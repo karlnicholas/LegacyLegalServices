@@ -1,0 +1,17 @@
+<ui:composition template="/views/template/template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+<ui:define name="title"><h:outputText value="Op - Thank You"/></ui:define>
+<ui:define name="content">
+<h:form id="aboutForm" styleClass="form-horizontal">
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-4"><h:outputText value="Thank you for your comments, we are pleased to hear from you." styleClass="control-label"/></div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-2"><h:button outcome="/views/index.xhtml" value="Home" class="btn"/></div>
+  </div>
+</h:form>
+</ui:define>
+</ui:composition>

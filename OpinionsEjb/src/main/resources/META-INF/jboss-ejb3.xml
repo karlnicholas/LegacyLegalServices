@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss:ejb-jar xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:jboss="http://www.jboss.com/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:s="urn:security:1.1"
+  xmlns:tx="urn:trans-timeout"
+  version="3.1"
+  impl-version="2.0">
+  <assembly-descriptor>
+    <s:security>
+      <!-- EJB name or wildcard * is supported -->
+      <ejb-name>UserService</ejb-name>
+      <!-- Name of the security domain which is configured in the EJB3 subsystem -->
+      <s:security-domain>opee-domain</s:security-domain>
+    </s:security>
+    <s:security>
+      <!-- EJB name or wildcard * is supported -->
+      <ejb-name>ArticleService</ejb-name>
+      <!-- Name of the security domain which is configured in the EJB3 subsystem -->
+      <s:security-domain>opee-domain</s:security-domain>
+    </s:security>
+    <container-transaction>
+      <method>
+        <ejb-name>CAOnlineUpdates</ejb-name>
+        <method-name>*</method-name>
+        <method-intf>Local</method-intf>
+      </method>
+      <tx:trans-timeout>
+        <tx:timeout>3600</tx:timeout>
+        <tx:unit>Seconds</tx:unit>
+      </tx:trans-timeout>
+    </container-transaction>
+  </assembly-descriptor>
+</jboss:ejb-jar>

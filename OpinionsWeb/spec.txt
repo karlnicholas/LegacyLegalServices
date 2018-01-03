@@ -1,0 +1,52 @@
+    15:28:53,531 FATAL [javax.enterprise.resource.webcontainer.jsf.context] (default task-6) JSF1073: java.lang.NullPointerException caught during processing of RENDER_RESPONSE 6 : UIComponent-ClientId=, Message=null
+    15:28:53,532 FATAL [javax.enterprise.resource.webcontainer.jsf.context] (default task-6) No associated message: java.lang.NullPointerException
+        at java.util.concurrent.ConcurrentHashMap.putVal(ConcurrentHashMap.java:1011)
+        at java.util.concurrent.ConcurrentHashMap.putIfAbsent(ConcurrentHashMap.java:1535)
+        at com.sun.faces.util.Cache.get(Cache.java:116)
+        at com.sun.faces.application.view.FaceletViewHandlingStrategy.getComponentMetadata(FaceletViewHandlingStrategy.java:252)
+        at com.sun.faces.application.ApplicationImpl.createComponent(ApplicationImpl.java:949)
+        at org.jboss.as.jsf.injection.weld.ForwardingApplication.createComponent(ForwardingApplication.java:106)
+        at com.sun.faces.facelets.tag.jsf.CompositeComponentTagHandler.createComponent(CompositeComponentTagHandler.java:161)
+        at com.sun.faces.facelets.tag.jsf.ComponentTagHandlerDelegateImpl.apply(ComponentTagHandlerDelegateImpl.java:173)
+        at javax.faces.view.facelets.DelegatingMetaTagHandler.apply(DelegatingMetaTagHandler.java:120)
+
+
+[P vs. O.J. Simpson]               Feb-12                           FILENAME
+   - Penal Code:27
+      10  §1170.78 Initial Sentencing
+      14 §§485-464 Burglary
+       3  §490a    Larceny
+     Welfare and Institutions Code:2
+       2  §602     Wards--Jurisdiction
+   + P vs. Kidman (3 Cal.3d 729), P. vs. Black (5 Cal. 100), 
+   - Affirmed: The court finds that there are many things to be considered
+     because it has thought about it a lot. That's our job, and we like 
+     to do it at least 10 or 15 times a week. This week has been particularly 
+     exciting. People that look like us have been on television, and we were
+     watching those people pretend to be us. For this reason we affirm 
+     the lower court's findings.
+
+[P vs. O.J. Simpson]               Feb-12                           FILENAME
+   - Penal Code:27
+      10  §1170.78 Initial Sentencing
+      14 §§485-464 Burglary
+       3  §490a    Larceny
+     Welfare and Institutions Code:2
+       2  §602     Wards--Jurisdiction
+   - Cases Cited:
+       People vs. Kidman (3 Cal.3d 729)
+       People vs. Black (5 Cal. 100) 
+       People vs. Black (5 Cal. 100) 
+       People vs. Black (5 Cal. 100)
+       (20 more) 
+   - Affirmed: The court finds that there are many things to be considered
+     because it has thought about it a lot. That's our job, and we like 
+     to do it at least 10 or 15 times a week. This week has been particularly 
+     exciting. People that look like us have been on television, and we were
+     watching those people pretend to be us. For this reason we affirm 
+     the lower court's findings.
+
+[Miranda vs. Simpson]
+   + Code of Civil Proc.: 18
+
+..... OLDER >>

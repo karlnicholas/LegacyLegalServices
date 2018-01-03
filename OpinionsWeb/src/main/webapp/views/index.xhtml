@@ -1,0 +1,31 @@
+<ui:composition template="/views/template/template.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+  xmlns:h="http://xmlns.jcp.org/jsf/html" 
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+  <ui:define name="title">
+    <h:outputText value="Op - Home" />
+  </ui:define>
+  <ui:define name="content">
+	<f:view afterPhase="#{indexController.afterPhaseListener}"
+		beforePhase="#{indexController.beforePhaseListener}">
+		<h1>JavaBeat JSF 2.2 Examples</h1>
+		<h2>JSF2 Ajaxify UI CommandLink &amp; CommandButton Example</h2>
+	    <h:form>
+            <h3>This Ajax is Triggered On Action Click</h3>
+            <h:inputText id="input" value="#{indexController.message}"/>
+            #{' '}
+            <h:commandButton value="Display" action="#{indexController.displayText}">
+                <f:ajax event="click" execute="input" render="output"></f:ajax>
+            </h:commandButton>
+            #{' '}
+            <h:commandLink value="Display" action="#{indexController.displayText}">
+                <f:ajax event="click" execute="input" render="output"></f:ajax>
+            </h:commandLink>
+            #{' '}
+            <h:outputText id="output" value="#{indexController.message}"></h:outputText>
+    <p><h:commandButton action="#{indexController.testUpdate()}" value="Test Update" /> </p>
+    </h:form>
+    </f:view>
+  </ui:define>
+</ui:composition>

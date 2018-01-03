@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+  xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a href="#{request.contextPath}/" class="pull-left" ><h:graphicImage library="img" name="javaee.png" /></a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+      <li><h:link id="headerTabHome" value="Home" outcome="/views/index.xhtml"/></li>
+      <li><h:link id="headerTabAccount" value="Account" outcome="/views/accounts/accounts.xhtml"/></li>
+      <li><h:link value="Board" outcome="/views/board/board.xhtml"/></li>
+      <li><h:link value="Opinions" outcome="/views/opinions/opinions.xhtml"/></li>
+      <ui:fragment rendered="#{fn:contains(request.requestURI, 'opinion')}">
+        <li role="presentation" class="dropdown"><h:link value="#{opinionsController.currentDate}" outcome="/views/index.xhtml" styleClass="dropdown-toggle" style="color:#FFFFFF;background-color:#4582ec;" p:data-toggle="dropdown" p:role="button" p:aria-haspopup="true" p:aria-expanded="false"><span class="caret"></span></h:link>
+        <ul class="dropdown-menu">
+        <ui:repeat var="s" value="#{opinionsController.dateList}">
+          <li><h:link value="#{s[0]}" outcome="/views/opinions/opinions.xhtml#{s[1]}"/></li>
+        </ui:repeat>
+        </ul>
+        </li>
+      </ui:fragment>
+      </ul>
+    </div>
+  </div>
+</nav>
+</ui:composition>

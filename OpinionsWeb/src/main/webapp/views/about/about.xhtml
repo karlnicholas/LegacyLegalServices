@@ -1,0 +1,36 @@
+<ui:composition template="/views/template/template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+<ui:define name="title"><h:outputText value="Op - About"/></ui:define>
+<ui:define name="content">
+<h:form id="aboutForm" styleClass="form-horizontal">
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-4"><h:outputText value="Your feedback is welcomed. Please enter your email and comment below." styleClass="control-label"/></div>
+  </div>
+  <div class="form-group #{accountsController.isValid('aboutForm:email')?'':'has-error'}">
+    <h:outputLabel for="email" value="Email:" styleClass="col-sm-2 control-label"/>
+    <div class="col-sm-4"><h:inputText id="email" value="#{aboutController.aboutForm.email}" styleClass="form-control" p:aria-describedby="aboutForm:helpforemail"/>
+      <h:message id="helpforemail" styleClass="help-block" for="email" />
+    </div>
+  </div>
+  <div class="form-group #{accountsController.isValid('aboutForm:comment')?'':'has-error'}">
+    <h:outputLabel for="comment" value="Comment:" styleClass="col-sm-2 control-label"/>
+    <div class="col-sm-4"><h:inputTextarea rows="4" id="comment" value="#{aboutController.aboutForm.comment}" styleClass="form-control" p:aria-describedby="aboutForm:helpforcomment" required="true" requiredMessage="Comment is required." />
+      <h:message id="helpforcomment" styleClass="help-block" for="comment"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-2"><h:commandButton id="submit" action="#{aboutController.submit()}" value="Submit" class="btn btn-default"/></div>
+    <div class="col-sm-2"><h:button outcome="/views/index.xhtml" value="Cancel" class="btn"/></div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-2"><h:commandButton id="test" action="#{aboutController.test()}" value="Test" class="btn btn-default"/></div>
+  </div>
+  <div class="form-group">
+    <h:messages globalOnly="true" showDetail="true" styleClass="col-sm-offset-2 col-sm-4" />
+  </div>
+</h:form>
+</ui:define>
+</ui:composition>

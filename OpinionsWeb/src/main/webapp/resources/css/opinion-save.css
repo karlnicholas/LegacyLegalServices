@@ -1,0 +1,181 @@
+div.anchor {
+    display: block;
+    position: relative;
+    top: -70px;
+    visibility: hidden;
+}
+.opinion {
+  overflow:hidden;
+  width:80%;
+  margin-left:5%;
+}
+.ophead {
+  overflow:hidden;
+  font-family:TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+  color:black;
+  background-color:lightblue;
+  font-size:20px;
+  font-style:normal;
+  font-variant:normal;
+}
+.ophead.title {
+  float:left;
+  text-align:left;
+}
+.ophead.date {
+  float:left;
+  text-align:left;
+  width:15%;
+  margin-left:10px;
+}
+.ophead.right {
+  float:right;
+  text-align:right;
+  font-size:16px;
+  text-decoration:underline;
+  color:blue;
+  padding-top:6px;
+  margin-right:10px;
+}
+.statute {
+  font-family:TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+  font-size:16px;
+  font-style:normal;
+  font-variant:normal;
+  font-weight:250;
+  color:gray;
+  background-color:white;
+  padding-left:5px;
+}
+.openstat {
+  font-family:TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+  font-size:16px;
+  font-style:normal;
+  font-variant:normal;
+  font-weight:250;
+  color:black;
+  background-color:white;
+}
+.openstat.wrap {
+  overflow:hidden;
+}
+.openstat.codewrap {
+  color:black;
+  background-color:Moccasin;
+}
+.openstat.statute {
+}
+.openstat.code {
+  padding-left: 1%;
+  color:black;
+  background-color:Moccasin;
+}
+.openstat.left {
+  float:left;
+  margin-right:5px;
+}
+.openstat.orow {
+  overflow:hidden;
+}
+.openstat.count {
+  float:left;
+  text-align:left;
+  width:5%;
+  color:black;
+  background-color:beige;
+  padding-left: 1%;
+}
+.openstat.statute {
+  float:left;
+  text-align:left;
+  width:15%;
+  color:black;
+  background-color:beige;
+  border-left:thin solid;
+  white-space: nowrap;
+}
+.openstat.title {
+  float:left;
+  text-align:left;
+  color:black;
+  background-color:beige;
+  padding-left: 2%;
+  width:80%;
+  border-left:thin solid;
+}
+.citation {
+  text-align:center;
+  font-family:italic, TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+  font-size:16px;
+  font-style:normal;
+  font-variant:normal;
+  font-weight:250;
+  color:gray;
+  background-color:white;
+  margin-left:5px;
+}
+.opencase {
+  font-family:TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+  font-size:16px;
+  font-style:normal;
+  font-variant:normal;
+  font-weight:250;
+  color:black;
+  background-color:white;
+}
+.opencase.left {
+  float:left;
+  margin-right:5px;
+}
+.opencase.wrap {
+  overflow:hidden;
+}
+.opencase.casehead {
+  color:black;
+  background-color:lightblue;
+}
+.opencase.casewrap {
+  color:black;
+  background-color:#FFDAB9;
+}
+.opencase.case {
+  padding-left: 1%;
+  color:black;
+  background-color:lightblue;
+}
+.opencase.orow {
+  overflow:hidden;
+  padding-left: 2%;
+  width: 100%;
+  float:left;
+  text-align:left;
+  background-color:beige;
+}
+.opencase.title {
+  font-style:italic;
+  background-color:beige;
+}
+.opencase.citedetails {
+  background-color:beige;
+  }
+.summary.wrap {
+  overflow:hidden;
+  margin-left:15px;
+  padding:5px;
+}
+
+.summary.outer {
+  border-left:thick solid #F8F8F8;
+}
+.summary.inner {
+  margin-left:5px;
+ }
+.optail {
+  height:10px;
+}
+.lightgray {
+  color:lightgray;
+}
+.gray {
+  color:gray;
+}

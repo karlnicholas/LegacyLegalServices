@@ -1,0 +1,4 @@
+californiastatutesloc = /opcastorage/CaliforniaStatutes
+gsindexloc = /opcastorage/index
+gsindextaxoloc = /opcastorage/indextaxo
+statuteswsservice = http://gs.opca.svc.cluster.local:8080/statutesws/StatutesWS?wsdl

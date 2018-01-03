@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+xmlns:f="http://xmlns.jcp.org/jsf/core"
+xmlns:composite="http://xmlns.jcp.org/jsf/composite">
+<!-- INTERFACE -->
+<composite:interface>
+  <composite:attribute name="view" type="opca.view.OpinionView" required="true"/>
+</composite:interface>
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+  <div class="anchor" id="anchor_#{cc.attrs.view.name}" />
+  <div class="opinion">
+    <h:form>
+    <div class="ophead">
+      <span class="ophead date"><h:outputText value="#{cc.attrs.view.opinionDate}" ><f:convertDateTime pattern="MMM dd"/></h:outputText>
+      </span>
+      <ui:fragment rendered="#{!opinionsController.opinionOpen(cc.attrs.view.name)}">
+        <h:commandLink actionListener="#{opinionsController.openOpinion(cc.attrs.view.name)}"><span class="ophead title"><h:outputText value="#{cc.attrs.view.title}" /></span></h:commandLink>
+      </ui:fragment>
+      <ui:fragment rendered="#{opinionsController.opinionOpen(cc.attrs.view.name)}">
+        <h:commandLink actionListener="#{opinionsController.closeOpinion()}"><span class="ophead title"><h:outputText value="#{cc.attrs.view.title}" /></span></h:commandLink>
+      </ui:fragment>
+      <h:outputLink styleClass="ophead right" value="http://www.courts.ca.gov/opinions/documents/#{cc.attrs.view.fileName}.PDF"><h:outputText value="#{cc.attrs.view.fileName}"/></h:outputLink>
+    </div>
+    <ui:fragment rendered="#{opinionsController.opinionOpen(cc.attrs.view.name)}">
+      <div class="openstat wrap">
+        <ui:repeat var="statute" value="#{cc.attrs.view.statutes}" >
+          <div class="openstat srow"><span class="casestar">
+          <ui:repeat var="i" value="#{opinionsController.repeatNTimes(statute.importance)}">
+              <span class="glyphicon glyphicon-star"/>      
+          </ui:repeat>
+          </span>
+          <span class="openstat code titlepath"><h:outputText value="#{statute.displayTitlePath}" /></span>
+          <span class="openstat code sections"><h:outputText value="#{statute.displaySections}" /></span>
+          </div>
+        </ui:repeat>
+      </div>
+      <div class="opencase wrap"><div class="opencase casehead"><span class="opencase case">Cases Cited:</span></div>
+        <div class="opencase casewrap">
+        <ui:repeat var="opinion" value="#{cc.attrs.view.cases}" size="#{cc.attrs.view.cases.size()>10?10:cc.attrs.view.cases.size()}" >
+          <div class="opencase orow"><span class="casestar">
+          <ui:repeat var="i" value="#{opinionsController.repeatNTimes(opinion.importance)}">
+              <span class="glyphicon glyphicon-star"/>      
+          </ui:repeat>
+          </span>
+          <span class="opencase title"><h:outputText value="#{opinion.title}"/></span>
+          <span class="opencase citedetails"><ui:fragment rendered="#{not empty opinion.opinionDate}"> (<h:outputText value="#{opinion.opinionDate}"><f:convertDateTime pattern="yyyy"/> </h:outputText>) </ui:fragment><h:outputText value="#{opinion.citation}"/></span>
+          </div>          
+        </ui:repeat>
+        </div>
+        <ui:fragment rendered="#{cc.attrs.view.cases.size() > 10}"><div class="opencase casehead"><span class="opencase case">[<h:outputText value="#{cc.attrs.view.cases.size() - 10}"/> more cases cited.]</span></div></ui:fragment>
+      </div>
+     </ui:fragment>
+     <ui:fragment rendered="#{cc.attrs.view.disposition != null}" ><div class="summary wrap"><div class="summary outer"><div class="summary inner"><b><h:outputText value="#{cc.attrs.view.disposition}: "/></b><h:outputText value="#{cc.attrs.view.summary}" /></div></div></div></ui:fragment>
+    <div class="opinion tail" />
+    </h:form>
+  </div>
+</composite:implementation>
+</html>

@@ -1,0 +1,25 @@
+<ui:composition template="/views/template/template.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:p="http://xmlns.jcp.org/jsf/passthrough"  
+  xmlns:jbview="http://xmlns.jcp.org/jsf/composite/jbview">
+<ui:define name="title">
+  <h:outputText value="Boards" />
+</ui:define>
+<ui:define name="additionalheader" >
+<h:outputStylesheet name="jboard.css" library="css"/>
+</ui:define>
+<ui:define name="content">
+<h:form id="commentForm">
+  <div class="form-group">
+    <h:messages p:name="commentForm:messages" globalOnly="true" showDetail="true" styleClass="col-sm-offset-2 col-sm-4"/>
+  </div>
+  <div>
+    <ui:repeat varStatus="ar" var="a" value="#{boardController.articles}">
+      <jbview:jbview article="#{a}"/>
+    </ui:repeat>
+  </div>
+</h:form>
+</ui:define>
+</ui:composition>

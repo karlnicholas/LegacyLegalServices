@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+xmlns:f="http://xmlns.jcp.org/jsf/core"
+xmlns:composite="http://xmlns.jcp.org/jsf/composite">
+<!-- INTERFACE -->
+<composite:interface>
+  <composite:attribute name="article" type="opca.model.Article" required="true"/>
+</composite:interface>
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+  <div class="jboard">
+    <div class="jbhead">
+      <span class="jbhead date"><h:outputText value="#{cc.attrs.article.date}" ><f:convertDateTime pattern="MMM dd"/></h:outputText>
+      </span>
+      <ui:fragment rendered="#{!boardController.articleOpen(cc.attrs.article.id)}">
+      	<h:commandLink action="#{boardController.openArticle(cc.attrs.article.id)}"><span class="jbhead title"><h:outputText value="#{cc.attrs.article.title}" /></span></h:commandLink>
+      </ui:fragment>
+      <ui:fragment rendered="#{boardController.articleOpen(cc.attrs.article.id)}">
+      	<h:commandLink action="#{boardController.closeArticle()}"><span class="jbhead title"><h:outputText value="#{cc.attrs.article.title}" /></span></h:commandLink>
+      </ui:fragment>
+      <ui:fragment rendered="#{!boardController.commentOpen(cc.attrs.article.id) }">
+      	<span class="jbhead right"><h:commandLink action="#{boardController.openComment(cc.attrs.article.id)}" ><h:outputText value="Comment" /></h:commandLink></span>
+      </ui:fragment>
+      <ui:fragment rendered="#{boardController.commentOpen(cc.attrs.article.id)}">
+      	<h:commandLink action="#{boardController.closeComment()}"><span class="jbhead right"><h:outputText value="Cancel" /></span></h:commandLink>
+      </ui:fragment>
+    </div>
+    <ui:fragment rendered="#{boardController.commentOpen(cc.attrs.article.id)}">
+    	<ui:include src="/resources/jbview/jbcomment.xhtml" />
+    </ui:fragment>
+    <ui:fragment rendered="#{boardController.articleOpen(cc.attrs.article.id)}">
+    <div class="jbcomment wrap"><div class="jbcomment casehead"><span class="jbcomment code">User Comments</span></div>
+      <ui:repeat var="articleComment" value="#{cc.attrs.article.articleComments}" >
+        <div class="jbcomment srow"><span class="casestar">
+        <ui:repeat var="i" value="#{boardController.repeatNTimes(articleComment.importance)}">
+            <span class="glyphicon glyphicon-star"/>      
+        </ui:repeat>
+        </span>
+        <span class="jbcomment code titlepath"><h:outputText value="#{articleComment.comment}" /></span>
+        <h:commandLink id="voteup" action="#{boardController.upvoteComment(articleComment.id)}"><span class="glyphicon glyphicon-arrow-up"/><f:ajax execute="@all" render="@all" /></h:commandLink>
+        <h:commandLink id="votedown" action="#{boardController.downvoteComment(articleComment.id)}"><span class="glyphicon glyphicon-arrow-down"/><f:ajax render="@all" /></h:commandLink>
+        </div>
+      </ui:repeat>
+    </div>
+    </ui:fragment>
+    <div class="jbsummary wrap"><div class="jbsummary outer"><div class="jbsummary inner"><h:outputText value="#{cc.attrs.article.contents}" /></div></div></div>
+    <div class="jboard jbtail" />
+  </div>
+</composite:implementation>
+</html>

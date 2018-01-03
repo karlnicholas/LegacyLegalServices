@@ -1,0 +1,56 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+<h:form id="userdetailForm" styleClass="form-horizontal">
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-4"><h:outputText value="User Detail" styleClass="control-label"/></div>
+  </div>
+  <div class="form-group">
+    <h:outputLabel for="email" value="Email:" styleClass="col-sm-2 control-label"/>
+    <div class="col-sm-4"><h:inputText id="email" value="#{accountsController.currentUser.email}" disabled="true" styleClass="form-control" /></div>
+  </div>
+  <div class="form-group">
+    <h:outputLabel for="firstName" value="First Name:" styleClass="col-sm-2 control-label"/>
+    <div class="col-sm-4">
+      <h:inputText id="firstName" value="#{accountsController.currentUser.firstName}" styleClass="form-control" />
+    </div>
+  </div>
+  <div class="form-group">
+    <h:outputLabel for="lastName" value="Last Name:" styleClass="col-sm-2 control-label"/>
+    <div class="col-sm-4">
+      <h:inputText id="lastName" value="#{accountsController.currentUser.lastName}" styleClass="form-control" />
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-2"><h:commandButton id="signout" action="#{accountsController.signOut()}" value="Sign-Out" class="btn btn-default"/></div>
+    <div class="col-sm-2"><h:commandButton id="update" action="#{accountsController.updateDetails()}" value="Update Details" class="btn"/></div>
+  </div>
+  <ui:fragment rendered="#{accountsController.admin}">
+    <div class="form-group">
+      <div class="col-sm-2"><h:button id="admin" outcome="/views/accounts/admin/admin.xhtml" value="Administer Users" class="btn btn-warning"/></div>
+      <div class="col-sm-offset-2 col-sm-2"><h:button id="changepassword" outcome="/views/accounts/user/changepassword.xhtml" value="Change Password" class="btn"/></div>
+    </div>
+  </ui:fragment>
+  <div class="form-group">
+    <h:messages p:name="userdetailForm:messages" globalOnly="true" showDetail="true"/>
+  </div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Selected Statutes</h3>
+  </div>
+  <div class="panel-body">
+  <h:panelGrid columns="3" columnClasses="col-sm-3, col-sm-3, col-sm-3">
+    <c:forEach items="#{userCodesBean.titleArray}" var="title" varStatus="loop">
+      <h:panelGroup>
+          <h:selectBooleanCheckbox id="box_#{loop.index}" value="#{accountsController.checkboxItems[title]}"/>
+          &#160;<h:outputLabel for="box_#{loop.index}" value="#{title}" />
+      </h:panelGroup>
+	</c:forEach>
+  </h:panelGrid>
+  </div>
+</div>
+</h:form>
+</f:view>
