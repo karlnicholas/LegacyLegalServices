@@ -1,8 +1,0 @@
-/target/
-/.settings/
-.project
-.classpath
-.factorypath
-target
-.settings/*
-!.settings/.jsdtscope

@@ -14,7 +14,7 @@
     </properties>
     <dependencies>
       <dependency>
-        <groupId>legalservices</groupId>
+        <groupId>guidedsearch</groupId>
         <artifactId>guidedsearch-core</artifactId>
         <version>0.2.0</version>
       </dependency>
@@ -22,6 +22,6 @@
     <parent>
       <groupId>legalservices</groupId>
       <artifactId>legalservices</artifactId>
-      <version>0.2.0</version>
+      <version>0.3.0</version>
     </parent>
 </project>

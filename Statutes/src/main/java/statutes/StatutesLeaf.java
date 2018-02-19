@@ -117,50 +117,7 @@ public class StatutesLeaf extends StatutesBaseClass {
         return parent.getFullTitle(separator)+separator+ret;
     }
 
-/*
-	//JAXB processor stuff
-	@XmlAttribute(required=true)
-	public String getCodeBegin() {
-	    if ( statuteRange != null ) {
-	    	if ( statuteRange.getsNumber() != null ) {
-	    		return statuteRange.getsNumber().getSectionNumber();
-	    	}
-    	}
-		return null;
-	}
-	public void setCodeBegin(String codeBegin) {}
-	@XmlAttribute
-	public String getCodeEnd() {
-	    if ( statuteRange != null ) {
-	    	if ( statuteRange.geteNumber() != null ) {
-	    		return statuteRange.geteNumber().getSectionNumber();
-	    	}
-	    }
-		return null;
-	}
-	public void setCodeEnd(String codeEnd) {}
-	@XmlAttribute(required=true)
-	public int getPosBegin() {
-	    if ( statuteRange != null ) {
-	    	if ( statuteRange.getsNumber() != null ) {
-				return statuteRange.getsNumber().getPosition();
-	    	}
-	    }
-		return -1;
-	}
-	public void setPosBegin(int posBegin) {}
-	@XmlAttribute
-	public int getPosEnd() {
-	    if ( statuteRange != null ) {
-	    	if ( statuteRange.geteNumber() != null ) {
-	    		return statuteRange.geteNumber().getPosition();
-	    	}
-	    }
-		return -1;
-	}
-	public void setPosEnd(int codeEnd) {}
-*/	
-	@Override
+    @Override
     public String toString() {
         StringBuilder ret = new StringBuilder();
         if ( part != null ) {

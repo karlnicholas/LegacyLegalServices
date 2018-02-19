@@ -5,7 +5,7 @@
   <parent>
     <artifactId>legalservices</artifactId>
     <groupId>legalservices</groupId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
   </parent>
   <artifactId>opinions-ejb</artifactId>
   <packaging>ejb</packaging>
@@ -18,13 +18,6 @@
       <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
     </license>
   </licenses>
-    <repositories>
-        <repository>
-            <id>project.local</id>
-            <name>project</name>
-            <url>file:${project.basedir}/../repo</url>
-        </repository>
-    </repositories>
   <dependencies>
     <!-- Declare the APIs we depend on and need for compilation. All of them are provided by JBoss WildFly -->
     <!-- Import the EJB API, we use provided scope as the API is included in JBoss WildFly -->
@@ -70,7 +63,6 @@
       <artifactId>arquillian-junit-container</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.jboss.arquillian.protocol</groupId>
       <artifactId>arquillian-protocol-servlet</artifactId>
@@ -105,7 +97,7 @@
     <dependency>
       <groupId>legalservices</groupId>
       <artifactId>statutes</artifactId>
-      <version>0.2.0</version>
+      <version>0.3.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.poi</groupId>

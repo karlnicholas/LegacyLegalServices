@@ -26,7 +26,7 @@ public class CAAppTest {
 	Logger logger = Logger.getLogger(CAAppTest.class.getName());
 	private static final String emptyString = "";
 	private static Endpoint endpoint;
-	private static final String address = "http://localhost:9000/statutesws";
+	private static String address = "http://localhost:9000/statutesws";
 
 	@WebService(serviceName = "StatutesWS", endpointInterface = "service.StatutesWS", 
 			targetNamespace = "http://statutesws/",  portName="StatutesWSPort")
@@ -40,6 +40,9 @@ public class CAAppTest {
 	@BeforeClass
 	public static void testSetup() {
 		StatutesWSServiceImpl implementor = new StatutesWSServiceImpl();
+		String container = System.getenv().get("container");
+		if ( container != null )
+			address = "http://0.0.0.0:9000/statutesws";
 		endpoint = Endpoint.publish(address, implementor);
 	}
 

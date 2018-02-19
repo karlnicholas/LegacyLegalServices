@@ -6,7 +6,7 @@
    <parent>
       <artifactId>legalservices</artifactId>
       <groupId>legalservices</groupId>
-      <version>0.2.0</version>
+      <version>0.3.0</version>
    </parent>
 
    <artifactId>opinions-web</artifactId>
@@ -113,7 +113,7 @@
       <dependency>
         <groupId>legalservices</groupId>
         <artifactId>opinions-ejb</artifactId>
-        <version>0.2.0</version>
+        <version>0.3.0</version>
         <type>ejb</type>
       </dependency>
    </dependencies>

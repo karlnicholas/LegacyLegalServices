@@ -53,7 +53,6 @@ public class StatutesNode extends StatutesBaseClass {
     	this.partNumber = partNumber;
     	this.title = title;
     	this.depth = depth;
-    	assert( depth>0 );
     }
     
 	public StatutesBaseClass findReference(SectionNumber sectionNumber) {
@@ -82,58 +81,14 @@ public class StatutesNode extends StatutesBaseClass {
     public ArrayList<StatutesBaseClass> getReferences() {
     	return references;
     }
-    public void setReferences(ArrayList<StatutesBaseClass> references) {
-    	this.references = references;
-    }
+
 	public void rebuildParentReferences(StatutesBaseClass parent) {
 		this.parent = parent;
 		for ( StatutesBaseClass reference: references ) {
 			reference.rebuildParentReferences(this);
 		}
 	}
-/*	
-	@XmlAttribute
-	public String getCodeBegin() {
-	    if ( statuteRange != null ) {
-	    	if ( statuteRange.getsNumber() != null ) {
-	    		return statuteRange.getsNumber().getSectionNumber();
-	    	}
-    	}
-		return null;
-	}
-	public void setCodeBegin(String codeBegin) {}
-	@XmlAttribute
-	public String getCodeEnd() {
-	    if ( statuteRange != null ) {
-	    	if ( statuteRange.geteNumber() != null ) {
-	    		return statuteRange.geteNumber().getSectionNumber();
-	    	}
-	    }
-		return null;
-	}
-	public void setCodeEnd(String codeEnd) {}
-	@XmlAttribute(required=true)
-	public int getPosBegin() {
-	    if ( statuteRange != null ) {
-	    	if ( statuteRange.getsNumber() != null ) {
-				return statuteRange.getsNumber().getPosition();
-	    	}
-	    }
-		return -1;
-	}
-	public void setPosBegin(int posBegin) {}
-	@XmlAttribute(required=true)
-	public int getPosEnd() {
-	    if ( statuteRange != null ) {
-	    	if ( statuteRange.geteNumber() != null ) {
-	    		return statuteRange.geteNumber().getPosition();
-	    	}
-	    }
-		return -1;
-	}
-	public void setPosEnd(int codeEnd) {}
-*/	
-//	@XmlElement
+
 	@XmlTransient
     public StatutesBaseClass getParent() {
     	return parent;

@@ -97,9 +97,6 @@ public class StatutesRoot extends StatutesBaseClass implements Comparable<Statut
 	public ArrayList<StatutesBaseClass> getReferences() {
 		return references;
 	}
-	public void setReferences(ArrayList<StatutesBaseClass> references) {
-		this.references = references;
-	}
 	@Override
     public String toString() {
     	String cString = title + ": " + references.size() + " references";

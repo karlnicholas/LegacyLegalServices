@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <artifactId>legalservices-ear</artifactId>
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>legalservices</artifactId>
     <groupId>legalservices</groupId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
   </parent>
-  <artifactId>legalservices-ear</artifactId>
   <packaging>ear</packaging>
-  <name>GuidedSearch: EAR Module</name>
-  <description>GuidedSearch: EAR Module</description>
+  <name>Legal Services: EAR Module</name>
+  <description>Legal Services: EAR Module</description>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
@@ -24,25 +24,11 @@
       <groupId>legalservices</groupId>
       <artifactId>guidedsearch-rs-ws</artifactId>
       <type>war</type>
-      <version>0.2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>legalservices</groupId>
-      <artifactId>statutesws</artifactId>
-      <type>war</type>
-      <version>0.2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>legalservices</groupId>
-      <artifactId>opinions-ejb</artifactId>
-      <type>ejb</type>
-      <version>0.2.0</version>
     </dependency>
     <dependency>
       <groupId>legalservices</groupId>
       <artifactId>opinions-web</artifactId>
       <type>war</type>
-      <version>0.2.0</version>
     </dependency>
   </dependencies>
 
@@ -64,11 +50,6 @@
               <groupId>legalservices</groupId>
               <artifactId>guidedsearch-rs-ws</artifactId>
               <contextRoot>/</contextRoot>
-            </webModule>
-            <webModule>
-              <groupId>legalservices</groupId>
-              <artifactId>statutesws</artifactId>
-              <contextRoot>statutesws</contextRoot>
             </webModule>
             <webModule>
               <groupId>legalservices</groupId>

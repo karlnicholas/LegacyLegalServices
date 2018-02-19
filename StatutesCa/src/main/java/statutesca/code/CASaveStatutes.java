@@ -162,7 +162,7 @@ public class CASaveStatutes {
 
 				Path codesDir = Paths.get("c:/users/karln/code");
 
-				Path xmlcodes = Paths.get("c:/users/karln/opca/StatutesCa/src/main/resources/CaliforniaStatutes");
+				Path xmlcodes = Paths.get("c:/users/karln/opcastorage/CaliforniaStatutes");
 				
 				List<Path> files = new CASaveStatutes().createSerializedStatutes(codesDir, xmlcodes );
 				
