@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 import parser.ParserInterface;
 import statutes.StatutesTitles;
-import statutesws.ReferencesWithReferences;
+import statutesrs.ReferencesWithReferences;
 import statutes.SectionNumber;
 import statutes.StatutesBaseClass;
 import statutes.StatutesLeaf;

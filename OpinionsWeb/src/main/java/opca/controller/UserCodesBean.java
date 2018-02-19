@@ -9,9 +9,9 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
-import opca.service.WebServicesService;
+import opca.service.RestServicesService;
 import statutes.StatutesTitles;
-import service.StatutesWS;
+import service.StatutesRs;
 
 /**
  * Simply provide the statutes to be combined with the user preferences.
@@ -28,10 +28,10 @@ public class UserCodesBean {
 	
 	@PostConstruct
 	public void postConstruct() {
-		StatutesWS statutesWS = new WebServicesService().connectStatutesWSService();
+		StatutesRs statutesRsS = new RestServicesService().connectStatutesRsService();
 		
 		@SuppressWarnings({ "unchecked", "rawtypes" })
-		List<StatutesTitles> statutesTitles = (List)statutesWS.getStatutesTitles().getItem();
+		List<StatutesTitles> statutesTitles = (List)statutesRsS.getStatutesTitles().getItem();
 
 		Collections.sort(statutesTitles, new Comparator<StatutesTitles>() {
 			@Override

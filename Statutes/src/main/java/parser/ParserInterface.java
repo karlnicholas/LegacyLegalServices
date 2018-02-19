@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import statutes.StatutesTitles;
-import statutesws.ReferencesWithReferences;
+import statutesrs.ReferencesWithReferences;
 import statutes.SectionNumber;
 import statutes.StatutesBaseClass;
 import statutes.StatutesRoot;

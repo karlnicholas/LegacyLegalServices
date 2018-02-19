@@ -16,7 +16,7 @@ import opca.model.StatuteCitation;
 import opca.model.StatuteKeyEntity;
 import opca.parser.ParsedOpinionCitationSet;
 import opca.view.*;
-import service.StatutesWS;
+import service.StatutesRs;
 
 @Stateless
 public class OpinionViewCache {
@@ -144,14 +144,14 @@ public class OpinionViewCache {
 		int levelOfInterest
 	) {
 		List<OpinionView> opinionViews = new ArrayList<OpinionView>();
-        StatutesWS statutesWS = new WebServicesService().connectStatutesWSService();
+        StatutesRs statutesRs = new RestServicesService().connectStatutesRsService();
 		//
 		OpinionViewBuilder opinionCaseBuilder = new OpinionViewBuilder();
 		List<SlipOpinion> opinions = findByPublishDateRange(sd, ed);
 		MyPersistenceLookup pl = new MyPersistenceLookup(this);
 		for ( SlipOpinion slipOpinion: opinions ) {
 			ParsedOpinionCitationSet parserResults = new ParsedOpinionCitationSet(slipOpinion, pl);
-			OpinionView opinionView = opinionCaseBuilder.buildSlipOpinionView(statutesWS, slipOpinion, parserResults);
+			OpinionView opinionView = opinionCaseBuilder.buildSlipOpinionView(statutesRs, slipOpinion, parserResults);
 			opinionView.trimToLevelOfInterest(levelOfInterest, true);
 			opinionView.combineCommonSections();
 			

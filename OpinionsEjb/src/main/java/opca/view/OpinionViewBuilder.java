@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import statutes.*;
-import service.StatutesWS;
+import service.StatutesRs;
 import opca.model.*;
 import opca.parser.ParsedOpinionCitationSet;
 
@@ -15,30 +15,30 @@ public class OpinionViewBuilder {
     }
 
     public OpinionView buildSlipOpinionView(
-    	StatutesWS statutesWS, 
+    	StatutesRs statutesRs, 
 		SlipOpinion slipOpinion, 
 		ParsedOpinionCitationSet parserResults 
 	) {
-    	return buildOpinionView(statutesWS, slipOpinion, slipOpinion.getFileName(), parserResults);
+    	return buildOpinionView(statutesRs, slipOpinion, slipOpinion.getFileName(), parserResults);
     }
 
     private OpinionView buildOpinionView(
-    	StatutesWS statutesWS, 
+    	StatutesRs statutesRs, 
     	SlipOpinion slipOpinion,
 		String name, 
 		ParsedOpinionCitationSet parserResults
 	) {
     	
         // statutes ws .. getStatuteKeys list to search for 
-    	statutesws.StatuteKeyArray statuteKeyArray = new statutesws.StatuteKeyArray();
+    	statutesrs.StatuteKeyArray statuteKeyArray = new statutesrs.StatuteKeyArray();
         for( StatuteKeyEntity statuteCitation: slipOpinion.getStatuteCitations() ) {
-            statutesws.StatuteKey statuteKey = new statutesws.StatuteKey();            
+            statutesrs.StatuteKey statuteKey = new statutesrs.StatuteKey();            
             statuteKey.setCode(statuteCitation.getCode());
             statuteKey.setSectionNumber(statuteCitation.getSectionNumber());
             statuteKeyArray.getItem().add(statuteKey);
         }
         // call statutesws to get details of statutes 
-        statutesws.ResponseArray responseArray = statutesWS.findStatutes(statuteKeyArray);
+        statutesrs.ResponseArray responseArray = statutesRs.findStatutes(statuteKeyArray);
         //
     	ArrayList<StatuteView> codes = new ArrayList<StatuteView>();
         // copy results into the new list ..
@@ -88,12 +88,12 @@ public class OpinionViewBuilder {
     }
 
 
-    private StatutesBaseClass findStatutesBaseClass(statutesws.ResponseArray responseArray, StatuteKeyEntity key) {
+    private StatutesBaseClass findStatutesBaseClass(statutesrs.ResponseArray responseArray, StatuteKeyEntity key) {
     	StatutesBaseClass statutesBaseClass = null;
     	final String code = key.getCode();
     	final String sectionNumber = key.getSectionNumber();
-    	for ( statutesws.ResponsePair responsePair: responseArray.getItem()) {
-    		statutesws.StatuteKey statuteKey = responsePair.getStatuteKey();
+    	for ( statutesrs.ResponsePair responsePair: responseArray.getItem()) {
+    		statutesrs.StatuteKey statuteKey = responsePair.getStatuteKey();
     		if ( code.equals(statuteKey.getCode()) && sectionNumber.equals(statuteKey.getSectionNumber()) ) {
     			statutesBaseClass = (StatutesBaseClass) responsePair.getStatutesBaseClass();
     			break;

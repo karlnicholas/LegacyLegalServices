@@ -14,9 +14,8 @@
     </properties>
     <dependencies>
       <dependency>
-        <groupId>guidedsearch</groupId>
+        <groupId>legalservices</groupId>
         <artifactId>guidedsearch-core</artifactId>
-        <version>0.2.0</version>
       </dependency>
     </dependencies>
     <parent>

@@ -97,7 +97,6 @@
     <dependency>
       <groupId>legalservices</groupId>
       <artifactId>statutes</artifactId>
-      <version>0.3.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.poi</groupId>

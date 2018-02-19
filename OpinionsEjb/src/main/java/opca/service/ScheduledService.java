@@ -22,7 +22,7 @@ public class ScheduledService {
     @Schedule(second="0", minute="15", hour="3", persistent=false)        // 03:30 am (12:30 am CA ) every day
     public void kickStatutesWS() {
         logger.info("KICK STATUESWS");
-        new WebServicesService().connectStatutesWSService();
+        new RestServicesService().connectStatutesRsService();
         logger.info("DONE KICK STATUESWS");
     }
     @Schedule(second="0", minute="22", hour="10", persistent=false)        // 03:30 am (12:30 am CA ) every day

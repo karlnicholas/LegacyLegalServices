@@ -19,10 +19,26 @@
     </license>
   </licenses>
   <dependencies>
+    <!-- note sure I need these -->
+    <dependency>
+      <groupId>legalservices</groupId>
+      <artifactId>statutes</artifactId>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>legalservices</groupId>
+      <artifactId>statutesca</artifactId>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>legalservices</groupId>
+      <artifactId>guidedsearch-core</artifactId>
+      <type>jar</type>
+    </dependency>
     <!-- Depend on the ejb module and war so that we can package them -->
     <dependency>
       <groupId>legalservices</groupId>
-      <artifactId>guidedsearch-rs-ws</artifactId>
+      <artifactId>guidedsearch-rs-rs</artifactId>
       <type>war</type>
     </dependency>
     <dependency>
@@ -30,8 +46,12 @@
       <artifactId>opinions-web</artifactId>
       <type>war</type>
     </dependency>
+    <dependency>
+      <groupId>legalservices</groupId>
+      <artifactId>statutesrs</artifactId>
+      <type>war</type>
+    </dependency>
   </dependencies>
-
   <build>
     <finalName>${project.artifactId}</finalName>
     <plugins>
@@ -48,8 +68,13 @@
           <modules>
             <webModule>
               <groupId>legalservices</groupId>
-              <artifactId>guidedsearch-rs-ws</artifactId>
+              <artifactId>guidedsearch-rs-rs</artifactId>
               <contextRoot>/</contextRoot>
+            </webModule>
+            <webModule>
+              <groupId>legalservices</groupId>
+              <artifactId>statutesrs</artifactId>
+              <contextRoot>statutesrs</contextRoot>
             </webModule>
             <webModule>
               <groupId>legalservices</groupId>
@@ -90,8 +115,13 @@
               <modules>
                 <webModule>
                   <groupId>legalservices</groupId>
-                  <artifactId>guidedsearch-rs-ws</artifactId>
+                  <artifactId>guidedsearch-rs-rs</artifactId>
                   <contextRoot>/</contextRoot>
+                </webModule>
+                <webModule>
+                  <groupId>legalservices</groupId>
+                  <artifactId>statutesrs</artifactId>
+                  <contextRoot>statutesrs</contextRoot>
                 </webModule>
                 <webModule>
                   <groupId>legalservices</groupId>

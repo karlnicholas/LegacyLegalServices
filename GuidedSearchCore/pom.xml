@@ -4,6 +4,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
 	<artifactId>guidedsearch-core</artifactId>
+    <parent>
+      <groupId>legalservices</groupId>
+      <artifactId>legalservices</artifactId>
+      <version>0.3.0</version>
+    </parent>
     <packaging>jar</packaging>
     <name>Guided Search Core</name>
     <description>Guided Search Core</description>
@@ -17,7 +22,6 @@
     	<dependency>
     		<groupId>legalservices</groupId>
     		<artifactId>statutes</artifactId>
-			<version>0.3.0</version>
     	</dependency>
     	<dependency>
     		<groupId>org.apache.lucene</groupId>
@@ -55,9 +59,4 @@
 			<version>${version.lucene}</version>
 		</dependency>
     </dependencies>
-    <parent>
-      <groupId>legalservices</groupId>
-      <artifactId>legalservices</artifactId>
-      <version>0.3.0</version>
-    </parent>
 </project>
