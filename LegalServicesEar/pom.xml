@@ -19,22 +19,6 @@
     </license>
   </licenses>
   <dependencies>
-    <!-- note sure I need these -->
-    <dependency>
-      <groupId>legalservices</groupId>
-      <artifactId>statutes</artifactId>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>legalservices</groupId>
-      <artifactId>statutesca</artifactId>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>legalservices</groupId>
-      <artifactId>guidedsearch-core</artifactId>
-      <type>jar</type>
-    </dependency>
     <!-- Depend on the ejb module and war so that we can package them -->
     <dependency>
       <groupId>legalservices</groupId>
