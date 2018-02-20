@@ -16,7 +16,7 @@ import opca.model.StatuteCitation;
 import opca.model.StatuteKeyEntity;
 import opca.parser.ParsedOpinionCitationSet;
 import opca.view.*;
-import service.StatutesRs;
+import service.Client;
 
 @Stateless
 public class OpinionViewCache {
@@ -144,7 +144,7 @@ public class OpinionViewCache {
 		int levelOfInterest
 	) {
 		List<OpinionView> opinionViews = new ArrayList<OpinionView>();
-        StatutesRs statutesRs = new RestServicesService().connectStatutesRsService();
+        Client statutesRs = new RestServicesService().connectStatutesRsService();
 		//
 		OpinionViewBuilder opinionCaseBuilder = new OpinionViewBuilder();
 		List<SlipOpinion> opinions = findByPublishDateRange(sd, ed);

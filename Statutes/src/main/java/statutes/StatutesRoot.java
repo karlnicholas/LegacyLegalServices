@@ -141,10 +141,12 @@ public class StatutesRoot extends StatutesBaseClass implements Comparable<Statut
 		this.depth = depth;
 	}
 
+	@XmlTransient
 	@Override
 	public StatutesLeaf getStatutesLeaf() {
 		return null;
 	}
+	@XmlTransient
 	@Override
 	public StatutesNode getStatutesNode() {
 		return null;

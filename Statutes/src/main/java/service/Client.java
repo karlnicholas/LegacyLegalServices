@@ -1,12 +1,15 @@
 package service;
 
+import java.util.List;
+
+import statutes.StatutesRoot;
 import statutesrs.ReferencesWithReferences;
 import statutesrs.ResponseArray;
 import statutesrs.StatuteKeyArray;
 import statutesrs.StatutesRootArray;
 import statutesrs.StatutesTitlesArray;
 
-public interface StatutesRs {
+public interface Client {
 
 	StatutesRootArray getStatutes();
 

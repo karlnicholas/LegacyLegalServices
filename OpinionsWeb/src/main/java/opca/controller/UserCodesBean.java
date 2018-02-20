@@ -11,7 +11,7 @@ import javax.faces.bean.ManagedBean;
 
 import opca.service.RestServicesService;
 import statutes.StatutesTitles;
-import service.StatutesRs;
+import service.Client;
 
 /**
  * Simply provide the statutes to be combined with the user preferences.
@@ -28,7 +28,7 @@ public class UserCodesBean {
 	
 	@PostConstruct
 	public void postConstruct() {
-		StatutesRs statutesRsS = new RestServicesService().connectStatutesRsService();
+		Client statutesRsS = new RestServicesService().connectStatutesRsService();
 		
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		List<StatutesTitles> statutesTitles = (List)statutesRsS.getStatutesTitles().getItem();

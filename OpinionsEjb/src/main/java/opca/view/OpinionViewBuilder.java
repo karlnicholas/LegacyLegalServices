@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import statutes.*;
-import service.StatutesRs;
+import service.Client;
 import opca.model.*;
 import opca.parser.ParsedOpinionCitationSet;
 
@@ -15,7 +15,7 @@ public class OpinionViewBuilder {
     }
 
     public OpinionView buildSlipOpinionView(
-    	StatutesRs statutesRs, 
+    	Client statutesRs, 
 		SlipOpinion slipOpinion, 
 		ParsedOpinionCitationSet parserResults 
 	) {
@@ -23,7 +23,7 @@ public class OpinionViewBuilder {
     }
 
     private OpinionView buildOpinionView(
-    	StatutesRs statutesRs, 
+    	Client statutesRs, 
     	SlipOpinion slipOpinion,
 		String name, 
 		ParsedOpinionCitationSet parserResults

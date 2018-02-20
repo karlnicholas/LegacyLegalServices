@@ -28,7 +28,7 @@ import opca.parser.ScrapedOpinionDocument;
 import opca.parser.ParsedOpinionCitationSet;
 import statutes.StatutesTitles;
 import statutesrs.StatutesTitlesArray;
-import service.StatutesRs;
+import service.Client;
 
 /**
  * 
@@ -117,7 +117,7 @@ public class CAOnlineUpdates {
 
 		StatutesTitles[] codeTitles = new StatutesTitles[0]; //parserInterface.getStatutesTitles();
 
-		StatutesRs statutesRs = new RestServicesService().connectStatutesRsService();
+		Client statutesRs = new RestServicesService().connectStatutesRsService();
 		StatutesTitlesArray statutesArray = statutesRs.getStatutesTitles();
 		codeTitles = statutesArray.getItem().toArray(codeTitles);
 

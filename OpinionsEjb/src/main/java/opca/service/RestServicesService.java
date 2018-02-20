@@ -7,7 +7,7 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import service.StatutesRs;
+import service.Client;
 import client.StatutesRsService;
 /**
  * This class is a singleton that loads and holds all Role definitions from 
@@ -49,15 +49,15 @@ public class RestServicesService {
 		}
 	}
     //private constructor to avoid client applications to use constructor
-    public StatutesRs connectStatutesRsService() {
+    public Client connectStatutesRsService() {
     	String serviceUrl = applicationProps.getProperty("statutesWSServiceUrl");
     	if ( serviceUrl == null ) serviceUrl = statutesRsServiceUrl;
-	    StatutesRs statutesRs = null;
+	    Client statutesRs = null;
 	    int retryCount = 3;
 	    while ( retryCount-- > 0 ) {
 	        try {
 	//        	statutesWS = new StatutesWSService(new URL("http://localhost:9080/StatutesWS?wsdl")).getStatutesWSPort();
-	        	statutesRs = new StatutesRsService(new URL(serviceUrl)).getStatutesRsPort();
+	        	statutesRs = new StatutesRsService(new URL(serviceUrl)).getRsService();
 			} catch (Exception e) {
 		        logger.info("new StatutesWSService - Exception");
 		        try {

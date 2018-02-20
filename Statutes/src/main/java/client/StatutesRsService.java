@@ -1,18 +1,23 @@
 package client;
 
+import java.net.URI;
 import java.net.URL;
 
-import service.StatutesRs;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.core.MediaType;
 
-public class StatutesRsService {
+import service.Client;
 
-	public StatutesRsService(URL wsdlLocation) {
-		// TODO Auto-generated constructor stub
+public class StatutesRsService  {
+	private URL apiLocation;
+	
+	public StatutesRsService(URL apiLocation) {
+		this.apiLocation = apiLocation;
 	}
 
-	public StatutesRs getStatutesRsPort() {
-		// TODO Auto-generated method stub
-		return null;
+	public Client getRsService() {
+		return new ClientImpl(apiLocation);
 	}
 
 }

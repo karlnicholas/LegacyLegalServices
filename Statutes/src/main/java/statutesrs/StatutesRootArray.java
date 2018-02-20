@@ -15,6 +15,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+import statutes.StatutesRoot;
+
 
 /**
  * <p>Java class for statutesRootArray complex type.
@@ -42,7 +44,7 @@ import javax.xml.bind.annotation.XmlType;
 public class StatutesRootArray {
 
     @XmlElement(nillable = true)
-    protected List<Object> item;
+    protected List<StatutesRoot> item;
 
     /**
      * Gets the value of the item property.
@@ -66,9 +68,9 @@ public class StatutesRootArray {
      * 
      * 
      */
-    public List<Object> getItem() {
+    public List<StatutesRoot> getItem() {
         if (item == null) {
-            item = new ArrayList<Object>();
+            item = new ArrayList<StatutesRoot>();
         }
         return this.item;
     }

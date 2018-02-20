@@ -8,7 +8,7 @@ import java.util.Map;
 
 import client.StatutesRsService;
 import parser.ParserInterface;
-import service.StatutesRs;
+import service.Client;
 import statutes.SectionNumber;
 import statutes.StatutesBaseClass;
 import statutes.StatutesRoot;
@@ -19,7 +19,7 @@ public class ParserInterfaceRsCa implements ParserInterface {
 	private StatutesRsService service;
 
 	public ParserInterfaceRsCa() {
-		init("http://localhost:8080/statutesrs");
+		init("http://localhost:8080/statutesrs/rs/");
 	}
 	
 	public ParserInterfaceRsCa(final String defaultAddress) {
@@ -29,12 +29,12 @@ public class ParserInterfaceRsCa implements ParserInterface {
 	private void init(final String defaultAddress) {
 		try {
 			String s = System.getenv("statutesrsservice");
-			URL wsdlLocation;
+			URL rsLocation;
 			if ( s != null )
-				wsdlLocation = new URL(s);
+				rsLocation = new URL(s);
 			else 
-				wsdlLocation = new URL(defaultAddress);
-			service = new StatutesRsService(wsdlLocation);
+				rsLocation = new URL(defaultAddress);
+			service = new StatutesRsService(rsLocation);
 		} catch (MalformedURLException e) {
 			throw new RuntimeException( e );
 		}
@@ -42,12 +42,11 @@ public class ParserInterfaceRsCa implements ParserInterface {
 
 	@Override
 	public List<StatutesRoot> getStatutes() {
-		StatutesRs statutesRs = service.getStatutesRsPort();
-		List<Object> objectList = statutesRs.getStatutes().getItem();
-		List<StatutesRoot> statutesList = new ArrayList<>();
-		for ( int i=0, l=objectList.size(); i<l; ++i ) {
-			statutesList.add(  (StatutesRoot) objectList.get(i) );
-		}		
+		Client statutesRs = service.getRsService();
+		List<StatutesRoot> statutesList = statutesRs.getStatutes().getItem();
+//		for ( int i=0, l=objectList.size(); i<l; ++i ) {
+//			statutesList.add(  (StatutesRoot) objectList.get(i) );
+//		}		
 		return statutesList;
 	}
 
@@ -60,7 +59,7 @@ public class ParserInterfaceRsCa implements ParserInterface {
 	@Override
 	public StatutesTitles[] getStatutesTitles() {
 		StatutesTitles[] statutesTitles; 
-		StatutesRs statutesRs = service.getStatutesRsPort();
+		Client statutesRs = service.getRsService();
 		List<Object> statutesTitlesList = statutesRs.getStatutesTitles().getItem();
 		statutesTitles = new StatutesTitles[statutesTitlesList.size()];
 		for (int i=0; i < statutesTitlesList.size(); ++i ) {
@@ -101,7 +100,7 @@ public class ParserInterfaceRsCa implements ParserInterface {
 
 	@Override
 	public ReferencesWithReferences returnReferencesByTitle(String fullFacet) {
-		StatutesRs statutesRs = service.getStatutesRsPort();
+		Client statutesRs = service.getRsService();
 		return statutesRs.returnReferencesByTitle(fullFacet);
 	}
 
