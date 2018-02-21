@@ -15,6 +15,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+import statutes.StatutesTitles;
+
 
 /**
  * <p>Java class for statutesTitlesArray complex type.
@@ -42,7 +44,7 @@ import javax.xml.bind.annotation.XmlType;
 public class StatutesTitlesArray {
 
     @XmlElement(nillable = true)
-    protected List<Object> item;
+    protected List<StatutesTitles> item;
 
     /**
      * Gets the value of the item property.
@@ -66,9 +68,9 @@ public class StatutesTitlesArray {
      * 
      * 
      */
-    public List<Object> getItem() {
+    public List<StatutesTitles> getItem() {
         if (item == null) {
-            item = new ArrayList<Object>();
+            item = new ArrayList<StatutesTitles>();
         }
         return this.item;
     }

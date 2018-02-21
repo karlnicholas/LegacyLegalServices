@@ -12,6 +12,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
+import statutes.StatutesBaseClass;
+
 
 /**
  * <p>Java class for responsePair complex type.
@@ -41,7 +43,7 @@ import javax.xml.bind.annotation.XmlType;
 public class ResponsePair {
 
     protected StatuteKey statuteKey;
-    protected Object statutesBaseClass;
+    protected StatutesBaseClass statutesBaseClass;
 
     /**
      * Gets the value of the statuteKey property.
@@ -75,7 +77,7 @@ public class ResponsePair {
      *     {@link Object }
      *     
      */
-    public Object getStatutesBaseClass() {
+    public StatutesBaseClass getStatutesBaseClass() {
         return statutesBaseClass;
     }
 
@@ -87,7 +89,7 @@ public class ResponsePair {
      *     {@link Object }
      *     
      */
-    public void setStatutesBaseClass(Object value) {
+    public void setStatutesBaseClass(StatutesBaseClass value) {
         this.statutesBaseClass = value;
     }
 

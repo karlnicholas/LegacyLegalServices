@@ -3,14 +3,11 @@ package client;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.List;
 
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.MediaType;
 
 import service.Client;
-import statutes.StatutesRoot;
 import statutesrs.ReferencesWithReferences;
 import statutesrs.ResponseArray;
 import statutesrs.StatuteKeyArray;
@@ -30,10 +27,34 @@ public class ClientImpl implements Client {
 
 	protected ClientImpl(URL apiLocation) {
 		try {
-			uriStatutes = new URI(apiLocation.getProtocol(), apiLocation.getUserInfo(), apiLocation.getHost(), apiLocation.getPort(), apiLocation.getPath() + STATUTES, null, null);
-			uriStatutesTitles = new URI(apiLocation.getProtocol(), apiLocation.getHost(), apiLocation.getPath() + STATUTESTITLES, null);
-			uriReferencesByTitle = new URI(apiLocation.getProtocol(), apiLocation.getHost(), apiLocation.getPath() + REFERENCEBYTITLE, null);
-			uriFindStatutes = new URI(apiLocation.getProtocol(), apiLocation.getHost(), apiLocation.getPath() + FINDSTATUTES, null);
+			uriStatutes = new URI(
+					apiLocation.getProtocol(), 
+					apiLocation.getUserInfo(), 
+					apiLocation.getHost(), 
+					apiLocation.getPort(), 
+					apiLocation.getPath() + STATUTES, 
+					null, null);
+			uriStatutesTitles = new URI(
+					apiLocation.getProtocol(), 
+					apiLocation.getUserInfo(), 
+					apiLocation.getHost(), 
+					apiLocation.getPort(), 
+					apiLocation.getPath() + STATUTESTITLES, 
+					null, null);
+			uriReferencesByTitle = new URI(
+					apiLocation.getProtocol(), 
+					apiLocation.getUserInfo(), 
+					apiLocation.getHost(), 
+					apiLocation.getPort(), 
+					apiLocation.getPath() + REFERENCEBYTITLE, 
+					null, null);
+			uriFindStatutes = new URI(
+					apiLocation.getProtocol(), 
+					apiLocation.getUserInfo(), 
+					apiLocation.getHost(), 
+					apiLocation.getPort(), 
+					apiLocation.getPath() + FINDSTATUTES, 
+					null, null);
 		} catch (URISyntaxException e) {
 			throw new RuntimeException(e);
 		}
@@ -47,20 +68,17 @@ public class ClientImpl implements Client {
 
 	@Override
 	public StatutesTitlesArray getStatutesTitles() {
-		// TODO Auto-generated method stub
-		return null;
+		return client.target(uriStatutesTitles).request(MediaType.APPLICATION_JSON_TYPE).get(StatutesTitlesArray.class);
 	}
 
 	@Override
 	public ReferencesWithReferences returnReferencesByTitle(String fullFacet) {
-		// TODO Auto-generated method stub
-		return null;
+		return client.target(uriReferencesByTitle).request(MediaType.APPLICATION_JSON_TYPE).get(ReferencesWithReferences.class);
 	}
 
 	@Override
 	public ResponseArray findStatutes(StatuteKeyArray statuteKeyArray) {
-		// TODO Auto-generated method stub
-		return null;
+		return client.target(uriFindStatutes).request(MediaType.APPLICATION_JSON_TYPE).get(ResponseArray.class);
 	}
 
 }

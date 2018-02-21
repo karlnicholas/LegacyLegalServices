@@ -2,7 +2,6 @@ package guidedsearch.restapi;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +59,7 @@ public class ParserInterfaceRsCa implements ParserInterface {
 	public StatutesTitles[] getStatutesTitles() {
 		StatutesTitles[] statutesTitles; 
 		Client statutesRs = service.getRsService();
-		List<Object> statutesTitlesList = statutesRs.getStatutesTitles().getItem();
+		List<StatutesTitles> statutesTitlesList = statutesRs.getStatutesTitles().getItem();
 		statutesTitles = new StatutesTitles[statutesTitlesList.size()];
 		for (int i=0; i < statutesTitlesList.size(); ++i ) {
 			statutesTitles[i] = (StatutesTitles) statutesTitlesList.get(i); 
