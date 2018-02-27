@@ -19,7 +19,7 @@ import client.StatutesRsService;
  */
 public class RestServicesService {
 	private Logger logger = Logger.getLogger(RestServicesService.class.getName());
-	private String statutesRsServiceUrl = "http://statutesrs-jsec.rhcloud.com:80/StatutesRs";
+	private String statutesRsServiceUrl = "http://localhost:8080/statutesrs/rs/";
 	protected Properties applicationProps;
 
 	public RestServicesService() {
@@ -50,7 +50,7 @@ public class RestServicesService {
 	}
     //private constructor to avoid client applications to use constructor
     public Client connectStatutesRsService() {
-    	String serviceUrl = applicationProps.getProperty("statutesWSServiceUrl");
+    	String serviceUrl = applicationProps.getProperty("statutesRsServiceUrl");
     	if ( serviceUrl == null ) serviceUrl = statutesRsServiceUrl;
 	    Client statutesRs = null;
 	    int retryCount = 3;

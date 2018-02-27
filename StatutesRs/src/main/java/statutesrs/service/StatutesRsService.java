@@ -3,11 +3,15 @@ package statutesrs.service;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
+import client.ClientImpl;
 import parser.ParserInterface;
 import service.Client;
 import statutes.SectionNumber;
@@ -30,17 +34,10 @@ public class StatutesRsService implements Client {
 		parserInterface = CAStatutesFactory.getInstance().getParserInterface(true);
 	}
 
-	@Path("xxx")
-	@GET
-	@Produces("text/plain")
-	public String getHello() {
-		return "hello";
-	}
-
 	@Override
-	@Path("statutes")
+	@Path(ClientImpl.STATUTES)
 	@GET
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public StatutesRootArray getStatutes() {
 		StatutesRootArray statutesRootArray = new StatutesRootArray();
 		statutesRootArray.getItem().addAll(parserInterface.getStatutes());
@@ -48,9 +45,9 @@ public class StatutesRsService implements Client {
 	}
 
 	@Override
-	@Path("statutestitles")
+	@Path(ClientImpl.STATUTESTITLES)
 	@GET
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public StatutesTitlesArray getStatutesTitles() {
 		StatutesTitles[] statutesTitles = parserInterface.getStatutesTitles();
 		StatutesTitlesArray statutesTitlesArray = new StatutesTitlesArray();
@@ -59,17 +56,18 @@ public class StatutesRsService implements Client {
 	}
 	
 	@Override
-	@Path("referencebytitle")
+	@Path(ClientImpl.REFERENCEBYTITLE)
 	@GET
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public ReferencesWithReferences returnReferencesByTitle(@QueryParam("fullFacet") String fullFacet) {
 		return parserInterface.returnReferencesByTitle(fullFacet);
 	}
 
 	@Override
-	@Path("findstatutes")
-	@GET
-	@Produces("application/json")
+	@Path(ClientImpl.FINDSTATUTES)
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public ResponseArray findStatutes(StatuteKeyArray keys) {
 		ResponseArray responseArray = new ResponseArray();
 		// copy results into the new list ..

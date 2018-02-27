@@ -2,6 +2,7 @@ package statutes;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -55,9 +56,11 @@ public class StatutesTitles implements Serializable {
 	public String[] getAbvrTitles() {
 		return abvrTitles;
 	}
+	@JsonIgnore
 	public String getAbvrTitle(int idx) {
 		return abvrTitles[idx];
 	}
+	@JsonIgnore
 	public String getAbvrTitle() {
 		return abvrTitles[0];
 	}

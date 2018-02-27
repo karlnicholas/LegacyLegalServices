@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 
 import service.Client;
@@ -15,10 +16,10 @@ import statutesrs.StatutesRootArray;
 import statutesrs.StatutesTitlesArray;
 
 public class ClientImpl implements Client {
-	private static final String STATUTES = "statutes";
-	private static final String STATUTESTITLES = "statutestitles";
-	private static final String REFERENCEBYTITLE = "referencebytitle";
-	private static final String FINDSTATUTES = "findstatutes";
+	public static final String STATUTES = "statutes";
+	public static final String STATUTESTITLES = "statutestitles";
+	public static final String REFERENCEBYTITLE = "referencebytitle";
+	public static final String FINDSTATUTES = "findstatutes";
 	private javax.ws.rs.client.Client client;
 	private URI uriStatutes;
 	private URI uriStatutesTitles;
@@ -63,22 +64,35 @@ public class ClientImpl implements Client {
 	
 	@Override
 	public StatutesRootArray getStatutes() {
-		return client.target(uriStatutes).request(MediaType.APPLICATION_JSON_TYPE).get(StatutesRootArray.class);
+		return client
+			.target(uriStatutes)
+			.request(MediaType.APPLICATION_JSON_TYPE)
+			.get(StatutesRootArray.class);
 	}
 
 	@Override
 	public StatutesTitlesArray getStatutesTitles() {
-		return client.target(uriStatutesTitles).request(MediaType.APPLICATION_JSON_TYPE).get(StatutesTitlesArray.class);
+		return client
+			.target(uriStatutesTitles)
+			.request(MediaType.APPLICATION_JSON_TYPE)
+			.get(StatutesTitlesArray.class);
 	}
 
 	@Override
 	public ReferencesWithReferences returnReferencesByTitle(String fullFacet) {
-		return client.target(uriReferencesByTitle).queryParam("fullFacet", fullFacet).request(MediaType.APPLICATION_JSON_TYPE).get(ReferencesWithReferences.class);
+		return client
+			.target(uriReferencesByTitle)
+			.queryParam("fullFacet", fullFacet)
+			.request(MediaType.APPLICATION_JSON_TYPE)
+			.get(ReferencesWithReferences.class);
 	}
 
 	@Override
 	public ResponseArray findStatutes(StatuteKeyArray statuteKeyArray) {
-		return client.target(uriFindStatutes).request(MediaType.APPLICATION_JSON_TYPE).get(ResponseArray.class);
+		return client
+				.target(uriFindStatutes)
+				.request(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.entity(statuteKeyArray, MediaType.APPLICATION_JSON_TYPE), ResponseArray.class);
 	}
 
 }
