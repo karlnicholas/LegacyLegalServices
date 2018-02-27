@@ -3,10 +3,8 @@ package statutes;
 import java.io.Serializable;
 import java.util.logging.Logger;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,10 +13,9 @@ import javax.xml.bind.annotation.XmlType;
  * Time: 6:50 PM
  * To change this template use File | Settings | File Templates.
  */
-@XmlType(propOrder = {
+@JsonPropertyOrder({
 		"sNumber", "eNumber"
 	})
-@XmlAccessorType(XmlAccessType.PROPERTY)
 public class StatuteRange implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -63,14 +60,14 @@ public class StatuteRange implements Serializable {
     	}
 //    	sectionString = new String(sNumber + "-" + eNumber );
     }
-	@XmlElement
+	@JsonInclude
 	public SectionNumber getsNumber() {
 		return sNumber;
 	}
 	public void setsNumber(SectionNumber sNumber) {
 		this.sNumber = sNumber;
 	}
-	@XmlElement
+	@JsonInclude
 	public SectionNumber geteNumber() {
 		return eNumber;
 	}

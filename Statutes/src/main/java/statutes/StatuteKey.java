@@ -1,39 +1,13 @@
 
 package statutes;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-
-/**
- * <p>Java class for statuteKey complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
- * <pre>
- * &lt;complexType name="statuteKey"&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;sequence&gt;
- *         &lt;element name="sectionNumber" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
- *       &lt;/sequence&gt;
- *       &lt;attribute name="title" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
- * &lt;/complexType&gt;
- * </pre>
- * 
- * 
- */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "statuteKey")
 public class StatuteKey {
 
-    @XmlAttribute(name = "sectionNumber")
+    @JsonInclude
     protected String sectionNumber;
-    @XmlAttribute(name = "title")
+    @JsonInclude
     protected String title;
 
     public StatuteKey() {}

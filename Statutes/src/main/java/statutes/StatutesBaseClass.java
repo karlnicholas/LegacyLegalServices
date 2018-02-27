@@ -1,56 +1,59 @@
 package statutes;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 
-@XmlTransient
-@XmlSeeAlso({StatutesRoot.class, StatutesNode.class, StatutesLeaf.class})
-@SuppressWarnings("serial")
-public abstract class StatutesBaseClass implements Serializable {
+@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=As.PROPERTY, property="@class" )
+@JsonSubTypes({
+      @JsonSubTypes.Type(value=StatutesRoot.class, name="statutesRoot"),
+      @JsonSubTypes.Type(value=StatutesNode.class, name="statutesNode"),
+      @JsonSubTypes.Type(value=StatutesLeaf.class, name="statutesLeaf")
+  }) 
+public interface StatutesBaseClass {
 	
-	public abstract StatutesBaseClass findReference(SectionNumber sectionNumber);
+	public StatutesBaseClass findReference(SectionNumber sectionNumber);
 
 	//	public String returnFullpath();
-	public abstract void mergeStatuteRange(StatuteRange statuteRange);
+	public void mergeStatuteRange(StatuteRange statuteRange);
 		
-	public abstract void addReference(StatutesBaseClass reference);
+	public void addReference(StatutesBaseClass reference);
 
-	public abstract void getParents(ArrayList<StatutesBaseClass> returnPath);
-	public abstract List<StatutesBaseClass> getReferences();
-	public abstract void rebuildParentReferences(StatutesBaseClass parent);
-	public abstract String getTitle(boolean showPart);
-    public abstract String getFullTitle(String separator);
+	public void getParents(ArrayList<StatutesBaseClass> returnPath);
+	public List<StatutesBaseClass> getReferences();
+	public void rebuildParentReferences(StatutesBaseClass parent);
+	public String getTitle(boolean showPart);
+    public String getFullTitle(String separator);
     
     // for typecasting
-	public abstract StatutesNode getStatutesNode();
-	public abstract StatutesLeaf getStatutesLeaf();	
-	public abstract StatutesRoot getStatutesRoot();
+	public StatutesNode getStatutesNode();
+	public StatutesLeaf getStatutesLeaf();	
+	public StatutesRoot getStatutesRoot();
 
 	// transferables
-	public abstract StatutesBaseClass getParent();
-	public abstract void setParent(StatutesBaseClass parent);
-	public abstract int getDepth();
-	public abstract void setDepth(int depth);
-	public abstract String getTitle();
-	public abstract void setTitle(String title);
-	public abstract String getShortTitle();
-	public abstract void setShortTitle(String shortTitle);
-//	public abstract String getFacetHead();
-//	public abstract void setFacetHead(String facetHead);
-	public abstract String getFullFacet();
-	public abstract void setFullFacet(String fullFacet);
-	public abstract String getPart();
-	public abstract void setPart(String part);
-	public abstract String getPartNumber();
-	public abstract void setPartNumber(String partNumber);
-	public abstract StatuteRange getStatuteRange();
-	public abstract void setStatuteRange(StatuteRange statuteRange);
+	public StatutesBaseClass getParent();
+	public void setParent(StatutesBaseClass parent);
+	public int getDepth();
+	public void setDepth(int depth);
+	public String getTitle();
+	public void setTitle(String title);
+	public String getShortTitle();
+	public void setShortTitle(String shortTitle);
+//	public String getFacetHead();
+//	public void setFacetHead(String facetHead);
+	public String getFullFacet();
+	public void setFullFacet(String fullFacet);
+	public String getPart();
+	public void setPart(String part);
+	public String getPartNumber();
+	public void setPartNumber(String partNumber);
+	public StatuteRange getStatuteRange();
+	public void setStatuteRange(StatuteRange statuteRange);
 	
 	// return true to keep iterating, false to stop iteration
-	public abstract boolean iterateLeafs( IteratorHandler handler) throws Exception;
+	public boolean iterateLeafs( IteratorHandler handler) throws Exception;
 	
 }

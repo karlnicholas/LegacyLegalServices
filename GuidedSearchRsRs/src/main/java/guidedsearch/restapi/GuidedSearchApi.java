@@ -51,7 +51,7 @@ public class GuidedSearchApi {
 			if ( viewModel.getStatutesBaseClass() != null ) {
 				viewModel.setStatutesBaseClass( createNewBaseClass(viewModel.getStatutesBaseClass()) );
 			}
-			recurseEntries(viewModel.getEntries());
+//			recurseEntries(viewModel.getEntries());
 			return viewModel;
 		} catch (IOException e) {
 			throw new RuntimeException(e);

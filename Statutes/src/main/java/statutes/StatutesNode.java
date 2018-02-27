@@ -1,24 +1,21 @@
 package statutes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.PROPERTY)
-@XmlType(propOrder = {
+@JsonTypeName("statutesNode")
+@JsonPropertyOrder({
 	"depth", "part", "partNumber", "statuteRange", 
 	"title", "fullFacet" 
 })
 @SuppressWarnings("serial")
-public class StatutesNode extends StatutesBaseClass {
+public class StatutesNode implements StatutesBaseClass, Serializable {
 	//	private static final Logger logger = Logger.getLogger(Subcode.class.getName());
 	private StatutesBaseClass parent;
     private String fullFacet;
@@ -77,7 +74,7 @@ public class StatutesNode extends StatutesBaseClass {
     	references.add(reference);
     	mergeStatuteRange(reference.getStatuteRange());
     }
-	@XmlTransient
+	@JsonIgnore
     public ArrayList<StatutesBaseClass> getReferences() {
     	return references;
     }
@@ -89,7 +86,7 @@ public class StatutesNode extends StatutesBaseClass {
 		}
 	}
 
-	@XmlTransient
+	@JsonIgnore
     public StatutesBaseClass getParent() {
     	return parent;
     }
@@ -99,7 +96,7 @@ public class StatutesNode extends StatutesBaseClass {
     }
 
 	@Override
-	@XmlAttribute(required=true)
+	@JsonInclude
     public String getPart() {
 		return part;
 	}
@@ -107,7 +104,7 @@ public class StatutesNode extends StatutesBaseClass {
 		this.part = part;
 	}
 	@Override
-	@XmlAttribute(required=true)
+	@JsonInclude
 	public String getPartNumber() {
 		return partNumber;
 	}
@@ -131,7 +128,7 @@ public class StatutesNode extends StatutesBaseClass {
         if ( title != null ) ret = ret + title;
         return parent.getFullTitle(separator)+separator+ret;
     }
-	@XmlElement
+	@JsonInclude
 	public String getTitle() {
 		return title;
 	}
@@ -144,13 +141,14 @@ public class StatutesNode extends StatutesBaseClass {
         return ret;
     }
 
-	@XmlAttribute(required=true)
+	@JsonInclude
 	public int getDepth() {
 		return depth;
 	}
 	public void setDepth(int depth) {
 		this.depth = depth;
 	}
+	@JsonIgnore
 	@Override
 	public StatutesLeaf getStatutesLeaf() {
 		return null;
@@ -161,7 +159,7 @@ public class StatutesNode extends StatutesBaseClass {
     	this.statuteRange.mergeRange(statuteRange);
     	parent.mergeStatuteRange(this.statuteRange);		
 	}
-	@XmlElement
+	@JsonInclude
 	public StatuteRange getStatuteRange() {
 		return statuteRange;
 	}
@@ -174,17 +172,17 @@ public class StatutesNode extends StatutesBaseClass {
 		parent.getParents(returnPath);
 	}
 
+	@JsonIgnore
 	@Override
-	@XmlTransient
 	public StatutesRoot getStatutesRoot() {
 		return parent.getStatutesRoot();
 	}
+	@JsonIgnore
 	@Override
-	@XmlTransient
 	public StatutesNode getStatutesNode() {
 		return this;
 	}
-	@XmlAttribute
+	@JsonInclude
 	@Override
 	public String getFullFacet() {
 		return fullFacet;
@@ -194,7 +192,7 @@ public class StatutesNode extends StatutesBaseClass {
 		this.fullFacet = fullFacet;
 	}
 
-	@XmlTransient
+	@JsonIgnore
 	@Override
 	public String getShortTitle() {
         StringBuilder ret = new StringBuilder();

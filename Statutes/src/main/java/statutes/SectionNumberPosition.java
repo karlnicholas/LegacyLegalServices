@@ -11,18 +11,16 @@ import java.io.Serializable;
  * 
  * @author Karl Nicholas
  */
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
 
-@XmlType(namespace="http://statutes", propOrder={"sectionNumber", "position"})
-@XmlAccessorType(XmlAccessType.FIELD)
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({ "sectionNumber", "position"})
 public class SectionNumberPosition implements Comparable<SectionNumberPosition>, Serializable {
 	private static final long serialVersionUID = 1L;
-	@XmlAttribute
+	@JsonInclude
 	private String sectionNumber;
-	@XmlAttribute
+	@JsonInclude
 	private int position;
 
 	public SectionNumberPosition() {}

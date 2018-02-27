@@ -73,7 +73,7 @@ public class ClientImpl implements Client {
 
 	@Override
 	public ReferencesWithReferences returnReferencesByTitle(String fullFacet) {
-		return client.target(uriReferencesByTitle).request(MediaType.APPLICATION_JSON_TYPE).get(ReferencesWithReferences.class);
+		return client.target(uriReferencesByTitle).queryParam("fullFacet", fullFacet).request(MediaType.APPLICATION_JSON_TYPE).get(ReferencesWithReferences.class);
 	}
 
 	@Override

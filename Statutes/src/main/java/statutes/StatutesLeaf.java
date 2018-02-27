@@ -1,29 +1,26 @@
 package statutes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * Leaf node of Statute Hierarchy
  * @author Karl Nicholas
  *
  */
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.PROPERTY)
-@XmlType(propOrder = {
+@JsonTypeName("statutesLeaf")
+@JsonPropertyOrder({
 	"depth", "part", "partNumber", "statuteRange", 
 	"title", "fullFacet", "sectionNumbers"
 })
 @SuppressWarnings("serial")
-public class StatutesLeaf extends StatutesBaseClass {
+public class StatutesLeaf implements StatutesBaseClass, Serializable {
 	//	private static final Logger logger = Logger.getLogger(Section.class.getName());
     private StatutesBaseClass parent;
     private String fullFacet;
@@ -84,7 +81,7 @@ public class StatutesLeaf extends StatutesBaseClass {
 		return handler.handleSection(this);
 	}
 
-	@XmlTransient
+	@JsonIgnore
 //	@XmlElement
     public StatutesBaseClass getParent() {
     	return parent;
@@ -99,7 +96,7 @@ public class StatutesLeaf extends StatutesBaseClass {
     public void addReference( StatutesBaseClass reference ) {
     }
     
-    @XmlTransient
+	@JsonIgnore
     @Override
 	public List<StatutesBaseClass> getReferences() {
 		return null;
@@ -141,7 +138,7 @@ public class StatutesLeaf extends StatutesBaseClass {
 
 	public void mergeStatuteRange(StatuteRange statuteRange) {}
 
-	@XmlElement
+	@JsonInclude
 	public ArrayList<SectionNumber> getSectionNumbers() {
 		return sectionNumbers;
 	}
@@ -154,17 +151,22 @@ public class StatutesLeaf extends StatutesBaseClass {
 		parent.getParents(returnPath);
 	}
 
+	@JsonIgnore
 	@Override
-    @XmlTransient
 	public StatutesRoot getStatutesRoot() {
 		return parent.getStatutesRoot();
 	}
+	@JsonIgnore
 	@Override
-    @XmlTransient
 	public StatutesLeaf getStatutesLeaf() {
 		return this;
 	}
-	@XmlElement
+	@JsonIgnore
+	@Override
+	public StatutesNode getStatutesNode() {
+		return null;
+	}
+	@JsonInclude
 	@Override
 	public String getTitle() {
 		return title;
@@ -182,8 +184,8 @@ public class StatutesLeaf extends StatutesBaseClass {
         if ( title != null ) ret = ret + title;
         return ret.toString();
     }
+	@JsonInclude
 	@Override
-	@XmlAttribute
 	public String getPart() {
         return part;
     }
@@ -191,8 +193,8 @@ public class StatutesLeaf extends StatutesBaseClass {
 	public void setPart(String part) {
 		this.part = part;
 	}
+	@JsonInclude
 	@Override
-	@XmlAttribute
     public String getPartNumber() {
         return partNumber;
     }
@@ -200,7 +202,7 @@ public class StatutesLeaf extends StatutesBaseClass {
 	public void setPartNumber(String partNumber) {
 		this.partNumber = partNumber;
 	}
-	@XmlElement
+	@JsonInclude
 	@Override
 	public StatuteRange getStatuteRange() {
 		return statuteRange;
@@ -209,7 +211,7 @@ public class StatutesLeaf extends StatutesBaseClass {
 	public void setStatuteRange(StatuteRange statuteRange) {
 		this.statuteRange = statuteRange;
 	}
-	@XmlAttribute(required=true)
+	@JsonInclude
 	@Override
 	public int getDepth() {
 		return depth;
@@ -218,11 +220,7 @@ public class StatutesLeaf extends StatutesBaseClass {
 	public void setDepth(int depth) {
 		this.depth = depth;
 	}
-	@Override
-	public StatutesNode getStatutesNode() {
-		return null;
-	}
-	@XmlAttribute
+	@JsonInclude
 	@Override
 	public String getFullFacet() {
 		return fullFacet;
@@ -232,7 +230,7 @@ public class StatutesLeaf extends StatutesBaseClass {
 		this.fullFacet = fullFacet;
 	}
 
-	@XmlTransient
+	@JsonIgnore
 	@Override
 	public String getShortTitle() {
         StringBuilder ret = new StringBuilder();

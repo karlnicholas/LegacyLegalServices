@@ -2,18 +2,13 @@ package statutes;
 
 import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@SuppressWarnings("serial")
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.PROPERTY)
-@XmlType(propOrder = {
+@JsonPropertyOrder({
 	"facetHead", "shortTitle", "fullTitle", "abvrTitles"
-})
+	})
+@SuppressWarnings("serial")
 public class StatutesTitles implements Serializable {
 	private String facetHead;
 	private String shortTitle;
@@ -35,28 +30,28 @@ public class StatutesTitles implements Serializable {
 		this.fullTitle = fullTitle;
 		this.abvrTitles = abvrTitles;
 	}
-	@XmlElement
+	@JsonInclude
 	public String getFacetHead() {
 		return facetHead;
 	}
 	public void setFacetHead(String facetHead) {
 		this.facetHead = facetHead;
 	}
-	@XmlElement
+	@JsonInclude
 	public String getShortTitle() {
 		return shortTitle;
 	}
 	public void setShortTitle(String shortTitle) {
 		this.shortTitle = shortTitle;
 	}
-	@XmlElement
+	@JsonInclude
 	public String getFullTitle() {
 		return fullTitle;
 	}
 	public void setFullTitle(String fullTitle) {
 		this.fullTitle = fullTitle;
 	}
-	@XmlElement
+	@JsonInclude
 	public String[] getAbvrTitles() {
 		return abvrTitles;
 	}

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import parser.ParserInterface;
 import service.Client;
@@ -61,7 +62,7 @@ public class StatutesRsService implements Client {
 	@Path("referencebytitle")
 	@GET
 	@Produces("application/json")
-	public ReferencesWithReferences returnReferencesByTitle(String fullFacet) {
+	public ReferencesWithReferences returnReferencesByTitle(@QueryParam("fullFacet") String fullFacet) {
 		return parserInterface.returnReferencesByTitle(fullFacet);
 	}
 

@@ -2,6 +2,8 @@ package statutes;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * The string representation of a statutory section.
  * Also holds the position of this section, an internally generated 
@@ -11,15 +13,10 @@ import java.io.Serializable;
  * 
  * @author Karl Nicholas
  */
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
 
-@XmlType(propOrder = {
-		"position", "sectionNumber"
-	})
-@XmlAccessorType(XmlAccessType.PROPERTY)
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({ "position", "sectionNumber" })
 public class SectionNumber implements Comparable<SectionNumber>, Serializable {
 	private static final long serialVersionUID = 1L;
 	private String sectionNumber;
@@ -35,14 +32,14 @@ public class SectionNumber implements Comparable<SectionNumber>, Serializable {
 		this.position = position;
 		this.sectionNumber = sectionNumber;
 	}
-	@XmlAttribute(required=true)
+	@JsonInclude
 	public String getSectionNumber() {
 		return sectionNumber;
 	}
 	public void setSectionNumber(String sectionNumber) {
 		this.sectionNumber = sectionNumber;
 	}
-	@XmlAttribute(required=true)
+	@JsonInclude
 	public int getPosition() {
 		return position;
 	}

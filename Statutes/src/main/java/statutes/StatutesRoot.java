@@ -1,29 +1,24 @@
 package statutes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * Root element of a Statute Hierarchy.
  */
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.PROPERTY)
-@XmlType(propOrder = {
+@JsonTypeName("statutesRoot")
+@JsonPropertyOrder({
 		"depth", "part", "partNumber", "statuteRange", 
 		"title", "shortTitle", "fullFacet"
 	})
-@XmlSeeAlso({StatutesNode.class, StatutesLeaf.class})
 @SuppressWarnings("serial")
-public class StatutesRoot extends StatutesBaseClass implements Comparable<StatutesRoot> {
+public class StatutesRoot implements StatutesBaseClass, Serializable, Comparable<StatutesRoot> {
 	//	private static final Logger logger = Logger.getLogger(Code.class.getName());
     private String title;
     private String shortTitle;
@@ -80,7 +75,7 @@ public class StatutesRoot extends StatutesBaseClass implements Comparable<Statut
 		}
 	}
 
-	@XmlTransient
+	@JsonIgnore
     public StatutesBaseClass getParent() {
     	return null;
     }
@@ -92,7 +87,7 @@ public class StatutesRoot extends StatutesBaseClass implements Comparable<Statut
 		references.add(reference);
     	mergeStatuteRange(reference.getStatuteRange());
 	}
-	@XmlTransient
+	@JsonIgnore
 	@Override
 	public ArrayList<StatutesBaseClass> getReferences() {
 		return references;
@@ -102,7 +97,7 @@ public class StatutesRoot extends StatutesBaseClass implements Comparable<Statut
     	String cString = title + ": " + references.size() + " references";
         return cString;
     }
-	@XmlElement
+	@JsonInclude
 	public String getTitle() {
 		return title;
 	}
@@ -116,7 +111,7 @@ public class StatutesRoot extends StatutesBaseClass implements Comparable<Statut
         return title;
     }
 
-	@XmlElement
+	@JsonInclude
 	@Override
     public String getShortTitle() {
         return shortTitle;
@@ -125,7 +120,7 @@ public class StatutesRoot extends StatutesBaseClass implements Comparable<Statut
 		this.shortTitle = shortTitle;
 	}
 
-	@XmlAttribute
+	@JsonInclude
 	@Override
     public String getFullFacet() {
         return fullFacet;
@@ -133,7 +128,7 @@ public class StatutesRoot extends StatutesBaseClass implements Comparable<Statut
 	public void setFullFacet(String fullFacet) {
 		this.fullFacet = fullFacet;
 	}
-	@XmlAttribute(required=true)
+	@JsonInclude
 	public int getDepth() {
 		return depth;	// always 0
 	}
@@ -141,17 +136,17 @@ public class StatutesRoot extends StatutesBaseClass implements Comparable<Statut
 		this.depth = depth;
 	}
 
-	@XmlTransient
+	@JsonIgnore
 	@Override
 	public StatutesLeaf getStatutesLeaf() {
 		return null;
 	}
-	@XmlTransient
+	@JsonIgnore
 	@Override
 	public StatutesNode getStatutesNode() {
 		return null;
 	}
-	@XmlElement
+	@JsonInclude
 	public StatuteRange getStatuteRange() {
 		return codeRange;
 	}
@@ -163,8 +158,8 @@ public class StatutesRoot extends StatutesBaseClass implements Comparable<Statut
 	}
 	public void getParents(ArrayList<StatutesBaseClass> returnPath) {}
 
+	@JsonIgnore
 	@Override
-	@XmlTransient
 	public StatutesRoot getStatutesRoot() {
 		return this;
 	}

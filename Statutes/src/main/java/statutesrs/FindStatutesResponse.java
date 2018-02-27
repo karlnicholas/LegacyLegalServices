@@ -1,31 +1,14 @@
 
-package statutes;
+package statutesrs;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
+import statutes.StatuteKey;
+import statutes.StatutesBaseClass;
 
-/**
- * <p>Java class for findStatutesResponse complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
- * <pre>
- * &lt;complexType name="findStatutesResponse"&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;sequence&gt;
- *         &lt;element name="statuteKey" type="{http://statutes}statuteKey" minOccurs="0"/&gt;
- *         &lt;element name="statutesBaseClass" type="{http://statutes}statutesBaseClass" minOccurs="0"/&gt;
- *       &lt;/sequence&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
- * &lt;/complexType&gt;
- * </pre>
- * 
- * 
- */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "findStatutesResponse", propOrder = {
     "statuteKey",
