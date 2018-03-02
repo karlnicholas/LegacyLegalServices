@@ -7,12 +7,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({
-	"facetHead", "shortTitle", "fullTitle", "abvrTitles"
+	"facetHead", "shortTitle", "commonTitle", "fullTitle", "abvrTitles"
 	})
 @SuppressWarnings("serial")
 public class StatutesTitles implements Serializable {
 	private String facetHead;
 	private String shortTitle;
+	private String commonTitle;
 	private String fullTitle;
 	private String[] abvrTitles;
 	
@@ -21,13 +22,15 @@ public class StatutesTitles implements Serializable {
 		// shallow copy
 		this.facetHead = codeTitles.facetHead;
 		this.shortTitle = codeTitles.shortTitle;
+		this.commonTitle = codeTitles.commonTitle;
 		this.fullTitle = codeTitles.fullTitle;
 		this.abvrTitles = codeTitles.abvrTitles;
 	}
 	
-	public StatutesTitles(String facetHead, String shortTitle, String fullTitle, String[] abvrTitles) {
+	public StatutesTitles(String facetHead, String shortTitle, String commonTitle, String fullTitle, String[] abvrTitles) {
 		this.facetHead = facetHead;
 		this.shortTitle = shortTitle;
+		this.commonTitle = commonTitle;
 		this.fullTitle = fullTitle;
 		this.abvrTitles = abvrTitles;
 	}
@@ -44,6 +47,13 @@ public class StatutesTitles implements Serializable {
 	}
 	public void setShortTitle(String shortTitle) {
 		this.shortTitle = shortTitle;
+	}
+	@JsonInclude
+	public String getCommonTitle() {
+		return commonTitle;
+	}
+	public void setCommonTitle(String commonTitle) {
+		this.commonTitle = commonTitle;
 	}
 	@JsonInclude
 	public String getFullTitle() {

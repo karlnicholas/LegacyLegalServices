@@ -74,7 +74,7 @@ public class User implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
 	private Date createDate;
     private Locale locale;
-	private String[] codes;
+	private String[] titles;
     
     @ManyToMany(fetch=FetchType.EAGER)
     private List<Role> roles;
@@ -283,10 +283,10 @@ public class User implements Serializable {
 	public void setLocale(Locale locale) {
 		this.locale = locale;
 	}
-	public String[] getCodes() {
-		return codes;
+	public String[] getTitles() {
+		return titles;
 	}
-	public void setCodes(String[] codes) {
-		this.codes = codes;
+	public void setTitles(String[] codes) {
+		this.titles = codes;
 	}
 }

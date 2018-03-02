@@ -47,8 +47,8 @@ public class AccountsController {
         newUser = new User();
 
     	checkboxItems = new HashMap<>();
-        if ( currentUser != null && currentUser.getCodes() != null ) {
-        	for ( String c: currentUser.getCodes()) {
+        if ( currentUser != null && currentUser.getTitles() != null ) {
+        	for ( String c: currentUser.getTitles()) {
         		checkboxItems.put(c, Boolean.TRUE);	
         	}
         }
@@ -287,7 +287,7 @@ public class AccountsController {
         	for ( Entry<String, Boolean> entry: checkboxItems.entrySet() ) {
         		if ( entry.getValue() ) listCodes.add( entry.getKey() );
         	}
-		    currentUser.setCodes(listCodes.toArray(new String[listCodes.size()]));
+		    currentUser.setTitles(listCodes.toArray(new String[listCodes.size()]));
             userService.merge(currentUser);
         } catch (Exception e) {
             facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Update unsuccessful", WebResources.getRootErrorMessage(e)));

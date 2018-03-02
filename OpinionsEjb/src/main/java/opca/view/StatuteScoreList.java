@@ -3,10 +3,10 @@ package opca.view;
 import java.util.ArrayList;
 import java.util.List;
 
-import opca.model.StatuteKeyEntity;
+import opca.model.StatuteKey;
 
 public class StatuteScoreList {
-	private StatuteKeyEntity slipOpinionStatute;
+	private StatuteKey slipOpinionStatute;
 	private int slipOpinionReferCount;
 	private List<StatuteScore> statuteScoreList;
 
@@ -14,10 +14,10 @@ public class StatuteScoreList {
 		statuteScoreList = new ArrayList<StatuteScore>();
 	}
 	
-	public StatuteKeyEntity getSlipOpinionStatute() {
+	public StatuteKey getSlipOpinionStatute() {
 		return slipOpinionStatute;
 	}
-	public void setSlipOpinionStatute(StatuteKeyEntity slipOpinionStatute) {
+	public void setSlipOpinionStatute(StatuteKey slipOpinionStatute) {
 		this.slipOpinionStatute = slipOpinionStatute;
 	}
 	public int getSlipOpinionReferCount() {

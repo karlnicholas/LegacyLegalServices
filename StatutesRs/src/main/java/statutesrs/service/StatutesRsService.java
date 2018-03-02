@@ -78,7 +78,7 @@ public class StatutesRsService implements Client {
 			StatuteKey key = itc.next();
 			// StatuteCitation citation = parserResults.findStatute(key);
 			// This is a section
-			String code = key.getCode();
+			String code = key.getTitle();
 			SectionNumber sectionNumber = new SectionNumber();
 			sectionNumber.setPosition(-1);
 			sectionNumber.setSectionNumber(key.getSectionNumber());

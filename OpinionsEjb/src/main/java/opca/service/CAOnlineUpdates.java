@@ -21,7 +21,7 @@ import opca.model.OpinionKey;
 import opca.model.OpinionSummary;
 import opca.model.SlipOpinion;
 import opca.model.StatuteCitation;
-import opca.model.StatuteKeyEntity;
+import opca.model.StatuteKey;
 import opca.parser.OpinionScraperInterface;
 import opca.parser.OpinionDocumentParser;
 import opca.parser.ScrapedOpinionDocument;
@@ -174,7 +174,7 @@ public class CAOnlineUpdates {
 					System.out.println("deleteOpinion " + deleteOpinion.getOpinionKey() + " not found in " + key);							
 				}
 			}
-			for ( StatuteKeyEntity key: deleteOpinion.getStatuteCitations() ) {
+			for ( StatuteKey key: deleteOpinion.getStatuteCitations() ) {
 				StatuteCitation opStatute = slipOpinionService.findStatute(key);
 				Map<OpinionKey, Integer> mapReferringOpinionCount = opStatute.getReferringOpinionCount();
 				OpinionKey opKey = deleteOpinion.getOpinionKey();

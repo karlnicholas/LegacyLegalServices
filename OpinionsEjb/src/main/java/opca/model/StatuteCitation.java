@@ -25,12 +25,12 @@ import javax.xml.bind.annotation.XmlElement;
  */
 
 @NamedQueries({
-	@NamedQuery(name="StatuteCitation.findByCodeSection", 
-		query="select s from StatuteCitation s where s.statuteKey.code = :code and s.statuteKey.sectionNumber = :sectionNumber"),
+	@NamedQuery(name="StatuteCitation.findByTitleSection", 
+		query="select s from StatuteCitation s where s.statuteKey.title = :title and s.statuteKey.sectionNumber = :sectionNumber"),
 	@NamedQuery(name="StatuteCitation.findStatutesForKeys", 
 		query="select s from StatuteCitation s where s.statuteKey in :keys"),
-	@NamedQuery(name="StatuteCitation.selectForCode", 
-		query="select s from StatuteCitation s where s.statuteKey.code like :code"),
+	@NamedQuery(name="StatuteCitation.selectForTitle", 
+		query="select s from StatuteCitation s where s.statuteKey.title like :title"),
 	@NamedQuery(name="StatuteCitationData.findStatutesForKeys", 
 		query="select distinct(s) from StatuteCitation s join fetch s.referringOpinionCount where s.statuteKey in :keys"),
 	@NamedQuery(name="StatuteCitationData.findStatutesForKeysWithChildren", 
@@ -39,13 +39,13 @@ import javax.xml.bind.annotation.XmlElement;
 })
 @SuppressWarnings("serial")
 @Entity
-@Table(indexes = {@Index(columnList="code,sectionNumber")}) 
+// bug @Table(indexes = {@Index(columnList="title,sectionNumber")})
 public class StatuteCitation implements Comparable<StatuteCitation>, Serializable { 
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@Embedded
-    private StatuteKeyEntity statuteKey;
+    private StatuteKey statuteKey;
     @ElementCollection
 	private Map<OpinionKey, Integer> referringOpinionCount;
     
@@ -55,21 +55,21 @@ public class StatuteCitation implements Comparable<StatuteCitation>, Serializabl
         referringOpinionCount = new TreeMap<OpinionKey, Integer>();
     }
     
-    public StatuteCitation(OpinionKey opinionKey, String code, String sectionNumber) {
+    public StatuteCitation(OpinionKey opinionKey, String title, String sectionNumber) {
     	// this is constructed without a parent and that's added later
     	// when we build the hierarchy
-//    	logger.fine("code:" + code + ":section:" + section);
-        statuteKey = new StatuteKeyEntity(code, sectionNumber);
+//    	logger.fine("title:" + title + ":section:" + section);
+        statuteKey = new StatuteKey(title, sectionNumber);
         referringOpinionCount = new TreeMap<OpinionKey, Integer>();
         referringOpinionCount.put(opinionKey, new Integer(1));
-        if ( code == null ) {
+        if ( title == null ) {
             designated = false;
         } else {
             designated = true;
         }
     }
     // dirty constructor for searching only
-    public StatuteCitation(StatuteKeyEntity key) {
+    public StatuteCitation(StatuteKey key) {
 		this.statuteKey = key;
 	}
     /**
@@ -91,11 +91,11 @@ public class StatuteCitation implements Comparable<StatuteCitation>, Serializabl
 	public Long getId() {
     	return id;
     }
-	public StatuteKeyEntity getStatuteKey() {
+	public StatuteKey getStatuteKey() {
         return statuteKey;
     }
     @XmlElement
-    public void setStatuteKey(StatuteKeyEntity statuteKey) {
+    public void setStatuteKey(StatuteKey statuteKey) {
         this.statuteKey = statuteKey;
     }
     public Map<OpinionKey, Integer> getReferringOpinionCount() {

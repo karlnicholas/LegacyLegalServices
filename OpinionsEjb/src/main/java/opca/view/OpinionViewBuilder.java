@@ -3,8 +3,8 @@ package opca.view;
 import java.util.*;
 import java.util.logging.Logger;
 
-import statutes.*;
 import service.Client;
+import statutes.StatutesBaseClass;
 import opca.model.*;
 import opca.parser.ParsedOpinionCitationSet;
 
@@ -31,9 +31,9 @@ public class OpinionViewBuilder {
     	
         // statutes ws .. getStatuteKeys list to search for 
     	statutesrs.StatuteKeyArray statuteKeyArray = new statutesrs.StatuteKeyArray();
-        for( StatuteKeyEntity statuteCitation: slipOpinion.getStatuteCitations() ) {
+        for( StatuteKey statuteCitation: slipOpinion.getStatuteCitations() ) {
             statutesrs.StatuteKey statuteKey = new statutesrs.StatuteKey();            
-            statuteKey.setCode(statuteCitation.getCode());
+            statuteKey.setTitle(statuteCitation.getTitle());
             statuteKey.setSectionNumber(statuteCitation.getSectionNumber());
             statuteKeyArray.getItem().add(statuteKey);
         }
@@ -44,17 +44,17 @@ public class OpinionViewBuilder {
         // copy results into the new list ..
         // Fill out the codeSections that these section are referencing ..
         // If possible ... 
-        Iterator<StatuteKeyEntity> itc = slipOpinion.getStatuteCitations().iterator();
+        Iterator<StatuteKey> itc = slipOpinion.getStatuteCitations().iterator();
         
         while ( itc.hasNext() ) {
-        	StatuteKeyEntity key = itc.next();
+        	StatuteKey key = itc.next();
         	StatuteCitation citation = parserResults.findStatute(key);
             // This is a section
-            if ( citation.getStatuteKey().getCode() != null ) {
+            if ( citation.getStatuteKey().getTitle() != null ) {
                 SectionView opSection = new SectionView(slipOpinion, citation);
                 // here we look for the Doc Section within the Code Section Hierachary
                 // and place it within the sectionReference we previously parsed out of the opinion
-//                opSection.setCodeReference( codesInterface.findReference(opSection.getCode(), opSection.getSectionNumber() ) );
+//                opSection.setCodeReference( codesInterface.findReference(opSection.getTitle(), opSection.getSectionNumber() ) );
                 opSection.setStatutesBaseClass(findStatutesBaseClass(responseArray, key));
 //                Section codeSection = codeList.findCodeSection(sectionReference);
                 // We don't want to keep ones that we can't map .. so .. 
@@ -88,13 +88,13 @@ public class OpinionViewBuilder {
     }
 
 
-    private StatutesBaseClass findStatutesBaseClass(statutesrs.ResponseArray responseArray, StatuteKeyEntity key) {
+    private StatutesBaseClass findStatutesBaseClass(statutesrs.ResponseArray responseArray, StatuteKey key) {
     	StatutesBaseClass statutesBaseClass = null;
-    	final String code = key.getCode();
+    	final String code = key.getTitle();
     	final String sectionNumber = key.getSectionNumber();
     	for ( statutesrs.ResponsePair responsePair: responseArray.getItem()) {
     		statutesrs.StatuteKey statuteKey = responsePair.getStatuteKey();
-    		if ( code.equals(statuteKey.getCode()) && sectionNumber.equals(statuteKey.getSectionNumber()) ) {
+    		if ( code.equals(statuteKey.getTitle()) && sectionNumber.equals(statuteKey.getSectionNumber()) ) {
     			statutesBaseClass = (StatutesBaseClass) responsePair.getStatutesBaseClass();
     			break;
     		}
@@ -185,7 +185,7 @@ public class OpinionViewBuilder {
             OpinionSection opSection = sri.next();
             // here we look for the Doc Section within the Code Section Hierachary
             // and place it within the sectionReference we previously parsed out of the opinion
-            String codeTitle = opSection.getCode();
+            String codeTitle = opSection.getTitle();
             if ( codeTitle != null ) {
                 opSection.setCodeReference( codesInterface.findReference(codeTitle, opSection.getSectionNumber() ) );
             }
@@ -214,7 +214,7 @@ public class OpinionViewBuilder {
 		List<OpinionScoreList> opinionScores = new ArrayList<OpinionScoreList>();
 		// need a collection StatutueCitations.
         for ( OpinionSummary opinionCited: opinionSummaries ) {
-        	for ( StatuteKeyEntity statuteKey: opinionCited.getStatuteCitations() ) {
+        	for ( StatuteKey statuteKey: opinionCited.getStatuteCitations() ) {
 				StatuteCitation statuteCitation = parserResults.findStatute(statuteKey);
         		if ( statuteCitation != null) {
         			// search scoreMatrix for opinionStatuteCitation
@@ -283,7 +283,7 @@ public class OpinionViewBuilder {
 		// make a sorted list of statuteKey's that opinionView refers to
 		
         for ( OpinionSummary opinionCited: opinionSummaries) {
-        	for ( StatuteKeyEntity statuteKey: opinionCited.getStatuteCitations() ) {
+        	for ( StatuteKey statuteKey: opinionCited.getStatuteCitations() ) {
 				StatuteCitation statuteCitation = parserResults.findStatute(statuteKey);
         		if ( statuteCitation != null ) {
         			// search scoreMatrix for opinionStatuteCitation
@@ -320,7 +320,7 @@ public class OpinionViewBuilder {
     			score = score + (statuteScore.getOpinionReferCount() * statuteScoreList.getSlipOpinionReferCount() );
     		}
     		for ( StatuteView statuteView: statutes ) {
-    			if ( statuteView.getSectionView().getCode().equals(statuteScoreList.getSlipOpinionStatute().getCode()) 
+    			if ( statuteView.getSectionView().getTitle().equals(statuteScoreList.getSlipOpinionStatute().getTitle()) 
     					&& statuteView.getSectionView().getSectionNumber().equals(statuteScoreList.getSlipOpinionStatute().getSectionNumber()) )
 				{
     				statuteView.setScore(score);

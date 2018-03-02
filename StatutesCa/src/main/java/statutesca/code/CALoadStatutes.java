@@ -58,6 +58,7 @@ public class CALoadStatutes implements ParserInterface {
 		StatutesTitles statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("bpc");
 		statutesTitles.setShortTitle("Bus. & Professions");
+		statutesTitles.setCommonTitle("business and professions code");
 		statutesTitles.setFullTitle("california business and professions code");
 		statutesTitles.setAbvrTitles( new String[]{"bus. & prof. code"} ); 		
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -65,6 +66,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("ccp");
 		statutesTitles.setShortTitle("Civ. Procedure");
+		statutesTitles.setCommonTitle("code of civil procedure");
 		statutesTitles.setFullTitle("california code of civil procedure");
 		statutesTitles.setAbvrTitles( new String[]{"code civ. proc.", "code of civ. pro."} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -72,6 +74,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("civ");
 		statutesTitles.setShortTitle("Civil");
+		statutesTitles.setCommonTitle("civil code");
 		statutesTitles.setFullTitle("california civil code");
 		statutesTitles.setAbvrTitles( new String[]{"civ. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -79,6 +82,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("com");
 		statutesTitles.setShortTitle("Commercial");
+		statutesTitles.setCommonTitle("commercial code");
 		statutesTitles.setFullTitle("california commercial code");
 		statutesTitles.setAbvrTitles( new String[]{"com. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -86,6 +90,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("corp");
 		statutesTitles.setShortTitle("Corporations");
+		statutesTitles.setCommonTitle("corporations code");
 		statutesTitles.setFullTitle("california corporations code");
 		statutesTitles.setAbvrTitles( new String[]{"corp. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -93,6 +98,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("edc");
 		statutesTitles.setShortTitle("Education");
+		statutesTitles.setCommonTitle("education code");
 		statutesTitles.setFullTitle("california education code");
 		statutesTitles.setAbvrTitles( new String[]{"ed. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -100,6 +106,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("elec");
 		statutesTitles.setShortTitle("Elections");
+		statutesTitles.setCommonTitle("elections code");
 		statutesTitles.setFullTitle("california elections code");
 		statutesTitles.setAbvrTitles( new String[]{"elec. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -107,6 +114,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("evid");
 		statutesTitles.setShortTitle("Evidence");
+		statutesTitles.setCommonTitle("evidence code");
 		statutesTitles.setFullTitle("california evidence code");
 		statutesTitles.setAbvrTitles( new String[]{"evid. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -114,6 +122,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("fac");
 		statutesTitles.setShortTitle("Agriculture");
+		statutesTitles.setCommonTitle("food and agricultural code");
 		statutesTitles.setFullTitle("california food and agricultural code");
 		statutesTitles.setAbvrTitles( new String[]{"food & agr. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -121,6 +130,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("fam");
 		statutesTitles.setShortTitle("Family");
+		statutesTitles.setCommonTitle("family code");
 		statutesTitles.setFullTitle("california family code");
 		statutesTitles.setAbvrTitles( new String[]{"fam. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -128,6 +138,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("fgc");
 		statutesTitles.setShortTitle("Fish & Game");
+		statutesTitles.setCommonTitle("fish and game code");
 		statutesTitles.setFullTitle("california fish and game code");
 		statutesTitles.setAbvrTitles( new String[]{"fish & game code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -135,6 +146,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("fin");
 		statutesTitles.setShortTitle("Financial");
+		statutesTitles.setCommonTitle("financial code");
 		statutesTitles.setFullTitle("california financial code");
 		statutesTitles.setAbvrTitles( new String[]{"fin. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -142,6 +154,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("gov");
 		statutesTitles.setShortTitle("Government");
+		statutesTitles.setCommonTitle("government code");
 		statutesTitles.setFullTitle("california government code");
 		statutesTitles.setAbvrTitles( new String[]{"gov. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -149,6 +162,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("hnc");
 		statutesTitles.setShortTitle("Harbors & Nav.");
+		statutesTitles.setCommonTitle("harbors and navigation code");
 		statutesTitles.setFullTitle("california harbors and navigation code");
 		statutesTitles.setAbvrTitles( new String[]{"har. & nav. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -156,6 +170,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("hsc");
 		statutesTitles.setShortTitle("Health");
+		statutesTitles.setCommonTitle("health and safety code");
 		statutesTitles.setFullTitle("california health and safety code");
 		statutesTitles.setAbvrTitles( new String[]{"health & saf. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -163,6 +178,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("ins");
 		statutesTitles.setShortTitle("Insurance");
+		statutesTitles.setCommonTitle("insurance code");
 		statutesTitles.setFullTitle("california insurance code");
 		statutesTitles.setAbvrTitles( new String[]{"ins. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -170,6 +186,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("lab");
 		statutesTitles.setShortTitle("Labor");
+		statutesTitles.setCommonTitle("labor code");
 		statutesTitles.setFullTitle("california labor code");
 		statutesTitles.setAbvrTitles( new String[]{"lab. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -177,13 +194,15 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("mvc");
 		statutesTitles.setShortTitle("Military & Vets.");
+		statutesTitles.setCommonTitle("military and veterans code");
 		statutesTitles.setFullTitle("california military and veterans code");
-		statutesTitles.setAbvrTitles( new String[]{"mil. and vet. code"} );
+		statutesTitles.setAbvrTitles( new String[]{"mil. and vet. code", "mil. & vet. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
 		
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("pcc");
 		statutesTitles.setShortTitle("Public Contact");
+		statutesTitles.setCommonTitle("public contract code");
 		statutesTitles.setFullTitle("california public contract code");
 		statutesTitles.setAbvrTitles( new String[]{"pub. con. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -191,6 +210,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("pen");
 		statutesTitles.setShortTitle("Penal");
+		statutesTitles.setCommonTitle("penal code");
 		statutesTitles.setFullTitle("california penal code");
 		statutesTitles.setAbvrTitles( new String[]{"pen. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -198,6 +218,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("prc");
 		statutesTitles.setShortTitle("Public Resources");
+		statutesTitles.setCommonTitle("public resources code");
 		statutesTitles.setFullTitle("california public resources code");
 		statutesTitles.setAbvrTitles( new String[]{"pub. res. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -205,6 +226,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("prob");
 		statutesTitles.setShortTitle("Probate");
+		statutesTitles.setCommonTitle("probate code");
 		statutesTitles.setFullTitle("california probate code");
 		statutesTitles.setAbvrTitles( new String[]{"prob. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -212,6 +234,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("puc");
 		statutesTitles.setShortTitle("Public Utilities");
+		statutesTitles.setCommonTitle("public utilities code");
 		statutesTitles.setFullTitle("california public utilities code");
 		statutesTitles.setAbvrTitles( new String[]{"pub. util. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -219,6 +242,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("rtc");
 		statutesTitles.setShortTitle("Revenue & Tax.");
+		statutesTitles.setCommonTitle("revenue and taxation code");
 		statutesTitles.setFullTitle("california revenue and taxation code");
 		statutesTitles.setAbvrTitles( new String[]{"rev. & tax. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -226,6 +250,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("shc");
 		statutesTitles.setShortTitle("Highways");
+		statutesTitles.setCommonTitle("streets and highways code");
 		statutesTitles.setFullTitle("california streets and highways code");
 		statutesTitles.setAbvrTitles( new String[]{"st. & high. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -233,6 +258,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("uic");
 		statutesTitles.setShortTitle("Unemployment Ins.");
+		statutesTitles.setCommonTitle("unemployment insurance code");
 		statutesTitles.setFullTitle("california unemployment insurance code");
 		statutesTitles.setAbvrTitles( new String[]{"unemp. ins. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -240,6 +266,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("veh");
 		statutesTitles.setShortTitle("Vehicle");
+		statutesTitles.setCommonTitle("vehicle code");
 		statutesTitles.setFullTitle("california vehicle code");
 		statutesTitles.setAbvrTitles( new String[]{"veh. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -247,6 +274,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("wat");
 		statutesTitles.setShortTitle("Water");
+		statutesTitles.setCommonTitle("water code");
 		statutesTitles.setFullTitle("california water code");
 		statutesTitles.setAbvrTitles( new String[]{"wat. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
@@ -254,6 +282,7 @@ public class CALoadStatutes implements ParserInterface {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setFacetHead("wic");
 		statutesTitles.setShortTitle("Welfare & Inst.");
+		statutesTitles.setCommonTitle("welfare and institutions code");
 		statutesTitles.setFullTitle("california welfare and institutions code");
 		statutesTitles.setAbvrTitles( new String[]{"welf. & inst. code"} );
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );

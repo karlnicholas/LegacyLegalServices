@@ -12,7 +12,7 @@ import opca.model.OpinionKey;
 import opca.model.OpinionSummary;
 import opca.model.SlipOpinion;
 import opca.model.StatuteCitation;
-import opca.model.StatuteKeyEntity;
+import opca.model.StatuteKey;
 
 @Stateless
 public class SlipOpinionService {
@@ -32,7 +32,7 @@ public class SlipOpinionService {
     @PostConstruct
     public void initNamedQueries() {
     	opinionSummaryFindByOpinionKey = em.createNamedQuery("OpinionSummary.findByOpinionKey", OpinionSummary.class);
-    	statuteCitationFindByCodeSection = em.createNamedQuery("StatuteCitation.findByCodeSection", StatuteCitation.class);
+    	statuteCitationFindByTitleSection = em.createNamedQuery("StatuteCitation.findByTitleSection", StatuteCitation.class);
     }
 */    
 	// used to lookup OpinionSummaries
@@ -46,10 +46,10 @@ public class SlipOpinionService {
 	}
 
 	// StatuteCitation
-	public StatuteCitation statuteExists(StatuteKeyEntity primaryKey) {
-		TypedQuery<StatuteCitation> statuteCitationFindByCodeSection = em.createNamedQuery("StatuteCitation.findByCodeSection", StatuteCitation.class);
+	public StatuteCitation statuteExists(StatuteKey primaryKey) {
+		TypedQuery<StatuteCitation> statuteCitationFindByTitleSection = em.createNamedQuery("StatuteCitation.findByTitleSection", StatuteCitation.class);
 		List<StatuteCitation> list = 
-				statuteCitationFindByCodeSection.setParameter("code", primaryKey.getCode())
+				statuteCitationFindByTitleSection.setParameter("title", primaryKey.getTitle())
 				.setParameter("sectionNumber", primaryKey.getSectionNumber())
 				.getResultList();
 		if ( list.size() > 0 ) return list.get(0);
@@ -77,7 +77,7 @@ public class SlipOpinionService {
 		return em.merge(opinion);
 	}
 
-	public List<StatuteCitation> getStatutes(Collection<StatuteKeyEntity> statuteKeys) {
+	public List<StatuteCitation> getStatutes(Collection<StatuteKey> statuteKeys) {
 		if ( statuteKeys.size() == 0 ) return new ArrayList<StatuteCitation>();
 		return em.createNamedQuery("StatuteCitation.findStatutesForKeys", StatuteCitation.class).setParameter("keys", statuteKeys).getResultList();
 	}
@@ -96,8 +96,8 @@ public class SlipOpinionService {
 		return em.createNamedQuery("SlipOpinion.listOpinionDates", Date.class).getResultList();
 	}
 
-	public StatuteCitation findStatute(StatuteKeyEntity key) {
-		return em.createNamedQuery("StatuteCitation.findByCodeSection", StatuteCitation.class).setParameter("code", key.getCode()).setParameter("sectionNumber", key.getSectionNumber()).getSingleResult();
+	public StatuteCitation findStatute(StatuteKey key) {
+		return em.createNamedQuery("StatuteCitation.findByTitleSection", StatuteCitation.class).setParameter("title", key.getTitle()).setParameter("sectionNumber", key.getSectionNumber()).getSingleResult();
 	}
 
 	public OpinionSummary findOpinion(OpinionKey key) {
@@ -128,12 +128,12 @@ public class SlipOpinionService {
 			this.slipOpinionRepository = slipOpinionRepository;
 		}
 		@Override
-		public StatuteCitation statuteExists(StatuteKeyEntity statuteKey) {			
+		public StatuteCitation statuteExists(StatuteKey statuteKey) {			
 			return slipOpinionRepository.statuteExists(statuteKey);
 		}
 
 		@Override
-		public List<StatuteCitation> getStatutes(Collection<StatuteKeyEntity> statuteKeys) {
+		public List<StatuteCitation> getStatutes(Collection<StatuteKey> statuteKeys) {
 			return slipOpinionRepository.getStatutes(statuteKeys);
 		}
 
@@ -186,11 +186,11 @@ public class SlipOpinionService {
     public Long getCount() {
         return em.createQuery("select count(*) from StatuteCitation", Long.class).getSingleResult();
     }
-    public List<StatuteCitation> selectForCode(String code) {
-    	return em.createNamedQuery("StatuteCitation.selectForCode", StatuteCitation.class).setParameter("code", '%'+code+'%').getResultList();
+    public List<StatuteCitation> selectForTitle(String title) {
+    	return em.createNamedQuery("StatuteCitation.selectForTitle", StatuteCitation.class).setParameter("title", '%'+title+'%').getResultList();
     }
-    public StatuteCitation testStatuteByCodeSection(String code, String sectionNumber) {
-    	List<StatuteCitation> list = em.createNamedQuery("StatuteCitation.findByCodeSection", StatuteCitation.class).setParameter("code", code).setParameter("sectionNumber", sectionNumber).getResultList();
+    public StatuteCitation testStatuteByTitleSection(String title, String sectionNumber) {
+    	List<StatuteCitation> list = em.createNamedQuery("StatuteCitation.findByTitleSection", StatuteCitation.class).setParameter("title", title).setParameter("sectionNumber", sectionNumber).getResultList();
     	if ( list.size() > 0 ) return list.get(0);
     	else return null;
     }

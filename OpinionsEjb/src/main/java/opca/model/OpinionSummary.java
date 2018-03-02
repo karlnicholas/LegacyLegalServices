@@ -99,9 +99,9 @@ public class OpinionSummary extends OpinionBase {
         // do statutes .. 
         if ( opinionSummary.getStatuteCitations() != null ) {
         	if ( statuteCitations == null ) 
-        		statuteCitations = new TreeSet<StatuteKeyEntity>();
-	        for ( StatuteKeyEntity addStatutekey: opinionSummary.getStatuteCitations() ) {
-            	if ( addStatutekey.getCode() == null ) 
+        		statuteCitations = new TreeSet<StatuteKey>();
+	        for ( StatuteKey addStatutekey: opinionSummary.getStatuteCitations() ) {
+            	if ( addStatutekey.getTitle() == null ) 
             		continue;
 	            if ( !statuteCitations.contains(addStatutekey) ) {
 	            	statuteCitations.add(addStatutekey);
@@ -135,9 +135,9 @@ public class OpinionSummary extends OpinionBase {
         // do statutes .. 
         if ( opinionSummary.getStatuteCitations() != null ) {
         	if ( statuteCitations == null ) 
-        		statuteCitations = new TreeSet<StatuteKeyEntity>();
-	        for ( StatuteKeyEntity addStatutekey: opinionSummary.getStatuteCitations() ) {
-            	if ( addStatutekey.getCode() == null ) 
+        		statuteCitations = new TreeSet<StatuteKey>();
+	        for ( StatuteKey addStatutekey: opinionSummary.getStatuteCitations() ) {
+            	if ( addStatutekey.getTitle() == null ) 
             		continue;
 	            if ( !statuteCitations.contains(addStatutekey) ) {
 	            	statuteCitations.add(addStatutekey);

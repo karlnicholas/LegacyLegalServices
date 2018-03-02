@@ -19,7 +19,7 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	@Column(columnDefinition="TEXT")
 	protected String court;
     @ElementCollection
-    protected Set<StatuteKeyEntity> statuteCitations;
+    protected Set<StatuteKey> statuteCitations;
     @ElementCollection
     protected Set<OpinionKey> opinionCitations;
     @ElementCollection
@@ -82,10 +82,10 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	public void setCourt(String court) {
 		this.court = court;
 	}
-	public Set<StatuteKeyEntity> getStatuteCitations() {
+	public Set<StatuteKey> getStatuteCitations() {
 		return statuteCitations;
 	}
-	public void setStatuteCitations(Set<StatuteKeyEntity> statuteCitations) {
+	public void setStatuteCitations(Set<StatuteKey> statuteCitations) {
 		this.statuteCitations = statuteCitations;
 	}
 	public Set<OpinionKey> getOpinionCitations() {

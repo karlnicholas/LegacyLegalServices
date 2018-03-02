@@ -10,7 +10,7 @@ public class SectionView {
     private final Section section;
     
     public SectionView(opca.view.SectionView section) {
-    	this.code = section.getCode();
+    	this.code = section.getTitle();
     	this.sectionNumber = section.getSectionNumber();
     	this.refCount = section.getRefCount();
     	this.section = new Section(section.getStatutesBaseClass().getStatutesLeaf());

@@ -13,7 +13,7 @@ import opca.model.OpinionKey;
 import opca.model.OpinionSummary;
 import opca.model.SlipOpinion;
 import opca.model.StatuteCitation;
-import opca.model.StatuteKeyEntity;
+import opca.model.StatuteKey;
 import opca.parser.ParsedOpinionCitationSet;
 import opca.view.*;
 import service.Client;
@@ -186,16 +186,16 @@ public class OpinionViewCache {
 	}
 
 	// StatuteCitation
-	public StatuteCitation statuteExists(StatuteKeyEntity key) {
+	public StatuteCitation statuteExists(StatuteKey key) {
 		List<StatuteCitation> list = em.createNamedQuery("StatuteCitation.findByCodeSection", StatuteCitation.class)
-			.setParameter("code", key.getCode())
+			.setParameter("code", key.getTitle())
 			.setParameter("sectionNumber", key.getSectionNumber())
 			.getResultList();
 		if ( list.size() > 0 ) return list.get(0);
 		return null;
 	}
 
-	public List<StatuteCitation> getStatutes(Collection<StatuteKeyEntity> statuteKeys) {
+	public List<StatuteCitation> getStatutes(Collection<StatuteKey> statuteKeys) {
 		if ( statuteKeys.size() == 0 ) return new ArrayList<StatuteCitation>();
 		return em.createNamedQuery("StatuteCitationData.findStatutesForKeys", StatuteCitation.class).setParameter("keys", statuteKeys).getResultList();
 	}
@@ -225,8 +225,8 @@ public class OpinionViewCache {
 		if ( list.size() > 0 ) return list.get(0);
 		return null;
 	}
-	public StatuteCitation findStatute(StatuteKeyEntity key) {
-		return (StatuteCitation) em.createNamedQuery("StatuteCitation.findByCodeSection").setParameter("code", key.getCode()).setParameter("sectionNumber", key.getSectionNumber()).getResultList().get(0);
+	public StatuteCitation findStatute(StatuteKey key) {
+		return (StatuteCitation) em.createNamedQuery("StatuteCitation.findByCodeSection").setParameter("code", key.getTitle()).setParameter("sectionNumber", key.getSectionNumber()).getResultList().get(0);
 	}
 	public OpinionSummary findOpinion(OpinionKey key) {
 		return (OpinionSummary) em.createNamedQuery("OpinionSummary.findByOpinionKey").setParameter("key", key).getResultList().get(0);
@@ -241,12 +241,12 @@ public class OpinionViewCache {
 			this.slipOpinionRepository = slipOpinionRepository;
 		}
 		@Override
-		public StatuteCitation statuteExists(StatuteKeyEntity statuteKey) {			
+		public StatuteCitation statuteExists(StatuteKey statuteKey) {			
 			return slipOpinionRepository.statuteExists(statuteKey);
 		}
 
 		@Override
-		public List<StatuteCitation> getStatutes(Collection<StatuteKeyEntity> statuteKeys) {
+		public List<StatuteCitation> getStatutes(Collection<StatuteKey> statuteKeys) {
 			return slipOpinionRepository.getStatutes(statuteKeys);
 		}
 

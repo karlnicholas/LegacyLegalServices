@@ -7,7 +7,7 @@ import opca.model.OpinionBase;
 import opca.model.OpinionKey;
 import opca.model.OpinionSummary;
 import opca.model.StatuteCitation;
-import opca.model.StatuteKeyEntity;
+import opca.model.StatuteKey;
 
 public class ParsedOpinionCitationSet {
     private TreeSet<OpinionSummary> opinionTable = new TreeSet<OpinionSummary>();
@@ -66,7 +66,7 @@ public class ParsedOpinionCitationSet {
 
 
  */
-    public StatuteCitation findStatute(StatuteKeyEntity key) {
+    public StatuteCitation findStatute(StatuteKey key) {
 		return findStatute(new StatuteCitation(key));
 	}
 

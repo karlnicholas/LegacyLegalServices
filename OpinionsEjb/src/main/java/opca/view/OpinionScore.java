@@ -1,16 +1,16 @@
 package opca.view;
 
-import opca.model.StatuteKeyEntity;
+import opca.model.StatuteKey;
 
 public class OpinionScore {
-	private StatuteKeyEntity slipOpinionStatute;
+	private StatuteKey slipOpinionStatute;
 	private int slipOpinionReferCount;
 	private int opinionReferCount;
 	
-	public StatuteKeyEntity getSlipOpinionStatute() {
+	public StatuteKey getSlipOpinionStatute() {
 		return slipOpinionStatute;
 	}
-	public void setSlipOpinionStatute(StatuteKeyEntity slipOpinionStatute) {
+	public void setSlipOpinionStatute(StatuteKey slipOpinionStatute) {
 		this.slipOpinionStatute = slipOpinionStatute;
 	}
 	public int getSlipOpinionReferCount() {

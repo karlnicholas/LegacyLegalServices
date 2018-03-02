@@ -74,10 +74,10 @@ public class OpinionDocumentParser {
         // What are we going to do with the citations?
         // need to use the StatuteFacade to add the to the external list
         List<StatuteCitation> statutes = new ArrayList<StatuteCitation>(codeCitationTree);
-        Set<StatuteKeyEntity> statuteKeys = new TreeSet<StatuteKeyEntity>();
+        Set<StatuteKey> statuteKeys = new TreeSet<StatuteKey>();
         for ( StatuteCitation statuteCitation: statutes) {
         	// forever get rid of statutes without a referenced code.
-        	if( statuteCitation.getStatuteKey().getCode() != null ) {
+        	if( statuteCitation.getStatuteKey().getTitle() != null ) {
     			parserResults.putStatuteCitation(statuteCitation);
             	statuteKeys.add(statuteCitation.getStatuteKey());
         	}
@@ -107,7 +107,7 @@ public class OpinionDocumentParser {
     	
 
         for ( int fi=0; fi < parserDocument.getFootnotes().size(); fi++ ) {
-            String footnote = parserDocument.getFootnotes().get(fi);
+            String footnote = parserDocument.getFootnotes().get(fi).toLowerCase();
             defCodeSection = searchDefCodeSection( footnote, "all further" );
             if ( defCodeSection == null ) {
                 defCodeSection = searchDefCodeSection( footnote, "statutory references" );
@@ -122,7 +122,7 @@ public class OpinionDocumentParser {
         // but looks like some more case testing should be done.
         if ( defCodeSection == null ) {
             for ( int pi=0; pi < parserDocument.getParagraphs().size(); pi++ ) {
-                String paragraph = parserDocument.getParagraphs().get(pi);
+                String paragraph = parserDocument.getParagraphs().get(pi).toLowerCase();
                 defCodeSection = searchDefCodeSection( paragraph, "all further" );
                 if ( defCodeSection == null ) {
                     defCodeSection = searchDefCodeSection( paragraph, "all statutory references" );
@@ -153,10 +153,10 @@ public class OpinionDocumentParser {
     private void checkDesignatedCodeSections(TreeSet<StatuteCitation> citations, OpinionKey opinionKey) {
     	StatuteCitation[] acitations = citations.toArray(new StatuteCitation[0]);
         for ( int idx = 0; idx < acitations.length; ++idx ) {
-            if ( acitations[idx].getStatuteKey().getCode() != null ) {
+            if ( acitations[idx].getStatuteKey().getTitle() != null ) {
                 for ( int idx2 = idx+1; idx2 < acitations.length; ++idx2 ) {
                     // if the code is not the same
-                    if ( ! (acitations[idx].getStatuteKey().getCode().equals( acitations[idx2].getStatuteKey().getCode() )) ) {
+                    if ( ! (acitations[idx].getStatuteKey().getTitle().equals( acitations[idx2].getStatuteKey().getTitle() )) ) {
                         // but the section number is .. then
                         if ( acitations[idx].getStatuteKey().getSectionNumber().equals( acitations[idx2].getStatuteKey().getSectionNumber() ) ) {
                             // if there is a difference in designated flags ..
@@ -188,7 +188,7 @@ public class OpinionDocumentParser {
     private void collapseCodeSections(TreeSet<StatuteCitation> citations, OpinionKey opinionKey ) {
     	StatuteCitation[] acitations = citations.toArray(new StatuteCitation[0]);
         for ( int idx = 0; idx < acitations.length; ++idx ) {
-            if ( acitations[idx].getStatuteKey().getCode() == null ) {
+            if ( acitations[idx].getStatuteKey().getTitle() == null ) {
                 for ( int idx2 = idx+1; idx2 < acitations.length; ++idx2 ) {
                     if ( acitations[idx].getStatuteKey().getSectionNumber().equals( acitations[idx2].getStatuteKey().getSectionNumber() ) ) {
                     	acitations[idx2].setRefCount(opinionKey, acitations[idx2].getRefCount(opinionKey) + acitations[idx].getRefCount(opinionKey));
@@ -233,16 +233,16 @@ public class OpinionDocumentParser {
             // Lets just try the hard code approach for now ..
 
             for ( int idx = 0, len = codeTitles.length; idx < len; ++idx ) {
-                if ( sentence.contains(codeTitles[idx].getFullTitle())) {
+                if ( sentence.contains(codeTitles[idx].getCommonTitle())) {
                     // found a hit ... lets see if it is in a good place ...
 //                    System.out.println("Found: " + searchString + ":" + StaticCodePatterns.patterns[idx] + ":" + sentence);
-                    return new String(codeTitles[idx].getFullTitle());
+                    return new String(codeTitles[idx].getFacetHead());
                 }
                 for ( int aIdx = 0, aLen = codeTitles[idx].getAbvrTitles().length; aIdx < aLen; ++aIdx ) {
 	                if ( sentence.contains(codeTitles[idx].getAbvrTitle(aIdx))) {
 	                    // found a hit ... lets see if it is in a good place ...
 	//                    System.out.println("Found: " + searchString + ":" + StaticCodePatterns.patterns[idx] + ":" + sentence);
-	                    return new String(codeTitles[idx].getFullTitle());
+	                    return new String(codeTitles[idx].getFacetHead());
 	                }
                 }
             }
@@ -552,14 +552,14 @@ public class OpinionDocumentParser {
         }
         if ( Character.isDigit(sectionNumber.charAt(0)) ) {
             // time to look for a Code names ...
-            String code = findCode(sentence, offset, term, sectionNumber);
+            String title = findTitle(sentence, offset, term, sectionNumber);
 
             //        System.out.println("\n===============:" + code + ":" + sectionNumber + ":" + hitSpot + "\n" + hit);
 
             // make a DocCodeSection out of these things ..
-            citation = new StatuteCitation(opinionSummaryKey, code, new String( sectionNumber) );
-            if ( code == null && defaultCodeSection != null ) {
-            	citation.getStatuteKey().setCode( defaultCodeSection );
+            citation = new StatuteCitation(opinionSummaryKey, title, new String( sectionNumber) );
+            if ( title == null && defaultCodeSection != null ) {
+            	citation.getStatuteKey().setTitle( defaultCodeSection );
             }
         }
         return citation;
@@ -587,14 +587,14 @@ public class OpinionDocumentParser {
         }
         if ( Character.isDigit(sectionNumber.charAt(0)) ) {
             // time to look for a Code names ...
-            String code = findCode(sentence, offset, term, sectionNumber);
+            String code = findTitle(sentence, offset, term, sectionNumber);
 
             //        System.out.println("\n===============:" + code + ":" + sectionNumber + ":" + hitSpot + "\n" + hit);
 
             // make a DocCodeSection out of these things ..
             citation = new StatuteCitation(opinionSummaryKey, code, new String( sectionNumber) );
             if ( code == null && defaultCodeSection != null ) {
-            	citation.getStatuteKey().setCode( defaultCodeSection );
+            	citation.getStatuteKey().setTitle( defaultCodeSection );
             }
 
         }
@@ -700,7 +700,7 @@ public class OpinionDocumentParser {
     }
 
     // StaticCodePatterns.patterns, StaticCodePatterns.patterns
-    private String findCode(String sentence, int offset, String term, String sectionNumber) {
+    private String findTitle(String sentence, int offset, String term, String sectionNumber) {
 
         // Lets just try the hard code approach for now ..
         for ( int idx = 0, len = codeTitles.length; idx < len; ++idx ) {
@@ -723,11 +723,11 @@ public class OpinionDocumentParser {
                 int close = offset - (iCode + lenCode);
                 // close = 1 makes a perfect hit ..
 //                System.out.println(close + ":" + nHit);
-                if ( 0 < close && close < 20 ) return codeTitles[idx].getFullTitle();
+                if ( 0 < close && close < 20 ) return codeTitles[idx].getFacetHead();
                 // what about "of the"
                 close = iCode - (offset + term.length() + sectionNumber.length() + 7 );
 //                System.out.println(close);
-                if ( 0 < close && close < 20 ) return codeTitles[idx].getFullTitle();
+                if ( 0 < close && close < 20 ) return codeTitles[idx].getFacetHead();
 
 //                return new String(patterns[idx]);
             } else {
@@ -753,11 +753,13 @@ public class OpinionDocumentParser {
                         int close = offset - (iCode + lenCode);
                         // close = 1 makes a perfect hit ..
 //                        System.out.println(close + ":" + nHit);
-                        if ( 0 < close && close < 20 ) return codeTitles[idx].getFullTitle();
+// if ( 0 < close && close < 20 ) return codeTitles[idx].getFullTitle();
+                        if ( 0 < close && close < 20 ) return codeTitles[idx].getFacetHead();
                         // what about "of the"
                         close = iCode - (offset + term.length() + sectionNumber.length() + 7 );
 //                        System.out.println(close);
-                        if ( 0 < close && close < 20 ) return codeTitles[idx].getFullTitle();
+// if ( 0 < close && close < 20 ) return codeTitles[idx].getFullTitle();
+                        if ( 0 < close && close < 20 ) return codeTitles[idx].getFacetHead();
                     }
                 }
             	

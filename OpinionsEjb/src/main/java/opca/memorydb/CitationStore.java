@@ -9,7 +9,7 @@ import opca.model.OpinionBase;
 import opca.model.OpinionKey;
 import opca.model.OpinionSummary;
 import opca.model.StatuteCitation;
-import opca.model.StatuteKeyEntity;
+import opca.model.StatuteKey;
 import opca.parser.ParsedOpinionCitationSet;
 
 public class CitationStore implements PersistenceLookup {
@@ -51,12 +51,12 @@ public class CitationStore implements PersistenceLookup {
         return statutesForCode;
     }
 */
-    public StatuteCitation findStatuteByCodeSection(String code, String sectionNumber) {
-        return statuteExists(new StatuteKeyEntity(code, sectionNumber));
+    public StatuteCitation findStatuteByCodeSection(String title, String sectionNumber) {
+        return statuteExists(new StatuteKey(title, sectionNumber));
     }
 
     @Override
-	public StatuteCitation statuteExists(StatuteKeyEntity key) {
+	public StatuteCitation statuteExists(StatuteKey key) {
 		return findStatuteByStatute(new StatuteCitation(key));
 	}
 
@@ -88,9 +88,9 @@ public class CitationStore implements PersistenceLookup {
 	}
 
 	@Override
-	public List<StatuteCitation> getStatutes(Collection<StatuteKeyEntity> statuteKeys) {
+	public List<StatuteCitation> getStatutes(Collection<StatuteKey> statuteKeys) {
 		List<StatuteCitation> list = new ArrayList<StatuteCitation>();
-		for (StatuteKeyEntity key: statuteKeys ) {
+		for (StatuteKey key: statuteKeys ) {
 			StatuteCitation statute = statuteExists(key);
 			if ( statute != null ) list.add(statute);
 		}
