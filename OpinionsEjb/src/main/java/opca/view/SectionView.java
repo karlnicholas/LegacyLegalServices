@@ -36,7 +36,7 @@ public class SectionView implements ViewReference {
 //    	logger.fine("code:" + code + ":section:" + section);
         this.title = citation.getStatuteKey().getTitle();
         sectionNumber = new SectionNumber(-1, citation.getStatuteKey().getSectionNumber());
-        refCount = citation.getRefCount(opinionBase.getOpinionKey());
+        refCount = citation.getOpinionStatuteReference(opinionBase).getCountReferences();
         designated = citation.getDesignated();
     }
 

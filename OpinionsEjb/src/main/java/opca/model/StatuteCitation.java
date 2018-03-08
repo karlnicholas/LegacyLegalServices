@@ -1,20 +1,15 @@
 package opca.model;
 
 import java.io.Serializable;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlElement;
+import javax.persistence.OneToMany;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,43 +20,40 @@ import javax.xml.bind.annotation.XmlElement;
  */
 
 @NamedQueries({
-	@NamedQuery(name="StatuteCitation.findByTitleSection", 
-		query="select s from StatuteCitation s where s.statuteKey.title = :title and s.statuteKey.sectionNumber = :sectionNumber"),
+	@NamedQuery(name="StatuteCitation.findByStatuteKey", 
+		query="select s from StatuteCitation s where s.statuteKey = :statuteKey"),
 	@NamedQuery(name="StatuteCitation.findStatutesForKeys", 
 		query="select s from StatuteCitation s where s.statuteKey in :keys"),
 	@NamedQuery(name="StatuteCitation.selectForTitle", 
 		query="select s from StatuteCitation s where s.statuteKey.title like :title"),
 	@NamedQuery(name="StatuteCitationData.findStatutesForKeys", 
-		query="select distinct(s) from StatuteCitation s join fetch s.referringOpinionCount where s.statuteKey in :keys"),
+		query="select distinct(s) from StatuteCitation s join fetch s.referringOpinions ro where ro.statuteCitation.statuteKey in :keys"),
 	@NamedQuery(name="StatuteCitationData.findStatutesForKeysWithChildren", 
-		query="select distinct(s) from StatuteCitation s join fetch s.referringOpinionCount where s.statuteKey in :keys"),
+		query="select distinct(s) from StatuteCitation s join fetch s.referringOpinions ro where ro.statuteCitation.statuteKey in :keys"),
 		
 })
 @SuppressWarnings("serial")
 @Entity
 // bug @Table(indexes = {@Index(columnList="title,sectionNumber")})
 public class StatuteCitation implements Comparable<StatuteCitation>, Serializable { 
-	@Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	@Embedded
+	@EmbeddedId
     private StatuteKey statuteKey;
-    @ElementCollection
-	private Map<OpinionKey, Integer> referringOpinionCount;
+	@OneToMany(mappedBy="statuteCitation")
+	private Set<OpinionStatuteCitation> referringOpinions;
     
     private boolean designated;
     
     public StatuteCitation() {
-        referringOpinionCount = new TreeMap<OpinionKey, Integer>();
+        referringOpinions = new TreeSet<OpinionStatuteCitation>();
     }
     
-    public StatuteCitation(OpinionKey opinionKey, String title, String sectionNumber) {
+    public StatuteCitation(OpinionBase opinionBase, String title, String sectionNumber) {
     	// this is constructed without a parent and that's added later
     	// when we build the hierarchy
 //    	logger.fine("title:" + title + ":section:" + section);
         statuteKey = new StatuteKey(title, sectionNumber);
-        referringOpinionCount = new TreeMap<OpinionKey, Integer>();
-        referringOpinionCount.put(opinionKey, new Integer(1));
+        referringOpinions = new TreeSet<OpinionStatuteCitation>();
+        referringOpinions.add(new OpinionStatuteCitation(this, opinionBase, 1));
         if ( title == null ) {
             designated = false;
         } else {
@@ -80,48 +72,66 @@ public class StatuteCitation implements Comparable<StatuteCitation>, Serializabl
      * @param statute
      */
 	public void mergeStatuteCitationFromSlipLoad(StatuteCitation statute) {
-		for ( OpinionKey key: statute.getReferringOpinionCount().keySet() ) {
-			if ( !referringOpinionCount.containsKey(key) ) {
-				referringOpinionCount.put(key, statute.getReferringOpinionCount().get(key));
-			} else {
-				throw new RuntimeException("Cannot merge: key exists " + key);
-			}
-		}
+    	Iterator<OpinionStatuteCitation> refOpIt = statute.referringOpinions.iterator();
+    	while (refOpIt.hasNext()) {
+    		OpinionStatuteCitation opinionStatuteReference = refOpIt.next();
+    		// test for error condition
+    		if ( referringOpinions.contains(opinionStatuteReference) ) {
+				throw new RuntimeException("Cannot merge: key exists " + opinionStatuteReference);
+    		}
+    		referringOpinions.add(opinionStatuteReference);
+    	}
 	}
-	public Long getId() {
-    	return id;
-    }
+	public void addOpinionCitation(OpinionStatuteCitation opinionStatuteCitation) {
+	}
 	public StatuteKey getStatuteKey() {
         return statuteKey;
     }
-    @XmlElement
     public void setStatuteKey(StatuteKey statuteKey) {
         this.statuteKey = statuteKey;
     }
-    public Map<OpinionKey, Integer> getReferringOpinionCount() {
-        return referringOpinionCount;
+    public Set<OpinionStatuteCitation> getReferringOpinions() {
+        return referringOpinions;
     }
-    @XmlElement
-    public void setReferringOpinionCount(Map<OpinionKey, Integer> mapReferringOpinionCount) {
-        this.referringOpinionCount = mapReferringOpinionCount;
+    public void setReferringOpinions(Set<OpinionStatuteCitation> referringOpinions) {
+        this.referringOpinions = referringOpinions;
     }
-    public void setRefCount(OpinionKey opinionCitationKey, int count) {
-        referringOpinionCount.put(opinionCitationKey, count);
+    public void setRefCount(OpinionBase opinionBase, int count) {
+    	referringOpinions.add(new OpinionStatuteCitation( this, opinionBase, count) );
     }
-    public int getRefCount(OpinionKey opinionCitationKey) {
-        Integer cInt = referringOpinionCount.get(opinionCitationKey);
-        if ( cInt == null ) return 0;
-        return cInt.intValue();
+    public OpinionStatuteCitation getOpinionStatuteReference(OpinionBase opinionBase) {
+    	Iterator<OpinionStatuteCitation> refOpIt = referringOpinions.iterator();
+    	while (refOpIt.hasNext()) {
+    		OpinionStatuteCitation opinionStatuteReference = refOpIt.next();
+    		if ( opinionStatuteReference.getOpinionBase().equals(opinionBase) ) {
+    			return opinionStatuteReference;
+    		}
+    	}
+    	return null;
     }
-    public void incRefCount(OpinionKey opinionCitationKey, int amount) {
-        Integer cInt = referringOpinionCount.get(opinionCitationKey);
-        if ( cInt == null ) cInt = new Integer(0);
-        referringOpinionCount.put(opinionCitationKey, cInt + amount);
+    public void incRefCount(OpinionBase opinionBase, int amount) {
+    	OpinionStatuteCitation cInt = getOpinionStatuteReference(opinionBase);
+        if ( cInt == null ) {
+        	referringOpinions.add(new OpinionStatuteCitation( this, opinionBase, amount));
+        } else {
+        	referringOpinions.remove(cInt);
+        	referringOpinions.add(new OpinionStatuteCitation( this, opinionBase, cInt.getCountReferences() + amount));
+        }
     }
+	public void removeOpinionStatuteReference(SlipOpinion deleteOpinion) {
+    	Iterator<OpinionStatuteCitation> refOpIt = referringOpinions.iterator();
+    	while (refOpIt.hasNext()) {
+    		OpinionStatuteCitation opinionStatuteReference = refOpIt.next();
+    		if ( opinionStatuteReference.getOpinionBase().equals(deleteOpinion) ) {
+    			refOpIt.remove();
+    			return;
+    		}
+    	}
+	}
+
     public boolean getDesignated() {
         return designated;
     }    
-    @XmlElement
     public void setDesignated( boolean designated ) {
         this.designated = designated;
     }
@@ -149,4 +159,6 @@ public class StatuteCitation implements Comparable<StatuteCitation>, Serializabl
         return statuteKey.toString();
     }
 
+
 }
+

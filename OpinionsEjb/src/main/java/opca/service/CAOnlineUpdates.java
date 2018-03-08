@@ -130,7 +130,7 @@ public class CAOnlineUpdates {
 
 		// all memory
 		for (ScrapedOpinionDocument scrapedOpinionDocument: scrapedOpinionDocuments ) {
-			ParsedOpinionCitationSet parsedOpinionResults = opinionDocumentParser.parseOpinionDocument(scrapedOpinionDocument, scrapedOpinionDocument.getOpinionBase(), scrapedOpinionDocument.getOpinionBase().getOpinionKey() );
+			ParsedOpinionCitationSet parsedOpinionResults = opinionDocumentParser.parseOpinionDocument(scrapedOpinionDocument, scrapedOpinionDocument.getOpinionBase(), citationStore );
 			// maybe someday deal with court issued modifications
     		opinionDocumentParser.parseSlipOpinionDetails((SlipOpinion) scrapedOpinionDocument.getOpinionBase(), scrapedOpinionDocument);
     		OpinionBase opinionBase = scrapedOpinionDocument.getOpinionBase();
@@ -165,21 +165,22 @@ public class CAOnlineUpdates {
 		for (SlipOpinion deleteOpinion: currentCopy) {
 			// re-attach entity so lazy associations will be loaded
 			deleteOpinion = em.merge(deleteOpinion);
-			for( OpinionKey key: deleteOpinion.getOpinionCitations() ) {
-				OpinionSummary opSummary = slipOpinionService.findOpinion(key);
-				Set<OpinionKey> referringOpinions = opSummary.getReferringOpinions();
-				if ( referringOpinions.remove(deleteOpinion.getOpinionKey()) ) {
+			for( OpinionBase opinionBase: deleteOpinion.getOpinionCitations() ) {
+				OpinionBase opSummary = slipOpinionService.findOpinion(opinionBase);
+				Set<OpinionBase> referringOpinions = opSummary.getReferringOpinions();
+				if ( referringOpinions.remove(deleteOpinion) ) {
 					em.merge(opSummary);
 				} else {
-					System.out.println("deleteOpinion " + deleteOpinion.getOpinionKey() + " not found in " + key);							
+					System.out.println("deleteOpinion " + deleteOpinion + " not found in " + opSummary);							
 				}
 			}
-			for ( StatuteKey key: deleteOpinion.getStatuteCitations() ) {
-				StatuteCitation opStatute = slipOpinionService.findStatute(key);
-				Map<OpinionKey, Integer> mapReferringOpinionCount = opStatute.getReferringOpinionCount();
-				OpinionKey opKey = deleteOpinion.getOpinionKey();
-				if ( !mapReferringOpinionCount.containsKey(opKey) ) throw new RuntimeException("Cannot delete referring opinion: " + opKey + " " + opStatute);
-				mapReferringOpinionCount.remove(opKey);
+			for ( StatuteCitation statuteCitation: deleteOpinion.getOnlyStatuteCitations() ) {
+				StatuteCitation opStatute = slipOpinionService.findStatute(statuteCitation);
+				// int count = opStatute.getOpinionStatuteReference(deleteOpinion).getCountReferences();
+				opStatute.removeOpinionStatuteReference(deleteOpinion);
+//				OpinionKey opKey = deleteOpinion.getOpinionKey();
+//				if ( count <= 0 ) throw new RuntimeException("Cannot delete referring opinion: " + deleteOpinion + " " + opStatute);
+//				mapReferringOpinionCount.remove(deleteOpinion);
 				em.merge(opStatute);
 			}
 //					if (!deleteOpinion.getReferringOpinions().isEmpty()) throw new RuntimeException("referringOpinions not empty: " + deleteOpinion );
@@ -191,15 +192,15 @@ public class CAOnlineUpdates {
 	private void processesOpinions(CitationStore citationStore) {
 		OpinionSummary[] opArray = new OpinionSummary[citationStore.getAllOpinions().size()];    	
 		citationStore.getAllOpinions().toArray(opArray);
-		List<OpinionSummary> opinions = Arrays.asList(opArray);
-		List<OpinionSummary> persistOpinions = new ArrayList<OpinionSummary>();
-		List<OpinionSummary> mergeOpinions = new ArrayList<OpinionSummary>();
+		List<OpinionBase> opinions = Arrays.asList(opArray);
+		List<OpinionBase> persistOpinions = new ArrayList<>();
+		List<OpinionBase> mergeOpinions = new ArrayList<>();
 
     	Date startTime = new Date();
-    	for(OpinionSummary opinion: opinions ) {
+    	for(OpinionBase opinion: opinions ) {
 //This causes a NPE !?!?	    		
 //    		opinion.checkCountReferringOpinions();
-    		OpinionSummary existingOpinion = slipOpinionService.opinionExists(opinion.getOpinionKey());
+    		OpinionBase existingOpinion = slipOpinionService.opinionExists(opinion);
 			if ( existingOpinion == null ) {
 				persistOpinions.add(opinion);
 			} else {
@@ -225,13 +226,13 @@ public class CAOnlineUpdates {
 		logger.info("Divided "+opinions.size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
 
 		startTime = new Date();
-    	for(OpinionSummary opinion: persistOpinions ) {
+    	for(OpinionBase opinion: persistOpinions ) {
 			em.persist(opinion);
     	}
 		logger.info("Persisted "+opinions.size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
 
 		startTime = new Date();
-    	for(OpinionSummary opinion: mergeOpinions ) {
+    	for(OpinionBase opinion: mergeOpinions ) {
 			em.merge(opinion);
     	}
 		logger.info("Merged "+opinions.size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
@@ -247,7 +248,7 @@ public class CAOnlineUpdates {
     	int count = statutes.size();
     	Date startTime = new Date();
     	for(StatuteCitation statute: statutes ) {
-    		StatuteCitation existingStatute = slipOpinionService.statuteExists(statute.getStatuteKey());
+    		StatuteCitation existingStatute = slipOpinionService.statuteExists(statute);
 			if ( existingStatute == null ) {
 				persistStatutes.add(statute);
 			} else {

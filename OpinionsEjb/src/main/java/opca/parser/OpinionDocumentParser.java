@@ -4,6 +4,7 @@ import java.text.BreakIterator;
 import java.util.*;
 
 import statutes.StatutesTitles;
+import opca.memorydb.CitationStore;
 import opca.model.*;
 
 /**
@@ -45,7 +46,7 @@ public class OpinionDocumentParser {
     public ParsedOpinionCitationSet parseOpinionDocument(
     	ScrapedOpinionDocument parserDocument, 
 		OpinionBase opinionBase, 
-		OpinionKey opinionBaseKey
+		CitationStore citationStore
 	) {
     	String defaultCodeSection;
     	ParsedOpinionCitationSet parserResults = new ParsedOpinionCitationSet();
@@ -59,7 +60,7 @@ public class OpinionDocumentParser {
         TreeSet<OpinionSummary> caseCitationTree = new TreeSet<OpinionSummary>();
 
         parseDoc( 
-    		opinionBaseKey, 
+    		opinionBase, 
         	parserDocument, 
     		codeCitationTree, 
     		caseCitationTree, 
@@ -67,31 +68,49 @@ public class OpinionDocumentParser {
     	);
         // Check to see if two elements have the same section number but one was affirmative and the other was default
         // If so, then combine them and
-        checkDesignatedCodeSections( codeCitationTree, opinionBaseKey);
+        checkDesignatedCodeSections( codeCitationTree, opinionBase);
 
-        collapseCodeSections( codeCitationTree, opinionBaseKey);
+        collapseCodeSections( codeCitationTree, opinionBase);
         
         // What are we going to do with the citations?
         // need to use the StatuteFacade to add the to the external list
         List<StatuteCitation> statutes = new ArrayList<StatuteCitation>(codeCitationTree);
-        Set<StatuteKey> statuteKeys = new TreeSet<StatuteKey>();
+        Set<StatuteCitation> goodStatutes = new TreeSet<StatuteCitation>();
         for ( StatuteCitation statuteCitation: statutes) {
         	// forever get rid of statutes without a referenced code.
         	if( statuteCitation.getStatuteKey().getTitle() != null ) {
+/*        		
+if ( !statuteCitation.toString().equals("pen:245") ) {
+	continue;
+}
+*/
+                StatuteCitation existingCitation = citationStore.findStatuteByStatute(statuteCitation);
+                if ( existingCitation != null ) {
+                	existingCitation.incRefCount(opinionBase, 1);
+                	statuteCitation = existingCitation;
+                }
+
     			parserResults.putStatuteCitation(statuteCitation);
-            	statuteKeys.add(statuteCitation.getStatuteKey());
+    			goodStatutes.add(statuteCitation);
         	}
         }
-        opinionBase.setStatuteCitations(statuteKeys);
+        
+        opinionBase.addStatuteCitations(goodStatutes);
         //
         List<OpinionSummary> opinions = new ArrayList<OpinionSummary>(caseCitationTree);
-        Set<OpinionKey> opinionKeys = new TreeSet<OpinionKey>();
-        for ( OpinionSummary opinionReferredTo: opinions) {
+        Set<OpinionBase> goodOpinions = new TreeSet<OpinionBase>();
+        for ( OpinionBase opinionReferredTo: opinions) {
         	// forever get rid of statutes without a referenced code.
+        	OpinionBase existingOpinion = citationStore.findOpinionByOpinion(opinionReferredTo);
+            if ( existingOpinion != null ) {
+            	existingOpinion.addReferringOpinion(opinionBase);
+            	opinionReferredTo = existingOpinion;
+            }
+        	
 			parserResults.putOpinionSummary(opinionReferredTo);
-        	opinionKeys.add(opinionReferredTo.getOpinionKey());
+			goodOpinions.add(opinionReferredTo);
         }
-        opinionBase.setOpinionCitations(opinionKeys);
+        opinionBase.setOpinionCitations(goodOpinions);
 //        parserResults.putOpinionSummary(opinionBase);
         
         // Sort according to sectionReferenced
@@ -150,7 +169,7 @@ public class OpinionDocumentParser {
     within the same sentence that the
     actual code section number was found.
      */
-    private void checkDesignatedCodeSections(TreeSet<StatuteCitation> citations, OpinionKey opinionKey) {
+    private void checkDesignatedCodeSections(TreeSet<StatuteCitation> citations, OpinionBase opinionBase) {
     	StatuteCitation[] acitations = citations.toArray(new StatuteCitation[0]);
         for ( int idx = 0; idx < acitations.length; ++idx ) {
             if ( acitations[idx].getStatuteKey().getTitle() != null ) {
@@ -163,13 +182,19 @@ public class OpinionDocumentParser {
                             if ( acitations[idx].getDesignated() != acitations[idx2].getDesignated() ) {
                                 // then compress them ..
                                 if ( acitations[idx].getDesignated() == true ) {
-                                	acitations[idx].setRefCount(opinionKey, acitations[idx].getRefCount(opinionKey) + acitations[idx2].getRefCount(opinionKey));
-                                	acitations[idx2].setRefCount(opinionKey, 0);
+                                	acitations[idx].setRefCount(opinionBase, 
+                            			acitations[idx].getOpinionStatuteReference(opinionBase).getCountReferences() 
+                            			+ acitations[idx2].getOpinionStatuteReference(opinionBase).getCountReferences()
+                        			);
+                                	acitations[idx2].setRefCount(opinionBase, 0);
                                     // or .. and .. get rid of it ..
                                 	citations.remove(acitations[idx2]);
                                 } else {
-                                	acitations[idx2].setRefCount(opinionKey, acitations[idx2].getRefCount(opinionKey) + acitations[idx].getRefCount(opinionKey));
-                                	acitations[idx].setRefCount(opinionKey, 0);
+                                	acitations[idx2].setRefCount(opinionBase, 
+                            			acitations[idx2].getOpinionStatuteReference(opinionBase).getCountReferences() 
+                            			+ acitations[idx].getOpinionStatuteReference(opinionBase).getCountReferences()
+                        			);
+                                	acitations[idx].setRefCount(opinionBase, 0);
                                     // or .. and .. get rid of it ..
                                 	citations.remove(acitations[idx]);
                                 }
@@ -185,14 +210,17 @@ public class OpinionDocumentParser {
     take out the dcs's that have null code parts and merge them into dcs's that have the same SectionNumbers
     merging means to add the two refCounts;
      */
-    private void collapseCodeSections(TreeSet<StatuteCitation> citations, OpinionKey opinionKey ) {
+    private void collapseCodeSections(TreeSet<StatuteCitation> citations, OpinionBase opinionBase) {
     	StatuteCitation[] acitations = citations.toArray(new StatuteCitation[0]);
         for ( int idx = 0; idx < acitations.length; ++idx ) {
             if ( acitations[idx].getStatuteKey().getTitle() == null ) {
                 for ( int idx2 = idx+1; idx2 < acitations.length; ++idx2 ) {
                     if ( acitations[idx].getStatuteKey().getSectionNumber().equals( acitations[idx2].getStatuteKey().getSectionNumber() ) ) {
-                    	acitations[idx2].setRefCount(opinionKey, acitations[idx2].getRefCount(opinionKey) + acitations[idx].getRefCount(opinionKey));
-                    	acitations[idx].setRefCount(opinionKey, 0);
+                    	acitations[idx2].setRefCount(opinionBase, 
+                			acitations[idx2].getOpinionStatuteReference(opinionBase).getCountReferences() 
+                			+ acitations[idx].getOpinionStatuteReference(opinionBase).getCountReferences()
+            			);
+                    	acitations[idx].setRefCount(opinionBase, 0);
                         // or
                     	citations.remove(acitations[idx]);
                         break;
@@ -251,7 +279,7 @@ public class OpinionDocumentParser {
     }
 
     private void parseDoc(
-    	OpinionKey opinionSummaryKey, 
+    	OpinionBase opinionBase, 
     	ScrapedOpinionDocument parserDocument,
 		TreeSet<StatuteCitation> codeCitationTree, 
         TreeSet<OpinionSummary> caseCitationTree, 
@@ -277,7 +305,7 @@ public class OpinionDocumentParser {
 //	sentWrit.println("   " + sentence);
 //	sentWrit.flush();
 //}
-	            parseSentence(opinionSummaryKey, sentence, codeCitationTree, caseCitationTree, defaultCodeSection);
+	            parseSentence(opinionBase, sentence, codeCitationTree, caseCitationTree, defaultCodeSection);
 	        }
         }
 //        System.out.println( disposition + ":" + summaryParagraph );
@@ -286,7 +314,7 @@ public class OpinionDocumentParser {
     }
     
     private void parseSentence(
-    	OpinionKey opinionSummaryKey, 
+    	OpinionBase opinionBase, 
 		String sentence, 
 		TreeSet<StatuteCitation> codeCitationTree, 
 		TreeSet<OpinionSummary> caseCitationTree, 
@@ -300,10 +328,10 @@ public class OpinionDocumentParser {
         Iterator<Integer> oi = offsets.iterator();
         while ( oi.hasNext() ) {
             int offset = oi.next().intValue();
-            StatuteCitation citation = parseCitation(opinionSummaryKey, offset, terms[0], sentence, defaultCodeSection);
+            StatuteCitation citation = parseCitation(opinionBase, offset, terms[0], sentence, defaultCodeSection);
             if ( citation != null ) {
 //if ( sentWrit != null ) sentWrit.println("---"+citation);
-            	addCodeCitationToTree(citation, codeCitationTree, opinionSummaryKey);
+            	addCodeCitationToTree(citation, codeCitationTree, opinionBase);
             }
         }
 
@@ -312,10 +340,10 @@ public class OpinionDocumentParser {
         oi = offsets.iterator();
         while ( oi.hasNext() ) {
             int offset = oi.next().intValue();
-            StatuteCitation citation = parseSSymbol(opinionSummaryKey, offset, terms[1], sentence, defaultCodeSection);
+            StatuteCitation citation = parseSSymbol(opinionBase, offset, terms[1], sentence, defaultCodeSection);
             if ( citation != null ) {
 //if ( sentWrit != null ) sentWrit.println("---"+citation);
-            	addCodeCitationToTree(citation, codeCitationTree, opinionSummaryKey);
+            	addCodeCitationToTree(citation, codeCitationTree, opinionBase);
             }
         }
 
@@ -324,10 +352,10 @@ public class OpinionDocumentParser {
         oi = offsets.iterator();
         while ( oi.hasNext() ) {
             int offset = oi.next().intValue();
-            StatuteCitation citation = parseCitation(opinionSummaryKey, offset, terms[2], sentence, defaultCodeSection);
+            StatuteCitation citation = parseCitation(opinionBase, offset, terms[2], sentence, defaultCodeSection);
             if ( citation != null ) {
 //if ( sentWrit != null ) sentWrit.println("---"+citation);
-            	addCodeCitationToTree(citation, codeCitationTree, opinionSummaryKey);
+            	addCodeCitationToTree(citation, codeCitationTree, opinionBase);
             }
         }
 
@@ -336,10 +364,10 @@ public class OpinionDocumentParser {
         oi = offsets.iterator();
         while ( oi.hasNext() ) {
             int offset = oi.next().intValue();
-            StatuteCitation citation = parseSSymbol(opinionSummaryKey, offset, terms[3], sentence, defaultCodeSection);
+            StatuteCitation citation = parseSSymbol(opinionBase, offset, terms[3], sentence, defaultCodeSection);
             if ( citation != null ) {
 //if ( sentWrit != null ) sentWrit.println("---"+citation);
-            	addCodeCitationToTree(citation, codeCitationTree, opinionSummaryKey);
+            	addCodeCitationToTree(citation, codeCitationTree, opinionBase);
             }
         }
 
@@ -347,7 +375,7 @@ public class OpinionDocumentParser {
 		oi = offsets.iterator();
 		while ( oi.hasNext() ) {
 			int offset = oi.next().intValue();
-			OpinionSummary opinion = parseCase(opinionSummaryKey, offset, sentence);
+			OpinionSummary opinion = parseCase(opinionBase, offset, sentence);
 			if ( opinion != null ) {
 //if ( sentWrit != null ) sentWrit.println("---"+citation);
 				// add a referring opinionSummaryKey
@@ -469,18 +497,19 @@ public class OpinionDocumentParser {
     private void addCodeCitationToTree( 
     		StatuteCitation statuteCitation, 
     		TreeSet<StatuteCitation> codeCitationTree, 
-    		OpinionKey opinionKey 
+    		OpinionBase opinionBase 
 	) {
+    	
         if ( codeCitationTree.contains(statuteCitation) ) {
         	StatuteCitation statuteCitationFloor = codeCitationTree.floor(statuteCitation);
-        	statuteCitationFloor.incRefCount(opinionKey, 1);
+        	statuteCitationFloor.incRefCount(opinionBase, 1);
         } else {
         	codeCitationTree.add(statuteCitation);
         }
     }
 
     // section or sections <-- plural
-    private OpinionSummary parseCase(OpinionKey opinionSummaryKey, int offset, String sentence ) {
+    private OpinionSummary parseCase(OpinionBase opinionBase, int offset, String sentence ) {
     	int startPos = offset;
     	int endPos = offset+5;
     	int sentEnd = sentence.length();
@@ -523,7 +552,7 @@ public class OpinionDocumentParser {
     	if ( parts[2].length() == 0 ) return null;
     	for ( String appellateSet: OpinionKey.appellateSets ) {
         	if ( parts[1].equalsIgnoreCase(appellateSet) ) {
-        		return new OpinionSummary(opinionSummaryKey, parts[0], parts[1], parts[2]);
+        		return new OpinionSummary(opinionBase, parts[0], parts[1], parts[2]);
         	}
     	}
         return null;
@@ -531,7 +560,7 @@ public class OpinionDocumentParser {
 
     // section or sections <-- plural
     private StatuteCitation parseCitation(
-    	OpinionKey opinionSummaryKey, 
+    	OpinionBase opinionBase, 
 		int offset, 
 		String term, 
 		String sentence, 
@@ -557,7 +586,7 @@ public class OpinionDocumentParser {
             //        System.out.println("\n===============:" + code + ":" + sectionNumber + ":" + hitSpot + "\n" + hit);
 
             // make a DocCodeSection out of these things ..
-            citation = new StatuteCitation(opinionSummaryKey, title, new String( sectionNumber) );
+            citation = new StatuteCitation(opinionBase, title, new String( sectionNumber) );
             if ( title == null && defaultCodeSection != null ) {
             	citation.getStatuteKey().setTitle( defaultCodeSection );
             }
@@ -566,7 +595,7 @@ public class OpinionDocumentParser {
     }
 
     private StatuteCitation parseSSymbol(
-    	OpinionKey opinionSummaryKey, 
+    	OpinionBase opinionBase, 
     	int offset, 
     	String term, 
     	String sentence, 
@@ -592,11 +621,10 @@ public class OpinionDocumentParser {
             //        System.out.println("\n===============:" + code + ":" + sectionNumber + ":" + hitSpot + "\n" + hit);
 
             // make a DocCodeSection out of these things ..
-            citation = new StatuteCitation(opinionSummaryKey, code, new String( sectionNumber) );
+            citation = new StatuteCitation(opinionBase, code, new String( sectionNumber) );
             if ( code == null && defaultCodeSection != null ) {
             	citation.getStatuteKey().setTitle( defaultCodeSection );
             }
-
         }
         return citation;
     }
@@ -753,12 +781,10 @@ public class OpinionDocumentParser {
                         int close = offset - (iCode + lenCode);
                         // close = 1 makes a perfect hit ..
 //                        System.out.println(close + ":" + nHit);
-// if ( 0 < close && close < 20 ) return codeTitles[idx].getFullTitle();
                         if ( 0 < close && close < 20 ) return codeTitles[idx].getFacetHead();
                         // what about "of the"
                         close = iCode - (offset + term.length() + sectionNumber.length() + 7 );
 //                        System.out.println(close);
-// if ( 0 < close && close < 20 ) return codeTitles[idx].getFullTitle();
                         if ( 0 < close && close < 20 ) return codeTitles[idx].getFacetHead();
                     }
                 }

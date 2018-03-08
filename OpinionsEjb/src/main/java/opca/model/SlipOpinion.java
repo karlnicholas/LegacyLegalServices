@@ -26,7 +26,6 @@ import javax.xml.bind.annotation.XmlElement;
 })
 @SuppressWarnings("serial")
 @Entity
-@Table(indexes = {@Index(columnList="volume,vset,page")}) 
 public class SlipOpinion extends OpinionBase {
 	private static Pattern fileNameSplit = Pattern.compile("(?<=\\d)(?=\\D)|(?=\\d)(?<=\\D)");
 //	@Id @GeneratedValue(strategy=GenerationType.IDENTITY) private Long id;

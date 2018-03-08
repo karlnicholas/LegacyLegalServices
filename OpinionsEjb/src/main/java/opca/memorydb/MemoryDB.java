@@ -4,21 +4,21 @@ import java.util.TreeSet;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import opca.model.OpinionSummary;
+import opca.model.OpinionBase;
 import opca.model.StatuteCitation;
 
 import javax.xml.bind.annotation.XmlElement;
 
 @XmlRootElement
 public class MemoryDB {
-    private TreeSet<OpinionSummary> opinionTable = new TreeSet<OpinionSummary>();
+    private TreeSet<OpinionBase> opinionTable = new TreeSet<OpinionBase>();
     private TreeSet<StatuteCitation> statuteTable = new TreeSet<StatuteCitation>();
     
-    public TreeSet<OpinionSummary> getOpinionTable() {
+    public TreeSet<OpinionBase> getOpinionTable() {
         return opinionTable;
     }
     @XmlElement
-    public void setOpinionTable(TreeSet<OpinionSummary> opinionTable) {
+    public void setOpinionTable(TreeSet<OpinionBase> opinionTable) {
         this.opinionTable = opinionTable;
     }
     public TreeSet<StatuteCitation> getStatuteTable() {

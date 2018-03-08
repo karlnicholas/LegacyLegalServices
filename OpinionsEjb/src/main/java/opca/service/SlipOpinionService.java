@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import opca.memorydb.PersistenceLookup;
+import opca.model.OpinionBase;
 import opca.model.OpinionKey;
 import opca.model.OpinionSummary;
 import opca.model.SlipOpinion;
@@ -36,9 +37,9 @@ public class SlipOpinionService {
     }
 */    
 	// used to lookup OpinionSummaries
-	public OpinionSummary opinionExists(OpinionKey primaryKey) {
+	public OpinionSummary opinionExists(OpinionBase opinionBase) {
 		TypedQuery<OpinionSummary> opinionSummaryFindByOpinionKey = em.createNamedQuery("OpinionSummary.findByOpinionKey", OpinionSummary.class);
-		List<OpinionSummary> list = opinionSummaryFindByOpinionKey.setParameter("key", primaryKey).getResultList();
+		List<OpinionSummary> list = opinionSummaryFindByOpinionKey.setParameter("key", opinionBase.getOpinionKey()).getResultList();
 		if ( list.size() > 0 ) return list.get(0);
 		return null;
 
@@ -46,11 +47,10 @@ public class SlipOpinionService {
 	}
 
 	// StatuteCitation
-	public StatuteCitation statuteExists(StatuteKey primaryKey) {
-		TypedQuery<StatuteCitation> statuteCitationFindByTitleSection = em.createNamedQuery("StatuteCitation.findByTitleSection", StatuteCitation.class);
+	public StatuteCitation statuteExists(StatuteCitation statuteCitation) {
+		TypedQuery<StatuteCitation> statuteCitationFindByTitleSection = em.createNamedQuery("StatuteCitation.findByStatuteKey", StatuteCitation.class);
 		List<StatuteCitation> list = 
-				statuteCitationFindByTitleSection.setParameter("title", primaryKey.getTitle())
-				.setParameter("sectionNumber", primaryKey.getSectionNumber())
+				statuteCitationFindByTitleSection.setParameter("statuteKey", statuteCitation.getStatuteKey())
 				.getResultList();
 		if ( list.size() > 0 ) return list.get(0);
 		return null;
@@ -64,9 +64,13 @@ public class SlipOpinionService {
 		return null;
 	}
 
-	public List<OpinionSummary> getOpinions(Collection<OpinionKey> opinionKeys) {
-		if ( opinionKeys.size() == 0 ) return new ArrayList<OpinionSummary>(); 
-		return em.createNamedQuery("OpinionSummary.findOpinionsForKeys", OpinionSummary.class).setParameter("keys", opinionKeys).getResultList();
+	public List<OpinionBase> getOpinions(Collection<OpinionBase> opinions) {
+		if ( opinions.size() == 0 ) return new ArrayList<OpinionBase>();
+		List<OpinionKey> keys = new ArrayList<>();
+		for ( OpinionBase opinion: opinions) {
+			keys.add(opinion.getOpinionKey());
+		}
+		return em.createNamedQuery("OpinionSummary.findOpinionsForKeys", OpinionBase.class).setParameter("keys", keys).getResultList();
 	}
 
 	public void persistOpinion(OpinionSummary opinion) {
@@ -77,9 +81,13 @@ public class SlipOpinionService {
 		return em.merge(opinion);
 	}
 
-	public List<StatuteCitation> getStatutes(Collection<StatuteKey> statuteKeys) {
-		if ( statuteKeys.size() == 0 ) return new ArrayList<StatuteCitation>();
-		return em.createNamedQuery("StatuteCitation.findStatutesForKeys", StatuteCitation.class).setParameter("keys", statuteKeys).getResultList();
+	public List<StatuteCitation> getStatutes(Collection<StatuteCitation> statuteCitations) {
+		if ( statuteCitations.size() == 0 ) return new ArrayList<StatuteCitation>();
+		List<StatuteKey> keys = new ArrayList<>();
+		for (StatuteCitation statuteCitation: statuteCitations) {
+			keys.add(statuteCitation.getStatuteKey());
+		}
+		return em.createNamedQuery("StatuteCitation.findStatutesForKeys", StatuteCitation.class).setParameter("keys", keys).getResultList();
 	}
 
 	public void persistStatute(StatuteCitation statute) {
@@ -96,12 +104,12 @@ public class SlipOpinionService {
 		return em.createNamedQuery("SlipOpinion.listOpinionDates", Date.class).getResultList();
 	}
 
-	public StatuteCitation findStatute(StatuteKey key) {
-		return em.createNamedQuery("StatuteCitation.findByTitleSection", StatuteCitation.class).setParameter("title", key.getTitle()).setParameter("sectionNumber", key.getSectionNumber()).getSingleResult();
+	public StatuteCitation findStatute(StatuteCitation statuteCitation) {
+		return em.createNamedQuery("StatuteCitation.findByStatuteKey", StatuteCitation.class).setParameter("StatuteKey", statuteCitation.getStatuteKey()).getSingleResult();
 	}
 
-	public OpinionSummary findOpinion(OpinionKey key) {
-		return em.createNamedQuery("OpinionSummary.findByOpinionKey", OpinionSummary.class).setParameter("key", key).getSingleResult();
+	public OpinionBase findOpinion(OpinionBase opinionBase) {
+		return em.createNamedQuery("OpinionSummary.findByOpinionKey", OpinionBase.class).setParameter("key", opinionBase.getOpinionKey()).getSingleResult();
 	}
 
 	public List<SlipOpinion> listSlipOpinions() {
@@ -128,23 +136,23 @@ public class SlipOpinionService {
 			this.slipOpinionRepository = slipOpinionRepository;
 		}
 		@Override
-		public StatuteCitation statuteExists(StatuteKey statuteKey) {			
-			return slipOpinionRepository.statuteExists(statuteKey);
+		public StatuteCitation statuteExists(StatuteCitation statuteCitation) {			
+			return slipOpinionRepository.statuteExists(statuteCitation);
 		}
 
 		@Override
-		public List<StatuteCitation> getStatutes(Collection<StatuteKey> statuteKeys) {
-			return slipOpinionRepository.getStatutes(statuteKeys);
+		public List<StatuteCitation> getStatutes(Collection<StatuteCitation> statuteCitations) {
+			return slipOpinionRepository.getStatutes(statuteCitations);
 		}
 
 		@Override
-		public OpinionSummary opinionExists(OpinionKey opinionKey) {
-			return slipOpinionRepository.opinionExists(opinionKey);
+		public OpinionBase opinionExists(OpinionBase opinionBase) {
+			return slipOpinionRepository.opinionExists(opinionBase);
 		}
 
 		@Override
-		public List<OpinionSummary> getOpinions(Collection<OpinionKey> opinionKeys) {
-			return slipOpinionRepository.getOpinions(opinionKeys);
+		public List<OpinionBase> getOpinions(Collection<OpinionBase> opinions) {
+			return slipOpinionRepository.getOpinions(opinions);
 		}	
 	}
 	

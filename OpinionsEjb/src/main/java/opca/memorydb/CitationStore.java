@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import opca.model.OpinionBase;
-import opca.model.OpinionKey;
+import opca.model.OpinionStatuteCitation;
 import opca.model.OpinionSummary;
 import opca.model.StatuteCitation;
 import opca.model.StatuteKey;
@@ -52,12 +52,12 @@ public class CitationStore implements PersistenceLookup {
     }
 */
     public StatuteCitation findStatuteByCodeSection(String title, String sectionNumber) {
-        return statuteExists(new StatuteKey(title, sectionNumber));
+        return statuteExists(new StatuteCitation(new StatuteKey(title, sectionNumber)));
     }
 
     @Override
-	public StatuteCitation statuteExists(StatuteKey key) {
-		return findStatuteByStatute(new StatuteCitation(key));
+	public StatuteCitation statuteExists(StatuteCitation statuteCitation) {
+		return findStatuteByStatute(statuteCitation);
 	}
 
 	public StatuteCitation findStatuteByStatute(StatuteCitation statuteCitation) {
@@ -65,6 +65,13 @@ public class CitationStore implements PersistenceLookup {
         if ( statuteCitation.equals(foundCitation)) return foundCitation;
         return null;
 	}    
+
+	public OpinionBase findOpinionByOpinion(OpinionBase opinionBase) {
+		OpinionBase foundOpinion = dataBase.getOpinionTable().floor(opinionBase);
+        if ( opinionBase.equals(foundOpinion)) return foundOpinion;
+		return null;
+	}
+
 
 	public void persistStatute(StatuteCitation statuteCitation) {
 		dataBase.getStatuteTable().add(statuteCitation);
@@ -76,37 +83,37 @@ public class CitationStore implements PersistenceLookup {
 	}
 
 	@Override
-	public OpinionSummary opinionExists(OpinionKey key) {
-        OpinionSummary tempOpinion = new OpinionSummary(key);
-        if ( dataBase.getOpinionTable().contains(tempOpinion))
-        	return dataBase.getOpinionTable().floor(tempOpinion);
+	public OpinionBase opinionExists(OpinionBase opinionBase) {
+//        OpinionSummary tempOpinion = new OpinionSummary(opinionBase);
+        if ( dataBase.getOpinionTable().contains(opinionBase))
+        	return dataBase.getOpinionTable().floor(opinionBase);
         else return null;
 	}
 
-	public void persistOpinion(OpinionSummary opinionSummary) {
-		dataBase.getOpinionTable().add(opinionSummary);
+	public void persistOpinion(OpinionBase opinionBase) {
+		dataBase.getOpinionTable().add(opinionBase);
 	}
 
 	@Override
-	public List<StatuteCitation> getStatutes(Collection<StatuteKey> statuteKeys) {
+	public List<StatuteCitation> getStatutes(Collection<StatuteCitation> statuteCitations) {
 		List<StatuteCitation> list = new ArrayList<StatuteCitation>();
-		for (StatuteKey key: statuteKeys ) {
-			StatuteCitation statute = statuteExists(key);
+		for (StatuteCitation statuteCitation: statuteCitations ) {
+			StatuteCitation statute = statuteExists(statuteCitation);
 			if ( statute != null ) list.add(statute);
 		}
 		return list;
 	}
 
 	@Override
-	public List<OpinionSummary> getOpinions(Collection<OpinionKey> opinionKeys) {
-		List<OpinionSummary> list = new ArrayList<OpinionSummary>();
-		for (OpinionKey key: opinionKeys ) {
-			OpinionSummary opinion = opinionExists(key);
-			if ( opinion != null ) list.add(opinion);
+	public List<OpinionBase> getOpinions(Collection<OpinionBase> opinions) {
+		List<OpinionBase> list = new ArrayList<OpinionBase>();
+		for (OpinionBase opinion: opinions ) {
+			OpinionBase tempOpinion = opinionExists(opinion);
+			if ( tempOpinion != null ) list.add(tempOpinion);
 		}
 		return list;
 	}
-	public Set<OpinionSummary> getAllOpinions() {
+	public Set<OpinionBase> getAllOpinions() {
         return dataBase.getOpinionTable();
     }
 	public Set<StatuteCitation> getAllStatutes() {
@@ -114,25 +121,27 @@ public class CitationStore implements PersistenceLookup {
 	}
 
     public void mergeParsedDocumentCitations(OpinionBase opinionBase, ParsedOpinionCitationSet parsedOpinionResults) {
-    	for ( OpinionSummary opinionSummary: parsedOpinionResults.getOpinionTable() ) { 
-    		OpinionSummary existingOpinion = opinionExists(opinionSummary.getOpinionKey());
+    	for ( OpinionBase opinion: parsedOpinionResults.getOpinionTable() ) { 
+    		OpinionBase existingOpinion = opinionExists(opinion);
             if (  existingOpinion != null ) {
             	// add citations where they don't already exist.
-                existingOpinion.mergeCitedOpinion(opinionSummary);
+                existingOpinion.mergeCitedOpinion(opinion);
             } else {
-            	persistOpinion(opinionSummary);
+            	persistOpinion(opinion);
             }
     	}
-    
+//TODO: WTF is all this about?    
     	for ( StatuteCitation statuteCitation: parsedOpinionResults.getStatuteTable() ) {
-    		StatuteCitation existingStatute = statuteExists(statuteCitation.getStatuteKey());
+    		StatuteCitation existingStatute = statuteExists(statuteCitation);
     		if ( existingStatute != null) {
-    			existingStatute.incRefCount(opinionBase.getOpinionKey(), statuteCitation.getRefCount(opinionBase.getOpinionKey()));
+    			OpinionStatuteCitation otherRef = statuteCitation.getOpinionStatuteReference(opinionBase);
+//    			if( otherRef != null ) {
+        			existingStatute.incRefCount(opinionBase, otherRef.getCountReferences());
+//    			}
     		} else {
     			persistStatute(statuteCitation);
     		}
     	}
     }
-
 
 }

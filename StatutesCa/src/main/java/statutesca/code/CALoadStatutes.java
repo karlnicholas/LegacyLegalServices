@@ -88,7 +88,7 @@ public class CALoadStatutes implements ParserInterface {
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
 		
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("corp");
+		statutesTitles.setFacetHead("crp");
 		statutesTitles.setShortTitle("Corporations");
 		statutesTitles.setCommonTitle("corporations code");
 		statutesTitles.setFullTitle("california corporations code");
@@ -104,7 +104,7 @@ public class CALoadStatutes implements ParserInterface {
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
 		
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("elec");
+		statutesTitles.setFacetHead("ele");
 		statutesTitles.setShortTitle("Elections");
 		statutesTitles.setCommonTitle("elections code");
 		statutesTitles.setFullTitle("california elections code");
@@ -112,7 +112,7 @@ public class CALoadStatutes implements ParserInterface {
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("evid");
+		statutesTitles.setFacetHead("evd");
 		statutesTitles.setShortTitle("Evidence");
 		statutesTitles.setCommonTitle("evidence code");
 		statutesTitles.setFullTitle("california evidence code");
@@ -224,7 +224,7 @@ public class CALoadStatutes implements ParserInterface {
 		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
 		
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("prob");
+		statutesTitles.setFacetHead("prb");
 		statutesTitles.setShortTitle("Probate");
 		statutesTitles.setCommonTitle("probate code");
 		statutesTitles.setFullTitle("california probate code");

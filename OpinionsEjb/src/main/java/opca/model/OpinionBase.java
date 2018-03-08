@@ -1,14 +1,19 @@
 package opca.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
 import javax.persistence.*;
 
+import opca.memorydb.CitationStore;
+import opca.parser.ParsedOpinionCitationSet;
+
 @SuppressWarnings("serial")
-@MappedSuperclass
+@Entity
+@Inheritance(strategy=InheritanceType.JOINED)
 public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	@EmbeddedId
 	protected OpinionKey opinionKey;
@@ -18,14 +23,16 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
     protected Date opinionDate;
 	@Column(columnDefinition="TEXT")
 	protected String court;
-    @ElementCollection
-    protected Set<StatuteKey> statuteCitations;
-    @ElementCollection
-    protected Set<OpinionKey> opinionCitations;
-    @ElementCollection
-    protected Set<OpinionKey> referringOpinions;
+	@OneToMany(mappedBy="opinionBase")
+	protected Set<OpinionStatuteCitation> statuteCitations;
+    @ManyToMany
+    protected Set<OpinionBase> opinionCitations;
+    @ManyToMany(mappedBy="opinionCitations")
+    protected Set<OpinionBase> referringOpinions;
     // performance optimization equal to size of referringOpinions 
     protected int countReferringOpinions;
+	@Transient
+	private boolean newlyLoadedOpinion;
 
     public OpinionBase() {}
 	public OpinionBase(OpinionBase opinionBase) {
@@ -56,14 +63,31 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	 * adds a new referringOpinion key if it doesn't already exist.
 	 * @param opinionKey
 	 */
-    public void addReferringOpinion(OpinionKey opinionKey) {
+    public void addReferringOpinion(OpinionBase opinionBase) {
     	if (referringOpinions == null ) {
-    		setReferringOpinions(new TreeSet<OpinionKey>());
+    		setReferringOpinions(new TreeSet<OpinionBase>());
     	}
-    	referringOpinions.add(opinionKey);
+    	referringOpinions.add(opinionBase);
         // do it the paranoid way
         countReferringOpinions = referringOpinions.size();
     }
+	public void addStatuteCitations(Set<StatuteCitation> goodStatutes) {
+		if ( statuteCitations == null ) {
+			setStatuteCitations(new TreeSet<>());
+		}
+		for( StatuteCitation statuteCitation: goodStatutes) {
+			// add on both sides ...
+			OpinionStatuteCitation opinionStatuteCitation = new OpinionStatuteCitation(statuteCitation, this, 1);
+			statuteCitations.add( opinionStatuteCitation );
+		}
+	}
+	public Collection<StatuteCitation> getOnlyStatuteCitations() {
+		Set<StatuteCitation> onlyStatuteCitations = new TreeSet<>();
+		for(OpinionStatuteCitation opinionStatuteCitation: statuteCitations) {
+			onlyStatuteCitations.add(opinionStatuteCitation.getStatuteCitation());
+		}
+		return onlyStatuteCitations;
+	}
     public String getTitle() {
 		return title;
 	}
@@ -82,22 +106,22 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	public void setCourt(String court) {
 		this.court = court;
 	}
-	public Set<StatuteKey> getStatuteCitations() {
+	public Set<OpinionStatuteCitation> getStatuteCitations() {
 		return statuteCitations;
 	}
-	public void setStatuteCitations(Set<StatuteKey> statuteCitations) {
+	public void setStatuteCitations(Set<OpinionStatuteCitation> statuteCitations) {
 		this.statuteCitations = statuteCitations;
 	}
-	public Set<OpinionKey> getOpinionCitations() {
+	public Set<OpinionBase> getOpinionCitations() {
 		return opinionCitations;
 	}
-	public void setOpinionCitations(Set<OpinionKey> opinionCitations) {
+	public void setOpinionCitations(Set<OpinionBase> opinionCitations) {
 		this.opinionCitations = opinionCitations;
 	}
-	public Set<OpinionKey> getReferringOpinions() {
+	public Set<OpinionBase> getReferringOpinions() {
         return referringOpinions;
     }
-    public void setReferringOpinions(Set<OpinionKey> referringOpinions) {
+    public void setReferringOpinions(Set<OpinionBase> referringOpinions) {
         this.referringOpinions = referringOpinions;
         countReferringOpinions = referringOpinions.size();
     }
@@ -137,4 +161,150 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	public int compareTo(OpinionBase o) {
 		return opinionKey.compareTo(o.opinionKey);
 	}
+	public void mergeCitedOpinion(OpinionBase opinionBase) {
+		// debug
+        if ( !opinionKey.equals(opinionBase.getOpinionKey())) throw new RuntimeException("Can not add modifications: " + opinionKey + " != " + opinionBase.getOpinionKey());
+//        if ( opinionBase.statuteCitations != null ) throw new RuntimeException("Can not add modifications: opinionBase.statuteCitations != null");
+//        if ( opinionBase.opinionCitations != null ) throw new RuntimeException("Can not add modifications: opinionBase.opinionCitations != null");
+//        if ( opinionBase.referringOpinions.size() != 1 ) throw new RuntimeException("Can not add modifications: " + opinionBase.referringOpinions.size() + " != 1");
+        //
+//        mergeOpinions(opinionBase);
+        // this is a newly cited opinion, so there will be only one referring opinion
+    	if (referringOpinions == null ) {
+    		setReferringOpinions(new TreeSet<OpinionBase>());
+    	}
+    	referringOpinions.addAll(opinionBase.referringOpinions);
+        // do it the paranoid way
+        countReferringOpinions = referringOpinions.size();
+    }
+	public void mergePersistenceFromSlipLoad(OpinionBase opinionBase) {
+		// debug
+        if ( !opinionKey.equals(opinionBase.getOpinionKey())) throw new RuntimeException("Can not add modifications: " + opinionKey + " != " + opinionBase.getOpinionKey());
+        if ( opinionBase.isNewlyLoadedOpinion() ) throw new RuntimeException("Can not add modifications: " + opinionKey + " != " + opinionBase.getOpinionKey());
+        // 
+        // opinionBase is either a published opinion (slip opinions) or a cited opinion 
+        // at this point, it's coming from slipOpinions, so if it's a slipOpinion
+        // this existingOpinion will NOT be a slip opinion .. since we don't merge slip opinions.
+        // if the existing opinion is not a slip opinion, and opinionbase is not a slip opinion, then is 
+        // is a case of merging cited opinions.
+        if ( opinionBase.getStatuteCitations() != null ) throw new RuntimeException("Can not add modifications: opinionBase.statuteCitations != null");
+        if ( opinionBase.getOpinionCitations() != null ) throw new RuntimeException("Can not add modifications: opinionBase.opinionCitations != null");
+        //
+    	if (referringOpinions == null ) {
+    		setReferringOpinions(new TreeSet<OpinionBase>());
+    	}
+    	//TODO:Lazy initialization exception ... 
+    	// these are newly created entities, so how did they get 'detached'?
+    	referringOpinions.addAll(opinionBase.getReferringOpinions());
+        // do it the paranoid way
+        countReferringOpinions = referringOpinions.size();
+	}
+	public void mergePublishedOpinion(OpinionBase opinionBase) {
+		// debug
+        if ( !opinionKey.equals(opinionBase.getOpinionKey())) throw new RuntimeException("Can not add modifications: " + opinionKey + " != " + opinionBase.getOpinionKey());
+        if ( opinionBase.referringOpinions != null ) throw new RuntimeException("Can not add modifications: " + opinionKey + " != " + opinionBase.getOpinionKey());
+        //
+        if ( title == null ) title = opinionBase.title;
+        if ( court == null ) court = opinionBase.court;
+        if ( opinionDate == null ) opinionDate = opinionBase.opinionDate;
+        
+        copyNewOpinions(opinionBase);
+        // do statutes .. 
+        if ( opinionBase.getStatuteCitations() != null ) {
+        	if ( statuteCitations == null ) 
+        		statuteCitations = new TreeSet<OpinionStatuteCitation>();
+	        for ( OpinionStatuteCitation addStatuteCitation: opinionBase.getStatuteCitations() ) {
+            	if ( addStatuteCitation.getId().getStatuteKey().getTitle() == null ) 
+            		continue;
+	            if ( !statuteCitations.contains(addStatuteCitation) ) {
+	            	statuteCitations.add(addStatuteCitation);
+	            }
+	        }
+        }
+        // do 
+		if ( newlyLoadedOpinion || opinionBase.isNewlyLoadedOpinion() )
+			newlyLoadedOpinion = true;
+        // do referringOpinions
+        // this is a "published" opinion, so there will be no referring opinions in opinionBase
+	}
+
+	private void copyNewOpinions(OpinionBase opinionBase) {
+        // do opinions
+        if ( opinionBase.getOpinionCitations() != null ) {
+        	if ( opinionCitations == null )
+        		opinionCitations = new TreeSet<OpinionBase>(); 
+	        for ( OpinionBase addOpinionBase: opinionBase.getOpinionCitations()) {
+	        	if ( !opinionCitations.contains(addOpinionBase) ) {
+	        		opinionCitations.add(addOpinionBase);
+	        	}
+	        }
+        }
+	}
+	public void mergeCourtRepublishedOpinion(OpinionBase opinionBase, ParsedOpinionCitationSet parserResults, CitationStore citationStore ) {
+        if ( title == null ) title = opinionBase.title;
+        if ( court == null ) court = opinionBase.court;
+        if ( opinionDate == null ) opinionDate = opinionBase.opinionDate;
+		copyNewOpinions(opinionBase);
+        // do statutes .. 
+        if ( opinionBase.getStatuteCitations() != null ) {
+        	if ( statuteCitations == null ) 
+        		statuteCitations = new TreeSet<OpinionStatuteCitation>();
+	        for ( OpinionStatuteCitation addStatuteCitation: opinionBase.getStatuteCitations() ) {
+            	if ( addStatuteCitation.getStatuteCitation().getStatuteKey().getTitle() == null ) 
+            		continue;
+	            if ( !statuteCitations.contains(addStatuteCitation) ) {
+	            	statuteCitations.add(addStatuteCitation);
+	            } else {
+	            	StatuteCitation newCitation = parserResults.findStatute(addStatuteCitation.getStatuteCitation().getStatuteKey());
+	            	StatuteCitation existingCitation = citationStore.statuteExists(addStatuteCitation.getStatuteCitation());
+	            	if ( existingCitation.getOpinionStatuteReference(opinionBase).getCountReferences() 
+            			< newCitation.getOpinionStatuteReference(opinionBase).getCountReferences() 
+        			) {
+	            		existingCitation.setRefCount(opinionBase, newCitation.getOpinionStatuteReference(opinionBase).getCountReferences());
+	            	}
+	            }
+	        }
+        }
+	}
+	public boolean isNewlyLoadedOpinion() {
+		return newlyLoadedOpinion;
+	}
+	public void setNewlyLoadedOpinion(boolean newlyLoadedOpinion) {
+		this.newlyLoadedOpinion = newlyLoadedOpinion;
+	}
+	@Override
+	public String toString() {
+        return String.format("%1$S : %2$tm/%2$td/%2$ty : %3$S", getOpinionKey().toString(), getOpinionDate(), getTitle() );
+    }
+	public String fullPrint() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("%1$S : %2$tm/%2$td/%2$ty : %3$S", getOpinionKey().toString(), getOpinionDate(), getTitle() ));
+		sb.append('\n');
+		sb.append("statuteCitations");
+		sb.append('\n');
+		for ( OpinionStatuteCitation statuteCitation: statuteCitations ) {
+			sb.append(statuteCitation);
+			sb.append('\n');
+		};
+		sb.append("opinionCitations");
+		sb.append('\n');
+		for ( OpinionBase opinionCitation: opinionCitations ) {
+			sb.append(opinionCitation);
+			sb.append('\n');
+		};
+		sb.append("referringOpinions");
+		sb.append('\n');
+		if( referringOpinions != null ) {
+			for ( OpinionBase referringOpinion: referringOpinions ) {
+				sb.append(referringOpinion);
+				sb.append('\n');
+			};
+		}
+		sb.append('\n');
+		sb.append("countReferringOpinions");
+		sb.append('\n');
+		sb.append(countReferringOpinions);
+		sb.append('\n');
+		return sb.toString();
+    }
 }

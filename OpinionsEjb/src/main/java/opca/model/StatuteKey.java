@@ -2,12 +2,15 @@ package opca.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @SuppressWarnings("serial")
 @Embeddable
 public class StatuteKey implements Serializable, Comparable<StatuteKey> {
+    @Column(columnDefinition="char(32)")
     protected String sectionNumber;
+    @Column(columnDefinition="char(3)")
     protected String title;
 //    private String title;
 //    private String sectionNumber;

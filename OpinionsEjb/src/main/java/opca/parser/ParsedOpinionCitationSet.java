@@ -10,7 +10,7 @@ import opca.model.StatuteCitation;
 import opca.model.StatuteKey;
 
 public class ParsedOpinionCitationSet {
-    private TreeSet<OpinionSummary> opinionTable = new TreeSet<OpinionSummary>();
+    private TreeSet<OpinionBase> opinionTable = new TreeSet<OpinionBase>();
     private TreeSet<StatuteCitation> statuteTable = new TreeSet<StatuteCitation>();
     
     public ParsedOpinionCitationSet() {}
@@ -30,7 +30,7 @@ public class ParsedOpinionCitationSet {
     	// This above comment makes no sense, there will never be any physical DB using
     	// this class?
     	// why are we copying from persistence into here. Where is that needed? 
-        statuteTable.addAll( persistence.getStatutes(opinionBase.getStatuteCitations()));
+        statuteTable.addAll( persistence.getStatutes(opinionBase.getOnlyStatuteCitations()));
         opinionTable.addAll( persistence.getOpinions(opinionBase.getOpinionCitations()));
     }
 
@@ -80,18 +80,18 @@ public class ParsedOpinionCitationSet {
         return null;
 	}
     
-	public OpinionSummary findOpinion(OpinionKey key) {
-		OpinionSummary tempOpinion = new OpinionSummary(key);
+	public OpinionBase findOpinion(OpinionKey key) {
+		OpinionBase tempOpinion = new OpinionBase(key);
         if ( opinionTable.contains(tempOpinion))
         	return opinionTable.floor(tempOpinion);
         else return null;
 	}
 
-	public void putOpinionSummary(OpinionSummary opinionSummary) {
-		opinionTable.add(opinionSummary);
+	public void putOpinionSummary(OpinionBase opinionBase) {
+		opinionTable.add(opinionBase);
 	}
 
-	public TreeSet<OpinionSummary> getOpinionTable() {
+	public TreeSet<OpinionBase> getOpinionTable() {
 		return opinionTable;
 	}
 
