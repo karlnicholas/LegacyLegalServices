@@ -5,7 +5,6 @@ import java.util.TreeSet;
 import opca.memorydb.PersistenceLookup;
 import opca.model.OpinionBase;
 import opca.model.OpinionKey;
-import opca.model.OpinionSummary;
 import opca.model.StatuteCitation;
 import opca.model.StatuteKey;
 
@@ -87,7 +86,7 @@ public class ParsedOpinionCitationSet {
         else return null;
 	}
 
-	public void putOpinionSummary(OpinionBase opinionBase) {
+	public void putOpinionBase(OpinionBase opinionBase) {
 		opinionTable.add(opinionBase);
 	}
 

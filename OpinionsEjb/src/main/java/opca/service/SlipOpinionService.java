@@ -10,7 +10,6 @@ import javax.persistence.TypedQuery;
 import opca.memorydb.PersistenceLookup;
 import opca.model.OpinionBase;
 import opca.model.OpinionKey;
-import opca.model.OpinionSummary;
 import opca.model.SlipOpinion;
 import opca.model.StatuteCitation;
 import opca.model.StatuteKey;
@@ -21,7 +20,7 @@ public class SlipOpinionService {
 	// viewModel items for display
 	// function as caches for database calls
     
-	// OpinionSummary
+	// OpinionBase
 
     public SlipOpinionService() {}
     // debug constructor
@@ -32,18 +31,18 @@ public class SlipOpinionService {
 /*
     @PostConstruct
     public void initNamedQueries() {
-    	opinionSummaryFindByOpinionKey = em.createNamedQuery("OpinionSummary.findByOpinionKey", OpinionSummary.class);
+    	OpinionBaseFindByOpinionKey = em.createNamedQuery("OpinionBase.findByOpinionKey", OpinionBase.class);
     	statuteCitationFindByTitleSection = em.createNamedQuery("StatuteCitation.findByTitleSection", StatuteCitation.class);
     }
 */    
 	// used to lookup OpinionSummaries
-	public OpinionSummary opinionExists(OpinionBase opinionBase) {
-		TypedQuery<OpinionSummary> opinionSummaryFindByOpinionKey = em.createNamedQuery("OpinionSummary.findByOpinionKey", OpinionSummary.class);
-		List<OpinionSummary> list = opinionSummaryFindByOpinionKey.setParameter("key", opinionBase.getOpinionKey()).getResultList();
+	public OpinionBase opinionExists(OpinionBase opinionBase) {
+		TypedQuery<OpinionBase> OpinionBaseFindByOpinionKey = em.createNamedQuery("OpinionBase.findByOpinionKey", OpinionBase.class);
+		List<OpinionBase> list = OpinionBaseFindByOpinionKey.setParameter("key", opinionBase.getOpinionKey()).getResultList();
 		if ( list.size() > 0 ) return list.get(0);
 		return null;
 
-//		return em.find(OpinionSummary.class, primaryKey);
+//		return em.find(OpinionBase.class, primaryKey);
 	}
 
 	// StatuteCitation
@@ -70,14 +69,14 @@ public class SlipOpinionService {
 		for ( OpinionBase opinion: opinions) {
 			keys.add(opinion.getOpinionKey());
 		}
-		return em.createNamedQuery("OpinionSummary.findOpinionsForKeys", OpinionBase.class).setParameter("keys", keys).getResultList();
+		return em.createNamedQuery("OpinionBase.findOpinionsForKeys", OpinionBase.class).setParameter("keys", keys).getResultList();
 	}
 
-	public void persistOpinion(OpinionSummary opinion) {
+	public void persistOpinion(OpinionBase opinion) {
 		em.persist(opinion);
 	}
 
-	public OpinionSummary mergeOpinion(OpinionSummary opinion) {
+	public OpinionBase mergeOpinion(OpinionBase opinion) {
 		return em.merge(opinion);
 	}
 
@@ -109,7 +108,7 @@ public class SlipOpinionService {
 	}
 
 	public OpinionBase findOpinion(OpinionBase opinionBase) {
-		return em.createNamedQuery("OpinionSummary.findByOpinionKey", OpinionBase.class).setParameter("key", opinionBase.getOpinionKey()).getSingleResult();
+		return em.createNamedQuery("OpinionBase.findByOpinionKey", OpinionBase.class).setParameter("key", opinionBase.getOpinionKey()).getSingleResult();
 	}
 
 	public List<SlipOpinion> listSlipOpinions() {
@@ -176,13 +175,13 @@ public class SlipOpinionService {
 		}
 
 		@Override
-		public void persistOpinion(OpinionSummary opinion) {
+		public void persistOpinion(OpinionBase opinion) {
 			slipOpinionRepository.persistOpinion(opinion);
 			
 		}
 
 		@Override
-		public OpinionSummary mergeOpinion(OpinionSummary opinion) {
+		public OpinionBase mergeOpinion(OpinionBase opinion) {
 			return slipOpinionRepository.mergeOpinion(opinion);
 		}
 	}

@@ -13,6 +13,14 @@ import opca.parser.ParsedOpinionCitationSet;
 
 @SuppressWarnings("serial")
 @Entity
+@NamedQueries({
+	@NamedQuery(name="OpinionBase.findByOpinionKey", 
+		query="select o from OpinionBase o where o.opinionKey = :key"),
+	@NamedQuery(name="OpinionBase.findOpinionsForKeys", 
+		query="select o from OpinionBase o where o.opinionKey in :keys"),
+	@NamedQuery(name="OpinionBase.findOpinionsForKeysJoinStatuteCitations", 
+		query="select distinct(o) from OpinionBase o inner join fetch o.statuteCitations where o.opinionKey in :keys"),
+})
 @Inheritance(strategy=InheritanceType.JOINED)
 public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	@EmbeddedId
@@ -51,7 +59,19 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
     	this.opinionDate = opinionDate;
         if ( court == null ) this.court = new String();
         else this.court = court;
+    	this.newlyLoadedOpinion = true;
     }
+	// making a new OpinionBase from only a citation.
+	public OpinionBase(int volume, int vset, long page) {
+		this(new OpinionKey(volume, vset, page), null, null, null);
+	}
+	// making a new OpinionBase from only a citation.
+    public OpinionBase(OpinionBase opinionBase, String volume, String vset, String page) {
+    	this(new OpinionKey(volume, vset, page));
+    	addReferringOpinion(opinionBase);
+    	this.newlyLoadedOpinion = false;
+    }
+	
 	/**
 	 * Only meant for comparison purposes.
 	 * @param opinionKey
@@ -77,8 +97,17 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 		}
 		for( StatuteCitation statuteCitation: goodStatutes) {
 			// add on both sides ...
+			OpinionStatuteCitation opinionStatuteCitation = statuteCitation.getOpinionStatuteReference(this);
+			if ( opinionStatuteCitation == null ) {
+				throw new RuntimeException("OpinionStatuteReference not found");
+			}
+			// complete the other side of the reference.
+			statuteCitations.add(opinionStatuteCitation);
+/*			
 			OpinionStatuteCitation opinionStatuteCitation = new OpinionStatuteCitation(statuteCitation, this, 1);
+			statuteCitation
 			statuteCitations.add( opinionStatuteCitation );
+*/			
 		}
 	}
 	public Collection<StatuteCitation> getOnlyStatuteCitations() {
@@ -257,10 +286,15 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	            } else {
 	            	StatuteCitation newCitation = parserResults.findStatute(addStatuteCitation.getStatuteCitation().getStatuteKey());
 	            	StatuteCitation existingCitation = citationStore.statuteExists(addStatuteCitation.getStatuteCitation());
-	            	if ( existingCitation.getOpinionStatuteReference(opinionBase).getCountReferences() 
-            			< newCitation.getOpinionStatuteReference(opinionBase).getCountReferences() 
-        			) {
-	            		existingCitation.setRefCount(opinionBase, newCitation.getOpinionStatuteReference(opinionBase).getCountReferences());
+	            	// because the opinionBase is actually an existing one so maybe not a citation reference in it.
+	            	if ( newCitation != null ) {
+		            	OpinionStatuteCitation osR = newCitation.getOpinionStatuteReference(opinionBase);
+		            	int countNew= osR == null ? 0 : osR.getCountReferences();
+		            	osR = existingCitation.getOpinionStatuteReference(opinionBase);
+		            	int countExisting = osR == null ? 0 : osR.getCountReferences();
+		            	if ( countExisting < countNew ) {
+		            		existingCitation.setRefCount(opinionBase, newCitation.getOpinionStatuteReference(opinionBase).getCountReferences());
+		            	}
 	            	}
 	            }
 	        }

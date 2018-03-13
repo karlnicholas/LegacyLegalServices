@@ -57,7 +57,7 @@ public class OpinionDocumentParser {
 
         // this analyzes sentences .. 
         TreeSet<StatuteCitation> codeCitationTree = new TreeSet<StatuteCitation>();
-        TreeSet<OpinionSummary> caseCitationTree = new TreeSet<OpinionSummary>();
+        TreeSet<OpinionBase> caseCitationTree = new TreeSet<OpinionBase>();
 
         parseDoc( 
     		opinionBase, 
@@ -97,7 +97,7 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
         
         opinionBase.addStatuteCitations(goodStatutes);
         //
-        List<OpinionSummary> opinions = new ArrayList<OpinionSummary>(caseCitationTree);
+        List<OpinionBase> opinions = new ArrayList<OpinionBase>(caseCitationTree);
         Set<OpinionBase> goodOpinions = new TreeSet<OpinionBase>();
         for ( OpinionBase opinionReferredTo: opinions) {
         	// forever get rid of statutes without a referenced code.
@@ -107,14 +107,15 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
             	opinionReferredTo = existingOpinion;
             }
         	
-			parserResults.putOpinionSummary(opinionReferredTo);
+			parserResults.putOpinionBase(opinionReferredTo);
 			goodOpinions.add(opinionReferredTo);
         }
         opinionBase.setOpinionCitations(goodOpinions);
-//        parserResults.putOpinionSummary(opinionBase);
+//        parserResults.putOpinionBase(opinionBase);
         
         // Sort according to sectionReferenced
 //        Collections.sort(sectionReferences);
+        
         return parserResults;
     }
 
@@ -282,7 +283,7 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
     	OpinionBase opinionBase, 
     	ScrapedOpinionDocument parserDocument,
 		TreeSet<StatuteCitation> codeCitationTree, 
-        TreeSet<OpinionSummary> caseCitationTree, 
+        TreeSet<OpinionBase> caseCitationTree, 
         String defaultCodeSection
 	) {
         
@@ -317,7 +318,7 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
     	OpinionBase opinionBase, 
 		String sentence, 
 		TreeSet<StatuteCitation> codeCitationTree, 
-		TreeSet<OpinionSummary> caseCitationTree, 
+		TreeSet<OpinionBase> caseCitationTree, 
 		String defaultCodeSection
 	) {
 //        System.out.println("--- Sent:" + sentence);
@@ -375,10 +376,10 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
 		oi = offsets.iterator();
 		while ( oi.hasNext() ) {
 			int offset = oi.next().intValue();
-			OpinionSummary opinion = parseCase(opinionBase, offset, sentence);
+			OpinionBase opinion = parseCase(opinionBase, offset, sentence);
 			if ( opinion != null ) {
 //if ( sentWrit != null ) sentWrit.println("---"+citation);
-				// add a referring opinionSummaryKey
+				// add a referring OpinionBaseKey
 				addCaseCitation(opinion, caseCitationTree);
 			}
 		}
@@ -488,7 +489,7 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
 //    	}
     }
 
-    private void addCaseCitation( OpinionSummary opinion, TreeSet<OpinionSummary> caseCitationTree ) {
+    private void addCaseCitation( OpinionBase opinion, TreeSet<OpinionBase> caseCitationTree ) {
         if ( !caseCitationTree.contains(opinion) ) {
         	caseCitationTree.add(opinion);
         }
@@ -509,7 +510,7 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
     }
 
     // section or sections <-- plural
-    private OpinionSummary parseCase(OpinionBase opinionBase, int offset, String sentence ) {
+    private OpinionBase parseCase(OpinionBase opinionBase, int offset, String sentence ) {
     	int startPos = offset;
     	int endPos = offset+5;
     	int sentEnd = sentence.length();
@@ -552,7 +553,7 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
     	if ( parts[2].length() == 0 ) return null;
     	for ( String appellateSet: OpinionKey.appellateSets ) {
         	if ( parts[1].equalsIgnoreCase(appellateSet) ) {
-        		return new OpinionSummary(opinionBase, parts[0], parts[1], parts[2]);
+        		return new OpinionBase(opinionBase, parts[0], parts[1], parts[2]);
         	}
     	}
         return null;
@@ -595,7 +596,7 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
     }
 
     private StatuteCitation parseSSymbol(
-    	OpinionBase opinionBase, 
+		OpinionBase opinionBase, 
     	int offset, 
     	String term, 
     	String sentence, 

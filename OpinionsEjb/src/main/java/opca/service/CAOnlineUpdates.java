@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -17,11 +16,8 @@ import javax.persistence.EntityManager;
 
 import opca.memorydb.CitationStore;
 import opca.model.OpinionBase;
-import opca.model.OpinionKey;
-import opca.model.OpinionSummary;
 import opca.model.SlipOpinion;
 import opca.model.StatuteCitation;
-import opca.model.StatuteKey;
 import opca.parser.OpinionScraperInterface;
 import opca.parser.OpinionDocumentParser;
 import opca.parser.ScrapedOpinionDocument;
@@ -190,7 +186,7 @@ public class CAOnlineUpdates {
 	}
 
 	private void processesOpinions(CitationStore citationStore) {
-		OpinionSummary[] opArray = new OpinionSummary[citationStore.getAllOpinions().size()];    	
+		OpinionBase[] opArray = new OpinionBase[citationStore.getAllOpinions().size()];    	
 		citationStore.getAllOpinions().toArray(opArray);
 		List<OpinionBase> opinions = Arrays.asList(opArray);
 		List<OpinionBase> persistOpinions = new ArrayList<>();
@@ -213,7 +209,7 @@ public class CAOnlineUpdates {
 	    				+ "\n	:OpinionCitations().size()= " + (existingOpinion.getOpinionCitations()== null?"xx":existingOpinion.getOpinionCitations().size())
 	    			);
 				//opinion referred to itself?
-//              existingOpinion.addOpinionSummaryReferredFrom(opinion.getOpinionKey());
+//              existingOpinion.addOpinionBaseReferredFrom(opinion.getOpinionKey());
 				mergeOpinions.add(existingOpinion);
 			}
 			logger.fine("opinion "+opinion.getOpinionKey()

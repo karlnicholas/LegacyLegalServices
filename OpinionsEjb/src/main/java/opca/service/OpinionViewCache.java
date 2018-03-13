@@ -11,7 +11,6 @@ import javax.persistence.TypedQuery;
 import opca.memorydb.PersistenceLookup;
 import opca.model.OpinionBase;
 import opca.model.OpinionKey;
-import opca.model.OpinionSummary;
 import opca.model.SlipOpinion;
 import opca.model.StatuteCitation;
 import opca.model.StatuteKey;
@@ -162,7 +161,7 @@ public class OpinionViewCache {
 			if ( opinionBases == null || opinionBases.size() == 0 ) {
 				opinionSummaries = new ArrayList<>();
 			} else {
-				TypedQuery<OpinionBase> query = em.createNamedQuery("OpinionSummary.findOpinionsForKeysJoinStatuteCitations", OpinionBase.class);
+				TypedQuery<OpinionBase> query = em.createNamedQuery("OpinionBase.findOpinionsForKeysJoinStatuteCitations", OpinionBase.class);
 				List<OpinionKey> keys = new ArrayList<>();
 				for (OpinionBase opinion: opinionBases) {
 					keys.add(opinion.getOpinionKey());
@@ -178,9 +177,9 @@ public class OpinionViewCache {
 		return opinionViews;
 	}
 
-	// OpinionSummary
+	// OpinionBase
 	public OpinionBase opinionExists(OpinionBase opinion) {
-		List<OpinionBase> list = em.createNamedQuery("OpinionSummary.findByOpinionKey", OpinionBase.class).setParameter("key", opinion.getOpinionKey()).getResultList();
+		List<OpinionBase> list = em.createNamedQuery("OpinionBase.findByOpinionKey", OpinionBase.class).setParameter("key", opinion.getOpinionKey()).getResultList();
 		if ( list.size() > 0 ) return list.get(0);
 		return null;
 	}
@@ -191,7 +190,7 @@ public class OpinionViewCache {
 		for(OpinionBase opinion: opinions) {
 			keys.add(opinion.getOpinionKey());
 		}
-		return em.createNamedQuery("OpinionSummary.findOpinionsForKeys", OpinionBase.class).setParameter("keys", keys).getResultList();
+		return em.createNamedQuery("OpinionBase.findOpinionsForKeys", OpinionBase.class).setParameter("keys", keys).getResultList();
 	}
 
 	// StatuteCitation
@@ -240,8 +239,8 @@ public class OpinionViewCache {
 	public StatuteCitation findStatute(StatuteKey key) {
 		return (StatuteCitation) em.createNamedQuery("StatuteCitation.findByCodeSection").setParameter("code", key.getTitle()).setParameter("sectionNumber", key.getSectionNumber()).getResultList().get(0);
 	}
-	public OpinionSummary findOpinion(OpinionKey key) {
-		return (OpinionSummary) em.createNamedQuery("OpinionSummary.findByOpinionKey").setParameter("key", key).getResultList().get(0);
+	public OpinionBase findOpinion(OpinionKey key) {
+		return (OpinionBase) em.createNamedQuery("OpinionBase.findByOpinionKey").setParameter("key", key).getResultList().get(0);
 	}
 	public List<SlipOpinion> listSlipOpinions() {
 		return em.createQuery("select from SlipOpinion", SlipOpinion.class).getResultList();

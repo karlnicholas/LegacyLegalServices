@@ -96,8 +96,14 @@ public class StatuteCitation implements Comparable<StatuteCitation>, Serializabl
     public void setReferringOpinions(Set<OpinionStatuteCitation> referringOpinions) {
         this.referringOpinions = referringOpinions;
     }
-    public void setRefCount(OpinionBase opinionBase, int count) {
-    	referringOpinions.add(new OpinionStatuteCitation( this, opinionBase, count) );
+    public void setRefCount(OpinionBase opinionBase, int count) {    
+    	OpinionStatuteCitation opinionStatuteCitation = getOpinionStatuteReference(opinionBase);
+    	if ( opinionStatuteCitation != null ) {
+    		opinionStatuteCitation.setCountReferences(count);
+    	} else {
+    		referringOpinions.add(opinionStatuteCitation);
+    	}
+
     }
     public OpinionStatuteCitation getOpinionStatuteReference(OpinionBase opinionBase) {
     	Iterator<OpinionStatuteCitation> refOpIt = referringOpinions.iterator();
@@ -110,12 +116,11 @@ public class StatuteCitation implements Comparable<StatuteCitation>, Serializabl
     	return null;
     }
     public void incRefCount(OpinionBase opinionBase, int amount) {
-    	OpinionStatuteCitation cInt = getOpinionStatuteReference(opinionBase);
-        if ( cInt == null ) {
+    	OpinionStatuteCitation opinionStatuteCitation = getOpinionStatuteReference(opinionBase);
+        if ( opinionStatuteCitation == null ) {
         	referringOpinions.add(new OpinionStatuteCitation( this, opinionBase, amount));
         } else {
-        	referringOpinions.remove(cInt);
-        	referringOpinions.add(new OpinionStatuteCitation( this, opinionBase, cInt.getCountReferences() + amount));
+        	opinionStatuteCitation.setCountReferences(opinionStatuteCitation.getCountReferences() + amount);
         }
     }
 	public void removeOpinionStatuteReference(SlipOpinion deleteOpinion) {
