@@ -62,7 +62,7 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
     	this.newlyLoadedOpinion = true;
     }
 	// making a new OpinionBase from only a citation.
-	public OpinionBase(int volume, int vset, long page) {
+	public OpinionBase(int volume, int vset, int page) {
 		this(new OpinionKey(volume, vset, page), null, null, null);
 	}
 	// making a new OpinionBase from only a citation.
