@@ -144,7 +144,7 @@ public class OpinionViewCache {
 		int levelOfInterest
 	) {
 		List<OpinionView> opinionViews = new ArrayList<OpinionView>();
-        Client statutesRs = new RestServicesService().connectStatutesRsService();
+        Client statutesRs = new RestServicesFactory().connectStatutesRsService();
 		//
 		OpinionViewBuilder opinionCaseBuilder = new OpinionViewBuilder();
 		List<SlipOpinion> opinions = findByPublishDateRange(sd, ed);

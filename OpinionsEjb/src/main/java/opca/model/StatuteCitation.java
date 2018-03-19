@@ -79,6 +79,9 @@ public class StatuteCitation implements Comparable<StatuteCitation>, Serializabl
     		if ( referringOpinions.contains(opinionStatuteReference) ) {
 				throw new RuntimeException("Cannot merge: key exists " + opinionStatuteReference);
     		}
+    		// replace existing statuteCitation with the this one b/c it was loaded from the database
+    		// and is being used to replace the statute one found in a new SlipOpinion
+    		opinionStatuteReference.setStatuteCitation(this);
     		referringOpinions.add(opinionStatuteReference);
     	}
 	}

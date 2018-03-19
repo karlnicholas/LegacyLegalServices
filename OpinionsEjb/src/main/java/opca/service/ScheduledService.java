@@ -8,7 +8,7 @@ import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
 
-import opca.scraper.CACaseScraper;
+import opca.scraper.TestCACaseScraper;
 
 @Singleton
 public class ScheduledService {
@@ -18,14 +18,15 @@ public class ScheduledService {
     @EJB private UserService userSession;
     @EJB private OpinionViewSingleton opinionViewSingleton;
 
-
+/*
     @Schedule(second="0", minute="15", hour="3", persistent=false)        // 03:30 am (12:30 am CA ) every day
     public void kickStatutesWS() {
         logger.info("KICK STATUESWS");
         new RestServicesService().connectStatutesRsService();
         logger.info("DONE KICK STATUESWS");
     }
-    @Schedule(second="0", minute="22", hour="10", persistent=false)        // 03:30 am (12:30 am CA ) every day
+*/    
+    @Schedule(second="0", minute="50", hour="17", persistent=false)        // 03:30 am (12:30 am AZ ) every day
     // Wildfly specific transaction timeout setting
     // this isn't working at the moment, there are confiugrations necessary in wildfly?
     // also, this is hibernate/jboss specific. There was a Java EE way of acheiving this?
@@ -48,7 +49,8 @@ public class ScheduledService {
     public void updateSlipOpinions() {
         Date currentTime = new Date();
         logger.info("STARTING SCRAPER UPDATE");
-        caOnlineUpdates.updateDatabase(new CACaseScraper(false));
+//        caOnlineUpdates.updateDatabase(new CACaseScraper(false));
+        caOnlineUpdates.updateDatabase(new TestCACaseScraper(false));
         logger.info("DONE SCRAPER UPDATE");
 
         logger.info("STARTING OPINIONVIEW POSTCONSTRUCT");

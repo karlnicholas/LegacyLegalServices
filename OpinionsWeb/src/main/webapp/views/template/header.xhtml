@@ -14,7 +14,6 @@
       <ul class="nav navbar-nav">
       <li><h:link id="headerTabHome" value="Home" outcome="/views/index.xhtml"/></li>
       <li><h:link id="headerTabAccount" value="Account" outcome="/views/accounts/accounts.xhtml"/></li>
-      <li><h:link value="Board" outcome="/views/board/board.xhtml"/></li>
       <li><h:link value="Opinions" outcome="/views/opinions/opinions.xhtml"/></li>
       <ui:fragment rendered="#{fn:contains(request.requestURI, 'opinion')}">
         <li role="presentation" class="dropdown"><h:link value="#{opinionsController.currentDate}" outcome="/views/index.xhtml" styleClass="dropdown-toggle" style="color:#FFFFFF;background-color:#4582ec;" p:data-toggle="dropdown" p:role="button" p:aria-haspopup="true" p:aria-expanded="false"><span class="caret"></span></h:link>

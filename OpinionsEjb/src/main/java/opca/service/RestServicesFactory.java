@@ -17,12 +17,12 @@ import client.StatutesRsService;
  * @author Karl Nicholas
  *
  */
-public class RestServicesService {
-	private Logger logger = Logger.getLogger(RestServicesService.class.getName());
+public class RestServicesFactory {
+	private Logger logger = Logger.getLogger(RestServicesFactory.class.getName());
 	private String statutesRsServiceUrl = "http://localhost:8080/statutesrs/rs/";
 	protected Properties applicationProps;
 
-	public RestServicesService() {
+	public RestServicesFactory() {
 		Properties defaultProps = new Properties();
 		// create and load default properties
 		try ( InputStream in = this.getClass().getResourceAsStream("/defaultProperties.properties") ) {

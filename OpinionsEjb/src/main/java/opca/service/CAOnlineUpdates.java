@@ -2,7 +2,6 @@ package opca.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +15,7 @@ import javax.persistence.EntityManager;
 
 import opca.memorydb.CitationStore;
 import opca.model.OpinionBase;
+import opca.model.OpinionStatuteCitation;
 import opca.model.SlipOpinion;
 import opca.model.StatuteCitation;
 import opca.parser.OpinionScraperInterface;
@@ -113,7 +113,7 @@ public class CAOnlineUpdates {
 
 		StatutesTitles[] codeTitles = new StatutesTitles[0]; //parserInterface.getStatutesTitles();
 
-		Client statutesRs = new RestServicesService().connectStatutesRsService();
+		Client statutesRs = new RestServicesFactory().connectStatutesRsService();
 		StatutesTitlesArray statutesArray = statutesRs.getStatutesTitles();
 		codeTitles = statutesArray.getItem().toArray(codeTitles);
 
@@ -144,12 +144,39 @@ public class CAOnlineUpdates {
 				);
 		}
 
-		processesOpinions(citationStore);
-		processesStatutes(citationStore);
-		
+		List<OpinionStatuteCitation> persistOpinionStatuteCitations = new ArrayList<>();
+		List<OpinionBase> mergeOpinions = new ArrayList<>();
+		List<StatuteCitation> mergeStatutes = new ArrayList<StatuteCitation>();
+
+		processOpinions(citationStore, mergeOpinions);
+	  	processStatutes(citationStore, mergeStatutes);
+	  	
 		for( SlipOpinion slipOpinion: opinions ) {
+    		if ( slipOpinion.getStatuteCitations() != null ) {
+	    		for ( OpinionStatuteCitation statuteCitation: slipOpinion.getStatuteCitations() ) {
+    				persistOpinionStatuteCitations.add(statuteCitation);
+	    		}
+    		}
 			em.persist(slipOpinion);
 		}
+		
+    	Date startTime = new Date();
+    	for(OpinionStatuteCitation opinionStatuteCitation: persistOpinionStatuteCitations) {
+			em.persist(opinionStatuteCitation);
+    	}
+		logger.info("Persisted "+ persistOpinionStatuteCitations.size()+" opinionStatuteCitation in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
+
+	  	startTime = new Date();
+    	for(OpinionBase opinion: mergeOpinions ) {
+			em.merge(opinion);
+    	}
+		logger.info("Merged "+mergeOpinions.size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
+		
+		startTime = new Date();
+    	for(StatuteCitation statute: mergeStatutes ) {
+			em.merge(statute);
+    	}
+		logger.info("Merged "+mergeStatutes.size()+" statutes in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
 	}
 
 	private void deleteExistingOpinions(List<SlipOpinion> currentCopy) {
@@ -185,12 +212,14 @@ public class CAOnlineUpdates {
 		}
 	}
 
-	private void processesOpinions(CitationStore citationStore) {
+	private void processOpinions(CitationStore citationStore,  
+		List<OpinionBase> mergeOpinions
+	) {
 		OpinionBase[] opArray = new OpinionBase[citationStore.getAllOpinions().size()];    	
 		citationStore.getAllOpinions().toArray(opArray);
 		List<OpinionBase> opinions = Arrays.asList(opArray);
 		List<OpinionBase> persistOpinions = new ArrayList<>();
-		List<OpinionBase> mergeOpinions = new ArrayList<>();
+//		List<OpinionBase> mergeOpinions = new ArrayList<>();
 
     	Date startTime = new Date();
     	for(OpinionBase opinion: opinions ) {
@@ -226,20 +255,23 @@ public class CAOnlineUpdates {
 			em.persist(opinion);
     	}
 		logger.info("Persisted "+opinions.size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
-
+/*
 		startTime = new Date();
     	for(OpinionBase opinion: mergeOpinions ) {
 			em.merge(opinion);
     	}
 		logger.info("Merged "+opinions.size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
+*/		
     }
 
-    private void processesStatutes( CitationStore citationStore ) {
+    private void processStatutes( 
+    		CitationStore citationStore, 
+    		List<StatuteCitation> mergeStatutes
+	) {
 		StatuteCitation[] stArray = new StatuteCitation[citationStore.getAllStatutes().size()];    	
 		citationStore.getAllStatutes().toArray(stArray);
 		List<StatuteCitation> statutes = Arrays.asList(stArray);
-		List<StatuteCitation> persistStatutes = Collections.synchronizedList(new ArrayList<StatuteCitation>());
-		List<StatuteCitation> mergeStatutes = Collections.synchronizedList(new ArrayList<StatuteCitation>());
+		List<StatuteCitation> persistStatutes = new ArrayList<StatuteCitation>();
 
     	int count = statutes.size();
     	Date startTime = new Date();
@@ -248,7 +280,7 @@ public class CAOnlineUpdates {
 			if ( existingStatute == null ) {
 				persistStatutes.add(statute);
 			} else {
-					existingStatute.mergeStatuteCitationFromSlipLoad(statute);
+				existingStatute.mergeStatuteCitationFromSlipLoad(statute);
 				mergeStatutes.add(existingStatute);
 			}
     	}
@@ -256,16 +288,16 @@ public class CAOnlineUpdates {
 
     	startTime = new Date();
     	for(StatuteCitation statute: persistStatutes ) {
-				em.persist(statute);
+			em.persist(statute);
     	}
 		logger.info("Persisted "+statutes.size()+" statutes in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
 
+/*
 		startTime = new Date();
     	for(StatuteCitation statute: mergeStatutes ) {
 			em.merge(statute);
     	}
 		logger.info("Merged "+statutes.size()+" statutes in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
+*/		
     }
-
-
 }

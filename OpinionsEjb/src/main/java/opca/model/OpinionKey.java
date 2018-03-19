@@ -73,11 +73,12 @@ public class OpinionKey implements Serializable, Comparable<OpinionKey> {
         return (int)( opinionKey & 0xffffffff);
     }
 */    
+
     @Override
     public int compareTo(OpinionKey o) {
     	return (opinionKey > o.opinionKey)?1:(opinionKey < o.opinionKey)?-1:0;
     }
-    @Override
+	@Override
     public int hashCode() {
     	return Objects.hash(opinionKey);
     }

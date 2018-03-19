@@ -84,7 +84,21 @@ public class SlipOpinion extends OpinionBase {
 		case 'H':
 			return (ONEMMM*8) + (2*Integer.parseInt(split[1])) + (split.length > 2?1:0); 
 		case 'J':
-			return (ONEMMM*9) + (2*Integer.parseInt(split[1]+split[3])) + (split.length > 4?1:0); 
+			if ( split.length >= 4  ) {
+				return (ONEMMM*9) + (2*Integer.parseInt(split[1]+split[3])) + (split.length > 4?1:0);
+			} else {
+				StringBuilder sb = new StringBuilder();
+				for ( char c: fileName.toCharArray()) {
+					if ( Character.isDigit(c)) {
+						sb.append(c);
+					}
+				}
+				Integer v = 2*Integer.parseInt(sb.toString());
+				if ( !Character.isDigit(fileName.charAt(fileName.length()-1))) {
+					v = v + 1;
+				}
+				return (ONEMMM*9) + v;
+			}
 		case 'S':
 			return (ONEMMM*10) + (2*Integer.parseInt(split[1])) + (split.length > 2?1:0); 
 		default:

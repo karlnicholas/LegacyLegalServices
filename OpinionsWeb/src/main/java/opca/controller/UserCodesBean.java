@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
-import opca.service.RestServicesService;
+import opca.service.RestServicesFactory;
 import statutes.StatutesTitles;
 import service.Client;
 
@@ -28,7 +28,7 @@ public class UserCodesBean {
 	
 	@PostConstruct
 	public void postConstruct() {
-		Client statutesRsS = new RestServicesService().connectStatutesRsService();
+		Client statutesRsS = new RestServicesFactory().connectStatutesRsService();
 		
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		List<StatutesTitles> statutesTitles = (List)statutesRsS.getStatutesTitles().getItem();
