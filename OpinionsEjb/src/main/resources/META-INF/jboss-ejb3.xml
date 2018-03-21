@@ -30,5 +30,16 @@
         <tx:unit>Seconds</tx:unit>
       </tx:trans-timeout>
     </container-transaction>
+    <container-transaction>
+      <method>
+        <ejb-name>OpinionViewSingleton</ejb-name>
+        <method-name>*</method-name>
+        <method-intf>Local</method-intf>
+      </method>
+      <tx:trans-timeout>
+        <tx:timeout>3600</tx:timeout>
+        <tx:unit>Seconds</tx:unit>
+      </tx:trans-timeout>
+    </container-transaction>
   </assembly-descriptor>
 </jboss:ejb-jar>

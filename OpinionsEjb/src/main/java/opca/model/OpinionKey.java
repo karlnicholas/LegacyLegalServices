@@ -95,7 +95,7 @@ public class OpinionKey implements Serializable, Comparable<OpinionKey> {
     }
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int vol = (int)(opinionKey >>> 48);
         sb.append(vol);
         sb.append(' ');

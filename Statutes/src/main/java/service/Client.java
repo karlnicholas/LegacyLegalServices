@@ -1,8 +1,5 @@
 package service;
 
-import java.util.List;
-
-import statutes.StatutesRoot;
 import statutesrs.ReferencesWithReferences;
 import statutesrs.ResponseArray;
 import statutesrs.StatuteKeyArray;

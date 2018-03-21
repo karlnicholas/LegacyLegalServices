@@ -146,12 +146,12 @@ public class OpinionViewCache {
 		List<OpinionView> opinionViews = new ArrayList<OpinionView>();
         Client statutesRs = new RestServicesFactory().connectStatutesRsService();
 		//
-		OpinionViewBuilder opinionCaseBuilder = new OpinionViewBuilder();
+		OpinionViewBuilder opinionViewBuilder = new OpinionViewBuilder();
 		List<SlipOpinion> opinions = findByPublishDateRange(sd, ed);
 		MyPersistenceLookup pl = new MyPersistenceLookup(this);
 		for ( SlipOpinion slipOpinion: opinions ) {
 			ParsedOpinionCitationSet parserResults = new ParsedOpinionCitationSet(slipOpinion, pl);
-			OpinionView opinionView = opinionCaseBuilder.buildSlipOpinionView(statutesRs, slipOpinion, parserResults);
+			OpinionView opinionView = opinionViewBuilder.buildSlipOpinionView(statutesRs, slipOpinion, parserResults);
 			opinionView.trimToLevelOfInterest(levelOfInterest, true);
 			opinionView.combineCommonSections();
 			
@@ -169,8 +169,8 @@ public class OpinionViewCache {
 				opinionSummaries = query.setParameter("keys", keys).getResultList();
 			}
 	        
-			opinionCaseBuilder.scoreSlipOpinionOpinions(opinionView, parserResults, opinionSummaries);
-			opinionCaseBuilder.scoreSlipOpinionStatutes(opinionView, parserResults, opinionSummaries);
+			opinionViewBuilder.scoreSlipOpinionOpinions(opinionView, parserResults, opinionSummaries);
+			opinionViewBuilder.scoreSlipOpinionStatutes(opinionView, parserResults, opinionSummaries);
 			
 			opinionViews.add(opinionView);
 		}

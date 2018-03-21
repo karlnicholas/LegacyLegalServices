@@ -8,12 +8,13 @@
 
 package statutesrs;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
 import statutes.StatutesBaseClass;
-
 
 /**
  * <p>Java class for responsePair complex type.
@@ -38,12 +39,12 @@ import statutes.StatutesBaseClass;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "responsePair", propOrder = {
     "statuteKey",
-    "statutesBaseClass"
+    "statutesPath"
 })
 public class ResponsePair {
 
     protected StatuteKey statuteKey;
-    protected StatutesBaseClass statutesBaseClass;
+    protected List<StatutesBaseClass> statutesPath;
 
     /**
      * Gets the value of the statuteKey property.
@@ -69,28 +70,12 @@ public class ResponsePair {
         this.statuteKey = value;
     }
 
-    /**
-     * Gets the value of the statutesBaseClass property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Object }
-     *     
-     */
-    public StatutesBaseClass getStatutesBaseClass() {
-        return statutesBaseClass;
-    }
+	public List<StatutesBaseClass> getStatutesPath() {
+		return statutesPath;
+	}
 
-    /**
-     * Sets the value of the statutesBaseClass property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Object }
-     *     
-     */
-    public void setStatutesBaseClass(StatutesBaseClass value) {
-        this.statutesBaseClass = value;
-    }
+	public void setStatutesPath(List<StatutesBaseClass> statutesPath) {
+		this.statutesPath = statutesPath;
+	}
 
 }

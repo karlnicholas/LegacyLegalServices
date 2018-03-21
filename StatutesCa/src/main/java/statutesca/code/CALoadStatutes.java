@@ -383,7 +383,7 @@ public class CALoadStatutes implements ParserInterface {
 		String tempTitle = codeTitle.toLowerCase();
 		StatutesTitles statutesTitles = null;
 		for ( StatutesTitles t: mapStatutesToTitles.values() ) {
-			if ( t.getFullTitle().equals( codeTitle ) ) {
+			if ( t.getFacetHead().equals( codeTitle ) ) {
 				statutesTitles = t;
 				break;
 			}
@@ -395,10 +395,10 @@ public class CALoadStatutes implements ParserInterface {
 		Iterator<StatutesRoot> ci = statutes.iterator();
 		while (ci.hasNext()) {
 			StatutesRoot code = ci.next();
-			if (code.getTitle(false).toLowerCase().contains(tempTitle)) {
+			if (code.getFullFacet().toLowerCase().contains(tempTitle)) {
 				return code;
 			}
-			if ( tempTitle.contains(code.getTitle(false).toLowerCase())) {
+			if ( tempTitle.contains(code.getFullFacet().toLowerCase())) {
 				return code;
 			}
 		}

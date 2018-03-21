@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import service.Client;
 import statutes.StatutesBaseClass;
+import statutes.StatutesRoot;
 import opca.model.*;
 import opca.parser.ParsedOpinionCitationSet;
 
@@ -40,7 +41,7 @@ public class OpinionViewBuilder {
         // call statutesws to get details of statutes 
         statutesrs.ResponseArray responseArray = statutesRs.findStatutes(statuteKeyArray);
         //
-    	ArrayList<StatuteView> codes = new ArrayList<StatuteView>();
+    	ArrayList<StatuteView> statuteViews = new ArrayList<StatuteView>();
         // copy results into the new list ..
         // Fill out the codeSections that these section are referencing ..
         // If possible ... 
@@ -59,7 +60,7 @@ public class OpinionViewBuilder {
                 // We don't want to keep ones that we can't map .. so .. 
                 if ( opSection.getStatutesBaseClass() != null ) {
                     // First .. let's get the OpinionCode for this sectionReference
-                    StatuteView opCode = findOrMakeOpinionCode(codes, opSection); 
+                    StatuteView opCode = findOrMakeOpinionCode(statuteViews, opSection); 
                     opCode.addNewSectionReference( opSection );
                 } 
             }
@@ -69,7 +70,7 @@ public class OpinionViewBuilder {
     	ArrayList<CaseView> cases = new ArrayList<CaseView>();
     	for ( OpinionBase opinionBase: slipOpinion.getOpinionCitations() ) {
     		OpinionBase opcase = parserResults.findOpinion(opinionBase.getOpinionKey());
-			CaseView caseView = new CaseView(opcase.getTitle(), opinionBase.toString(), opcase.getOpinionDate(), opcase.getCountReferringOpinions());
+			CaseView caseView = new CaseView(opcase.getTitle(), opinionBase.getOpinionKey().toString(), opcase.getOpinionDate(), opcase.getCountReferringOpinions());
     		cases.add(caseView);
     	}
 /*    	
@@ -83,22 +84,42 @@ public class OpinionViewBuilder {
 			c.setImportance((int)(c.getCountReferringOpinions()/maxCited)+1);
 		}	
 */
-        return new OpinionView(slipOpinion, name, codes, cases);
+        return new OpinionView(slipOpinion, name, statuteViews, cases);
     }
 
 
+    /**
+     * Build out the StatutesBaseClass with parent pointers
+     * @param responseArray
+     * @param key
+     * @return
+     */
     private StatutesBaseClass findStatutesBaseClass(statutesrs.ResponseArray responseArray, StatuteKey key) {
-    	StatutesBaseClass statutesBaseClass = null;
+		List<StatutesBaseClass> subPaths = null;
     	final String code = key.getTitle();
     	final String sectionNumber = key.getSectionNumber();
     	for ( statutesrs.ResponsePair responsePair: responseArray.getItem()) {
     		statutesrs.StatuteKey statuteKey = responsePair.getStatuteKey();
     		if ( code.equals(statuteKey.getTitle()) && sectionNumber.equals(statuteKey.getSectionNumber()) ) {
-    			statutesBaseClass = (StatutesBaseClass) responsePair.getStatutesBaseClass();
+    			subPaths =  responsePair.getStatutesPath();
     			break;
     		}
     	}
-    	return statutesBaseClass;
+
+		StatutesBaseClass returnBaseClass = null;
+    	if ( subPaths != null ) {
+			StatutesRoot statutesRoot = (StatutesRoot)subPaths.remove(0);
+			StatutesBaseClass parent = statutesRoot;
+			returnBaseClass = statutesRoot;
+			for (StatutesBaseClass baseClass: subPaths ) {
+				// check terminating
+				baseClass.setParent(parent);
+				parent = baseClass; 
+				returnBaseClass = baseClass;
+				subPaths = baseClass.getReferences();
+			}
+    	}
+    	return returnBaseClass;
     }
 
     
@@ -234,7 +255,12 @@ public class OpinionViewBuilder {
 					OpinionScore opinionScore = new OpinionScore();
 					opinionScore.setSlipOpinionStatute(statuteCitation.getStatuteKey());
 					opinionScore.setOpinionReferCount(statuteCitation.getOpinionStatuteReference(opinionCited).getCountReferences());
-					opinionScore.setSlipOpinionReferCount(statuteCitation.getOpinionStatuteReference(opinionView).getCountReferences());
+					OpinionStatuteCitation osr = statuteCitation.getOpinionStatuteReference(opinionView);
+					if ( osr == null ) {
+						opinionScore.setSlipOpinionReferCount(0);
+					} else {
+						opinionScore.setSlipOpinionReferCount(osr.getCountReferences());
+					}
 					opinionScoreList.getOpinionScoreList().add(opinionScore);
         		}
         	}
@@ -296,7 +322,12 @@ public class OpinionViewBuilder {
         			if ( statuteScoreList == null ) {
         				statuteScoreList = new StatuteScoreList();
         				statuteScoreList.setSlipOpinionStatute(statuteCitation.getStatuteKey());
-        				statuteScoreList.setSlipOpinionReferCount(statuteCitation.getOpinionStatuteReference(opinionView).getCountReferences());
+    					OpinionStatuteCitation osr = statuteCitation.getOpinionStatuteReference(opinionView);
+    					if ( osr == null ) {
+            				statuteScoreList.setSlipOpinionReferCount(0);
+    					} else {
+            				statuteScoreList.setSlipOpinionReferCount(osr.getCountReferences());
+    					}
         				statuteScores.add(statuteScoreList);
         			}
 					//TODO will all entries be unqiue?

@@ -63,7 +63,7 @@ public class StatutesRsService implements Client {
 		return parserInterface.returnReferencesByTitle(fullFacet);
 	}
 
-	@Override
+	@Override	
 	@Path(ClientImpl.FINDSTATUTES)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -78,21 +78,22 @@ public class StatutesRsService implements Client {
 			StatuteKey key = itc.next();
 			// StatuteCitation citation = parserResults.findStatute(key);
 			// This is a section
-			String code = key.getTitle();
+			String title = key.getTitle();
 			SectionNumber sectionNumber = new SectionNumber();
 			sectionNumber.setPosition(-1);
 			sectionNumber.setSectionNumber(key.getSectionNumber());
 			// int refCount = citation.getRefCount(opinionBase.getOpinionKey());
 			// boolean designated = citation.getDesignated();
-			if (code != null) {
+			if (title != null) {
 				// here we look for the Doc Section within the Code Section Hierachary
 				// and place it within the sectionReference we previously parsed out of the
 				// opinion
-				StatutesBaseClass statutesBaseClass = parserInterface.findReference(code, sectionNumber);
+				StatutesBaseClass statutesBaseClass = parserInterface.findReference(title, sectionNumber);
 				if (statutesBaseClass != null) {
+					ReferencesWithReferences referencesWithReferences = parserInterface.returnReferencesByTitle( statutesBaseClass.getFullFacet() );
 					ResponsePair responsePair = new ResponsePair();
 					responsePair.setStatuteKey(key);
-					responsePair.setStatutesBaseClass(statutesBaseClass);
+					responsePair.setStatutesPath(referencesWithReferences.getStatutesPath());
 					responseArray.getItem().add(responsePair);
 				}
 				// Section codeSection = codeList.findCodeSection(sectionReference);
@@ -101,4 +102,5 @@ public class StatutesRsService implements Client {
 		}
 		return responseArray;
 	}
+
 }
