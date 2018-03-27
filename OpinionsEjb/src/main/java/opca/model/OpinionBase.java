@@ -20,17 +20,17 @@ import opca.parser.ParsedOpinionCitationSet;
 		query="select o from OpinionBase o where o.opinionKey in :keys"),
 	@NamedQuery(name="OpinionBase.findOpinionsForKeysJoinStatuteCitations", 
 		query="select distinct(o) from OpinionBase o inner join fetch o.statuteCitations where o.opinionKey in :keys"),
-})
-@Inheritance(strategy=InheritanceType.JOINED)
+	@NamedQuery(name="OpinionBase.findOpinionByKeyFetchReferringOpinions", 
+		query="select o from OpinionBase o left join fetch o.referringOpinions where o.opinionKey = :key"),})
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType=DiscriminatorType.INTEGER)
 public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	@EmbeddedId
 	protected OpinionKey opinionKey;
-	@Column(columnDefinition="TEXT")
+	@Column(columnDefinition="varchar(127)")
 	protected String title;
     @Temporal(TemporalType.DATE)
     protected Date opinionDate;
-	@Column(columnDefinition="TEXT")
-	protected String court;
 	@OneToMany(mappedBy="opinionBase")
 	protected Set<OpinionStatuteCitation> statuteCitations;
     @ManyToMany
@@ -46,7 +46,6 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	public OpinionBase(OpinionBase opinionBase) {
 		this.opinionKey = opinionBase.opinionKey;
     	this.title = opinionBase.title;
-    	this.court = opinionBase.court;
     	this.opinionDate = opinionBase.opinionDate;
     	this.statuteCitations = opinionBase.statuteCitations;
     	this.opinionCitations = opinionBase.opinionCitations;
@@ -57,8 +56,6 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 		this.opinionKey = opinionKey;
         this.title = title;
     	this.opinionDate = opinionDate;
-        if ( court == null ) this.court = new String();
-        else this.court = court;
     	this.newlyLoadedOpinion = true;
     }
 	// making a new OpinionBase from only a citation.
@@ -128,12 +125,6 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	}
 	public void setOpinionDate(Date opinionDate) {
 		this.opinionDate = opinionDate;
-	}
-	public String getCourt() {
-		return court;
-	}
-	public void setCourt(String court) {
-		this.court = court;
 	}
 	public Set<OpinionStatuteCitation> getStatuteCitations() {
 		return statuteCitations;
@@ -234,7 +225,6 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
         if ( opinionBase.referringOpinions != null ) throw new RuntimeException("Can not add modifications: " + opinionKey + " != " + opinionBase.getOpinionKey());
         //
         if ( title == null ) title = opinionBase.title;
-        if ( court == null ) court = opinionBase.court;
         if ( opinionDate == null ) opinionDate = opinionBase.opinionDate;
         
         copyNewOpinions(opinionBase);
@@ -271,7 +261,6 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	}
 	public void mergeCourtRepublishedOpinion(OpinionBase opinionBase, ParsedOpinionCitationSet parserResults, CitationStore citationStore ) {
         if ( title == null ) title = opinionBase.title;
-        if ( court == null ) court = opinionBase.court;
         if ( opinionDate == null ) opinionDate = opinionBase.opinionDate;
 		copyNewOpinions(opinionBase);
         // do statutes .. 
@@ -308,7 +297,7 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	}
 	@Override
 	public String toString() {
-        return String.format("%1$S : %2$tm/%2$td/%2$ty : %3$S", getOpinionKey().toString(), getOpinionDate(), getTitle() );
+        return String.format("%1$s : %2$tm/%2$td/%2$ty : %3$S", getOpinionKey().toString(), getOpinionDate(), getTitle() );
     }
 	public String fullPrint() {
 		StringBuilder sb = new StringBuilder();

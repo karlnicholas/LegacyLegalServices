@@ -45,6 +45,12 @@ public class SlipOpinionService {
 //		return em.find(OpinionBase.class, primaryKey);
 	}
 
+	public OpinionBase opinionExistsWithReferringOpinions(OpinionBase opinionBase) {
+		TypedQuery<OpinionBase> OpinionBaseFindByOpinionKey = em.createNamedQuery("OpinionBase.findOpinionByKeyFetchReferringOpinions", OpinionBase.class);
+		List<OpinionBase> list = OpinionBaseFindByOpinionKey.setParameter("key", opinionBase.getOpinionKey()).getResultList();
+		if ( list.size() > 0 ) return list.get(0);
+		return null;
+	}	
 	// StatuteCitation
 	public StatuteCitation statuteExists(StatuteCitation statuteCitation) {
 		TypedQuery<StatuteCitation> statuteCitationFindByTitleSection = em.createNamedQuery("StatuteCitation.findByStatuteKey", StatuteCitation.class);
@@ -210,5 +216,5 @@ public class SlipOpinionService {
 			slipOpinion.setOpinionCitations(new TreeSet<OpinionKey>(fetchOpinionCitations.setParameter("key", slipOpinion.getOpinionKey()).getResultList()));
 		}
 	}
-*/	
+*/
 }

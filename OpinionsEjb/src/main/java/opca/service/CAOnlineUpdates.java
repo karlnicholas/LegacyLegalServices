@@ -158,6 +158,7 @@ public class CAOnlineUpdates {
 	    		}
     		}
 			em.persist(slipOpinion);
+			em.persist(slipOpinion.getSlipProperties());
 		}
 		
     	Date startTime = new Date();
@@ -225,11 +226,13 @@ public class CAOnlineUpdates {
     	for(OpinionBase opinion: opinions ) {
 //This causes a NPE !?!?	    		
 //    		opinion.checkCountReferringOpinions();
-    		OpinionBase existingOpinion = slipOpinionService.opinionExists(opinion);
+    		// checking for opinionBase for citations
+    		OpinionBase existingOpinion = slipOpinionService.opinionExistsWithReferringOpinions(opinion);
 			if ( existingOpinion == null ) {
 				persistOpinions.add(opinion);
 			} else {
 				existingOpinion.mergePersistenceFromSlipLoad(opinion);
+/*				
 	    		logger.fine("existingOpinion:= " 
 	    				+ existingOpinion.getTitle() 
 	    				+ "\n	:OpinionKey= " + existingOpinion.getOpinionKey()
@@ -237,6 +240,7 @@ public class CAOnlineUpdates {
 	    				+ "\n	:ReferringOpinions.size()= " + (existingOpinion.getReferringOpinions()== null?"xx":existingOpinion.getReferringOpinions().size())
 	    				+ "\n	:OpinionCitations().size()= " + (existingOpinion.getOpinionCitations()== null?"xx":existingOpinion.getOpinionCitations().size())
 	    			);
+*/	    			
 				//opinion referred to itself?
 //              existingOpinion.addOpinionBaseReferredFrom(opinion.getOpinionKey());
 				mergeOpinions.add(existingOpinion);

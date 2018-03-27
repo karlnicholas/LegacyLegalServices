@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlElement;
 
 @NamedQueries({
 	@NamedQuery(name="SlipOpinion.findByOpinionDate", 
@@ -17,46 +16,36 @@ import javax.xml.bind.annotation.XmlElement;
 		query="select distinct o.opinionDate from SlipOpinion o order by o.opinionDate desc"),
 	@NamedQuery(name="SlipOpinion.findByOpinionKey", 
 		query="select o from SlipOpinion o where o.opinionKey = :key"),
+})
+/*
 	@NamedQuery(name="SlipOpinion.fetchStatuteCitations", 
 		query="select elements(so.statuteCitations) from SlipOpinion as so where so.opinionKey = :key"),
 	@NamedQuery(name="SlipOpinion.fetchOpinionCitations", 
 		query="select elements(so.opinionCitations) from SlipOpinion as so where so.opinionKey = :key"),
 	@NamedQuery(name="SlipOpinion.fetchReferringOpinions", 
 		query="select elements(so.referringOpinions) from SlipOpinion as so where so.opinionKey = :key"),
-})
+ 
+ */
 @SuppressWarnings("serial")
 @Entity
 public class SlipOpinion extends OpinionBase {
 	private static Pattern fileNameSplit = Pattern.compile("(?<=\\d)(?=\\D)|(?=\\d)(?<=\\D)");
-//	@Id @GeneratedValue(strategy=GenerationType.IDENTITY) private Long id;
-	@Column(columnDefinition = "TEXT")
-    private String fileName;
-	@Column(columnDefinition = "TEXT")
-	private String fileExtension;
-	@Column(columnDefinition = "TEXT")
-    private String disposition;
-	@Column(columnDefinition = "TEXT")
-    private String summary;
+	private final static int ONEMMM = 10000000;
 
-	final static int ONEMMM = 10000000;
+	@Transient
+	private SlipProperties slipProperties;
+
     public SlipOpinion() {
     	super();
     }
 	public SlipOpinion(SlipOpinion slipOpinion) {
 		super(slipOpinion);
-//		this.id = opinionSummary.id;
-    	this.disposition = slipOpinion.disposition;
-    	this.summary = slipOpinion.summary;
-    	this.fileName = slipOpinion.fileName;
-    	this.fileExtension = slipOpinion.fileExtension;
+		this.slipProperties = new SlipProperties(this, slipOpinion);
     }
 	public SlipOpinion(String fileName, String fileExtension, String title, Date opinionDate, String court) {
 		super(null, title, opinionDate, court);
 		setOpinionKey(new OpinionKey("1 Slip.Op " + generateOpinionKey(fileName)));
-		this.fileName = fileName;
-		this.fileExtension = fileExtension;
-    	this.disposition = null;
-    	this.summary = null;
+		slipProperties = new SlipProperties(this, fileName, fileExtension, court, null, null);
     }
 
 //	public Long getId() {
@@ -108,37 +97,43 @@ public class SlipOpinion extends OpinionBase {
 		}
 	}
 	public String getFileName() {
-		return fileName;
+		return slipProperties.getFileName();
 	}
-    @XmlElement
 	public void setFileName(String fileName) {
-		this.fileName = fileName;
+    	slipProperties.setFileName(fileName);
 	}
 	public String getFileExtension() {
-		return fileExtension;
+		return slipProperties.getFileExtension();
 	}
-    @XmlElement
 	public void setFileExtension(String fileExtension) {
-		this.fileExtension = fileExtension;
+    	slipProperties.setFileExtension(fileExtension);
+	}
+	public String getCourt() {
+		return slipProperties.getCourt();
+	}
+	public void setCourt(String court) {
+    	slipProperties.setCourt(court);
 	}
 	public String getDisposition() {
-		return disposition;
+		return slipProperties.getDisposition();
 	}
-    @XmlElement
 	public void setDisposition(String disposition) {
-		if ( disposition != null && disposition.length() > 250 ) disposition = disposition.substring(0, 250);
-		this.disposition = disposition;
+    	slipProperties.setDisposition(disposition);
 	}
 	public String getSummary() {
-		return summary;
+		return slipProperties.getSummary();
 	}
-    @XmlElement
 	public void setSummary(String summary) {
-		if ( summary != null && summary.length() > 4090 ) summary = "..." + summary.substring(summary.length()-4087);
-		this.summary = summary;
+    	slipProperties.setSummary(summary);
 	}
 	@Override
 	public String toString() {
         return String.format("%1$S : %2$tm/%2$td/%2$ty : %3$S", getFileName(), getOpinionDate(), getTitle() );
     }
+	public SlipProperties getSlipProperties() {
+		return slipProperties;
+	}
+	public void setSlipProperties(SlipProperties slipProperties) {
+		this.slipProperties = slipProperties;
+	}
 }

@@ -8,6 +8,7 @@
     <class>opca.model.OpinionKey</class>
     <class>opca.model.Role</class>
     <class>opca.model.SlipOpinion</class>
+    <class>opca.model.SlipProperties</class>
     <class>opca.model.StatuteCitation</class>
     <class>opca.model.User</class>
     <class>opca.model.OpinionStatuteCitation</class>

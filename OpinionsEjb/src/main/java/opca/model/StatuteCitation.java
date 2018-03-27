@@ -27,10 +27,15 @@ import javax.persistence.OneToMany;
 	@NamedQuery(name="StatuteCitation.selectForTitle", 
 		query="select s from StatuteCitation s where s.statuteKey.title like :title"),
 	@NamedQuery(name="StatuteCitationData.findStatutesForKeys", 
+		query="select distinct(s) from StatuteCitation s join fetch s.referringOpinions where s.statuteKey in :keys"),
+	@NamedQuery(name="StatuteCitationData.findStatutesForKeysWithChildren", 
+		query="select distinct(s) from StatuteCitation s join fetch s.referringOpinions where s.statuteKey in :keys"),
+/*	
+	@NamedQuery(name="StatuteCitationData.findStatutesForKeys", 
 		query="select distinct(s) from StatuteCitation s join fetch s.referringOpinions ro where ro.statuteCitation.statuteKey in :keys"),
 	@NamedQuery(name="StatuteCitationData.findStatutesForKeysWithChildren", 
 		query="select distinct(s) from StatuteCitation s join fetch s.referringOpinions ro where ro.statuteCitation.statuteKey in :keys"),
-		
+*/				
 })
 @SuppressWarnings("serial")
 @Entity
