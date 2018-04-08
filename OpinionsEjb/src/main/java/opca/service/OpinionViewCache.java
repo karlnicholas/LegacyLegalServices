@@ -11,7 +11,9 @@ import javax.persistence.TypedQuery;
 import opca.memorydb.PersistenceLookup;
 import opca.model.OpinionBase;
 import opca.model.OpinionKey;
+import opca.model.OpinionStatuteCitation;
 import opca.model.SlipOpinion;
+import opca.model.SlipProperties;
 import opca.model.StatuteCitation;
 import opca.model.StatuteKey;
 import opca.parser.ParsedOpinionCitationSet;
@@ -215,6 +217,37 @@ public class OpinionViewCache {
 	public List<SlipOpinion> findByPublishDateRange(Date startDate, Date endDate) {
 //		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.findByOpinionDateRange", SlipOpinion.class).setParameter("startDate", startDate).setParameter("endDate", endDate).getResultList();
 		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.loadByOpinionDateRange", SlipOpinion.class).setParameter("startDate", startDate).setParameter("endDate", endDate).getResultList();
+		List<OpinionBase> sortedOpinions = new ArrayList<>(opinions);
+		Collections.sort(sortedOpinions);
+		// need to fill out the statuteCitations.referringOpinions.opinionStatuteCitation for these opinions
+		// since the refCount will be needed for the SectionView.
+		List<OpinionStatuteCitation> osCitations = em.createNamedQuery("OpinionStatuteCitation.findByOpinions", OpinionStatuteCitation.class)
+				.setParameter("opinions",  opinions).getResultList();
+		TreeSet<StatuteCitation> citationsReferringOpinions = new TreeSet<>();
+		for ( OpinionStatuteCitation osCitation: osCitations ) {
+			StatuteCitation statuteCitation = citationsReferringOpinions.floor(osCitation.getStatuteCitation());
+			if ( statuteCitation != null ) {
+				statuteCitation.getReferringOpinions().add(osCitation);
+			} else {
+				statuteCitation = osCitation.getStatuteCitation();
+				TreeSet<OpinionStatuteCitation> opinionStatuteCitations= new TreeSet<>();
+				opinionStatuteCitations.add(osCitation);
+				statuteCitation.setReferringOpinions(opinionStatuteCitations);
+				citationsReferringOpinions.add(statuteCitation);
+			}
+		}
+		// need to add the retrieval of SlipProperties here. 
+		List<SlipProperties> properties = em.createNamedQuery("SlipProperties.findAll", SlipProperties.class).getResultList();
+		for( SlipProperties slipProperties: properties ) {
+			int found = Collections.binarySearch(sortedOpinions, new OpinionBase(slipProperties.getOpinionKey()), (o1, o2)->o1.compareTo(o2) );
+			if ( found >= 0 ) {
+				SlipOpinion slipOpinion = ((SlipOpinion)sortedOpinions.get(found));
+				slipOpinion.setSlipProperties(slipProperties);
+				for ( StatuteCitation statuteCitation: slipOpinion.getOnlyStatuteCitations() ) {
+					statuteCitation.setReferringOpinions(citationsReferringOpinions.floor(statuteCitation).getReferringOpinions());
+				}
+			}
+		}
 /*		
 		TypedQuery<StatuteKey> fetchStatuteCitations = em.createNamedQuery("SlipOpinion.fetchStatuteCitations", StatuteKey.class);
 		TypedQuery<OpinionKey> fetchOpinionCitations = em.createNamedQuery("SlipOpinion.fetchOpinionCitations", OpinionKey.class);

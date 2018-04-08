@@ -19,9 +19,9 @@ import opca.parser.ParsedOpinionCitationSet;
 	@NamedQuery(name="OpinionBase.findOpinionsForKeys", 
 		query="select o from OpinionBase o where o.opinionKey in :keys"),
 	@NamedQuery(name="OpinionBase.findOpinionsForKeysJoinStatuteCitations", 
-		query="select distinct(o) from OpinionBase o inner join fetch o.statuteCitations where o.opinionKey in :keys"),
+		query="select distinct(o) from OpinionBase o left join fetch o.statuteCitations where o.opinionKey in :keys"),
 	@NamedQuery(name="OpinionBase.findOpinionByKeyFetchReferringOpinions", 
-		query="select o from OpinionBase o left join fetch o.referringOpinions where o.opinionKey = :key"),})
+		query="select o from OpinionBase o inner join fetch o.referringOpinions where o.opinionKey = :key"),})
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType=DiscriminatorType.INTEGER)
 public class OpinionBase implements Comparable<OpinionBase>, Serializable {

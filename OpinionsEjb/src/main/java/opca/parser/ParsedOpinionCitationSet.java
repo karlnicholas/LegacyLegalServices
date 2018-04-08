@@ -29,8 +29,10 @@ public class ParsedOpinionCitationSet {
     	// This above comment makes no sense, there will never be any physical DB using
     	// this class?
     	// why are we copying from persistence into here. Where is that needed? 
-        statuteTable.addAll( persistence.getStatutes(opinionBase.getOnlyStatuteCitations()));
-        opinionTable.addAll( persistence.getOpinions(opinionBase.getOpinionCitations()));
+//        statuteTable.addAll( persistence.getStatutes(opinionBase.getOnlyStatuteCitations()));
+//        opinionTable.addAll( persistence.getOpinions(opinionBase.getOpinionCitations()));
+        statuteTable.addAll( opinionBase.getOnlyStatuteCitations());
+        opinionTable.addAll( opinionBase.getOpinionCitations());
     }
 
     /*

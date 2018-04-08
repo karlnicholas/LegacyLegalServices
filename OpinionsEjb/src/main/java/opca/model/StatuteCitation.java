@@ -26,10 +26,16 @@ import javax.persistence.OneToMany;
 		query="select s from StatuteCitation s where s.statuteKey in :keys"),
 	@NamedQuery(name="StatuteCitation.selectForTitle", 
 		query="select s from StatuteCitation s where s.statuteKey.title like :title"),
+
+//	@NamedQuery(name="StatuteCitationData.findStatutesForKeys", 
+//		query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions where s.statuteKey in :keys"),
 	@NamedQuery(name="StatuteCitationData.findStatutesForKeys", 
-		query="select distinct(s) from StatuteCitation s join fetch s.referringOpinions where s.statuteKey in :keys"),
+		query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions ro left join fetch ro.opinionBase where s.statuteKey in :keys"),
+	
+	@NamedQuery(name="StatuteCitationData.findOnltStatutesForKeys", 
+		query="select s from StatuteCitation s where s.statuteKey in :keys"),
 	@NamedQuery(name="StatuteCitationData.findStatutesForKeysWithChildren", 
-		query="select distinct(s) from StatuteCitation s join fetch s.referringOpinions where s.statuteKey in :keys"),
+		query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions where s.statuteKey in :keys"),
 /*	
 	@NamedQuery(name="StatuteCitationData.findStatutesForKeys", 
 		query="select distinct(s) from StatuteCitation s join fetch s.referringOpinions ro where ro.statuteCitation.statuteKey in :keys"),

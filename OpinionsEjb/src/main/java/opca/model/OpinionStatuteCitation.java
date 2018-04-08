@@ -4,16 +4,19 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
+@NamedQueries( {
+	@NamedQuery(name="OpinionStatuteCitation.findByOpinions", query="select c from OpinionStatuteCitation c where c.opinionBase in :opinions order by statuteCitation, opinionBase")
+})
 @Entity
 public class OpinionStatuteCitation implements Comparable<OpinionStatuteCitation> {
 	@EmbeddedId
 	private OpinionStatuteCitationId id;
-    @ManyToOne
-    @MapsId("opinionKey")
+    @ManyToOne @MapsId("opinionKey")
     private OpinionBase opinionBase;
-    @ManyToOne
-    @MapsId("statuteKey")
+    @ManyToOne @MapsId("statuteKey")
     private StatuteCitation statuteCitation;
     private int countReferences;
 	public OpinionStatuteCitation() {

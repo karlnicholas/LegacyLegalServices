@@ -21,8 +21,8 @@
       <!-- <property name="hibernate.archive.autodetection" value="class" /> -->
       <!-- <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/> -->
       <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
-      <property name="hibernate.show_sql" value="false" />
-      <property name="hibernate.id.new_generator_mappings" value="true" />
+      <property name="hibernate.show_sql" value="true" />
+      <property name="hibernate.id.new_generator_mappings" value="false" />
 <!-- <property name="hibernate.implicit_naming_strategy" value="opca.ejb.util.ImprovedImplicitNamingStrategy" /> -->      
       <property name="hibernate.physical_naming_strategy" value="opca.ejb.util.ImprovedNamingStrategy" />
     </properties>

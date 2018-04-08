@@ -3,9 +3,14 @@ package opca.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
-@SuppressWarnings("serial")
+@NamedQueries({
+	@NamedQuery(name="SlipProperties.findAll", 
+		query="select p from SlipProperties p")
+})
 @Entity
+@SuppressWarnings("serial")
 public class SlipProperties implements Serializable {
+	// does this space count? Don't think so, row allocation is dynamic anyway.
 	@Id
 	private OpinionKey opinionKey;
     @OneToOne @MapsId
@@ -18,10 +23,10 @@ public class SlipProperties implements Serializable {
 	private String fileExtension;
 	@Column(columnDefinition = "varchar(31)")
     private String disposition;
-	@Column(columnDefinition = "varchar(4008)")
+	@Column(columnDefinition = "varchar(4007)")
     private String summary;
 
-    public SlipProperties() {}
+	public SlipProperties() {}
 	public SlipProperties(SlipOpinion slipOpinion, String fileName, String fileExtension, String court, String disposition, String summary) {
 		this.slipOpinion = slipOpinion;
     	setFileName(fileName);
@@ -38,6 +43,18 @@ public class SlipProperties implements Serializable {
 		setCourt(slipCopy.getCourt());
     	setDisposition(slipCopy.getDisposition());
     	setSummary(slipCopy.getSummary());
+	}
+    public OpinionKey getOpinionKey() {
+		return opinionKey;
+	}
+	public void setOpinionKey(OpinionKey opinionKey) {
+		this.opinionKey = opinionKey;
+	}
+	public SlipOpinion getSlipOpinion() {
+		return slipOpinion;
+	}
+	public void setSlipOpinion(SlipOpinion slipOpinion) {
+		this.slipOpinion = slipOpinion;
 	}
 	public String getFileName() {
 		return fileName;
@@ -71,7 +88,7 @@ public class SlipProperties implements Serializable {
 		return summary;
 	}
 	public void setSummary(String summary) {
-		if ( summary != null && summary.length() > 4008 ) summary = "..." + summary.substring(summary.length()-4005);
+		if ( summary != null && summary.length() > 4007 ) summary = "..." + summary.substring(summary.length()-4004);
 		this.summary = summary;
 	}
 	@Override

@@ -1,50 +1,23 @@
+select distinct 
+	employee0_.id as id1_1_0_, 
+	children1_.child_id as child_id2_2_1_, 
+	children1_.employee_id as employee3_2_1_, 
+	children1_.count as count1_2_1_, 
+	children1_.employee_id as employee3_2_0__, 
+	children1_.child_id as child_id2_2_0__ 
+from Employee employee0_ 
+left outer join EmployeeChildRelation children1_ on employee0_.id=children1_.employee_id
 
+select child0_.id as id1_0_0_ from Child child0_ where child0_.id=?
 
-select 
-  distinct 
-  slipopinio0_.opinionkey as opinionk1_0_0_, 
-  statutecit1_.opinionbase_opinionkey as opinionb4_2_1_, 
-  statutecit1_.statutecitation_sectionnumber as statutec2_2_1_, 
-  statutecit1_.statutecitation_title as statutec3_2_1_, 
-  opinionbas3_.opinionkey as opinionk1_0_2_, 
-  slipopinio0_1_.countreferringopinions as countref2_0_0_, 
-  slipopinio0_1_.court as court3_0_0_, 
-  slipopinio0_1_.opiniondate as opiniond4_0_0_, 
-  slipopinio0_1_.title as title5_0_0_, 
-  slipopinio0_.disposition as disposit1_4_0_, 
-  slipopinio0_.fileextension as fileexte2_4_0_, 
-  slipopinio0_.filename as filename3_4_0_, 
-  slipopinio0_.summary as summary4_4_0_, 
-  statutecit1_.countreferences as countref1_2_1_, 
-  statutecit1_.opinionbase_opinionkey as opinionb4_2_0__, 
-  statutecit1_.statutecitation_sectionnumber as statutec2_2_0__, 
-  statutecit1_.statutecitation_title as statutec3_2_0__, 
-  opinionbas3_.countreferringopinions as countref2_0_2_, 
-  opinionbas3_.court as court3_0_2_, 
-  opinionbas3_.opiniondate as opiniond4_0_2_, 
-  opinionbas3_.title as title5_0_2_, 
-  opinionbas3_1_.disposition as disposit1_4_2_, 
-  opinionbas3_1_.fileextension as fileexte2_4_2_, 
-  opinionbas3_1_.filename as filename3_4_2_, 
-  opinionbas3_1_.summary as summary4_4_2_, 
-  case 
-    when opinionbas3_1_.opinionkey is not null then 1 
-    when opinionbas3_.opinionkey is not null then 0 
-  end as clazz_2_, 
-  opinioncit2_.referringopinions_opinionkey as referrin1_1_1__, 
-  opinioncit2_.opinioncitations_opinionkey as opinionc2_1_1__ 
-from 
-  slipopinion slipopinio0_ 
-  inner join opinionbase slipopinio0_1_ on slipopinio0_.opinionkey=slipopinio0_1_.opinionkey 
-  left outer join opinionstatutecitation statutecit1_ on slipopinio0_.opinionkey=statutecit1_.opinionbase_opinionkey 
-  left outer join opinionbase_opinionbase opinioncit2_ on slipopinio0_.opinionkey=opinioncit2_.referringopinions_opinionkey 
-  left outer join opinionbase opinionbas3_ on opinioncit2_.opinioncitations_opinionkey=opinionbas3_.opinionkey 
-  left outer join slipopinion opinionbas3_1_ on opinionbas3_.opinionkey=opinionbas3_1_.opinionkey 
-where 
-  slipopinio0_1_.opiniondate between ? and ? order by slipopinio0_1_.opiniondate desc
-
-
-
-
-19:11:04,161 INFO  [stdout] (default task-4) Hibernate: select statutecit0_.sectionnumber as sectionn1_5_0_, statutecit0_.title as title2_5_0_, statutecit0_.designated as designat3_5_0_ from statutecitation statutecit0_ where statutecit0_.sectionnumber=? and statutecit0_.title=?
-
+select distinct 
+	employee0_.id as id1_1_0_, 
+	children1_.child_id as child_id2_2_1_, 
+	children1_.employee_id as employee3_2_1_, 
+	child2_.id as id1_0_2_, 
+	children1_.count as count1_2_1_, 
+	children1_.employee_id as employee3_2_0__, 
+	children1_.child_id as child_id2_2_0__ 
+from Employee employee0_ 
+left outer join EmployeeChildRelation children1_ on employee0_.id=children1_.employee_id 
+left outer join Child child2_ on children1_.child_id=child2_.id
