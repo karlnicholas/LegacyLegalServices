@@ -228,12 +228,11 @@ public class OpinionViewBuilder {
 
 	public List<OpinionScoreList> scoreSlipOpinionOpinions(
 		OpinionView opinionView, 
-		ParsedOpinionCitationSet parserResults, 
-		List<OpinionBase> opinionSummaries
+		ParsedOpinionCitationSet parserResults
 	) {
 		List<OpinionScoreList> opinionScores = new ArrayList<OpinionScoreList>();
 		// need a collection StatutueCitations.
-        for ( OpinionBase opinionCited: opinionSummaries ) {
+        for ( OpinionBase opinionCited: opinionView.getOpinionCitations() ) {
         	for ( StatuteCitation statuteCitation: opinionCited.getOnlyStatuteCitations() ) {
         		if ( statuteCitation != null) {
         			// search scoreMatrix for opinionStatuteCitation
@@ -300,13 +299,12 @@ public class OpinionViewBuilder {
 
 	public List<StatuteScoreList> scoreSlipOpinionStatutes(
 		OpinionView opinionView, 
-		ParsedOpinionCitationSet parserResults, 
-		List<OpinionBase> opinionSummaries
+		ParsedOpinionCitationSet parserResults
 	) {
 		List<StatuteScoreList> statuteScores = new ArrayList<StatuteScoreList>();
 		// make a sorted list of statuteKey's that opinionView refers to
 		
-        for ( OpinionBase opinionCited: opinionSummaries) {
+        for ( OpinionBase opinionCited: opinionView.getOpinionCitations()) {
         	for ( StatuteCitation statuteCitation: opinionCited.getOnlyStatuteCitations() ) {
         		if ( statuteCitation != null ) {
         			// search scoreMatrix for opinionStatuteCitation

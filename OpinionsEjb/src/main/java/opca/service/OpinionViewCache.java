@@ -2,11 +2,11 @@ package opca.service;
 
 import java.util.*;
 import java.util.logging.Logger;
+import static java.util.stream.Collectors.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 
 import opca.memorydb.PersistenceLookup;
 import opca.model.OpinionBase;
@@ -156,23 +156,23 @@ public class OpinionViewCache {
 			OpinionView opinionView = opinionViewBuilder.buildSlipOpinionView(statutesRs, slipOpinion, parserResults);
 			opinionView.trimToLevelOfInterest(levelOfInterest, true);
 			opinionView.combineCommonSections();
-			
+/*			
 			List<OpinionBase> opinionSummaries;
 			List<OpinionBase> opinionBases = new ArrayList<>(opinionView.getOpinionCitations());
 
 			if ( opinionBases == null || opinionBases.size() == 0 ) {
 				opinionSummaries = new ArrayList<>();
 			} else {
-				TypedQuery<OpinionBase> query = em.createNamedQuery("OpinionBase.findOpinionsForKeysJoinStatuteCitations", OpinionBase.class);
+				TypedQuery<OpinionBase> query = em.createNamedQuery("OpinionBase.findByOpinionsJoinStatuteCitations", OpinionBase.class);
 				List<OpinionKey> keys = new ArrayList<>();
 				for (OpinionBase opinion: opinionBases) {
 					keys.add(opinion.getOpinionKey());
 				}
 				opinionSummaries = query.setParameter("keys", keys).getResultList();
 			}
-	        
-			opinionViewBuilder.scoreSlipOpinionOpinions(opinionView, parserResults, opinionSummaries);
-			opinionViewBuilder.scoreSlipOpinionStatutes(opinionView, parserResults, opinionSummaries);
+*/	        
+			opinionViewBuilder.scoreSlipOpinionOpinions(opinionView, parserResults);
+			opinionViewBuilder.scoreSlipOpinionStatutes(opinionView, parserResults);
 			
 			opinionViews.add(opinionView);
 		}
@@ -221,21 +221,14 @@ public class OpinionViewCache {
 		Collections.sort(sortedOpinions);
 		// need to fill out the statuteCitations.referringOpinions.opinionStatuteCitation for these opinions
 		// since the refCount will be needed for the SectionView.
-		List<OpinionStatuteCitation> osCitations = em.createNamedQuery("OpinionStatuteCitation.findByOpinions", OpinionStatuteCitation.class)
-				.setParameter("opinions",  opinions).getResultList();
-		TreeSet<StatuteCitation> citationsReferringOpinions = new TreeSet<>();
-		for ( OpinionStatuteCitation osCitation: osCitations ) {
-			StatuteCitation statuteCitation = citationsReferringOpinions.floor(osCitation.getStatuteCitation());
-			if ( statuteCitation != null ) {
-				statuteCitation.getReferringOpinions().add(osCitation);
-			} else {
-				statuteCitation = osCitation.getStatuteCitation();
-				TreeSet<OpinionStatuteCitation> opinionStatuteCitations= new TreeSet<>();
-				opinionStatuteCitations.add(osCitation);
-				statuteCitation.setReferringOpinions(opinionStatuteCitations);
-				citationsReferringOpinions.add(statuteCitation);
-			}
-		}
+		// combine duplicates
+		
+		Map<StatuteCitation, Set<OpinionStatuteCitation>> osCitations = em.createNamedQuery("OpinionStatuteCitation.findByOpinions", OpinionStatuteCitation.class)
+				.setParameter("opinions",  opinions)
+				.getResultList()
+				.stream()
+				.collect( groupingBy(OpinionStatuteCitation::getStatuteCitation, toSet() ));
+				
 		// need to add the retrieval of SlipProperties here. 
 		List<SlipProperties> properties = em.createNamedQuery("SlipProperties.findAll", SlipProperties.class).getResultList();
 		for( SlipProperties slipProperties: properties ) {
@@ -243,9 +236,11 @@ public class OpinionViewCache {
 			if ( found >= 0 ) {
 				SlipOpinion slipOpinion = ((SlipOpinion)sortedOpinions.get(found));
 				slipOpinion.setSlipProperties(slipProperties);
+
 				for ( StatuteCitation statuteCitation: slipOpinion.getOnlyStatuteCitations() ) {
-					statuteCitation.setReferringOpinions(citationsReferringOpinions.floor(statuteCitation).getReferringOpinions());
+					statuteCitation.setReferringOpinions(osCitations.get(statuteCitation));
 				}
+				
 			}
 		}
 /*		

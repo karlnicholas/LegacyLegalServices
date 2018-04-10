@@ -117,6 +117,10 @@ public class SlipOpinionService {
 		return em.createNamedQuery("OpinionBase.findByOpinionKey", OpinionBase.class).setParameter("key", opinionBase.getOpinionKey()).getSingleResult();
 	}
 
+	public SlipOpinion loadOpinion(OpinionKey opinionKey) {
+		return em.createNamedQuery("SlipOpinion.loadOpinion", SlipOpinion.class).setParameter("key", opinionKey).getSingleResult();
+	}
+
 	public List<SlipOpinion> listSlipOpinions() {
 		return em.createQuery("select s from SlipOpinion s", SlipOpinion.class).getResultList();
 	}

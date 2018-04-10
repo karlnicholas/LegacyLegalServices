@@ -18,6 +18,8 @@ import javax.persistence.*;
 		query="select distinct o.opinionDate from SlipOpinion o order by o.opinionDate desc"),
 	@NamedQuery(name="SlipOpinion.findByOpinionKey", 
 		query="select o from SlipOpinion o where o.opinionKey = :key"),
+	@NamedQuery(name="SlipOpinion.loadOpinion", 
+		query="select o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation left join fetch o.opinionCitations left join fetch o.referringOpinions where o.opinionKey = :key"),
 })
 /*
 	@NamedQuery(name="SlipOpinion.fetchStatuteCitations", 

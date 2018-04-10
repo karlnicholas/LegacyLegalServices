@@ -8,7 +8,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @NamedQueries( {
-	@NamedQuery(name="OpinionStatuteCitation.findByOpinions", query="select c from OpinionStatuteCitation c where c.opinionBase in :opinions order by statuteCitation, opinionBase")
+	@NamedQuery(name="OpinionStatuteCitation.findByOpinions", 
+		query="select c from OpinionStatuteCitation c where c.opinionBase in :opinions order by statuteCitation, opinionBase")
 })
 @Entity
 public class OpinionStatuteCitation implements Comparable<OpinionStatuteCitation> {

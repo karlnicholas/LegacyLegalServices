@@ -105,6 +105,17 @@ public class OpinionKey implements Serializable, Comparable<OpinionKey> {
         sb.append(p);
         return sb.toString();
     }
+    public static String printKey(long opinionKey) {
+        StringBuilder sb = new StringBuilder();
+        int vol = (int)(opinionKey >>> 48);
+        sb.append(vol);
+        sb.append(' ');
+        sb.append(appellateSets[(int)((opinionKey >>> 32) & 0xffff)]);
+        sb.append(' ');
+        int p = (int)( opinionKey & 0xffffffff);
+        sb.append(p);
+        return sb.toString();
+    }
 	public boolean isSlipOpinion() {
 		return ((int)((opinionKey >>> 32) & 0xffff)) == 0; 
 	}

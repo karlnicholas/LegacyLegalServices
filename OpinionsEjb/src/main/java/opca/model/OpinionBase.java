@@ -18,8 +18,6 @@ import opca.parser.ParsedOpinionCitationSet;
 		query="select o from OpinionBase o where o.opinionKey = :key"),
 	@NamedQuery(name="OpinionBase.findOpinionsForKeys", 
 		query="select o from OpinionBase o where o.opinionKey in :keys"),
-	@NamedQuery(name="OpinionBase.findOpinionsForKeysJoinStatuteCitations", 
-		query="select distinct(o) from OpinionBase o left join fetch o.statuteCitations where o.opinionKey in :keys"),
 	@NamedQuery(name="OpinionBase.findOpinionByKeyFetchReferringOpinions", 
 		query="select o from OpinionBase o inner join fetch o.referringOpinions where o.opinionKey = :key"),})
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)

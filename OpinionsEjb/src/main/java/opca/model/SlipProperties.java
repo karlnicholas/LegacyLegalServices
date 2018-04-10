@@ -5,7 +5,9 @@ import javax.persistence.*;
 
 @NamedQueries({
 	@NamedQuery(name="SlipProperties.findAll", 
-		query="select p from SlipProperties p")
+		query="select p from SlipProperties p"), 
+	@NamedQuery(name="SlipProperties.findOne", 
+		query="select p from SlipProperties p where p.slipOpinion = :opinion")
 })
 @Entity
 @SuppressWarnings("serial")
