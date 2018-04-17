@@ -216,33 +216,18 @@ public class OpinionViewCache {
 
 	public List<SlipOpinion> findByPublishDateRange(Date startDate, Date endDate) {
 //		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.findByOpinionDateRange", SlipOpinion.class).setParameter("startDate", startDate).setParameter("endDate", endDate).getResultList();
-		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.loadByOpinionDateRange", SlipOpinion.class).setParameter("startDate", startDate).setParameter("endDate", endDate).getResultList();
-		List<OpinionBase> sortedOpinions = new ArrayList<>(opinions);
-		Collections.sort(sortedOpinions);
-		// need to fill out the statuteCitations.referringOpinions.opinionStatuteCitation for these opinions
-		// since the refCount will be needed for the SectionView.
-		// combine duplicates
-		
-		Map<StatuteCitation, Set<OpinionStatuteCitation>> osCitations = em.createNamedQuery("OpinionStatuteCitation.findByOpinions", OpinionStatuteCitation.class)
-				.setParameter("opinions",  opinions)
-				.getResultList()
-				.stream()
-				.collect( groupingBy(OpinionStatuteCitation::getStatuteCitation, toSet() ));
-				
-		// need to add the retrieval of SlipProperties here. 
-		List<SlipProperties> properties = em.createNamedQuery("SlipProperties.findAll", SlipProperties.class).getResultList();
-		for( SlipProperties slipProperties: properties ) {
-			int found = Collections.binarySearch(sortedOpinions, new OpinionBase(slipProperties.getOpinionKey()), (o1, o2)->o1.compareTo(o2) );
-			if ( found >= 0 ) {
-				SlipOpinion slipOpinion = ((SlipOpinion)sortedOpinions.get(found));
-				slipOpinion.setSlipProperties(slipProperties);
+		// just get all slip opinions
+		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.loadByOpinionDateRange", SlipOpinion.class).getResultList();
 
-				for ( StatuteCitation statuteCitation: slipOpinion.getOnlyStatuteCitations() ) {
-					statuteCitation.setReferringOpinions(osCitations.get(statuteCitation));
-				}
-				
-			}
+		// load slipOpinion properties from the database here ... ?
+		int tcount = 0;
+		for ( SlipOpinion slipOpinion: opinions ) {
+			slipOpinion.setOpinionCitations( em.createQuery("select so from SlipOpinion so left join fetch so.opinionCitations oc left join fetch oc.statuteCitations ocsc left join fetch ocsc.statuteCitation ocscsc left join fetch ocscsc.referringOpinions ocscscro left join fetch ocscscro.opinionBase ocscscroob where so.opinionKey = :key", SlipOpinion.class).setParameter("key", slipOpinion.getOpinionKey()).getSingleResult().getOpinionCitations() );
+			slipOpinion.setStatuteCitations( em.createQuery("select so from SlipOpinion so left join fetch so.statuteCitations sc left join fetch sc.statuteCitation scsc left join fetch scsc.referringOpinions scscro left join fetch scscro.opinionBase scscroob where so.opinionKey = :key", SlipOpinion.class).setParameter("key", slipOpinion.getOpinionKey()).getSingleResult().getStatuteCitations() );
+			slipOpinion.setSlipProperties( em.createNamedQuery("SlipProperties.findOne", SlipProperties.class).setParameter("opinion", slipOpinion).getSingleResult() );
+System.out.println("Loaded: " + ++tcount + ": " +slipOpinion.getTitle()); 			
 		}
+
 /*		
 		TypedQuery<StatuteKey> fetchStatuteCitations = em.createNamedQuery("SlipOpinion.fetchStatuteCitations", StatuteKey.class);
 		TypedQuery<OpinionKey> fetchOpinionCitations = em.createNamedQuery("SlipOpinion.fetchOpinionCitations", OpinionKey.class);

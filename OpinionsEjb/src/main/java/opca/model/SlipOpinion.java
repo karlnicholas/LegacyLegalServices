@@ -13,7 +13,7 @@ import javax.persistence.*;
 //	@NamedQuery(name="SlipOpinion.loadByOpinionDateRange", 
 //		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation left join fetch o.opinionCitations left join fetch o.referringOpinions where o.opinionDate between :startDate and :endDate order by o.opinionDate desc"),
 	@NamedQuery(name="SlipOpinion.loadByOpinionDateRange", 
-		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation left join fetch o.opinionCitations left join fetch o.referringOpinions where o.opinionDate between :startDate and :endDate order by o.opinionDate desc"),
+		query="select o from SlipOpinion o order by o.opinionDate desc"),
 	@NamedQuery(name="SlipOpinion.listOpinionDates", 
 		query="select distinct o.opinionDate from SlipOpinion o order by o.opinionDate desc"),
 	@NamedQuery(name="SlipOpinion.findByOpinionKey", 
