@@ -110,7 +110,7 @@ public class SlipOpinionService {
 	}
 
 	public StatuteCitation findStatute(StatuteCitation statuteCitation) {
-		return em.createNamedQuery("StatuteCitation.findByStatuteKey", StatuteCitation.class).setParameter("StatuteKey", statuteCitation.getStatuteKey()).getSingleResult();
+		return em.createNamedQuery("StatuteCitation.findByStatuteKey", StatuteCitation.class).setParameter("statuteKey", statuteCitation.getStatuteKey()).getSingleResult();
 	}
 
 	public OpinionBase findOpinion(OpinionBase opinionBase) {

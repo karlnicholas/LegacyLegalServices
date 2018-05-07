@@ -17,6 +17,7 @@ import opca.memorydb.CitationStore;
 import opca.model.OpinionBase;
 import opca.model.OpinionStatuteCitation;
 import opca.model.SlipOpinion;
+import opca.model.SlipProperties;
 import opca.model.StatuteCitation;
 import opca.parser.OpinionScraperInterface;
 import opca.parser.OpinionDocumentParser;
@@ -66,6 +67,10 @@ public class CAOnlineUpdates {
 			logger.info("No cases found online: returning.");
 			return;
 		}
+		//
+//		onlineOpinions.remove(0);
+//		onlineOpinions = onlineOpinions.subList(17, 19);
+		//
 		List<SlipOpinion> currentOpinions = slipOpinionService.listSlipOpinions();
 		List<SlipOpinion> currentCopy = new ArrayList<SlipOpinion>(currentOpinions);
 		logger.info("Found " + currentCopy.size() + " in the database.");
@@ -145,13 +150,20 @@ public class CAOnlineUpdates {
 		}
 
 		List<OpinionStatuteCitation> persistOpinionStatuteCitations = new ArrayList<>();
+		List<OpinionBase> persistOpinions = new ArrayList<>();
 		List<OpinionBase> mergeOpinions = new ArrayList<>();
-		List<StatuteCitation> mergeStatutes = new ArrayList<StatuteCitation>();
+		List<StatuteCitation> mergeStatutes = new ArrayList<>();	  	
+		List<StatuteCitation> persistStatutes = new ArrayList<>();
 
-		processOpinions(citationStore, mergeOpinions);
-	  	processStatutes(citationStore, mergeStatutes);
-	  	
+		processOpinions(citationStore, mergeOpinions, persistOpinions);
+	  	processStatutes(citationStore, mergeStatutes, persistStatutes);
+		
 		for( SlipOpinion slipOpinion: opinions ) {
+//			slipOpinion.setOpinionCitations(null);		
+//			slipOpinion.getOpinionCitations().clear();
+//			OpinionBase opBase = mergeOpinions.get(0);
+//			slipOpinion.getOpinionCitations().removeAll(mergeOpinions);
+//			slipOpinion.getOpinionCitations().add(opBase);
     		if ( slipOpinion.getStatuteCitations() != null ) {
 	    		for ( OpinionStatuteCitation statuteCitation: slipOpinion.getStatuteCitations() ) {
     				persistOpinionStatuteCitations.add(statuteCitation);
@@ -160,24 +172,49 @@ public class CAOnlineUpdates {
 			em.persist(slipOpinion);
 			em.persist(slipOpinion.getSlipProperties());
 		}
-		
-    	Date startTime = new Date();
-    	for(OpinionStatuteCitation opinionStatuteCitation: persistOpinionStatuteCitations) {
+
+/*
+
+		Date startTime = new Date();
+		startTime = new Date();
+		for(OpinionStatuteCitation opinionStatuteCitation: persistOpinionStatuteCitations) {
 			em.persist(opinionStatuteCitation);
     	}
 		logger.info("Persisted "+ persistOpinionStatuteCitations.size()+" opinionStatuteCitation in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
+		
+*/		
+		
+		Date startTime = new Date();
+    	for(OpinionBase opinion: persistOpinions ) {
+			em.persist(opinion);
+    	}
+		logger.info("Persisted "+persistOpinions.size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
 
-	  	startTime = new Date();
+		startTime = new Date();
+
     	for(OpinionBase opinion: mergeOpinions ) {
 			em.merge(opinion);
     	}
 		logger.info("Merged "+mergeOpinions.size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
-		
+
+		startTime = new Date();
+		for(OpinionStatuteCitation opinionStatuteCitation: persistOpinionStatuteCitations) {
+			em.persist(opinionStatuteCitation);
+    	}
+		logger.info("Persisted "+ persistOpinionStatuteCitations.size()+" opinionStatuteCitation in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
+
+		startTime = new Date();
+    	for(StatuteCitation statute: persistStatutes ) {
+			em.persist(statute);
+    	}
+		logger.info("Persisted "+persistStatutes.size()+" statutes in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
+
 		startTime = new Date();
     	for(StatuteCitation statute: mergeStatutes ) {
 			em.merge(statute);
     	}
 		logger.info("Merged "+mergeStatutes.size()+" statutes in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
+
 	}
 
 	private void deleteExistingOpinions(List<SlipOpinion> currentCopy) {
@@ -201,26 +238,33 @@ public class CAOnlineUpdates {
 			for ( StatuteCitation statuteCitation: deleteOpinion.getOnlyStatuteCitations() ) {
 				StatuteCitation opStatute = slipOpinionService.findStatute(statuteCitation);
 				// int count = opStatute.getOpinionStatuteReference(deleteOpinion).getCountReferences();
-				opStatute.removeOpinionStatuteReference(deleteOpinion);
+				OpinionStatuteCitation opinionStatuteCitation = opStatute.removeOpinionStatuteReference(deleteOpinion);
 //				OpinionKey opKey = deleteOpinion.getOpinionKey();
 //				if ( count <= 0 ) throw new RuntimeException("Cannot delete referring opinion: " + deleteOpinion + " " + opStatute);
 //				mapReferringOpinionCount.remove(deleteOpinion);
 				em.merge(opStatute);
+				if ( opinionStatuteCitation != null ) {
+					em.remove(opinionStatuteCitation);
+				}
 			}
 //					if (!deleteOpinion.getReferringOpinions().isEmpty()) throw new RuntimeException("referringOpinions not empty: " + deleteOpinion );
 			// remove detached entity
+			List<SlipProperties> slipProperties = em.createNamedQuery("SlipProperties.findOne", SlipProperties.class).setParameter("opinion", deleteOpinion).getResultList();
+			if ( slipProperties.size() != 0 )
+				em.remove(slipProperties.get(0));
 			em.remove(deleteOpinion);
 		}
 	}
 
 	private void processOpinions(CitationStore citationStore,  
-		List<OpinionBase> mergeOpinions
+		List<OpinionBase> mergeOpinions, 
+		List<OpinionBase> persistOpinions 
+		
 	) {
-		OpinionBase[] opArray = new OpinionBase[citationStore.getAllOpinions().size()];    	
-		citationStore.getAllOpinions().toArray(opArray);
-		List<OpinionBase> opinions = Arrays.asList(opArray);
-		List<OpinionBase> persistOpinions = new ArrayList<>();
-//		List<OpinionBase> mergeOpinions = new ArrayList<>();
+//		OpinionBase[] opArray = new OpinionBase[citationStore.getAllOpinions().size()];    	
+//		citationStore.getAllOpinions().toArray(opArray);
+//		List<OpinionBase> opinions = Arrays.asList(opArray);
+		List<OpinionBase> opinions = new ArrayList<>(citationStore.getAllOpinions());
 
     	Date startTime = new Date();
     	for(OpinionBase opinion: opinions ) {
@@ -243,6 +287,7 @@ public class CAOnlineUpdates {
 */	    			
 				//opinion referred to itself?
 //              existingOpinion.addOpinionBaseReferredFrom(opinion.getOpinionKey());
+				citationStore.replaceOpinion(existingOpinion);				
 				mergeOpinions.add(existingOpinion);
 			}
 			logger.fine("opinion "+opinion.getOpinionKey()
@@ -252,30 +297,29 @@ public class CAOnlineUpdates {
 
 			
 		}
-		logger.info("Divided "+opinions.size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
-
+		logger.info("Divided "+citationStore.getAllOpinions().size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
+/*		
 		startTime = new Date();
     	for(OpinionBase opinion: persistOpinions ) {
 			em.persist(opinion);
     	}
-		logger.info("Persisted "+opinions.size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
-/*
+		logger.info("Persisted "+persistOpinions.size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
 		startTime = new Date();
     	for(OpinionBase opinion: mergeOpinions ) {
 			em.merge(opinion);
     	}
-		logger.info("Merged "+opinions.size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
+		logger.info("Merged "+mergeOpinions.size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
 */		
     }
 
     private void processStatutes( 
     		CitationStore citationStore, 
-    		List<StatuteCitation> mergeStatutes
+    		List<StatuteCitation> mergeStatutes, 
+    		List<StatuteCitation> persistStatutes
 	) {
 		StatuteCitation[] stArray = new StatuteCitation[citationStore.getAllStatutes().size()];    	
 		citationStore.getAllStatutes().toArray(stArray);
 		List<StatuteCitation> statutes = Arrays.asList(stArray);
-		List<StatuteCitation> persistStatutes = new ArrayList<StatuteCitation>();
 
     	int count = statutes.size();
     	Date startTime = new Date();
@@ -285,23 +329,24 @@ public class CAOnlineUpdates {
 				persistStatutes.add(statute);
 			} else {
 				existingStatute.mergeStatuteCitationFromSlipLoad(statute);
+				citationStore.replaceStatute(existingStatute);				
+				
 				mergeStatutes.add(existingStatute);
 			}
     	}
 		logger.info("Divided "+count+" statutes in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
 
+/*
     	startTime = new Date();
     	for(StatuteCitation statute: persistStatutes ) {
 			em.persist(statute);
     	}
-		logger.info("Persisted "+statutes.size()+" statutes in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
-
-/*
+		logger.info("Persisted "+persistStatutes.size()+" statutes in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
 		startTime = new Date();
     	for(StatuteCitation statute: mergeStatutes ) {
 			em.merge(statute);
     	}
-		logger.info("Merged "+statutes.size()+" statutes in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
+		logger.info("Merged "+mergeStatutes.size()+" statutes in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
 */		
     }
 }

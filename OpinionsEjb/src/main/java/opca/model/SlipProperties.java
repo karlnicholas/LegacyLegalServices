@@ -7,14 +7,16 @@ import javax.persistence.*;
 	@NamedQuery(name="SlipProperties.findAll", 
 		query="select p from SlipProperties p"), 
 	@NamedQuery(name="SlipProperties.findOne", 
-		query="select p from SlipProperties p where p.slipOpinion = :opinion")
+		query="select p from SlipProperties p where p.slipOpinion = :opinion"), 
+	@NamedQuery(name="SlipProperties.deleteOne", 
+		query="delete from SlipProperties p where p.slipOpinion = :opinion")
 })
 @Entity
 @SuppressWarnings("serial")
 public class SlipProperties implements Serializable {
 	// does this space count? Don't think so, row allocation is dynamic anyway.
 	@Id
-	private OpinionKey opinionKey;
+	private Integer opinionId;
     @OneToOne @MapsId
 	private SlipOpinion slipOpinion; 
 	@Column(columnDefinition="varchar(15)")
@@ -46,11 +48,11 @@ public class SlipProperties implements Serializable {
     	setDisposition(slipCopy.getDisposition());
     	setSummary(slipCopy.getSummary());
 	}
-    public OpinionKey getOpinionKey() {
-		return opinionKey;
+    public Integer getOpinionKey() {
+		return opinionId;
 	}
-	public void setOpinionKey(OpinionKey opinionKey) {
-		this.opinionKey = opinionKey;
+	public void setOpinionKey(Integer opinionId) {
+		this.opinionId = opinionId;
 	}
 	public SlipOpinion getSlipOpinion() {
 		return slipOpinion;

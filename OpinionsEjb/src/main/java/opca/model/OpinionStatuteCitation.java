@@ -17,9 +17,9 @@ import javax.persistence.NamedQuery;
 public class OpinionStatuteCitation implements Comparable<OpinionStatuteCitation> {
 	@EmbeddedId
 	private OpinionStatuteCitationId id;
-    @ManyToOne @MapsId("opinionKey")
+    @ManyToOne @MapsId("opinionId")
     private OpinionBase opinionBase;
-    @ManyToOne @MapsId("statuteKey")
+    @ManyToOne @MapsId("statuteId")
     private StatuteCitation statuteCitation;
     private int countReferences;
 	public OpinionStatuteCitation() {

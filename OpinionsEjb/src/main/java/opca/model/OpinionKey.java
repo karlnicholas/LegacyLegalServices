@@ -1,7 +1,6 @@
 package opca.model;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 import javax.persistence.Embeddable;
 
@@ -32,12 +31,11 @@ public class OpinionKey implements Serializable, Comparable<OpinionKey> {
         "Cal.App.7th", 		// 20
         "Cal.App.Supp.7th", 	// 21
     };
-/*    
+    
     private int volume; 
     private int vset;
     private int page;
-*/
-    private long opinionKey; 
+
     public OpinionKey() {}
     public OpinionKey(String volume, String vset, String page) {
         buildKey(volume, vset, page);
@@ -46,7 +44,9 @@ public class OpinionKey implements Serializable, Comparable<OpinionKey> {
     	setKey(volume, vset, page);
 	}
     private void setKey(int volume, int vset, int page) {
-    	opinionKey = ((((long)volume ) << 48) | (((long)vset) << 32) | page);
+    	this.volume = volume;
+    	this.vset= vset;
+    	this.page = page;
     }
 	public OpinionKey(String caseName) {
         String[] parts = caseName.split("[ ]");
@@ -76,52 +76,61 @@ public class OpinionKey implements Serializable, Comparable<OpinionKey> {
 
     @Override
     public int compareTo(OpinionKey o) {
-    	return (opinionKey > o.opinionKey)?1:(opinionKey < o.opinionKey)?-1:0;
+    	if ( page != o.page ) return page - o.page;
+    	if ( volume != o.volume ) return volume - o.volume;
+    	return vset - o.vset;
     }
+
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + page;
+		result = prime * result + volume;
+		result = prime * result + vset;
+		return result;
+	}
 	@Override
-    public int hashCode() {
-    	return Objects.hash(opinionKey);
-    }
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        OpinionKey other = (OpinionKey) obj;
-        return (opinionKey == other.opinionKey);
-    }
-    @Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		OpinionKey other = (OpinionKey) obj;
+		if (page != other.page)
+			return false;
+		if (volume != other.volume)
+			return false;
+		if (vset != other.vset)
+			return false;
+		return true;
+	}
+	@Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        int vol = (int)(opinionKey >>> 48);
-        sb.append(vol);
+        sb.append(volume);
         sb.append(' ');
         sb.append(getVSetAsString());
         sb.append(' ');
-        int p = (int)( opinionKey & 0xffffffff);
-        sb.append(p);
+        sb.append(page);
         return sb.toString();
     }
-    public static String printKey(long opinionKey) {
+    public static String printKey(OpinionKey opinionKey) {
         StringBuilder sb = new StringBuilder();
-        int vol = (int)(opinionKey >>> 48);
-        sb.append(vol);
+        sb.append(opinionKey.volume);
         sb.append(' ');
-        sb.append(appellateSets[(int)((opinionKey >>> 32) & 0xffff)]);
+        sb.append(appellateSets[opinionKey.vset]);
         sb.append(' ');
-        int p = (int)( opinionKey & 0xffffffff);
-        sb.append(p);
+        sb.append(opinionKey.page);
         return sb.toString();
     }
 	public boolean isSlipOpinion() {
-		return ((int)((opinionKey >>> 32) & 0xffff)) == 0; 
+		return vset == 0; 
 	}
 	public String getVSetAsString() {
-		int vs = (int)((opinionKey >>> 32) & 0xffff);
-		return appellateSets[vs];
+		return appellateSets[vset];
 	}
 }
 

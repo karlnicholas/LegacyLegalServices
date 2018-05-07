@@ -5,8 +5,10 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -47,7 +49,8 @@ import javax.persistence.OneToMany;
 @Entity
 // bug @Table(indexes = {@Index(columnList="title,sectionNumber")})
 public class StatuteCitation implements Comparable<StatuteCitation>, Serializable { 
-	@EmbeddedId
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer id;
     private StatuteKey statuteKey;
 	@OneToMany(mappedBy="statuteCitation")
 	private Set<OpinionStatuteCitation> referringOpinions;
@@ -137,15 +140,16 @@ public class StatuteCitation implements Comparable<StatuteCitation>, Serializabl
         	opinionStatuteCitation.setCountReferences(opinionStatuteCitation.getCountReferences() + amount);
         }
     }
-	public void removeOpinionStatuteReference(SlipOpinion deleteOpinion) {
+	public OpinionStatuteCitation removeOpinionStatuteReference(SlipOpinion deleteOpinion) {
     	Iterator<OpinionStatuteCitation> refOpIt = referringOpinions.iterator();
     	while (refOpIt.hasNext()) {
     		OpinionStatuteCitation opinionStatuteReference = refOpIt.next();
     		if ( opinionStatuteReference.getOpinionBase().equals(deleteOpinion) ) {
     			refOpIt.remove();
-    			return;
+    			return opinionStatuteReference;
     		}
     	}
+    	return null;
 	}
 
     public boolean getDesignated() {

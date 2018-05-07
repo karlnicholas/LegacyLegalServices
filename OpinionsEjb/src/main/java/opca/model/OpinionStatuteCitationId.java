@@ -7,26 +7,26 @@ import javax.persistence.Embeddable;
 @Embeddable
 @SuppressWarnings("serial")
 public class OpinionStatuteCitationId implements Serializable {
-	private StatuteKey statuteKey;
-	private OpinionKey opinionKey;
-	public StatuteKey getStatuteKey() {
-		return statuteKey;
+	private Integer statuteId;
+	private Integer opinionId;
+	public Integer getStatuteId() {
+		return statuteId;
 	}
-	public void setStatuteKey(StatuteKey statuteKey) {
-		this.statuteKey = statuteKey;
+	public void setStatuteId(Integer statuteId) {
+		this.statuteId = statuteId;
 	}
-	public OpinionKey getOpinionKey() {
-		return opinionKey;
+	public Integer getOpinionId() {
+		return opinionId;
 	}
-	public void setOpinionKey(OpinionKey opinionKey) {
-		this.opinionKey = opinionKey;
+	public void setOpinionId(Integer opinionId) {
+		this.opinionId = opinionId;
 	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((opinionKey == null) ? 0 : opinionKey.hashCode());
-		result = prime * result + ((statuteKey == null) ? 0 : statuteKey.hashCode());
+		result = prime * result + ((opinionId == null) ? 0 : opinionId.hashCode());
+		result = prime * result + ((statuteId == null) ? 0 : statuteId.hashCode());
 		return result;
 	}
 	@Override
@@ -38,16 +38,20 @@ public class OpinionStatuteCitationId implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		OpinionStatuteCitationId other = (OpinionStatuteCitationId) obj;
-		if (opinionKey == null) {
-			if (other.opinionKey != null)
+		if (opinionId == null) {
+			if (other.opinionId != null)
 				return false;
-		} else if (!opinionKey.equals(other.opinionKey))
+		} else if (!opinionId.equals(other.opinionId))
 			return false;
-		if (statuteKey == null) {
-			if (other.statuteKey != null)
+		if (statuteId == null) {
+			if (other.statuteId != null)
 				return false;
-		} else if (!statuteKey.equals(other.statuteKey))
+		} else if (!statuteId.equals(other.statuteId))
 			return false;
 		return true;
+	}
+	@Override
+	public String toString() {
+		return 	"statuteId=" + statuteId + ", opinionId=" + opinionId;
 	}
 }

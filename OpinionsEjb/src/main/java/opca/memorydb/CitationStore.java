@@ -76,9 +76,14 @@ public class CitationStore implements PersistenceLookup {
 		dataBase.getStatuteTable().add(statuteCitation);
 	}
 
-	public void replaceStatute(StatuteCitation existingCitation, StatuteCitation newCitation) {
-		dataBase.getStatuteTable().remove(existingCitation);
-		dataBase.getStatuteTable().add(newCitation);
+	public void replaceStatute(StatuteCitation statuteCitation) {
+		dataBase.getStatuteTable().remove(statuteCitation);
+		dataBase.getStatuteTable().add(statuteCitation);
+	}
+
+	public void replaceOpinion(OpinionBase existingOpinion) {
+		dataBase.getOpinionTable().remove(existingOpinion);
+		dataBase.getOpinionTable().add(existingOpinion);
 	}
 
 	@Override

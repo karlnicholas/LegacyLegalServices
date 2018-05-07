@@ -132,7 +132,10 @@ public class SlipOpinion extends OpinionBase {
 	}
 	@Override
 	public String toString() {
-        return String.format("%1$S : %2$tm/%2$td/%2$ty : %3$S", getFileName(), getOpinionDate(), getTitle() );
+		if ( slipProperties != null )
+			return String.format("%1$S : %2$tm/%2$td/%2$ty : %3$S", getFileName(), getOpinionDate(), getTitle() );
+		else 
+			return super.toString();
     }
 	public SlipProperties getSlipProperties() {
 		return slipProperties;

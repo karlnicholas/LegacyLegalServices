@@ -2,7 +2,6 @@ package opca.service;
 
 import java.util.*;
 import java.util.logging.Logger;
-import static java.util.stream.Collectors.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -11,7 +10,6 @@ import javax.persistence.EntityManager;
 import opca.memorydb.PersistenceLookup;
 import opca.model.OpinionBase;
 import opca.model.OpinionKey;
-import opca.model.OpinionStatuteCitation;
 import opca.model.SlipOpinion;
 import opca.model.SlipProperties;
 import opca.model.StatuteCitation;

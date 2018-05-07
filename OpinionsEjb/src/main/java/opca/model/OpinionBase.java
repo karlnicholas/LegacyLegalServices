@@ -3,6 +3,7 @@ package opca.model;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -19,11 +20,12 @@ import opca.parser.ParsedOpinionCitationSet;
 	@NamedQuery(name="OpinionBase.findOpinionsForKeys", 
 		query="select o from OpinionBase o where o.opinionKey in :keys"),
 	@NamedQuery(name="OpinionBase.findOpinionByKeyFetchReferringOpinions", 
-		query="select o from OpinionBase o inner join fetch o.referringOpinions where o.opinionKey = :key"),})
+		query="select distinct(o) from OpinionBase o inner join fetch o.referringOpinions where o.opinionKey = :key"),})
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType=DiscriminatorType.INTEGER)
 public class OpinionBase implements Comparable<OpinionBase>, Serializable {
-	@EmbeddedId
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	protected Integer id;
 	protected OpinionKey opinionKey;
 	@Column(columnDefinition="varchar(127)")
 	protected String title;
@@ -207,6 +209,13 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
         // is a case of merging cited opinions.
         if ( opinionBase.getStatuteCitations() != null ) throw new RuntimeException("Can not add modifications: opinionBase.statuteCitations != null");
         if ( opinionBase.getOpinionCitations() != null ) throw new RuntimeException("Can not add modifications: opinionBase.opinionCitations != null");
+        // replace ALL the opinionBase in the referring slipOpinion
+        Iterator<OpinionBase> roIt = opinionBase.getReferringOpinions().iterator();
+        while ( roIt.hasNext() ) {
+        	OpinionBase ro = roIt.next();
+        	ro.opinionCitations.remove(opinionBase);
+        	ro.opinionCitations.add(this);
+        }
         //
     	if (referringOpinions == null ) {
     		setReferringOpinions(new TreeSet<OpinionBase>());
@@ -231,7 +240,7 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
         	if ( statuteCitations == null ) 
         		statuteCitations = new TreeSet<OpinionStatuteCitation>();
 	        for ( OpinionStatuteCitation addStatuteCitation: opinionBase.getStatuteCitations() ) {
-            	if ( addStatuteCitation.getId().getStatuteKey().getTitle() == null ) 
+            	if ( addStatuteCitation.getStatuteCitation().getStatuteKey().getTitle() == null ) 
             		continue;
 	            if ( !statuteCitations.contains(addStatuteCitation) ) {
 	            	statuteCitations.add(addStatuteCitation);
