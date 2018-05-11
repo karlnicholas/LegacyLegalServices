@@ -31,8 +31,8 @@ import javax.persistence.OneToMany;
 
 //	@NamedQuery(name="StatuteCitationData.findStatutesForKeys", 
 //		query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions where s.statuteKey in :keys"),
-	@NamedQuery(name="StatuteCitationData.findStatutesForKeys", 
-		query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions ro left join fetch ro.opinionBase where s.statuteKey in :keys"),
+	@NamedQuery(name="StatuteCitation.findByStatuteKeyJoinReferringOpinions", 
+		query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions ro left join fetch ro.opinionBase where s.statuteKey = :statuteKey"),
 	
 	@NamedQuery(name="StatuteCitationData.findOnltStatutesForKeys", 
 		query="select s from StatuteCitation s where s.statuteKey in :keys"),

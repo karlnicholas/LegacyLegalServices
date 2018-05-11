@@ -53,7 +53,7 @@ public class SlipOpinionService {
 	}	
 	// StatuteCitation
 	public StatuteCitation statuteExists(StatuteCitation statuteCitation) {
-		TypedQuery<StatuteCitation> statuteCitationFindByTitleSection = em.createNamedQuery("StatuteCitation.findByStatuteKey", StatuteCitation.class);
+		TypedQuery<StatuteCitation> statuteCitationFindByTitleSection = em.createNamedQuery("StatuteCitation.findByStatuteKeyJoinReferringOpinions", StatuteCitation.class);
 		List<StatuteCitation> list = 
 				statuteCitationFindByTitleSection.setParameter("statuteKey", statuteCitation.getStatuteKey())
 				.getResultList();

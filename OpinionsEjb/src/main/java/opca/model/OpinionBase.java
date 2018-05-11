@@ -20,7 +20,17 @@ import opca.parser.ParsedOpinionCitationSet;
 	@NamedQuery(name="OpinionBase.findOpinionsForKeys", 
 		query="select o from OpinionBase o where o.opinionKey in :keys"),
 	@NamedQuery(name="OpinionBase.findOpinionByKeyFetchReferringOpinions", 
-		query="select distinct(o) from OpinionBase o inner join fetch o.referringOpinions where o.opinionKey = :key"),})
+		query="select distinct(o) from OpinionBase o inner join fetch o.referringOpinions where o.opinionKey = :key"),
+	@NamedQuery(name="OpinionBase.fetchOpinionCitationsFullJoins",
+		query="select so from SlipOpinion so left join fetch so.opinionCitations oc left join fetch oc.statuteCitations ocsc left join fetch ocsc.statuteCitation ocscsc left join fetch ocscsc.referringOpinions ocscscro left join fetch ocscscro.opinionBase ocscscroob where so.id = :id"), 
+	@NamedQuery(name="OpinionBase.fetchStatuteCitationsFullJoins",
+		query="select so from SlipOpinion so left join fetch so.statuteCitations sc left join fetch sc.statuteCitation scsc left join fetch scsc.referringOpinions scscro left join fetch scscro.opinionBase scscroob where so.id = :id"), 
+	@NamedQuery(name="OpinionBase.fetchAllOpinionCitationsFullJoins",
+		query="select so from SlipOpinion so left join fetch so.opinionCitations oc left join fetch oc.statuteCitations ocsc left join fetch ocsc.statuteCitation ocscsc left join fetch ocscsc.referringOpinions ocscscro left join fetch ocscscro.opinionBase ocscscroob where so.id in :ids"), 
+	@NamedQuery(name="OpinionBase.fetchAllStatuteCitationsFullJoins",
+		query="select so from SlipOpinion so left join fetch so.statuteCitations sc left join fetch sc.statuteCitation scsc left join fetch scsc.referringOpinions scscro left join fetch scscro.opinionBase scscroob where so.id in :ids"), 
+	})
+
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType=DiscriminatorType.INTEGER)
 public class OpinionBase implements Comparable<OpinionBase>, Serializable {
@@ -113,6 +123,9 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 			onlyStatuteCitations.add(opinionStatuteCitation.getStatuteCitation());
 		}
 		return onlyStatuteCitations;
+	}
+    public Integer getId() {
+		return id;
 	}
     public String getTitle() {
 		return title;
