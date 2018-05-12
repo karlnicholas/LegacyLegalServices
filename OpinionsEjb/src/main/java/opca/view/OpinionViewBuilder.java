@@ -233,35 +233,28 @@ public class OpinionViewBuilder {
 		List<OpinionScoreList> opinionScores = new ArrayList<OpinionScoreList>();
 		// need a collection StatutueCitations.
         for ( OpinionBase opinionCited: opinionView.getOpinionCitations() ) {
-        	for ( StatuteCitation statuteCitation: opinionCited.getOnlyStatuteCitations() ) {
-        		if ( statuteCitation != null) {
-        			// search scoreMatrix for opinionStatuteCitation
-        			OpinionScoreList opinionScoreList = null;
-        			Iterator<OpinionScoreList> osIt = opinionScores.iterator(); 
-        			while( osIt.hasNext() ) {
-        				opinionScoreList = osIt.next(); 
-        				if (opinionScoreList.getOpinionKey().equals(opinionCited.getOpinionKey())) {
-        					break;
-        				}
-        				opinionScoreList = null;
-        			}
-        			if ( opinionScoreList == null ) {
-        				opinionScoreList = new OpinionScoreList();
-        				opinionScoreList.setOpinionKey(opinionCited.getOpinionKey());
-        				opinionScores.add(opinionScoreList);
-        			}
-					//TODO will all entries be unqiue?
-					OpinionScore opinionScore = new OpinionScore();
-					opinionScore.setSlipOpinionStatute(statuteCitation.getStatuteKey());
-					opinionScore.setOpinionReferCount(statuteCitation.getOpinionStatuteReference(opinionCited).getCountReferences());
-					OpinionStatuteCitation osr = statuteCitation.getOpinionStatuteReference(opinionView);
-					if ( osr == null ) {
-						opinionScore.setSlipOpinionReferCount(0);
-					} else {
-						opinionScore.setSlipOpinionReferCount(osr.getCountReferences());
-					}
-					opinionScoreList.getOpinionScoreList().add(opinionScore);
-        		}
+        	for ( OpinionStatuteCitation opinionStatuteCitation: opinionCited.getStatuteCitations() ) {
+    			// search scoreMatrix for opinionStatuteCitation
+    			OpinionScoreList opinionScoreList = null;
+    			Iterator<OpinionScoreList> osIt = opinionScores.iterator(); 
+    			while( osIt.hasNext() ) {
+    				opinionScoreList = osIt.next(); 
+    				if (opinionScoreList.getOpinionKey().equals(opinionCited.getOpinionKey())) {
+    					break;
+    				}
+    				opinionScoreList = null;
+    			}
+    			if ( opinionScoreList == null ) {
+    				opinionScoreList = new OpinionScoreList();
+    				opinionScoreList.setOpinionKey(opinionCited.getOpinionKey());
+    				opinionScores.add(opinionScoreList);
+    			}
+				//TODO will all entries be unqiue?
+				OpinionScore opinionScore = new OpinionScore();
+				opinionScore.setSlipOpinionStatute(opinionStatuteCitation.getStatuteCitation().getStatuteKey());
+				opinionScore.setOpinionReferCount(opinionStatuteCitation.getStatuteCitation().getReferringOpinions().size());
+				opinionScore.setSlipOpinionReferCount(opinionStatuteCitation.getCountReferences());
+				opinionScoreList.getOpinionScoreList().add(opinionScore);
         	}
         }
 
@@ -305,35 +298,29 @@ public class OpinionViewBuilder {
 		// make a sorted list of statuteKey's that opinionView refers to
 		
         for ( OpinionBase opinionCited: opinionView.getOpinionCitations()) {
-        	for ( StatuteCitation statuteCitation: opinionCited.getOnlyStatuteCitations() ) {
-        		if ( statuteCitation != null ) {
-        			// search scoreMatrix for opinionStatuteCitation
-        			StatuteScoreList statuteScoreList = null;
-        			Iterator<StatuteScoreList> scsIt = statuteScores.iterator(); 
-        			while( scsIt.hasNext() ) {
-        				statuteScoreList = scsIt.next(); 
-        				if (statuteScoreList.getSlipOpinionStatute().equals(statuteCitation.getStatuteKey())) {
-        					break;
-        				}
-        				statuteScoreList = null;
-        			}
-        			if ( statuteScoreList == null ) {
-        				statuteScoreList = new StatuteScoreList();
-        				statuteScoreList.setSlipOpinionStatute(statuteCitation.getStatuteKey());
-    					OpinionStatuteCitation osr = statuteCitation.getOpinionStatuteReference(opinionView);
-    					if ( osr == null ) {
-            				statuteScoreList.setSlipOpinionReferCount(0);
-    					} else {
-            				statuteScoreList.setSlipOpinionReferCount(osr.getCountReferences());
-    					}
-        				statuteScores.add(statuteScoreList);
-        			}
-					//TODO will all entries be unqiue?
-					StatuteScore statuteScore = new StatuteScore();
-					statuteScore.setOpinionKey(opinionCited.getOpinionKey());
-					statuteScore.setOpinionReferCount(statuteCitation.getOpinionStatuteReference(opinionCited).getCountReferences());
-					statuteScoreList.getStatuteScoreList().add(statuteScore);
-        		}
+        	for ( OpinionStatuteCitation opinionStatuteCitation: opinionCited.getStatuteCitations() ) {
+    			// search scoreMatrix for opinionStatuteCitation
+    			StatuteScoreList statuteScoreList = null;
+    			StatuteKey statuteKey = opinionStatuteCitation.getStatuteCitation().getStatuteKey();
+    			Iterator<StatuteScoreList> scsIt = statuteScores.iterator(); 
+    			while( scsIt.hasNext() ) {
+    				statuteScoreList = scsIt.next(); 
+    				if (statuteScoreList.getSlipOpinionStatute().equals(statuteKey)) {
+    					break;
+    				}
+    				statuteScoreList = null;
+    			}
+    			if ( statuteScoreList == null ) {
+    				statuteScoreList = new StatuteScoreList();
+    				statuteScoreList.setSlipOpinionStatute(statuteKey);
+    				statuteScoreList.setSlipOpinionReferCount(opinionStatuteCitation.getCountReferences());
+    				statuteScores.add(statuteScoreList);
+    			}
+				//TODO will all entries be unqiue?
+				StatuteScore statuteScore = new StatuteScore();
+				statuteScore.setOpinionKey(opinionCited.getOpinionKey());
+				statuteScore.setOpinionReferCount(opinionStatuteCitation.getCountReferences());
+				statuteScoreList.getStatuteScoreList().add(statuteScore);
         	}
         }
 

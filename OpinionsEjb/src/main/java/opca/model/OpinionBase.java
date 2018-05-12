@@ -21,8 +21,10 @@ import opca.parser.ParsedOpinionCitationSet;
 		query="select o from OpinionBase o where o.opinionKey in :keys"),
 	@NamedQuery(name="OpinionBase.findOpinionByKeyFetchReferringOpinions", 
 		query="select distinct o from OpinionBase o inner join fetch o.referringOpinions where o.opinionKey = :key"),
-	@NamedQuery(name="OpinionBase.fetchOpinionCitationsFullJoins",
-		query="select distinct so from SlipOpinion so left join fetch so.opinionCitations oc left join fetch oc.statuteCitations ocsc left join fetch ocsc.statuteCitation ocscsc left join fetch ocscsc.referringOpinions ocscscro left join fetch ocscscro.opinionBase ocscscroob where so.id = :id"), 
+	@NamedQuery(name="OpinionBase.fetchOpinionCitationsForScore",
+		query="select distinct o from SlipOpinion o left join fetch o.opinionCitations ooc left join fetch ooc.statuteCitations oocsc left join fetch oocsc.statuteCitation oocscsc left join fetch oocscsc.referringOpinions oocscscro left join fetch oocscscro.opinionBase where o.id = :id"), 
+//		query="select distinct so from OpinionBase so left join fetch so.opinionCitations oc left join fetch oc.statuteCitations ocsc left join fetch ocsc.statuteCitation ocscsc left join fetch ocscsc.referringOpinions where so.id = :id"), 
+//		query="select distinct so from SlipOpinion so left join fetch so.opinionCitations oc left join fetch oc.statuteCitations ocsc left join fetch ocsc.statuteCitation ocscsc left join fetch ocscsc.referringOpinions ocscscro left join fetch ocscscro.opinionBase ocscscroob where so.id = :id"), 
 	@NamedQuery(name="OpinionBase.fetchStatuteCitationsFullJoins",
 		query="select distinct so from SlipOpinion so left join fetch so.statuteCitations sc left join fetch sc.statuteCitation scsc left join fetch scsc.referringOpinions scscro left join fetch scscro.opinionBase scscroob where so.id = :id"), 
 	@NamedQuery(name="OpinionBase.fetchAllOpinionCitationsFullJoins",
@@ -117,13 +119,14 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 */			
 		}
 	}
+	
 	public Collection<StatuteCitation> getOnlyStatuteCitations() {
 		Set<StatuteCitation> onlyStatuteCitations = new TreeSet<>();
 		for(OpinionStatuteCitation opinionStatuteCitation: statuteCitations) {
 			onlyStatuteCitations.add(opinionStatuteCitation.getStatuteCitation());
 		}
 		return onlyStatuteCitations;
-	}
+	}	
     public Integer getId() {
 		return id;
 	}

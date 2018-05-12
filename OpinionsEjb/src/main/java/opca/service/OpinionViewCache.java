@@ -150,7 +150,9 @@ public class OpinionViewCache {
 		OpinionViewBuilder opinionViewBuilder = new OpinionViewBuilder();
 		List<SlipOpinion> opinions = findByPublishDateRange(sd, ed);
 		MyPersistenceLookup pl = new MyPersistenceLookup(this);
+		TypedQuery<OpinionBase> focfs = em.createNamedQuery("OpinionBase.fetchOpinionCitationsForScore", OpinionBase.class);
 		for ( SlipOpinion slipOpinion: opinions ) {
+			slipOpinion.setOpinionCitations( focfs.setParameter("id", slipOpinion.getId()).getSingleResult().getOpinionCitations() );			
 			ParsedOpinionCitationSet parserResults = new ParsedOpinionCitationSet(slipOpinion, pl);
 			OpinionView opinionView = opinionViewBuilder.buildSlipOpinionView(statutesRs, slipOpinion, parserResults);
 			opinionView.trimToLevelOfInterest(levelOfInterest, true);
@@ -169,9 +171,9 @@ public class OpinionViewCache {
 				}
 				opinionSummaries = query.setParameter("keys", keys).getResultList();
 			}
+*/	        
 			opinionViewBuilder.scoreSlipOpinionOpinions(opinionView, parserResults);
 			opinionViewBuilder.scoreSlipOpinionStatutes(opinionView, parserResults);
-*/	        
 			
 			opinionViews.add(opinionView);
 		}
@@ -223,6 +225,7 @@ public class OpinionViewCache {
 //		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.findByOpinionDateRange", SlipOpinion.class).setParameter("startDate", startDate).setParameter("endDate", endDate).getResultList();
 		// just get all slip opinions
 		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.loadOpinionsWithJoins", SlipOpinion.class).getResultList();
+//		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.loadOpinions", SlipOpinion.class).getResultList();
 
 		// load slipOpinion properties from the database here ... ?
 		int tcount = 0;

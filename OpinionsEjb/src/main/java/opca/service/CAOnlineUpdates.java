@@ -235,17 +235,15 @@ public class CAOnlineUpdates {
 					System.out.println("deleteOpinion " + deleteOpinion + " not found in " + opSummary);							
 				}
 			}
-			for ( StatuteCitation statuteCitation: deleteOpinion.getOnlyStatuteCitations() ) {
-				StatuteCitation opStatute = slipOpinionService.findStatute(statuteCitation);
+			for ( OpinionStatuteCitation opinionStatuteCitation: deleteOpinion.getStatuteCitations() ) {
+				StatuteCitation opStatute = slipOpinionService.findStatute(opinionStatuteCitation.getStatuteCitation());
 				// int count = opStatute.getOpinionStatuteReference(deleteOpinion).getCountReferences();
-				OpinionStatuteCitation opinionStatuteCitation = opStatute.removeOpinionStatuteReference(deleteOpinion);
+				opStatute.removeOpinionStatuteReference(deleteOpinion);
 //				OpinionKey opKey = deleteOpinion.getOpinionKey();
 //				if ( count <= 0 ) throw new RuntimeException("Cannot delete referring opinion: " + deleteOpinion + " " + opStatute);
 //				mapReferringOpinionCount.remove(deleteOpinion);
 				em.merge(opStatute);
-				if ( opinionStatuteCitation != null ) {
-					em.remove(opinionStatuteCitation);
-				}
+				em.remove(opinionStatuteCitation);
 			}
 //					if (!deleteOpinion.getReferringOpinions().isEmpty()) throw new RuntimeException("referringOpinions not empty: " + deleteOpinion );
 			// remove detached entity
