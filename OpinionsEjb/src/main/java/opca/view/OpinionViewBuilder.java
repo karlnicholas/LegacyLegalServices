@@ -45,25 +45,25 @@ public class OpinionViewBuilder {
         // copy results into the new list ..
         // Fill out the codeSections that these section are referencing ..
         // If possible ... 
-        Iterator<StatuteCitation> itc = slipOpinion.getOnlyStatuteCitations().iterator();
+        Iterator<OpinionStatuteCitation> itc = slipOpinion.getStatuteCitations().iterator();
         
         while ( itc.hasNext() ) {
-        	StatuteCitation citation = itc.next();
-            // This is a section
-            if ( citation.getStatuteKey().getTitle() != null ) {
-                SectionView opSection = new SectionView(slipOpinion, citation);
-                // here we look for the Doc Section within the Code Section Hierachary
-                // and place it within the sectionReference we previously parsed out of the opinion
-//                opSection.setCodeReference( codesInterface.findReference(opSection.getTitle(), opSection.getSectionNumber() ) );
-                opSection.setStatutesBaseClass(findStatutesBaseClass(responseArray, citation.getStatuteKey()));
-//                Section codeSection = codeList.findCodeSection(sectionReference);
-                // We don't want to keep ones that we can't map .. so .. 
-                if ( opSection.getStatutesBaseClass() != null ) {
-                    // First .. let's get the OpinionCode for this sectionReference
-                    StatuteView opCode = findOrMakeOpinionCode(statuteViews, opSection); 
-                    opCode.addNewSectionReference( opSection );
-                } 
-            }
+        	OpinionStatuteCitation citation = itc.next();
+        	if ( citation.getStatuteCitation().getStatuteKey().getTitle() != null ) {
+	            // This is a section
+	            SectionView opSection = new SectionView(slipOpinion, citation);
+	            // here we look for the Doc Section within the Code Section Hierachary
+	            // and place it within the sectionReference we previously parsed out of the opinion
+	//                opSection.setCodeReference( codesInterface.findReference(opSection.getTitle(), opSection.getSectionNumber() ) );
+	            opSection.setStatutesBaseClass(findStatutesBaseClass(responseArray, citation.getStatuteCitation().getStatuteKey()));
+	//                Section codeSection = codeList.findCodeSection(sectionReference);
+	            // We don't want to keep ones that we can't map .. so .. 
+	            if ( opSection.getStatutesBaseClass() != null ) {
+	                // First .. let's get the OpinionCode for this sectionReference
+	                StatuteView opCode = findOrMakeOpinionCode(statuteViews, opSection); 
+	                opCode.addNewSectionReference( opSection );
+	            }
+        	}
         }
 
         // create a CaseView list.

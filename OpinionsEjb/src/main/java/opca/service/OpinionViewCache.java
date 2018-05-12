@@ -169,9 +169,9 @@ public class OpinionViewCache {
 				}
 				opinionSummaries = query.setParameter("keys", keys).getResultList();
 			}
-*/	        
 			opinionViewBuilder.scoreSlipOpinionOpinions(opinionView, parserResults);
 			opinionViewBuilder.scoreSlipOpinionStatutes(opinionView, parserResults);
+*/	        
 			
 			opinionViews.add(opinionView);
 		}
@@ -212,19 +212,31 @@ public class OpinionViewCache {
 		return em.createNamedQuery("StatuteCitationData.findStatutesForKeys", StatuteCitation.class).setParameter("keys", keys).getResultList();
 	}
 
-
+	/**
+	 * Going to do a two stage load I think. Enough to build view first stage, and then enough to do graph analysis second stage.
+	 * 
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
 	public List<SlipOpinion> findByPublishDateRange(Date startDate, Date endDate) {
 //		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.findByOpinionDateRange", SlipOpinion.class).setParameter("startDate", startDate).setParameter("endDate", endDate).getResultList();
 		// just get all slip opinions
-		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.loadByOpinionDateRange", SlipOpinion.class).getResultList();
+		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.loadOpinionsWithJoins", SlipOpinion.class).getResultList();
 
 		// load slipOpinion properties from the database here ... ?
 		int tcount = 0;
 
+		List<SlipProperties> spl = em.createNamedQuery("SlipProperties.findAll", SlipProperties.class).getResultList();
+		for ( SlipOpinion slipOpinion: opinions ) {
+			slipOpinion.setSlipProperties(spl.get(spl.indexOf(new SlipProperties(slipOpinion))));
+		}
+
+/*		
+			
 //		FETCH BY OPINIONKEY IS NOT ANY FASTER
 //		slipOpinion.setOpinionCitations( em.createQuery("select distinct(so) from SlipOpinion so left join fetch so.opinionCitations oc left join fetch oc.statuteCitations ocsc left join fetch ocsc.statuteCitation ocscsc left join fetch ocscsc.referringOpinions ocscscro left join fetch ocscscro.opinionBase ocscscroob where so.opinionKey = :key", SlipOpinion.class).setParameter("key", slipOpinion.getOpinionKey()).getSingleResult().getOpinionCitations() );
 //		slipOpinion.setStatuteCitations( em.createQuery("select distinct(so) from SlipOpinion so left join fetch so.statuteCitations sc left join fetch sc.statuteCitation scsc left join fetch scsc.referringOpinions scscro left join fetch scscro.opinionBase scscroob where so.opinionKey = :key", SlipOpinion.class).setParameter("key", slipOpinion.getOpinionKey()).getSingleResult().getStatuteCitations() );
-/*		
 
 		TypedQuery<OpinionBase> ocq = em.createNamedQuery("OpinionBase.fetchOpinionCitationsFullJoins",OpinionBase.class); 
 		TypedQuery<OpinionBase> scq = em.createNamedQuery("OpinionBase.fetchStatuteCitationsFullJoins",OpinionBase.class); 
@@ -235,25 +247,29 @@ public class OpinionViewCache {
 			slipOpinion.setSlipProperties( spq.setParameter("opinion", slipOpinion).getSingleResult() );
 System.out.println("Loaded: " + ++tcount + ": " +slipOpinion.getTitle()); 			
 		}
-FETCHING ALL AT ONCE, THIS IS NOT ANY FASTER
-*/		
-		
 
 		TypedQuery<OpinionBase> ocq = em.createNamedQuery("OpinionBase.fetchAllOpinionCitationsFullJoins",OpinionBase.class); 
 		TypedQuery<OpinionBase> scq = em.createNamedQuery("OpinionBase.fetchAllStatuteCitationsFullJoins",OpinionBase.class); 
 		TypedQuery<SlipProperties> spq = em.createNamedQuery("SlipProperties.findAllByIds", SlipProperties.class);
 		List<Integer> ids = new ArrayList<>();
+		List<SlipOpinion> slips = new ArrayList<>();
 		for ( SlipOpinion slipOpinion: opinions ) {
 			ids.add(slipOpinion.getId());
-		}
-		List<OpinionBase> ocl = ocq.setParameter("ids", ids).getResultList();
-		List<OpinionBase> scl = scq.setParameter("ids", ids).getResultList();
-		List<SlipProperties> spl = spq.setParameter("ids", ids).getResultList();
-		for ( SlipOpinion slipOpinion: opinions ) {
-			slipOpinion.setOpinionCitations( ocl.get(ocl.indexOf(slipOpinion)).getOpinionCitations() );
-			slipOpinion.setStatuteCitations( scl.get(scl.indexOf(slipOpinion)).getStatuteCitations() );
-			slipOpinion.setSlipProperties( spl.get(spl.indexOf(new SlipProperties(slipOpinion))) );
-System.out.println("Loaded: " + ++tcount + ": " +slipOpinion.getTitle()); 			
+			slips.add(slipOpinion);
+			if ( ids.size() % 10 == 0 ) {
+		System.out.println("ids: "  + ids); 			
+				List<OpinionBase> ocl = ocq.setParameter("ids", ids).getResultList();
+				List<OpinionBase> scl = scq.setParameter("ids", ids).getResultList();
+				List<SlipProperties> spl = spq.setParameter("ids", ids).getResultList();
+				for ( SlipOpinion slip: slips ) {
+					slip.setOpinionCitations( ocl.get(ocl.indexOf(slip)).getOpinionCitations() );
+					slip.setStatuteCitations( scl.get(scl.indexOf(slip)).getStatuteCitations() );
+					slip.setSlipProperties( spl.get(spl.indexOf(new SlipProperties(slip))) );
+		System.out.println("Loaded: " + ++tcount + " : " + slip.getTitle()); 			
+				}
+				ids.clear();
+				slips.clear();
+			}
 		}
 /*		
 		TypedQuery<StatuteKey> fetchStatuteCitations = em.createNamedQuery("SlipOpinion.fetchStatuteCitations", StatuteKey.class);

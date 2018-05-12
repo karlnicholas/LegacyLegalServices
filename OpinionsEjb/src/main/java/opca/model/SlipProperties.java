@@ -106,10 +106,17 @@ public class SlipProperties implements Serializable {
     }
 	@Override
 	public int hashCode() {
-		return slipOpinion.hashCode();
+		return slipOpinion.id.hashCode();
 	}
 	@Override
 	public boolean equals(Object obj) {
-		return slipOpinion.equals(obj);
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if ( !(obj instanceof SlipProperties) ) 
+			return false;
+		SlipProperties other = (SlipProperties) obj;
+		return slipOpinion.id.equals( other.slipOpinion.id);
 	}
 }

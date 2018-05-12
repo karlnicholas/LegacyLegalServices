@@ -3,6 +3,7 @@ package opca.view;
 import java.util.*;
 
 import opca.model.OpinionBase;
+import opca.model.OpinionStatuteCitation;
 import opca.model.StatuteCitation;
 import statutes.SectionNumber;
 import statutes.StatutesBaseClass;
@@ -30,14 +31,14 @@ public class SectionView implements ViewReference {
     private StatutesBaseClass section;
 
     public SectionView() {}
-    public SectionView(OpinionBase opinionBase, StatuteCitation citation) {
+    public SectionView(OpinionBase opinionBase, OpinionStatuteCitation citation) {
     	// this is constructed without a parent and that's added later
     	// when we build the hierarchy
 //    	logger.fine("code:" + code + ":section:" + section);
-        this.title = citation.getStatuteKey().getTitle();
-        sectionNumber = new SectionNumber(-1, citation.getStatuteKey().getSectionNumber());
-        refCount = citation.getOpinionStatuteReference(opinionBase).getCountReferences();
-        designated = citation.getDesignated();
+        this.title = citation.getStatuteCitation().getStatuteKey().getTitle();
+        sectionNumber = new SectionNumber(-1, citation.getStatuteCitation().getStatuteKey().getSectionNumber());
+        refCount = citation.getCountReferences();
+        designated = citation.getStatuteCitation().getDesignated();
     }
 
     public boolean equals(SectionView dcs ) {
