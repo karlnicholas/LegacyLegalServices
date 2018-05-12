@@ -33,6 +33,9 @@ public class SlipProperties implements Serializable {
     private String summary;
 
 	public SlipProperties() {}
+	public SlipProperties(SlipOpinion slipOpinion) {
+		this.slipOpinion = slipOpinion;
+	}
 	public SlipProperties(SlipOpinion slipOpinion, String fileName, String fileExtension, String court, String disposition, String summary) {
 		this.slipOpinion = slipOpinion;
     	setFileName(fileName);
@@ -101,4 +104,12 @@ public class SlipProperties implements Serializable {
 	public String toString() {
         return getFileName();
     }
+	@Override
+	public int hashCode() {
+		return slipOpinion.hashCode();
+	}
+	@Override
+	public boolean equals(Object obj) {
+		return slipOpinion.equals(obj);
+	}
 }

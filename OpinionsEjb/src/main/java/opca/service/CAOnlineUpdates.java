@@ -69,7 +69,7 @@ public class CAOnlineUpdates {
 		}
 		//
 //		onlineOpinions.remove(0);
-		onlineOpinions = onlineOpinions.subList(0, 5);
+//		onlineOpinions = onlineOpinions.subList(0, 5);
 		//
 		List<SlipOpinion> currentOpinions = slipOpinionService.listSlipOpinions();
 		List<SlipOpinion> currentCopy = new ArrayList<SlipOpinion>(currentOpinions);
