@@ -178,7 +178,7 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	}
 	@Override
 	public int hashCode() {
-		return id.hashCode();
+		return opinionKey.hashCode();
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -191,7 +191,9 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 		if ( !(obj instanceof OpinionBase) ) 
 			return false;
 		OpinionBase other = (OpinionBase) obj;
-		return id.equals(other.id);
+		return opinionKey.equals(other.opinionKey);
+		// id may not be initialized from database during initial load historical opinions.
+//		return id.equals(other.id);
 	}
 	@Override
 	public int compareTo(OpinionBase o) {
