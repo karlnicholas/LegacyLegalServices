@@ -8,6 +8,7 @@ import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
 
+import opca.scraper.CACaseScraper;
 import opca.scraper.TestCACaseScraper;
 
 @Singleton
@@ -49,8 +50,8 @@ public class ScheduledService {
     public void updateSlipOpinions() {
         Date currentTime = new Date();
         logger.info("STARTING SCRAPER UPDATE");
-//        caOnlineUpdates.updateDatabase(new CACaseScraper(false));
-        caOnlineUpdates.updateDatabase(new TestCACaseScraper(false));
+        caOnlineUpdates.updateDatabase(new CACaseScraper(false));
+//        caOnlineUpdates.updateDatabase(new TestCACaseScraper(false));
         logger.info("DONE SCRAPER UPDATE");
 
         logger.info("STARTING OPINIONVIEW POSTCONSTRUCT");

@@ -3,7 +3,6 @@ package opca.view;
 import java.util.*;
 
 import opca.model.OpinionBase;
-import opca.model.OpinionStatuteCitation;
 import opca.model.SlipOpinion;
 import statutes.StatutesBaseClass;
 

@@ -20,8 +20,8 @@ public class IndexController {
     
     public void testUpdate() {
         logger.info("STARTING SCRAPER UPDATE");
-//        caOnlineUpdates.updateDatabase(new CACaseScraper(false));
-        caOnlineUpdates.updateDatabase(new TestCACaseScraper(false));
+        caOnlineUpdates.updateDatabase(new CACaseScraper(false));
+//        caOnlineUpdates.updateDatabase(new TestCACaseScraper(false));
 
         logger.info("DONE SCRAPER UPDATE");
 		logger.info("STARTING OPINIONVIEW POSTCONSTRUCT");

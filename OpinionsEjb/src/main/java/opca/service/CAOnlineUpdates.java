@@ -75,7 +75,7 @@ public class CAOnlineUpdates {
 		List<SlipOpinion> currentCopy = new ArrayList<SlipOpinion>(currentOpinions);
 		logger.info("Found " + currentCopy.size() + " in the database.");
 		logger.info("Split Transactions" );
-		
+/*		
 		// Determine old cases
 		// remove online cases from dbCopy
 		// what's left is no longer in online List
@@ -107,6 +107,8 @@ public class CAOnlineUpdates {
 		} else {
 			logger.info("No new cases.");
 		}
+*/		
+		processAndPersistCases(onlineOpinions, caseScraper);
 	}
 	
 	private void processAndPersistCases(List<SlipOpinion> opinions, OpinionScraperInterface opinionScraper) {

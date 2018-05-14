@@ -4,7 +4,6 @@ import java.util.*;
 
 import opca.model.OpinionBase;
 import opca.model.OpinionStatuteCitation;
-import opca.model.StatuteCitation;
 import statutes.SectionNumber;
 import statutes.StatutesBaseClass;
 import statutes.StatutesLeaf;
