@@ -21,6 +21,7 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
     // Well, this should really be the toplevel object in the codes hierarchy ..
     // but, lets set it to this for now, come back to it later ..
     private StatutesBaseClass statutesBaseClass;
+    private StatutesBaseClass leafBaseClass;
     
     // this thing again
     private QueueUtility queue;
@@ -31,8 +32,9 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
     public StatuteView() {}
     // the old one was .. Section section, OpinionSection opSectionReference
     // Section section, OpinionSection opSectionReference
-    public StatuteView(StatutesBaseClass code) {
+    public StatuteView(StatutesBaseClass code, StatutesBaseClass leafBaseClass) {
         this.statutesBaseClass = code;
+        this.leafBaseClass = leafBaseClass;
         childReferences = new ArrayList<ViewReference>();
         queue = new QueueUtility(); 
         // even so .. we'll have think about this .. 
@@ -238,5 +240,33 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
 	}
 	public void setImportance(int importance) {
 		this.importance = importance;
-	}    
+	}
+	public StatutesBaseClass getLeafBaseClass() {
+		return leafBaseClass;
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((leafBaseClass.getStatutesLeaf() == null) ? 0 : leafBaseClass.getStatutesLeaf().hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StatuteView other = (StatuteView) obj;
+		if (leafBaseClass == null) {
+			if (other.leafBaseClass != null)
+				return false;
+		} else if (!leafBaseClass.getStatutesLeaf().equals(other.leafBaseClass.getStatutesLeaf()))
+			return false;
+		return true;
+	}
+	
+	
 }

@@ -172,8 +172,8 @@ public class OpinionViewCache {
 				opinionSummaries = query.setParameter("keys", keys).getResultList();
 			}
 */	        
-			opinionViewBuilder.scoreSlipOpinionOpinions(opinionView, parserResults);
-			opinionViewBuilder.scoreSlipOpinionStatutes(opinionView, parserResults);
+			opinionViewBuilder.scoreSlipOpinionStatutes(opinionView);
+			opinionViewBuilder.scoreSlipOpinionOpinions(opinionView);
 			
 			opinionViews.add(opinionView);
 		}

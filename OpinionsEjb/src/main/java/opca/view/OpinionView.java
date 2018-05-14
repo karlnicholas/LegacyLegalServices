@@ -2,8 +2,10 @@ package opca.view;
 
 import java.util.*;
 
+import opca.model.OpinionBase;
+import opca.model.OpinionStatuteCitation;
 import opca.model.SlipOpinion;
-import statutes.StatutesRoot;
+import statutes.StatutesBaseClass;
 
 public class OpinionView extends SlipOpinion {
 	private static final int MAX_INFO_LENGTH = 75;
@@ -111,6 +113,38 @@ public class OpinionView extends SlipOpinion {
     public String toString() {
     	return name + " " + this.getTitle();
     }
+    public Map<StatutesBaseClass, List<StatuteView>> combineCommonSections() {
+    	Map<StatutesBaseClass, List<StatuteView>> combinedStatutes = new HashMap<StatutesBaseClass, List<StatuteView>>(); 
+    	for ( StatuteView statuteView:  statutes) {
+    		List<StatuteView> statuteViews = combinedStatutes.get(statuteView.getLeafBaseClass());
+    		if ( statuteViews == null ) {
+    			statuteViews = new ArrayList<StatuteView>(); 
+    			combinedStatutes.put(statuteView.getLeafBaseClass(), statuteViews);
+    		}
+    		boolean found = false;
+    		for ( StatuteView existingStatuteView:  statuteViews ) {
+    			if ( statuteView.getLeafBaseClass().getStatuteRange().equals(existingStatuteView.getLeafBaseClass().getStatuteRange()) ) {
+    				existingStatuteView.addReference(statuteView);
+    				existingStatuteView.incRefCount(statuteView.getRefCount());
+    				found = true;
+    				break;
+    			}
+    		}
+    		if ( !found ) {
+    			statuteViews.add(statuteView);
+    		}
+    	}
+    	statutes.clear();
+        for ( StatutesBaseClass key: combinedStatutes.keySet()) {
+        	List<StatuteView> statuteViews =  combinedStatutes.get(key);
+        	for ( StatuteView statuteView: statuteViews ) {
+        		statutes.add(statuteView);
+        	}
+        }
+        
+        return combinedStatutes;
+    }
+/*	
     public Map<StatutesRoot, List<StatuteView>> combineCommonSections() {
     	Map<StatutesRoot, List<StatuteView>> combinedStatutes = new HashMap<StatutesRoot, List<StatuteView>>(); 
     	for ( StatuteView statuteView:  statutes) {
@@ -142,4 +176,13 @@ public class OpinionView extends SlipOpinion {
         
         return combinedStatutes;
     }
+*/    
+	public CaseView findCaseView(OpinionBase opinionCited) {
+		for ( CaseView caseView: cases) {
+			if ( caseView.getCitation().equals(opinionCited.getOpinionKey().toString())) {
+				return caseView;
+			}
+		}
+		return null;
+	}
 }

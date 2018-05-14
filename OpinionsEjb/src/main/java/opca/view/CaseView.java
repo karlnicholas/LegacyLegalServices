@@ -45,4 +45,8 @@ public class CaseView implements Comparable<CaseView> {
 	public int compareTo(CaseView o) {
 		return citation.compareTo(o.citation);
 	}
+	@Override
+	public String toString() {
+		return importance + " : " + citation + "(" + opinionDate + ")";
+	}
 }
