@@ -79,13 +79,19 @@ public class OpinionView extends SlipOpinion {
 	}
 	// end: supporting methods for JSF pages 
 
+	/**
+	 * If there isn't a sectionView at the end of the chain then need to remove entire tree(branch)
+	 * Also, shouldn't there be incremented citation counts for removed items?
+	 * @param levelOfInterest
+	 * @param removeCodes
+	 */
 	public void trimToLevelOfInterest( int levelOfInterest, boolean removeCodes) {
 		Iterator<StatuteView> ci = statutes.iterator();
 		while ( ci.hasNext() ) {
-			StatuteView code = ci.next();
-			code.trimToLevelOfInterest( levelOfInterest );
+			StatuteView statuteView = ci.next();
+			statuteView.trimToLevelOfInterest( levelOfInterest );
 			if (removeCodes) {
-			    if ( code.getRefCount() < levelOfInterest ) 
+			    if ( statuteView.getRefCount() < levelOfInterest )
 			        ci.remove();
 			}
 		}
@@ -115,14 +121,14 @@ public class OpinionView extends SlipOpinion {
     public Map<StatutesBaseClass, List<StatuteView>> combineCommonSections() {
     	Map<StatutesBaseClass, List<StatuteView>> combinedStatutes = new HashMap<StatutesBaseClass, List<StatuteView>>(); 
     	for ( StatuteView statuteView:  statutes) {
-    		List<StatuteView> statuteViews = combinedStatutes.get(statuteView.getLeafBaseClass());
+    		List<StatuteView> statuteViews = combinedStatutes.get(statuteView.getStatutesLeaf());
     		if ( statuteViews == null ) {
     			statuteViews = new ArrayList<StatuteView>(); 
-    			combinedStatutes.put(statuteView.getLeafBaseClass(), statuteViews);
+    			combinedStatutes.put(statuteView.getStatutesLeaf(), statuteViews);
     		}
     		boolean found = false;
     		for ( StatuteView existingStatuteView:  statuteViews ) {
-    			if ( statuteView.getLeafBaseClass().getStatuteRange().equals(existingStatuteView.getLeafBaseClass().getStatuteRange()) ) {
+    			if ( statuteView.getStatutesLeaf().getStatuteRange().equals(existingStatuteView.getStatutesLeaf().getStatuteRange()) ) {
     				existingStatuteView.addReference(statuteView);
     				existingStatuteView.incRefCount(statuteView.getRefCount());
     				found = true;

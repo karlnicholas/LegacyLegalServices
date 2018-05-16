@@ -24,4 +24,5 @@ public interface ViewReference {
 
     // return true to keep iterating, false to stop iteration
 	public boolean iterateSections( IterateSectionsHandler handler);
+	
 }

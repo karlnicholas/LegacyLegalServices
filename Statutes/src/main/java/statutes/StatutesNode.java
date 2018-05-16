@@ -209,4 +209,39 @@ public class StatutesNode implements StatutesBaseClass, Serializable {
 	public void setShortTitle(String shortTitle) {
 		// do nothing
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((part == null) ? 0 : part.hashCode());
+		result = prime * result + ((partNumber == null) ? 0 : partNumber.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StatutesNode other = (StatutesNode) obj;
+		if (part == null) {
+			if (other.part != null)
+				return false;
+		} else if (!part.equals(other.part))
+			return false;
+		if (partNumber == null) {
+			if (other.partNumber != null)
+				return false;
+		} else if (!partNumber.equals(other.partNumber))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		return true;
+	}
 }

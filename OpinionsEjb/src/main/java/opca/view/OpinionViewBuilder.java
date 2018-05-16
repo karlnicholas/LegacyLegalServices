@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import service.Client;
 import statutes.StatutesBaseClass;
+import statutes.StatutesLeaf;
 import statutes.StatutesRoot;
 import opca.model.*;
 import opca.parser.ParsedOpinionCitationSet;
@@ -77,7 +78,7 @@ public class OpinionViewBuilder {
         	if ( citation.getStatuteCitation().getStatuteKey().getTitle() != null ) {
 	            // This is a section
 	            SectionView opSection = new SectionView(opinionBase, citation);
-	            // here we look for the Doc Section within the Code Section Hierachary
+	            // here we look for the Doc Section within the Code Section hierarchy
 	            // and place it within the sectionReference we previously parsed out of the opinion
 	//                opSection.setCodeReference( codesInterface.findReference(opSection.getTitle(), opSection.getSectionNumber() ) );
 	            opSection.setStatutesBaseClass(findStatutesBaseClass(responseArray, citation.getStatuteCitation().getStatuteKey()));
@@ -135,6 +136,7 @@ public class OpinionViewBuilder {
     private StatuteView findOrMakeOpinionCode( ArrayList<StatuteView> codes, SectionView sectionReference) {
     	// First, find the section's top code
     	StatutesBaseClass statutesBaseClass = sectionReference.getStatutesBaseClass();
+    	StatutesLeaf statutesLeaf = (StatutesLeaf) statutesBaseClass;
     	while ( statutesBaseClass.getParent() != null ) {
     		statutesBaseClass = statutesBaseClass.getParent();
     	}
@@ -143,10 +145,11 @@ public class OpinionViewBuilder {
     	while ( cit.hasNext() ) {
     		StatuteView opCode = cit.next();
 //    		if ( opCode.getCodeReference().equals( code.getTitle())) return opCode;
-    		if ( opCode.getStatutesBaseClass() == statutesBaseClass ) return opCode;
+    		if ( opCode.getStatutesBaseClass().equals(statutesBaseClass) ) 
+    			return opCode;
     	}
     	// else, construct one ...
-    	StatuteView opCode = new StatuteView( statutesBaseClass, sectionReference.getStatutesBaseClass());
+    	StatuteView opCode = new StatuteView( statutesBaseClass, statutesLeaf);
         codes.add(opCode);
     	return opCode;
     }
@@ -249,6 +252,11 @@ public class OpinionViewBuilder {
             List<StatuteView> statuteViews = createStatuteViews(opinionCited, responseArray);
             // do a ranking
             rankStatuteViews(statuteViews);
+
+            statuteViews.forEach(statuteView->{
+        		System.out.println(statuteView.getDisplaySections()+"-"+statuteView.getStatutesBaseClass().getShortTitle()+","+statuteView.getRefCount()+","+opinionCited.getOpinionKey()+","+opinionView.getName()+",,");
+    		});		
+
             // remove anything not in the slip opinion statutes
             List<StatuteView> slipStatuteViews = opinionView.getStatutes();
             Iterator<StatuteView> itsv = statuteViews.iterator();
@@ -290,6 +298,11 @@ public class OpinionViewBuilder {
 			public int compare(StatuteView o1, StatuteView o2) {
 				return o2.getImportance() - o1.getImportance();
 			}
+		});
+
+		opinionView.getStatutes().forEach(statuteView->{
+			String ds = statuteView.getDisplaySections();
+    		System.out.println(",,,"+opinionView.getName()+","+statuteView.getRefCount()+","+ds+"-"+statuteView.getStatutesBaseClass().getShortTitle());
 		});
 	}
 	private void rankStatuteViews(List<StatuteView> statuteViews) {

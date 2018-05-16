@@ -32,7 +32,7 @@ public class QueueUtility extends ArrayDeque<ViewReference> {
 			// one and update the reference count ..
 			// if ( listSubcode.getStatutesBaseClass() == subcode.getStatutesBaseClass() ) {
 			// well, yea, the codeSection has to match, or don't even consider
-			if (listSubcode.getStatutesBaseClass() == opReference.getStatutesBaseClass()) {
+			if (listSubcode.getStatutesBaseClass().equals(opReference.getStatutesBaseClass())) {
 
 				listSubcode.incorporateOpinionReference( opReference, this );
 				return opReference;

@@ -5,6 +5,8 @@ import java.util.*;
 import statutes.SectionNumber;
 import statutes.StatuteRange;
 import statutes.StatutesBaseClass;
+import statutes.StatutesLeaf;
+import statutes.StatutesNode;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,7 +23,7 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
     // Well, this should really be the toplevel object in the codes hierarchy ..
     // but, lets set it to this for now, come back to it later ..
     private StatutesBaseClass statutesBaseClass;
-    private StatutesBaseClass leafBaseClass;
+    private StatutesLeaf leafBaseClass;
     
     // this thing again
     private QueueUtility queue;
@@ -32,7 +34,7 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
     public StatuteView() {}
     // the old one was .. Section section, OpinionSection opSectionReference
     // Section section, OpinionSection opSectionReference
-    public StatuteView(StatutesBaseClass code, StatutesBaseClass leafBaseClass) {
+    public StatuteView(StatutesBaseClass code, StatutesLeaf leafBaseClass) {
         this.statutesBaseClass = code;
         this.leafBaseClass = leafBaseClass;
         childReferences = new ArrayList<ViewReference>();
@@ -48,6 +50,7 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
     		ViewReference opReference= ori.next();
     		opReference.trimToLevelOfInterest( levelOfInterest );	
     		if ( opReference.getRefCount() < levelOfInterest ) {
+    			incRefCount(0 - opReference.getRefCount());
     			ori.remove();
     		}
     	}
@@ -64,7 +67,7 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
 	    	StatutesBaseClass statutesBaseClass = opReference.getStatutesBaseClass().getParent();
 	    	if ( statutesBaseClass.getParent() != null  ) {
 //		    	subcode = new OpinionSubcode( codeSection, subcode );
-		    	opReference = new SubcodeView( statutesBaseClass, opReference.getRefCount() );
+		    	opReference = new SubcodeView( (StatutesNode) statutesBaseClass, opReference.getRefCount() );
 		        queue.push(opReference);
 	    	} else {
 	    		break;
@@ -241,7 +244,7 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
 	public void setImportance(int importance) {
 		this.importance = importance;
 	}
-	public StatutesBaseClass getLeafBaseClass() {
+	public StatutesLeaf getStatutesLeaf() {
 		return leafBaseClass;
 	}
 	@Override

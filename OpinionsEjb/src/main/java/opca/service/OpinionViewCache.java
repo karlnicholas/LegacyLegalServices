@@ -155,8 +155,8 @@ public class OpinionViewCache {
 			slipOpinion.setOpinionCitations( focfs.setParameter("id", slipOpinion.getId()).getSingleResult().getOpinionCitations() );			
 			ParsedOpinionCitationSet parserResults = new ParsedOpinionCitationSet(slipOpinion, pl);
 			OpinionView opinionView = opinionViewBuilder.buildSlipOpinionView(statutesRs, slipOpinion, parserResults);
-			opinionView.trimToLevelOfInterest(levelOfInterest, true);
 			opinionView.combineCommonSections();
+			opinionView.trimToLevelOfInterest(levelOfInterest, true);
 /*			
 			List<OpinionBase> opinionSummaries;
 			List<OpinionBase> opinionBases = new ArrayList<>(opinionView.getOpinionCitations());
