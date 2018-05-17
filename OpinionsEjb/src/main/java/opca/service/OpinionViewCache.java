@@ -147,33 +147,17 @@ public class OpinionViewCache {
 		List<OpinionView> opinionViews = new ArrayList<OpinionView>();
         Client statutesRs = new RestServicesFactory().connectStatutesRsService();
 		//
-		OpinionViewBuilder opinionViewBuilder = new OpinionViewBuilder();
+		OpinionViewBuilder opinionViewBuilder = new OpinionViewBuilder(statutesRs);
 		List<SlipOpinion> opinions = findByPublishDateRange(sd, ed);
 		MyPersistenceLookup pl = new MyPersistenceLookup(this);
 		TypedQuery<OpinionBase> focfs = em.createNamedQuery("OpinionBase.fetchOpinionCitationsForScore", OpinionBase.class);
 		for ( SlipOpinion slipOpinion: opinions ) {
 			slipOpinion.setOpinionCitations( focfs.setParameter("id", slipOpinion.getId()).getSingleResult().getOpinionCitations() );			
 			ParsedOpinionCitationSet parserResults = new ParsedOpinionCitationSet(slipOpinion, pl);
-			OpinionView opinionView = opinionViewBuilder.buildSlipOpinionView(statutesRs, slipOpinion, parserResults);
+			OpinionView opinionView = opinionViewBuilder.buildOpinionView(slipOpinion, parserResults);
 			opinionView.combineCommonSections();
 			opinionView.trimToLevelOfInterest(levelOfInterest, true);
-/*			
-			List<OpinionBase> opinionSummaries;
-			List<OpinionBase> opinionBases = new ArrayList<>(opinionView.getOpinionCitations());
-
-			if ( opinionBases == null || opinionBases.size() == 0 ) {
-				opinionSummaries = new ArrayList<>();
-			} else {
-				TypedQuery<OpinionBase> query = em.createNamedQuery("OpinionBase.findByOpinionsJoinStatuteCitations", OpinionBase.class);
-				List<OpinionKey> keys = new ArrayList<>();
-				for (OpinionBase opinion: opinionBases) {
-					keys.add(opinion.getOpinionKey());
-				}
-				opinionSummaries = query.setParameter("keys", keys).getResultList();
-			}
-*/	        
-			opinionViewBuilder.scoreSlipOpinionStatutes(opinionView);
-			opinionViewBuilder.scoreSlipOpinionOpinions(opinionView);
+			opinionView.scoreCitations(opinionViewBuilder);
 			
 			opinionViews.add(opinionView);
 		}

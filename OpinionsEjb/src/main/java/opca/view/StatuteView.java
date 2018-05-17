@@ -47,10 +47,11 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
     public void trimToLevelOfInterest( int levelOfInterest ) {
     	Iterator<ViewReference> ori = childReferences.iterator();
     	while ( ori.hasNext() ) {
-    		ViewReference opReference= ori.next();
+    		ViewReference opReference = ori.next();
+    		int saveRefCount = opReference.getRefCount();
     		opReference.trimToLevelOfInterest( levelOfInterest );	
     		if ( opReference.getRefCount() < levelOfInterest ) {
-    			incRefCount(0 - opReference.getRefCount());
+    			incRefCount(0 - saveRefCount);
     			ori.remove();
     		}
     	}

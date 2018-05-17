@@ -32,10 +32,11 @@ public class SubcodeView implements ViewReference {
     	Iterator<ViewReference> ori = childReferences.iterator();
     	while ( ori.hasNext() ) {
     		ViewReference opReference = ori.next();
+    		int saveRefCount = opReference.getRefCount();
 			opReference.trimToLevelOfInterest( levelOfInterest );
     		if ( opReference.getRefCount() < levelOfInterest ) {
     			// remove reference counts from removed node
-    			incRefCount(0 - opReference.getRefCount() );
+    			incRefCount(0 - saveRefCount );
     			ori.remove();
     		}
     	}

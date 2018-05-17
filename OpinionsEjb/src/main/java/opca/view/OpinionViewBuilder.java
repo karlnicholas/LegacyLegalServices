@@ -12,37 +12,16 @@ import opca.parser.ParsedOpinionCitationSet;
 
 public class OpinionViewBuilder {
 	private Logger logger = Logger.getLogger(OpinionViewBuilder.class.getName());
-	private Client statutesRs; 
-
-    public OpinionViewBuilder() {
-    }
-
-    public OpinionView buildSlipOpinionView(
-    	Client statutesRs, 
-		SlipOpinion slipOpinion, 
-		ParsedOpinionCitationSet parserResults 
-	) {
-    	this.statutesRs = statutesRs; 
-    	return buildOpinionView(slipOpinion, slipOpinion.getFileName(), parserResults);
-    }
-
-    private OpinionView buildOpinionView(
+	private final Client statutesRs;
+	public OpinionViewBuilder(Client statutesRs) {
+		this.statutesRs = statutesRs;
+	}
+	
+    public OpinionView buildOpinionView(
     	SlipOpinion slipOpinion,
-		String name, 
-		ParsedOpinionCitationSet parserResults
+		ParsedOpinionCitationSet parserResults  
 	) {
-    	
-        // statutes ws .. getStatuteKeys list to search for 
-    	statutesrs.StatuteKeyArray statuteKeyArray = new statutesrs.StatuteKeyArray();
-        for( StatuteCitation statuteCitation: slipOpinion.getOnlyStatuteCitations() ) {
-            statutesrs.StatuteKey statuteKey = new statutesrs.StatuteKey();            
-            statuteKey.setTitle(statuteCitation.getStatuteKey().getTitle());
-            statuteKey.setSectionNumber(statuteCitation.getStatuteKey().getSectionNumber());
-            statuteKeyArray.getItem().add(statuteKey);
-        }
-        // call statutesws to get details of statutes 
-        statutesrs.ResponseArray responseArray = statutesRs.findStatutes(statuteKeyArray);
-        List<StatuteView> statuteViews = createStatuteViews(slipOpinion, responseArray);
+        List<StatuteView> statuteViews = createStatuteViews(slipOpinion);
         // create a CaseView list.
     	ArrayList<CaseView> cases = new ArrayList<CaseView>();
     	for ( OpinionBase opinionBase: slipOpinion.getOpinionCitations() ) {
@@ -61,11 +40,28 @@ public class OpinionViewBuilder {
 			c.setImportance((int)(c.getCountReferringOpinions()/maxCited)+1);
 		}	
 */
-        return new OpinionView(slipOpinion, name, statuteViews, cases);
+        return new OpinionView(slipOpinion, slipOpinion.getFileName(), statuteViews, cases);
     }
 
 
-    private List<StatuteView> createStatuteViews(OpinionBase opinionBase, statutesrs.ResponseArray responseArray) {
+    /**
+     * Should be combined and trimmed, yes?
+     * 
+     * @param opinionBase
+     * @param responseArray
+     * @return
+     */
+    public List<StatuteView> createStatuteViews(OpinionBase opinionBase) {
+        // statutes ws .. getStatuteKeys list to search for 
+    	statutesrs.StatuteKeyArray statuteKeyArray = new statutesrs.StatuteKeyArray();
+        for( StatuteCitation statuteCitation: opinionBase.getOnlyStatuteCitations() ) {
+            statutesrs.StatuteKey statuteKey = new statutesrs.StatuteKey();            
+            statuteKey.setTitle(statuteCitation.getStatuteKey().getTitle());
+            statuteKey.setSectionNumber(statuteCitation.getStatuteKey().getSectionNumber());
+            statuteKeyArray.getItem().add(statuteKey);
+        }
+        // call statutesws to get details of statutes 
+        statutesrs.ResponseArray responseArray = statutesRs.findStatutes(statuteKeyArray);
         //
     	ArrayList<StatuteView> statuteViews = new ArrayList<StatuteView>();
         // copy results into the new list ..
@@ -152,297 +148,6 @@ public class OpinionViewBuilder {
     	StatuteView opCode = new StatuteView( statutesBaseClass, statutesLeaf);
         codes.add(opCode);
     	return opCode;
-    }
-    
-
-//    private CodesInterface codesInterface;
-/*    
-    public static void main(String[] args) throws Exception {
-
-//        File file = new File("Cases/B231123.DOC");
-
-        FilenameFilter filter = new FilenameFilter() {
-            public boolean accept(File directory, String name) {
-                if ( DEBUGFILE != null ) if ( !name.contains(DEBUGFILE)) return false;
-                if (name.contains("~")) return false;
-                if (name.contains(".DOC")) {
-                    return true;
-                }
-                return false;
-            }
-        };
-
-        OpinionDocumentParser po = new OpinionDocumentParser();
-
-        File casesDirectory = new File("c:/users/karln/workspace/opinionsreport/cases");
-        File[] files = casesDirectory.listFiles(filter);
-        for (int i=0; i<files.length; ++i ) {
-            
-            if ( DEBUG ) System.out.print( files[i].getName() );
-
-            po.parseOpinionFile( files[i]);
-//            ArrayList<OpinionSection> sectionReferences = po.parseOpinionFile( files[i], sp );
-//            if ( DEBUG ) System.out.println( sectionReferences );
-            
-        }
-        
     }    
-    public void parseCitations(Case opinionSummary, InputStream inputStream, CodesInterface codesInterface) throws Exception {
 
-    	codeTitles = codesInterface.getCodeTitles();
-
-//        codes = new ArrayList<OpinionCode>();
-        ArrayList<OpinionSection> sectionReferences = parseCase(inputStream);
-        
-//        logger.info(sectionReferences.toString());
-
-        // Map to the Codes
-        // and then compress the Section References into a Hierarchy
-        // within the California Codes structure
-        //
-
-        opinionSummary.setDisposition( getSectionParser().getDisposition() );
-        opinionSummary.setSummary( getSectionParser().getSummaryParagraph() );
-
-        // copy results into the new list ..
-        // Fill out the codeSections that these section are referencing ..
-        // If possible ... 
-        Iterator<OpinionSection>sri = sectionReferences.iterator();
-        while ( sri.hasNext() ) {
-            // This is a section
-            OpinionSection opSection = sri.next();
-            // here we look for the Doc Section within the Code Section Hierachary
-            // and place it within the sectionReference we previously parsed out of the opinion
-            String codeTitle = opSection.getTitle();
-            if ( codeTitle != null ) {
-                opSection.setCodeReference( codesInterface.findReference(codeTitle, opSection.getSectionNumber() ) );
-            }
-//            Section codeSection = codeList.findCodeSection(sectionReference);
-            // We don't want to keep ones that we can't map .. so .. 
-            if ( opSection.getCodeReference() != null ) {
-            	// First .. let's get the OpinionCode for this sectionReference
-            	OpinionCode topCode = findOrMakeOpinionCode(opSection); 
-
-                topCode.addNewSectionReference( opSection );
-            } else {
-//                    System.out.println("Cannot find codeSection for " + sectionReference);
-            }
-//            System.out.println(this);
-        }
-
-    }
-
-*/
-
-	public void scoreSlipOpinionOpinions(
-		OpinionView opinionView
-	) {
-		// need a collection StatutueCitations.
-        for ( OpinionBase opinionCited: opinionView.getOpinionCitations() ) {
-            // statutes ws .. getStatuteKeys list to search for 
-        	statutesrs.StatuteKeyArray statuteKeyArray = new statutesrs.StatuteKeyArray();
-            for( StatuteCitation statuteCitation: opinionCited.getOnlyStatuteCitations() ) {
-                statutesrs.StatuteKey statuteKey = new statutesrs.StatuteKey();            
-                statuteKey.setTitle(statuteCitation.getStatuteKey().getTitle());
-                statuteKey.setSectionNumber(statuteCitation.getStatuteKey().getSectionNumber());
-                statuteKeyArray.getItem().add(statuteKey);
-            }
-            // call statutesws to get details of statutes 
-            statutesrs.ResponseArray responseArray = statutesRs.findStatutes(statuteKeyArray);
-            List<StatuteView> statuteViews = createStatuteViews(opinionCited, responseArray);
-            // do a ranking
-            rankStatuteViews(statuteViews);
-
-            statuteViews.forEach(statuteView->{
-        		System.out.println(statuteView.getDisplaySections()+"-"+statuteView.getStatutesBaseClass().getShortTitle()+","+statuteView.getRefCount()+","+opinionCited.getOpinionKey()+","+opinionView.getName()+",,");
-    		});		
-
-            // remove anything not in the slip opinion statutes
-            List<StatuteView> slipStatuteViews = opinionView.getStatutes();
-            Iterator<StatuteView> itsv = statuteViews.iterator();
-            int score = 0;
-            while ( itsv.hasNext() ) {
-            	StatuteView statuteView = itsv.next();
-            	int idx = slipStatuteViews.indexOf(statuteView);
-            	if ( idx < 0 ) {
-            		itsv.remove();
-            		continue;
-            	}
-                // score the rest
-            	score = score + ( statuteView.getImportance() + slipStatuteViews.get(idx).getImportance());
-            }
-            opinionView.findCaseView(opinionCited).setScore(score);
-        }
-    	long maxScore = 0;
-		for ( CaseView c: opinionView.getCases() ) {
-			if ( c.getScore() > maxScore )
-				maxScore = c.getScore();
-		}	
-		double d = ((maxScore+1) / 4.0);
-		for ( CaseView c: opinionView.getCases() ) {
-			c.setImportance((int)(((double)c.getScore())/d)+1);
-		}	
-		Collections.sort(opinionView.getCases(), new Comparator<CaseView>() {
-			@Override
-			public int compare(CaseView o1, CaseView o2) {
-				return o2.getImportance() - o1.getImportance();
-			}
-		});
-	}
-	public void scoreSlipOpinionStatutes(
-		OpinionView opinionView
-	) {
-		rankStatuteViews(opinionView.getStatutes());
-		Collections.sort(opinionView.getStatutes(), new Comparator<StatuteView>() {
-			@Override
-			public int compare(StatuteView o1, StatuteView o2) {
-				return o2.getImportance() - o1.getImportance();
-			}
-		});
-
-		opinionView.getStatutes().forEach(statuteView->{
-			String ds = statuteView.getDisplaySections();
-    		System.out.println(",,,"+opinionView.getName()+","+statuteView.getRefCount()+","+ds+"-"+statuteView.getStatutesBaseClass().getShortTitle());
-		});
-	}
-	private void rankStatuteViews(List<StatuteView> statuteViews) {
-		long maxCount = 0;
-		for ( StatuteView c: statuteViews) {
-			if ( c.getRefCount() > maxCount )
-				maxCount = c.getRefCount();
-		}	
-		double d = ((maxCount+1) / 4.0);
-		for ( StatuteView c: statuteViews ) {
-			c.setImportance((int)(((double)c.getRefCount())/d)+1);
-		}	
-	}
-/*
-
-	public List<OpinionScoreList> scoreSlipOpinionOpinions(
-		OpinionView opinionView, 
-		ParsedOpinionCitationSet parserResults
-	) {
-		List<OpinionScoreList> opinionScores = new ArrayList<OpinionScoreList>();
-		// need a collection StatutueCitations.
-        for ( OpinionBase opinionCited: opinionView.getOpinionCitations() ) {
-        	for ( OpinionStatuteCitation opinionStatuteCitation: opinionCited.getStatuteCitations() ) {
-    			// search scoreMatrix for opinionStatuteCitation
-    			OpinionScoreList opinionScoreList = null;
-    			Iterator<OpinionScoreList> osIt = opinionScores.iterator(); 
-    			while( osIt.hasNext() ) {
-    				opinionScoreList = osIt.next(); 
-    				if (opinionScoreList.getOpinionKey().equals(opinionCited.getOpinionKey())) {
-    					break;
-    				}
-    				opinionScoreList = null;
-    			}
-    			if ( opinionScoreList == null ) {
-    				opinionScoreList = new OpinionScoreList();
-    				opinionScoreList.setOpinionKey(opinionCited.getOpinionKey());
-    				opinionScores.add(opinionScoreList);
-    			}
-				//TODO will all entries be unqiue?
-				OpinionScore opinionScore = new OpinionScore();
-				opinionScore.setSlipOpinionStatute(opinionStatuteCitation.getStatuteCitation().getStatuteKey());
-				opinionScore.setOpinionReferCount(opinionStatuteCitation.getStatuteCitation().getReferringOpinions().size());
-				opinionScore.setSlipOpinionReferCount(opinionStatuteCitation.getCountReferences());
-				opinionScoreList.getOpinionScoreList().add(opinionScore);
-        	}
-        }
-
-        List<CaseView> cases = opinionView.getCases();
-
-    	for ( OpinionScoreList opinionScoreList:  opinionScores ) {
-    		int score = 0;
-    		for ( OpinionScore opinionScore: opinionScoreList.getOpinionScoreList() ) {
-    			score = score + (opinionScore.getOpinionReferCount() * opinionScore.getSlipOpinionReferCount() );
-    		}
-    		int caseViewPos = Collections.binarySearch(cases, new CaseView(null, opinionScoreList.getOpinionKey().toString(), null, 0));
-    		cases.get(caseViewPos).setScore(score);
-    	}
-
-    	long maxScore = 0;
-		for ( CaseView c: cases ) {
-			if ( c.getScore() > maxScore )
-				maxScore = c.getScore();
-		}	
-		maxScore = (maxScore / 4)+1;
-		for ( CaseView c: cases ) {
-			c.setImportance((int)(c.getScore()/maxScore)+1);
-		}	
-
-		
-		Collections.sort(opinionView.getCases(), new Comparator<CaseView>() {
-			@Override
-			public int compare(CaseView o1, CaseView o2) {
-				return o2.getScore() - o1.getScore();
-			}
-		});
-
-        return opinionScores;
-	}
-
-	public List<StatuteScoreList> scoreSlipOpinionStatutes(
-		OpinionView opinionView, 
-		ParsedOpinionCitationSet parserResults
-	) {
-		List<StatuteScoreList> statuteScores = new ArrayList<StatuteScoreList>();
-		// make a sorted list of statuteKey's that opinionView refers to
-		
-        for ( OpinionBase opinionCited: opinionView.getOpinionCitations()) {
-        	for ( OpinionStatuteCitation opinionStatuteCitation: opinionCited.getStatuteCitations() ) {
-    			// search scoreMatrix for opinionStatuteCitation
-    			StatuteScoreList statuteScoreList = null;
-    			StatuteKey statuteKey = opinionStatuteCitation.getStatuteCitation().getStatuteKey();
-    			Iterator<StatuteScoreList> scsIt = statuteScores.iterator(); 
-    			while( scsIt.hasNext() ) {
-    				statuteScoreList = scsIt.next(); 
-    				if (statuteScoreList.getSlipOpinionStatute().equals(statuteKey)) {
-    					break;
-    				}
-    				statuteScoreList = null;
-    			}
-    			if ( statuteScoreList == null ) {
-    				statuteScoreList = new StatuteScoreList();
-    				statuteScoreList.setSlipOpinionStatute(statuteKey);
-    				statuteScoreList.setSlipOpinionReferCount(opinionStatuteCitation.getCountReferences());
-    				statuteScores.add(statuteScoreList);
-    			}
-				//TODO will all entries be unqiue?
-				StatuteScore statuteScore = new StatuteScore();
-				statuteScore.setOpinionKey(opinionCited.getOpinionKey());
-				statuteScore.setOpinionReferCount(opinionStatuteCitation.getCountReferences());
-				statuteScoreList.getStatuteScoreList().add(statuteScore);
-        	}
-        }
-
-        List<StatuteView> statutes = opinionView.getStatutes();
-//		Collections.sort(statutes);
-
-		for ( StatuteScoreList statuteScoreList:  statuteScores ) {
-    		int score = 0;
-    		for ( StatuteScore statuteScore: statuteScoreList.getStatuteScoreList() ) {
-    			score = score + (statuteScore.getOpinionReferCount() * statuteScoreList.getSlipOpinionReferCount() );
-    		}
-    		for ( StatuteView statuteView: statutes ) {
-    			if ( statuteView.getSectionView().getTitle().equals(statuteScoreList.getSlipOpinionStatute().getTitle()) 
-    					&& statuteView.getSectionView().getSectionNumber().equals(statuteScoreList.getSlipOpinionStatute().getSectionNumber()) )
-				{
-    				statuteView.setScore(score);
-    			}
-    		}
-    	}
-
-		long maxScore = 0;
-		for ( StatuteView c: statutes ) {
-			if ( c.getScore() > maxScore )
-				maxScore = c.getScore();
-		}	
-		maxScore = (maxScore / 4)+1;
-		for ( StatuteView c: statutes ) {
-			c.setImportance((int)(c.getScore()/maxScore)+1);
-		}	
-        return statuteScores;
-	}
-*/	
 }
