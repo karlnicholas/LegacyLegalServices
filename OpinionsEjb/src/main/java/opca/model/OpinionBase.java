@@ -34,6 +34,7 @@ import opca.parser.ParsedOpinionCitationSet;
 
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType=DiscriminatorType.INTEGER)
+@Table(indexes= {@Index(columnList = "vset,volume,page")})
 public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	protected Integer id;
