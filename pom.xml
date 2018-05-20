@@ -38,7 +38,7 @@
     <!-- Define the version of the JBoss BOMs we want to import to specify tested stacks. -->
     <version.wildfly.bom>10.1.0.Final</version.wildfly.bom>
     <version.wildfly>10.1.0.Final</version.wildfly>
-
+    <version.wildfly.swarm>2018.5.0</version.wildfly.swarm>
 
     <!-- other plugin versions -->
     <version.compiler.plugin>3.1</version.compiler.plugin>
@@ -68,7 +68,8 @@
         <groupId>legalservices</groupId>
         <artifactId>opinions-ejb</artifactId>
         <version>${project.version}</version>
-        <type>ear</type>
+        <type>jar</type>
+        <scope>compile</scope>
       </dependency>
       <dependency>
         <groupId>legalservices</groupId>
@@ -76,13 +77,6 @@
         <version>${project.version}</version>
         <type>war</type>
         <scope>compile</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.wildfly.bom</groupId>
-        <artifactId>wildfly-javaee7-with-tools</artifactId>
-        <version>${version.wildfly.bom}</version>
-        <type>pom</type>
-        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>legalservices</groupId>
@@ -118,6 +112,20 @@
         <version>${project.version}</version>
         <type>war</type>
         <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.wildfly.bom</groupId>
+        <artifactId>wildfly-javaee7-with-tools</artifactId>
+        <version>${version.wildfly.bom}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.wildfly.swarm</groupId>
+        <artifactId>bom-all</artifactId>
+        <version>${version.wildfly.swarm}</version>
+        <scope>import</scope>
+        <type>pom</type>
       </dependency>
     </dependencies>
   </dependencyManagement>

@@ -21,13 +21,6 @@
     <m2eclipse.wtp.contextRoot>statutesrs</m2eclipse.wtp.contextRoot>
     <failOnMissingWebXml>false</failOnMissingWebXml>
   </properties>
-  <dependencyManagement>
-    <dependencies>
-      <!-- Pull in the cxf-parents as import scope to re-use the dependencyManagement sections of those poms. Those sections define 
-        the versions of various third party deps that CXF used to build with and test with and we would like to make sure the same versions 
-        are used for the samples -->
-    </dependencies>
-  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>legalservices</groupId>
@@ -58,10 +51,9 @@
       <plugin>
         <groupId>org.wildfly.swarm</groupId>
         <artifactId>wildfly-swarm-plugin</artifactId>
-        <version>2018.5.0</version>
+        <version>${version.wildfly.swarm}</version>
         <executions>
           <execution>
-            <phase>package</phase>
             <goals>
               <goal>package</goal>
             </goals>

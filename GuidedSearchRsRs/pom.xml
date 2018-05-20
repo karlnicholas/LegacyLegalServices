@@ -54,10 +54,9 @@
       <plugin>
         <groupId>org.wildfly.swarm</groupId>
         <artifactId>wildfly-swarm-plugin</artifactId>
-        <version>2018.5.0</version>
+        <version>${version.wildfly.swarm}</version>
         <executions>
           <execution>
-            <phase>package</phase>
             <goals>
               <goal>package</goal>
             </goals>

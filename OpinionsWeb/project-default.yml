@@ -1,0 +1,24 @@
+swarm:
+  datasources:
+    data-sources:
+      OpEEDS:
+        driver-name: mysql
+        connection-url: jdbc:mysql://localhost:3306/op
+        user-name: adminnr1up7V
+        password: qm1zmQxcZY1t
+  security:
+    security-domains:
+      opee-domain:
+        classic-authentication:
+          login-modules:
+            Database:
+              code: Database
+              flag: required
+              module-options:
+                dsJndiName: java:jboss/datasources/OpEEDS
+                principalsQuery: select password from user where email = ?
+                rolesQuery: select r.role, 'Roles' from user_role ur inner join role r on r.id = ur.roles_id inner join user u on u.id = ur.user_id where u.email = ?
+                hashAlgorithm: SHA-256
+                hashEncoding: BASE64
+                hashCharset: UTF-8
+                unauthenticatedIdentity: guest

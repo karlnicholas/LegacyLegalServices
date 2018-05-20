@@ -8,7 +8,6 @@
     <version>0.3.0</version>
   </parent>
   <artifactId>opinions-ejb</artifactId>
-  <packaging>ejb</packaging>
   <name>opinions-ejb: EJB Module</name>
   <url>http://wildfly.org</url>
   <licenses>

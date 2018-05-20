@@ -1,134 +1,143 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-   <modelVersion>4.0.0</modelVersion>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-   <parent>
-      <artifactId>legalservices</artifactId>
-      <groupId>legalservices</groupId>
-      <version>0.3.0</version>
-   </parent>
+  <parent>
+    <artifactId>legalservices</artifactId>
+    <groupId>legalservices</groupId>
+    <version>0.3.0</version>
+  </parent>
 
-   <artifactId>opinions-web</artifactId>
-   <packaging>war</packaging>
+  <artifactId>opinions-web</artifactId>
+  <packaging>war</packaging>
 
-   <name>Opinions: WAR Module</name>
+  <name>Opinions: WAR Module</name>
 
-   <url>http://wildfly.org</url>
-   <licenses>
-      <license>
-         <name>Apache License, Version 2.0</name>
-         <distribution>repo</distribution>
-         <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-      </license>
-   </licenses>
-    <repositories>
-        <repository>
-            <id>project.local</id>
-            <name>project</name>
-            <url>file:${project.basedir}/../repo</url>
-        </repository>
+  <url>http://wildfly.org</url>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <distribution>repo</distribution>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+    </license>
+  </licenses>
+  <repositories>
+    <repository>
+      <id>project.local</id>
+      <name>project</name>
+      <url>file:${project.basedir}/../repo</url>
+    </repository>
     <repository>
       <id>jboss-ga-repository</id>
       <url>https://maven.repository.redhat.com/nexus/content/repositories/developer</url>
     </repository>
-    </repositories>
-   <dependencies>
+  </repositories>
+  <dependencies>
 
-      <!-- Dependency on the EJB module so we can use it's services if needed -->
+    <!-- Dependency on the EJB module so we can use it's services if needed -->
 
-      <!-- Import the CDI API, we use provided scope as the API is included in JBoss WildFly -->
-      <dependency>
-         <groupId>javax.enterprise</groupId>
-         <artifactId>cdi-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      
-      <!-- Import the JSF API, we use provided scope as the API is included in JBoss WildFly -->
-      <dependency>
-         <groupId>org.jboss.spec.javax.faces</groupId>
-         <artifactId>jboss-jsf-api_2.2_spec</artifactId>
-      </dependency>
+    <!-- Import the CDI API, we use provided scope as the API is included in JBoss WildFly -->
+    <dependency>
+      <groupId>javax.enterprise</groupId>
+      <artifactId>cdi-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
-      <!-- Import the JPA API, we use provided scope as the API is included in JBoss WildFly -->
-      <dependency>
-         <groupId>org.hibernate.javax.persistence</groupId>
-         <artifactId>hibernate-jpa-2.1-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
+    <!-- Import the JSF API, we use provided scope as the API is included in JBoss WildFly -->
+    <dependency>
+      <groupId>org.jboss.spec.javax.faces</groupId>
+      <artifactId>jboss-jsf-api_2.2_spec</artifactId>
+    </dependency>
 
-       <!-- JSR-303 (Bean Validation) Implementation -->
-       <!-- Provides portable constraints such as @Email -->
-       <!-- Hibernate Validator is shipped in JBoss WildFly -->
-       <dependency>
-           <groupId>org.hibernate</groupId>
-           <artifactId>hibernate-validator</artifactId>
-           <scope>provided</scope>
-           <exclusions>
-               <exclusion>
-                   <groupId>org.slf4j</groupId>
-                   <artifactId>slf4j-api</artifactId>
-               </exclusion>
-           </exclusions>
-       </dependency>
-       <dependency>
-         <groupId>org.webjars</groupId>
-         <artifactId>jquery</artifactId>
-         <version>1.12.4</version>
-       </dependency>
-       <dependency>
-         <groupId>org.jboss.spec.javax.servlet</groupId>
-         <artifactId>jboss-servlet-api_3.1_spec</artifactId>
-         <scope>provided</scope>
-       </dependency>
-       <dependency>
-         <groupId>org.webjars</groupId>
-         <artifactId>bootstrap</artifactId>
-         <version>3.3.7</version>
-       </dependency>
-       <dependency>
-         <groupId>org.jboss.spec.javax.el</groupId>
-         <artifactId>jboss-el-api_3.0_spec</artifactId>
-       </dependency>
-      <dependency>
-          <groupId>io.undertow</groupId>
-          <artifactId>undertow-core</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>io.undertow</groupId>
-          <artifactId>undertow-servlet</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>io.undertow.jastow</groupId>
-          <artifactId>jastow</artifactId>
-          <version>2.0.1.Final</version>
-          <scope>provided</scope>
-      </dependency>
-      <dependency>
-          <groupId>com.sun.faces</groupId>
-          <artifactId>jsf-impl</artifactId>
-          <version>2.2.13.SP1</version>
-          <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>legalservices</groupId>
-        <artifactId>opinions-ejb</artifactId>
-        <version>0.3.0</version>
-        <type>ejb</type>
-      </dependency>
-   </dependencies>
-   <build>
-      <finalName>${project.artifactId}</finalName>
-      <plugins>
-         <plugin>
-            <artifactId>maven-war-plugin</artifactId>
-            <version>${version.war.plugin}</version>
-            <configuration>
-               <!-- Java EE 7 doesn't require web.xml, Maven needs to catch up! -->
-               <failOnMissingWebXml>false</failOnMissingWebXml>
-            </configuration>
-         </plugin>
-      </plugins>
-   </build>
+    <!-- Import the JPA API, we use provided scope as the API is included in JBoss WildFly -->
+    <dependency>
+      <groupId>org.hibernate.javax.persistence</groupId>
+      <artifactId>hibernate-jpa-2.1-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
+    <!-- JSR-303 (Bean Validation) Implementation -->
+    <!-- Provides portable constraints such as @Email -->
+    <!-- Hibernate Validator is shipped in JBoss WildFly -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>jquery</artifactId>
+      <version>1.12.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.servlet</groupId>
+      <artifactId>jboss-servlet-api_3.1_spec</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>bootstrap</artifactId>
+      <version>3.3.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.el</groupId>
+      <artifactId>jboss-el-api_3.0_spec</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.undertow</groupId>
+      <artifactId>undertow-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.undertow</groupId>
+      <artifactId>undertow-servlet</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.undertow.jastow</groupId>
+      <artifactId>jastow</artifactId>
+      <version>2.0.1.Final</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.faces</groupId>
+      <artifactId>jsf-impl</artifactId>
+      <version>2.2.13.SP1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>legalservices</groupId>
+      <artifactId>opinions-ejb</artifactId>
+    </dependency>
+  </dependencies>
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <plugins>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>${version.war.plugin}</version>
+        <configuration>
+          <!-- Java EE 7 doesn't require web.xml, Maven needs to catch up! -->
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.wildfly.swarm</groupId>
+        <artifactId>wildfly-swarm-plugin</artifactId>
+        <version>${version.wildfly.swarm}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>package</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
