@@ -12,7 +12,7 @@
   <modules>
     <module>Statutes</module>
     <module>GuidedSearchCore</module>
-    <module>StatutesCa</module>    
+    <module>StatutesCa</module>
     <module>GuidedSearchRsRs</module>
     <module>OpinionsEjb</module>
     <module>OpinionsWeb</module>
@@ -33,11 +33,11 @@
 
     <!-- JBoss dependency versions -->
 
-    <version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
+    <version.wildfly.maven.plugin>1.2.1.Final</version.wildfly.maven.plugin>
 
     <!-- Define the version of the JBoss BOMs we want to import to specify tested stacks. -->
-    <version.wildfly.bom>10.1.0.Final</version.wildfly.bom>
-    <version.wildfly>10.1.0.Final</version.wildfly>
+    <version.wildfly.bom>11.0.0.Final</version.wildfly.bom>
+    <version.wildfly>11.0.0.Final</version.wildfly>
     <version.wildfly.swarm>2018.5.0</version.wildfly.swarm>
 
     <!-- other plugin versions -->
@@ -107,13 +107,6 @@
         <scope>compile</scope>
       </dependency>
       <dependency>
-        <groupId>legalservices</groupId>
-        <artifactId>statutesrs</artifactId>
-        <version>${project.version}</version>
-        <type>war</type>
-        <scope>compile</scope>
-      </dependency>
-      <dependency>
         <groupId>org.wildfly.bom</groupId>
         <artifactId>wildfly-javaee7-with-tools</artifactId>
         <version>${version.wildfly.bom}</version>
@@ -129,7 +122,11 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
+  <profiles>
+    <profile>
+      <id>swarm</id>
+    </profile>
+  </profiles>
   <build>
     <pluginManagement>
       <plugins>

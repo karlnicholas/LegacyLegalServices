@@ -49,6 +49,9 @@
       <type>war</type>
     </dependency>
   </dependencies>
+  <profiles>
+    <profile>
+      <id>swarm</id>
   <build>
     <plugins>
       <plugin>
@@ -65,4 +68,6 @@
       </plugin>
     </plugins>
   </build>
+    </profile>
+  </profiles>
 </project>
