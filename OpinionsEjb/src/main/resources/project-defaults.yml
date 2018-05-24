@@ -1,0 +1,34 @@
+swarm:
+  datasources:
+    data-sources:
+      OpEEDS:
+        driver-name: mysql
+        connection-url: jdbc:mysql://mysql:3306/${env.MYSQL_DATABASE}
+        user-name: ${env.MYSQL_USER}
+        password: ${env.MYSQL_PASSWORD}
+        jta: true
+        use-java-context: true 
+        min-pool-size: 8
+        max-pool-size: 20
+        pool-prefill: true
+        connection-checker-class-name: org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLValidConnectionChecker
+        background-validation: true
+        exception-sorter-class-name: org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLExceptionSorter
+        connection-properties: CharacterEncoding/ UTF-8 UseUnicode/true
+  security:
+    security-domains:
+      opee-domain:
+        classic-authentication:
+          login-modules:
+            defaultRoleDatabaseModule:
+              code: org.jboss.security.auth.spi.DatabaseServerLoginModule
+              flag: optional
+              module-options:
+                dsJndiName: java:jboss/datasources/OpEEDS
+                password-stacking: useFirstPass
+                principalsQuery: select password from User where email = ?
+                rolesQuery: select r.role, 'Roles' from user_role ur inner join role r on r.id = ur.roles_id inner join user u on u.id = ur.user_id where u.email = ?
+                hashAlgorithm: SHA-256
+                hashEncoding: BASE64
+                hashCharset: UTF-8
+                unauthenticatedIdentity: guest

@@ -35,26 +35,10 @@
   </repositories>
   <dependencies>
 
-    <!-- Dependency on the EJB module so we can use it's services if needed -->
-
-    <!-- Import the CDI API, we use provided scope as the API is included in JBoss WildFly -->
-    <dependency>
-      <groupId>javax.enterprise</groupId>
-      <artifactId>cdi-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
     <!-- Import the JSF API, we use provided scope as the API is included in JBoss WildFly -->
     <dependency>
       <groupId>org.jboss.spec.javax.faces</groupId>
       <artifactId>jboss-jsf-api_2.2_spec</artifactId>
-    </dependency>
-
-    <!-- Import the JPA API, we use provided scope as the API is included in JBoss WildFly -->
-    <dependency>
-      <groupId>org.hibernate.javax.persistence</groupId>
-      <artifactId>hibernate-jpa-2.1-api</artifactId>
-      <scope>provided</scope>
     </dependency>
 
     <!-- JSR-303 (Bean Validation) Implementation -->
@@ -110,30 +94,135 @@
       <version>2.2.13.SP1</version>
       <scope>provided</scope>
     </dependency>
+    <!-- Declare the APIs we depend on and need for compilation. All of them are provided by JBoss WildFly -->
+    <!-- Import the EJB API, we use provided scope as the API is included in JBoss WildFly -->
+    <dependency>
+      <groupId>org.jboss.spec.javax.ejb</groupId>
+      <artifactId>jboss-ejb-api_3.2_spec</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Import the CDI API, we use provided scope as the API is included in JBoss WildFly -->
+    <dependency>
+      <groupId>javax.enterprise</groupId>
+      <artifactId>cdi-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <!-- Import the JPA API, we use provided scope as the API is included in JBoss WildFly -->
+    <dependency>
+      <groupId>org.hibernate.javax.persistence</groupId>
+      <artifactId>hibernate-jpa-2.1-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Test scope dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Optional, but highly recommended -->
+    <!-- Arquillian allows you to test enterprise code such as EJBs and Transactional(JTA) JPA from JUnit/TestNG -->
+    <dependency>
+      <groupId>org.jboss.arquillian.junit</groupId>
+      <artifactId>arquillian-junit-container</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.protocol</groupId>
+      <artifactId>arquillian-protocol-servlet</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-scratchpad</artifactId>
+      <version>3.15</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>javax.mail</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>legalservices</groupId>
+      <artifactId>statutes</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>3.15</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.ejb3</groupId>
+      <artifactId>jboss-ejb3-ext-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.annotation</groupId>
+      <artifactId>jboss-annotations-api_1.2_spec</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.46</version>
+    </dependency>
     <dependency>
       <groupId>legalservices</groupId>
       <artifactId>opinions-ejb</artifactId>
+      <version>0.3.0</version>
     </dependency>
   </dependencies>
   <profiles>
     <profile>
       <id>swarm</id>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.wildfly.swarm</groupId>
-        <artifactId>wildfly-swarm-plugin</artifactId>
-        <version>${version.wildfly.swarm}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>package</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.wildfly.swarm</groupId>
+            <artifactId>wildfly-swarm-plugin</artifactId>
+            <version>${version.wildfly.swarm}</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>package</goal>
+                </goals>
+                <configuration>
+                  <fractions>
+                    <fraction>cdi</fraction>
+                    <fraction>ejb</fraction>
+                    <fraction>jpa</fraction>
+                    <fraction>jsf</fraction>
+                    <fraction>mail</fraction>
+                    <fraction>bean-validation</fraction>
+                    <fraction>cdi-config</fraction>
+                    <fraction>container</fraction>
+                    <fraction>datasources</fraction>
+                    <fraction>ee</fraction>
+                    <fraction>jaxrs-cdi</fraction>
+                    <fraction>jaxrs</fraction>
+                    <fraction>jca</fraction>
+                    <fraction>logging</fraction>
+                    <fraction>naming</fraction>
+                    <fraction>security</fraction>
+                    <fraction>transactions</fraction>
+                    <fraction>undertow</fraction>
+                  </fractions>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
   <build>
