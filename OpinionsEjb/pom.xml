@@ -173,4 +173,5 @@
       </dependencies>
     </profile>
   </profiles>
+  <packaging>ejb</packaging>
 </project>

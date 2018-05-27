@@ -14,10 +14,10 @@
     <module>GuidedSearchCore</module>
     <module>StatutesCa</module>
     <module>GuidedSearchRsRs</module>
+    <module>OpinionsEjb</module>
     <module>OpinionsWeb</module>
     <module>LegalServicesEar</module>
     <module>StatutesRs</module>
-    <module>OpinionsEjb</module>
   </modules>
   <licenses>
     <license>
@@ -60,6 +60,13 @@
         <artifactId>guidedsearch-rs-rs</artifactId>
         <version>${project.version}</version>
         <type>war</type>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>legalservices</groupId>
+        <artifactId>opinions-ejb</artifactId>
+        <version>${project.version}</version>
+        <type>ejb</type>
         <scope>compile</scope>
       </dependency>
       <dependency>
