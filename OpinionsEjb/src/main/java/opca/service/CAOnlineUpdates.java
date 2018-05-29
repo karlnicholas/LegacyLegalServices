@@ -278,6 +278,7 @@ public class CAOnlineUpdates {
     			opinionKeys.clear();
     		}
     	}
+		existingOpinions.addAll(  slipOpinionService.opinionsWithReferringOpinions(opinionKeys) );
     	Collections.sort(existingOpinions);
     	OpinionBase[] existingOpinionsArray = existingOpinions.toArray(new OpinionBase[existingOpinions.size()]);
     	for(OpinionBase opinion: opinions ) {
@@ -345,6 +346,7 @@ public class CAOnlineUpdates {
     			statuteKeys.clear();
     		}
     	}
+		existingStatutes.addAll(  slipOpinionService.statutesWithReferringOpinions(statuteKeys) );
     	Collections.sort(existingStatutes);
     	StatuteCitation[] existingStatutesArray = existingStatutes.toArray(new StatuteCitation[existingStatutes.size()]);
 		
