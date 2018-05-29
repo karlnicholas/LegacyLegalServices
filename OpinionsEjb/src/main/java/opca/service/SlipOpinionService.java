@@ -45,7 +45,7 @@ public class SlipOpinionService {
 //		return em.find(OpinionBase.class, primaryKey);
 	}
 
-	public OpinionBase opinionExistsWithReferringOpinions(OpinionBase opinionBase) {
+	public OpinionBase opinionsWithReferringOpinions(OpinionBase opinionBase) {
 		TypedQuery<OpinionBase> OpinionBaseFindByOpinionKey = em.createNamedQuery("OpinionBase.findOpinionByKeyFetchReferringOpinions", OpinionBase.class);
 		List<OpinionBase> list = OpinionBaseFindByOpinionKey.setParameter("key", opinionBase.getOpinionKey()).getResultList();
 		if ( list.size() > 0 ) return list.get(0);
@@ -62,6 +62,11 @@ public class SlipOpinionService {
 //		return em.find(StatuteCitation.class, primaryKey);
 	}
 
+	// StatuteCitation
+	public List<StatuteCitation> statutesWithReferringOpinions(List<StatuteKey> statuteKeys) {
+		return em.createNamedQuery("StatuteCitation.statutesWithReferringOpinions", StatuteCitation.class)
+			.setParameter("statuteKeys", statuteKeys).getResultList();
+	}
 
 	public SlipOpinion slipOpinionExists(OpinionKey opinionKey) {
 		List<SlipOpinion> list = em.createNamedQuery("SlipOpinion.findByOpinionKey", SlipOpinion.class).setParameter("key", opinionKey).getResultList();
@@ -221,4 +226,7 @@ public class SlipOpinionService {
 		}
 	}
 */
+	public List<OpinionBase> opinionsWithReferringOpinions(List<OpinionKey> opinionKeys) {
+    	return em.createNamedQuery("OpinionBase.opinionsWithReferringOpinions", OpinionBase.class).setParameter("opinionKeys", opinionKeys).getResultList();
+	}
 }

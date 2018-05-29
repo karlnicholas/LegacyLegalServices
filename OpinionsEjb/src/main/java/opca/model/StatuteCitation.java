@@ -36,6 +36,9 @@ import javax.persistence.Table;
 	@NamedQuery(name="StatuteCitation.findByStatuteKeyJoinReferringOpinions", 
 		query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions ro left join fetch ro.opinionBase where s.statuteKey = :statuteKey"),
 	
+	@NamedQuery(name="StatuteCitation.statutesWithReferringOpinions", 
+		query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions ro left join fetch ro.opinionBase where s.statuteKey in :statuteKeys"),
+
 	@NamedQuery(name="StatuteCitationData.findOnltStatutesForKeys", 
 		query="select s from StatuteCitation s where s.statuteKey in :keys"),
 	@NamedQuery(name="StatuteCitationData.findStatutesForKeysWithChildren", 

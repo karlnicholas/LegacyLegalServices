@@ -29,7 +29,9 @@ import opca.parser.ParsedOpinionCitationSet;
 	@NamedQuery(name="OpinionBase.fetchAllOpinionCitationsFullJoins",
 		query="select distinct so from SlipOpinion so left join fetch so.opinionCitations oc left join fetch oc.statuteCitations ocsc left join fetch ocsc.statuteCitation ocscsc left join fetch ocscsc.referringOpinions ocscscro left join fetch ocscscro.opinionBase ocscscroob where so.id in :ids"), 
 	@NamedQuery(name="OpinionBase.fetchAllStatuteCitationsFullJoins",
-		query="select distinct so from SlipOpinion so left join fetch so.statuteCitations sc left join fetch sc.statuteCitation scsc left join fetch scsc.referringOpinions scscro left join fetch scscro.opinionBase scscroob where so.id in :ids"), 
+		query="select distinct so from SlipOpinion so left join fetch so.statuteCitations sc left join fetch sc.statuteCitation scsc left join fetch scsc.referringOpinions scscro left join fetch scscro.opinionBase scscroob where so.id in :ids"),
+	@NamedQuery(name="OpinionBase.opinionsWithReferringOpinions", 
+		query="select distinct o from OpinionBase o left join fetch o.referringOpinions where o.opinionKey in :opinionKeys"),
 	})
 
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)

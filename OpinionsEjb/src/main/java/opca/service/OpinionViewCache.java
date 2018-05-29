@@ -148,7 +148,7 @@ public class OpinionViewCache {
         Client statutesRs = new RestServicesFactory().connectStatutesRsService();
 		//
 		OpinionViewBuilder opinionViewBuilder = new OpinionViewBuilder(statutesRs);
-		List<SlipOpinion> opinions = findByPublishDateRange(sd, ed);
+		List<SlipOpinion> opinions = findByPublishDateRange();
 		MyPersistenceLookup pl = new MyPersistenceLookup(this);
 		TypedQuery<OpinionBase> focfs = em.createNamedQuery("OpinionBase.fetchOpinionCitationsForScore", OpinionBase.class);
 		for ( SlipOpinion slipOpinion: opinions ) {
@@ -205,20 +205,17 @@ public class OpinionViewCache {
 	 * @param endDate
 	 * @return
 	 */
-	public List<SlipOpinion> findByPublishDateRange(Date startDate, Date endDate) {
+	public List<SlipOpinion> findByPublishDateRange() {
 //		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.findByOpinionDateRange", SlipOpinion.class).setParameter("startDate", startDate).setParameter("endDate", endDate).getResultList();
 		// just get all slip opinions
 		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.loadOpinionsWithJoins", SlipOpinion.class).getResultList();
 //		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.loadOpinions", SlipOpinion.class).getResultList();
 
 		// load slipOpinion properties from the database here ... ?
-		int tcount = 0;
-
 		List<SlipProperties> spl = em.createNamedQuery("SlipProperties.findAll", SlipProperties.class).getResultList();
 		for ( SlipOpinion slipOpinion: opinions ) {
 			slipOpinion.setSlipProperties(spl.get(spl.indexOf(new SlipProperties(slipOpinion))));
 		}
-
 /*		
 			
 //		FETCH BY OPINIONKEY IS NOT ANY FASTER

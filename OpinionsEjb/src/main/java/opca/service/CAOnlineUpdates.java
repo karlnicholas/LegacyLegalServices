@@ -2,10 +2,12 @@ package opca.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ejb.EJB;
@@ -15,10 +17,12 @@ import javax.persistence.EntityManager;
 
 import opca.memorydb.CitationStore;
 import opca.model.OpinionBase;
+import opca.model.OpinionKey;
 import opca.model.OpinionStatuteCitation;
 import opca.model.SlipOpinion;
 import opca.model.SlipProperties;
 import opca.model.StatuteCitation;
+import opca.model.StatuteKey;
 import opca.parser.OpinionScraperInterface;
 import opca.parser.OpinionDocumentParser;
 import opca.parser.ScrapedOpinionDocument;
@@ -70,6 +74,7 @@ public class CAOnlineUpdates {
 		//
 //		onlineOpinions.remove(0);
 //		onlineOpinions = onlineOpinions.subList(0, 5);
+//		onlineOpinions = onlineOpinions.subList(0, 0);
 		//
 		List<SlipOpinion> currentOpinions = slipOpinionService.listSlipOpinions();
 		List<SlipOpinion> currentCopy = new ArrayList<SlipOpinion>(currentOpinions);
@@ -136,7 +141,8 @@ public class CAOnlineUpdates {
     		opinionDocumentParser.parseSlipOpinionDetails((SlipOpinion) scrapedOpinionDocument.getOpinionBase(), scrapedOpinionDocument);
     		OpinionBase opinionBase = scrapedOpinionDocument.getOpinionBase();
     		citationStore.mergeParsedDocumentCitations(scrapedOpinionDocument.getOpinionBase(), parsedOpinionResults);
-    		logger.fine("scrapedOpinionDocument:= " 
+    		if ( logger.getLevel() == Level.FINE ) {
+    			logger.fine("scrapedOpinionDocument:= " 
     				+ scrapedOpinionDocument.getOpinionBase().getTitle() 
     				+ "\n	:OpinionKey= " + opinionBase.getOpinionKey()
     				+ "\n	:CountReferringOpinions= " + opinionBase.getCountReferringOpinions()
@@ -147,6 +153,7 @@ public class CAOnlineUpdates {
     				+ "\n	:OpinionTable= " + parsedOpinionResults.getOpinionTable().size()
     				+ "\n	:StatuteTable= " + parsedOpinionResults.getStatuteTable().size()
 				);
+    		}
 		}
 
 		List<OpinionStatuteCitation> persistOpinionStatuteCitations = new ArrayList<>();
@@ -259,20 +266,31 @@ public class CAOnlineUpdates {
 		List<OpinionBase> persistOpinions 
 		
 	) {
-//		OpinionBase[] opArray = new OpinionBase[citationStore.getAllOpinions().size()];    	
-//		citationStore.getAllOpinions().toArray(opArray);
-//		List<OpinionBase> opinions = Arrays.asList(opArray);
-		List<OpinionBase> opinions = new ArrayList<>(citationStore.getAllOpinions());
-
     	Date startTime = new Date();
+		Set<OpinionBase> opinions = citationStore.getAllOpinions();
+		List<OpinionKey> opinionKeys = new ArrayList<>();
+		int i = 0;
+		List<OpinionBase> existingOpinions = new ArrayList<>();
+    	for(OpinionBase opinion: opinions ) {
+    		opinionKeys.add(opinion.getOpinionKey());
+    		if ( ++i % 100 == 0 ) {
+    			existingOpinions.addAll(  slipOpinionService.opinionsWithReferringOpinions(opinionKeys) );
+    			opinionKeys.clear();
+    		}
+    	}
+    	Collections.sort(existingOpinions);
+    	OpinionBase[] existingOpinionsArray = existingOpinions.toArray(new OpinionBase[existingOpinions.size()]);
     	for(OpinionBase opinion: opinions ) {
 //This causes a NPE !?!?	    		
 //    		opinion.checkCountReferringOpinions();
     		// checking for opinionBase for citations
-    		OpinionBase existingOpinion = slipOpinionService.opinionExistsWithReferringOpinions(opinion);
-			if ( existingOpinion == null ) {
+//    		OpinionBase existingOpinion = slipOpinionService.opinionExistsWithReferringOpinions(opinion);
+    		int idx = Arrays.binarySearch(existingOpinionsArray, opinion);
+    		
+    		if ( idx < 0 ) {
 				persistOpinions.add(opinion);
 			} else {
+				OpinionBase existingOpinion = existingOpinionsArray[idx]; 
 				existingOpinion.mergePersistenceFromSlipLoad(opinion);
 /*				
 	    		logger.fine("existingOpinion:= " 
@@ -285,7 +303,7 @@ public class CAOnlineUpdates {
 */	    			
 				//opinion referred to itself?
 //              existingOpinion.addOpinionBaseReferredFrom(opinion.getOpinionKey());
-				citationStore.replaceOpinion(existingOpinion);				
+//				citationStore.replaceOpinion(existingOpinion);				
 				mergeOpinions.add(existingOpinion);
 			}
 			logger.fine("opinion "+opinion.getOpinionKey()
@@ -315,19 +333,30 @@ public class CAOnlineUpdates {
     		List<StatuteCitation> mergeStatutes, 
     		List<StatuteCitation> persistStatutes
 	) {
-		StatuteCitation[] stArray = new StatuteCitation[citationStore.getAllStatutes().size()];    	
-		citationStore.getAllStatutes().toArray(stArray);
-		List<StatuteCitation> statutes = Arrays.asList(stArray);
-
-    	int count = statutes.size();
     	Date startTime = new Date();
+    	Set<StatuteCitation> statutes = citationStore.getAllStatutes();
+		List<StatuteKey> statuteKeys = new ArrayList<>();
+		int i = 0;
+		List<StatuteCitation> existingStatutes = new ArrayList<>();
+    	for(StatuteCitation statuteCitation: statutes ) {
+    		statuteKeys.add(statuteCitation.getStatuteKey());
+    		if ( ++i % 100 == 0 ) {
+    			existingStatutes.addAll(  slipOpinionService.statutesWithReferringOpinions(statuteKeys) );
+    			statuteKeys.clear();
+    		}
+    	}
+    	Collections.sort(existingStatutes);
+    	StatuteCitation[] existingStatutesArray = existingStatutes.toArray(new StatuteCitation[existingStatutes.size()]);
+		
+    	int count = statutes.size();
     	for(StatuteCitation statute: statutes ) {
-    		StatuteCitation existingStatute = slipOpinionService.statuteExists(statute);
-			if ( existingStatute == null ) {
+    		int idx = Arrays.binarySearch(existingStatutesArray, statute);
+			if ( idx < 0 ) {
 				persistStatutes.add(statute);
 			} else {
+	    		StatuteCitation existingStatute = existingStatutesArray[idx];
 				existingStatute.mergeStatuteCitationFromSlipLoad(statute);
-				citationStore.replaceStatute(existingStatute);				
+//				citationStore.replaceStatute(existingStatute);				
 				
 				mergeStatutes.add(existingStatute);
 			}
