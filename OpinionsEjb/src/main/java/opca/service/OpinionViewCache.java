@@ -161,9 +161,11 @@ public class OpinionViewCache {
 				opinionIds.clear();
 			}
 		}
-		opinionOpinionCitations.addAll( 
-			em.createNamedQuery("OpinionBase.fetchOpinionCitationsForOpinions", OpinionBase.class).setParameter("opinionIds", opinionIds).getResultList()
-		);
+		if ( opinionIds.size() != 0 ) {
+			opinionOpinionCitations.addAll( 
+				em.createNamedQuery("OpinionBase.fetchOpinionCitationsForOpinions", OpinionBase.class).setParameter("opinionIds", opinionIds).getResultList()
+			);
+		}
 		for ( SlipOpinion slipOpinion: opinions ) {
 			slipOpinion.setOpinionCitations( opinionOpinionCitations.get( opinionOpinionCitations.indexOf(slipOpinion)).getOpinionCitations() );
 			ParsedOpinionCitationSet parserResults = new ParsedOpinionCitationSet(slipOpinion, pl);

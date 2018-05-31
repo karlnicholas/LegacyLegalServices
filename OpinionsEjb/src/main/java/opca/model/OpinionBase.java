@@ -32,6 +32,10 @@ import opca.parser.ParsedOpinionCitationSet;
 		query="select distinct o from OpinionBase o left join fetch o.referringOpinions where o.opinionKey in :opinionKeys"),
 	@NamedQuery(name="OpinionBase.fetchOpinionCitationsForOpinions", 
 		query="select distinct o from OpinionBase o left join fetch o.opinionCitations ooc left join fetch ooc.statuteCitations oocsc left join fetch oocsc.statuteCitation where o.id in :opinionIds"), 
+	@NamedQuery(name="OpinionBase.fetchReferringOpinions", 
+		query="select oro from OpinionBase o2 left outer join o2.opinionCitations oro where o2.id in :opinionIds"),
+	@NamedQuery(name="OpinionBase.fetchCitedOpinionsWithReferringOpinions", 
+		query="select distinct oro from OpinionBase o2 left outer join o2.opinionCitations oro left join fetch oro.referringOpinions where o2.id in :opinionIds"),
 	
 	})
 
@@ -102,6 +106,17 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
     	referringOpinions.add(opinionBase);
         // do it the paranoid way
         countReferringOpinions = referringOpinions.size();
+    }
+    /**
+     * Removes a referringOpinion if it exists
+     * @param opinionBase
+     */
+    public void removeReferringOpinion(OpinionBase opinionBase) {
+    	if (referringOpinions != null ) {
+	    	if ( referringOpinions.remove(opinionBase) ) {
+	    		countReferringOpinions = referringOpinions.size();
+	    	}
+    	}
     }
 	public void addStatuteCitations(Set<StatuteCitation> goodStatutes) {
 		if ( statuteCitations == null ) {

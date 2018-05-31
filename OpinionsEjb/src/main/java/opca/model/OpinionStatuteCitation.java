@@ -11,7 +11,9 @@ import javax.persistence.NamedQuery;
 	@NamedQuery(name="OpinionStatuteCitation.findByOpinions", 
 		query="select c from OpinionStatuteCitation c where c.opinionBase in :opinions order by statuteCitation, opinionBase"), 
 	@NamedQuery(name="OpinionStatuteCitation.findByOpinion", 
-		query="select c from OpinionStatuteCitation c where c.opinionBase = :opinion order by statuteCitation, opinionBase")
+		query="select c from OpinionStatuteCitation c where c.opinionBase = :opinion order by statuteCitation, opinionBase"), 
+	@NamedQuery(name="OpinionStatuteCitation.deleteOpinionStatuteCitations", 
+		query="delete from OpinionStatuteCitation c where c.opinionBase.id in :opinionIds"), 
 })
 @Entity
 public class OpinionStatuteCitation implements Comparable<OpinionStatuteCitation> {

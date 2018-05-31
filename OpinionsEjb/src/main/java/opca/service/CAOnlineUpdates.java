@@ -14,6 +14,8 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import opca.memorydb.CitationStore;
 import opca.model.OpinionBase;
@@ -112,6 +114,7 @@ public class CAOnlineUpdates {
 			logger.info("No new cases.");
 		}		
 //		processAndPersistCases(onlineOpinions, caseScraper);
+
 	}
 	
 	private void processAndPersistCases(List<SlipOpinion> opinions, OpinionScraperInterface opinionScraper) {
@@ -230,6 +233,70 @@ public class CAOnlineUpdates {
 // BUG		slipOpinionService.fetchCitations(currentCopy);
 //			Object[] results = (Object[]) em.createNativeQuery("SELECT @@GLOBAL.tx_isolation, @@tx_isolation;").getSingleResult();
 //			logger.info("Transaction Level: " + results[0] + " : " + results[1]);
+		List<OpinionBase> citedOpinions = new ArrayList<>(); 
+		List<Integer> opinionIds = new ArrayList<>();
+		int i = 0;
+		TypedQuery<OpinionBase> queryCitedOpinions = em.createNamedQuery("OpinionBase.fetchCitedOpinionsWithReferringOpinions", OpinionBase.class);
+		for (SlipOpinion deleteOpinion: currentCopy) {
+			opinionIds.add(deleteOpinion.getId());
+			if ( ++i % 100 == 0 ) {
+				citedOpinions.addAll( queryCitedOpinions.setParameter("opinionIds", opinionIds).getResultList() );
+				opinionIds.clear();
+			}
+		}
+		if ( opinionIds.size() != 0 ) {
+			citedOpinions.addAll( queryCitedOpinions.setParameter("opinionIds", opinionIds).getResultList() );
+		}
+		
+		// ugly double loop ( O(n^2) )
+		// but currently only getting 350 opinions max, 
+		// operationally much lower if update every night
+		for ( OpinionBase citedOpinion: citedOpinions ) {
+			for (SlipOpinion deleteOpinion: currentCopy) {
+				citedOpinion.removeReferringOpinion(deleteOpinion);
+			}
+		}
+/*		
+do I really need this?
+		// now merge citedOpinions without slipOpinion citations 
+		for ( OpinionBase citedOpinion: citedOpinions ) {
+			em.merge(citedOpinion);
+		}
+*/		
+		
+		opinionIds.clear();
+		i = 0;
+		Query queryOpinionStatuteCitations = em.createNamedQuery("OpinionStatuteCitation.deleteOpinionStatuteCitations");
+		for (SlipOpinion deleteOpinion: currentCopy) {
+			opinionIds.add(deleteOpinion.getId());
+			if ( ++i % 100 == 0 ) {
+				queryOpinionStatuteCitations.setParameter("opinionIds", opinionIds).executeUpdate();
+				opinionIds.clear();
+			}
+		}
+		if ( opinionIds.size() != 0 ) {
+			queryOpinionStatuteCitations.setParameter("opinionIds", opinionIds).executeUpdate();
+		}
+		
+
+		List<SlipProperties> slipProperties = em.createNamedQuery("SlipProperties.findAll", SlipProperties.class).getResultList();
+		for (SlipOpinion deleteOpinion: currentCopy) {
+			for ( SlipProperties slipProperty: slipProperties ) {
+				if ( slipProperty.getOpinionKey().equals(deleteOpinion.getId())) {
+					em.remove(slipProperty);
+					break;
+				}
+			}
+			em.remove(deleteOpinion);
+		}
+	}
+/*
+	private void deleteExistingOpinions(List<SlipOpinion> currentCopy) {
+		logger.info("Deleting " + currentCopy.size() + " cases." );
+		// need to fill out OpinionCitations and StatuteCitations for these opinions
+// BUG		slipOpinionService.fetchCitations(currentCopy);
+//			Object[] results = (Object[]) em.createNativeQuery("SELECT @@GLOBAL.tx_isolation, @@tx_isolation;").getSingleResult();
+//			logger.info("Transaction Level: " + results[0] + " : " + results[1]);
 		for (SlipOpinion deleteOpinion: currentCopy) {
 			// re-attach entity so lazy associations will be loaded
 			deleteOpinion = em.merge(deleteOpinion);
@@ -255,11 +322,14 @@ public class CAOnlineUpdates {
 //					if (!deleteOpinion.getReferringOpinions().isEmpty()) throw new RuntimeException("referringOpinions not empty: " + deleteOpinion );
 			// remove detached entity
 			List<SlipProperties> slipProperties = em.createNamedQuery("SlipProperties.findOne", SlipProperties.class).setParameter("opinion", deleteOpinion).getResultList();
-			if ( slipProperties.size() != 0 )
+			if ( slipProperties.size() != 0 ) {
 				em.remove(slipProperties.get(0));
+			}
 			em.remove(deleteOpinion);
 		}
 	}
+	
+ */
 
 	private void processOpinions(CitationStore citationStore,  
 		List<OpinionBase> mergeOpinions, 
@@ -278,7 +348,9 @@ public class CAOnlineUpdates {
     			opinionKeys.clear();
     		}
     	}
-		existingOpinions.addAll(  slipOpinionService.opinionsWithReferringOpinions(opinionKeys) );
+    	if ( opinionKeys.size() != 0 ) {
+    		existingOpinions.addAll(  slipOpinionService.opinionsWithReferringOpinions(opinionKeys) );
+    	}
     	Collections.sort(existingOpinions);
     	OpinionBase[] existingOpinionsArray = existingOpinions.toArray(new OpinionBase[existingOpinions.size()]);
     	for(OpinionBase opinion: opinions ) {
@@ -346,7 +418,9 @@ public class CAOnlineUpdates {
     			statuteKeys.clear();
     		}
     	}
-		existingStatutes.addAll(  slipOpinionService.statutesWithReferringOpinions(statuteKeys) );
+    	if ( statuteKeys.size() != 0 ) {
+    		existingStatutes.addAll(  slipOpinionService.statutesWithReferringOpinions(statuteKeys) );
+    	}
     	Collections.sort(existingStatutes);
     	StatuteCitation[] existingStatutesArray = existingStatutes.toArray(new StatuteCitation[existingStatutes.size()]);
 		
