@@ -3,7 +3,7 @@ swarm:
     data-sources:
       OpEEDS:
         driver-name: mysql
-        connection-url: jdbc:mysql://mysql:3306/${env.MYSQL_DATABASE}
+        connection-url: jdbc:mysql://mysql:3306/${env.MYSQL_DATABASE}?autoReconnect=true&useSSL=false
         user-name: ${env.MYSQL_USER}
         password: ${env.MYSQL_PASSWORD}
         jta: true
