@@ -27,7 +27,7 @@ public class ScheduledService {
         logger.info("DONE KICK STATUESWS");
     }
 */    
-    @Schedule(second="0", minute="50", hour="17", persistent=false)        // 03:30 am (12:30 am AZ ) every day
+    @Schedule(second="0", minute="30", hour="03", persistent=false)        // 03:30 am (12:30 am AZ ) every day
     // Wildfly specific transaction timeout setting
     // this isn't working at the moment, there are confiugrations necessary in wildfly?
     // also, this is hibernate/jboss specific. There was a Java EE way of acheiving this?

@@ -43,7 +43,7 @@ public class CAParseScrapedDocument {
 		if ( slipOpinion.getFileExtension().equals(".DOC")) {
 			try {
 				parseHWPF(scrapedDocument, slipOpinion, bais);
-			} catch ( OfficeXmlFileException ex ) {
+			} catch ( IllegalArgumentException ex ) {
 				bais.reset();
 				parseXWPF(scrapedDocument, slipOpinion, bais);
 			}
