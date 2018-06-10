@@ -12,8 +12,7 @@ public class StatuteKey implements Serializable, Comparable<StatuteKey> {
     protected String sectionNumber;
     @Column(columnDefinition="char(3)")
     protected String title;
-//    private String title;
-//    private String sectionNumber;
+
     public StatuteKey() {}
     
     public StatuteKey(String title, String sectionNumber) {

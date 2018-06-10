@@ -290,46 +290,6 @@ do I really need this?
 			em.remove(deleteOpinion);
 		}
 	}
-/*
-	private void deleteExistingOpinions(List<SlipOpinion> currentCopy) {
-		logger.info("Deleting " + currentCopy.size() + " cases." );
-		// need to fill out OpinionCitations and StatuteCitations for these opinions
-// BUG		slipOpinionService.fetchCitations(currentCopy);
-//			Object[] results = (Object[]) em.createNativeQuery("SELECT @@GLOBAL.tx_isolation, @@tx_isolation;").getSingleResult();
-//			logger.info("Transaction Level: " + results[0] + " : " + results[1]);
-		for (SlipOpinion deleteOpinion: currentCopy) {
-			// re-attach entity so lazy associations will be loaded
-			deleteOpinion = em.merge(deleteOpinion);
-			for( OpinionBase opinionBase: deleteOpinion.getOpinionCitations() ) {
-				OpinionBase opSummary = slipOpinionService.findOpinion(opinionBase);
-				Set<OpinionBase> referringOpinions = opSummary.getReferringOpinions();
-				if ( referringOpinions.remove(deleteOpinion) ) {
-					em.merge(opSummary);
-				} else {
-					System.out.println("deleteOpinion " + deleteOpinion + " not found in " + opSummary);							
-				}
-			}
-			for ( OpinionStatuteCitation opinionStatuteCitation: deleteOpinion.getStatuteCitations() ) {
-				StatuteCitation opStatute = slipOpinionService.findStatute(opinionStatuteCitation.getStatuteCitation());
-				// int count = opStatute.getOpinionStatuteReference(deleteOpinion).getCountReferences();
-				opStatute.removeOpinionStatuteReference(deleteOpinion);
-//				OpinionKey opKey = deleteOpinion.getOpinionKey();
-//				if ( count <= 0 ) throw new RuntimeException("Cannot delete referring opinion: " + deleteOpinion + " " + opStatute);
-//				mapReferringOpinionCount.remove(deleteOpinion);
-				em.merge(opStatute);
-				em.remove(opinionStatuteCitation);
-			}
-//					if (!deleteOpinion.getReferringOpinions().isEmpty()) throw new RuntimeException("referringOpinions not empty: " + deleteOpinion );
-			// remove detached entity
-			List<SlipProperties> slipProperties = em.createNamedQuery("SlipProperties.findOne", SlipProperties.class).setParameter("opinion", deleteOpinion).getResultList();
-			if ( slipProperties.size() != 0 ) {
-				em.remove(slipProperties.get(0));
-			}
-			em.remove(deleteOpinion);
-		}
-	}
-	
- */
 
 	private void processOpinions(CitationStore citationStore,  
 		List<OpinionBase> mergeOpinions, 
@@ -357,7 +317,6 @@ do I really need this?
 //This causes a NPE !?!?	    		
 //    		opinion.checkCountReferringOpinions();
     		// checking for opinionBase for citations
-//    		OpinionBase existingOpinion = slipOpinionService.opinionExistsWithReferringOpinions(opinion);
     		int idx = Arrays.binarySearch(existingOpinionsArray, opinion);
     		
     		if ( idx < 0 ) {
@@ -374,9 +333,6 @@ do I really need this?
 	    				+ "\n	:OpinionCitations().size()= " + (existingOpinion.getOpinionCitations()== null?"xx":existingOpinion.getOpinionCitations().size())
 	    			);
 */	    			
-				//opinion referred to itself?
-//              existingOpinion.addOpinionBaseReferredFrom(opinion.getOpinionKey());
-//				citationStore.replaceOpinion(existingOpinion);				
 				mergeOpinions.add(existingOpinion);
 			}
 			logger.fine("opinion "+opinion.getOpinionKey()
@@ -387,18 +343,6 @@ do I really need this?
 			
 		}
 		logger.info("Divided "+citationStore.getAllOpinions().size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
-/*		
-		startTime = new Date();
-    	for(OpinionBase opinion: persistOpinions ) {
-			em.persist(opinion);
-    	}
-		logger.info("Persisted "+persistOpinions.size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
-		startTime = new Date();
-    	for(OpinionBase opinion: mergeOpinions ) {
-			em.merge(opinion);
-    	}
-		logger.info("Merged "+mergeOpinions.size()+" opinions in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
-*/		
     }
 
     private void processStatutes( 
@@ -432,24 +376,10 @@ do I really need this?
 			} else {
 	    		StatuteCitation existingStatute = existingStatutesArray[idx];
 				existingStatute.mergeStatuteCitationFromSlipLoad(statute);
-//				citationStore.replaceStatute(existingStatute);				
 				
 				mergeStatutes.add(existingStatute);
 			}
     	}
 		logger.info("Divided "+count+" statutes in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
-
-/*
-    	startTime = new Date();
-    	for(StatuteCitation statute: persistStatutes ) {
-			em.persist(statute);
-    	}
-		logger.info("Persisted "+persistStatutes.size()+" statutes in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
-		startTime = new Date();
-    	for(StatuteCitation statute: mergeStatutes ) {
-			em.merge(statute);
-    	}
-		logger.info("Merged "+mergeStatutes.size()+" statutes in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
-*/		
     }
 }

@@ -139,6 +139,9 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	}
 	
 	public Collection<StatuteCitation> getOnlyStatuteCitations() {
+		if ( statuteCitations == null ) {
+			setStatuteCitations(new TreeSet<>());
+		}
 		Set<StatuteCitation> onlyStatuteCitations = new TreeSet<>();
 		for(OpinionStatuteCitation opinionStatuteCitation: statuteCitations) {
 			onlyStatuteCitations.add(opinionStatuteCitation.getStatuteCitation());

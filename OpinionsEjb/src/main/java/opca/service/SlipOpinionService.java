@@ -26,23 +26,14 @@ public class SlipOpinionService {
     // debug constructor
     public SlipOpinionService(EntityManager em) {
     	this.em = em;
-//    	initNamedQueries();
 	}
-/*
-    @PostConstruct
-    public void initNamedQueries() {
-    	OpinionBaseFindByOpinionKey = em.createNamedQuery("OpinionBase.findByOpinionKey", OpinionBase.class);
-    	statuteCitationFindByTitleSection = em.createNamedQuery("StatuteCitation.findByTitleSection", StatuteCitation.class);
-    }
-*/    
-	// used to lookup OpinionSummaries
+
+    // used to lookup OpinionSummaries
 	public OpinionBase opinionExists(OpinionBase opinionBase) {
 		TypedQuery<OpinionBase> OpinionBaseFindByOpinionKey = em.createNamedQuery("OpinionBase.findByOpinionKey", OpinionBase.class);
 		List<OpinionBase> list = OpinionBaseFindByOpinionKey.setParameter("key", opinionBase.getOpinionKey()).getResultList();
 		if ( list.size() > 0 ) return list.get(0);
 		return null;
-
-//		return em.find(OpinionBase.class, primaryKey);
 	}
 
 	public OpinionBase opinionsWithReferringOpinions(OpinionBase opinionBase) {
@@ -173,59 +164,21 @@ public class SlipOpinionService {
 	public PersistenceLookup getPersistenceLookup() {
 		return new MyPersistenceLookup(this); 
 	}
-/*	
-	class MyPersistenceInterface extends MyPersistenceLookup implements CitationStore  {
-		public MyPersistenceInterface(SlipOpinionService slipOpinionRepository) {
-			super(slipOpinionRepository);
-		}
 
-		@Override
-		public void persistStatute(StatuteCitation statute) {
-			slipOpinionRepository.persistStatute(statute);
-		}
-
-		@Override
-		public StatuteCitation mergeStatute(StatuteCitation statute) {
-			return slipOpinionRepository.mergeStatute(statute);
-		}
-
-		@Override
-		public void persistOpinion(OpinionBase opinion) {
-			slipOpinionRepository.persistOpinion(opinion);
-			
-		}
-
-		@Override
-		public OpinionBase mergeOpinion(OpinionBase opinion) {
-			return slipOpinionRepository.mergeOpinion(opinion);
-		}
-	}
-	
-	public CitationStore getPersistenceInterface() {
-		return new MyPersistenceInterface(this); 
-	}
-*/	
-    public Long getCount() {
+	public Long getCount() {
         return em.createQuery("select count(*) from StatuteCitation", Long.class).getSingleResult();
     }
-    public List<StatuteCitation> selectForTitle(String title) {
+
+	public List<StatuteCitation> selectForTitle(String title) {
     	return em.createNamedQuery("StatuteCitation.selectForTitle", StatuteCitation.class).setParameter("title", '%'+title+'%').getResultList();
     }
-    public StatuteCitation testStatuteByTitleSection(String title, String sectionNumber) {
+
+	public StatuteCitation testStatuteByTitleSection(String title, String sectionNumber) {
     	List<StatuteCitation> list = em.createNamedQuery("StatuteCitation.findByTitleSection", StatuteCitation.class).setParameter("title", title).setParameter("sectionNumber", sectionNumber).getResultList();
     	if ( list.size() > 0 ) return list.get(0);
     	else return null;
     }
-/*    
-	public void fetchCitations(List<SlipOpinion> slipOpinions) {
-		TypedQuery<StatuteKey> fetchStatuteCitations = em.createNamedQuery("SlipOpinion.fetchStatuteCitations", StatuteKey.class);
-		TypedQuery<OpinionKey> fetchOpinionCitations = em.createNamedQuery("SlipOpinion.fetchOpinionCitations", OpinionKey.class);
-		for ( SlipOpinion slipOpinion: slipOpinions) {
-			slipOpinion.setStatuteCitations(new TreeSet<StatuteKey>(fetchStatuteCitations.setParameter("key", slipOpinion.getOpinionKey()).getResultList()));
-			slipOpinion.setOpinionCitations(new TreeSet<OpinionKey>(fetchOpinionCitations.setParameter("key", slipOpinion.getOpinionKey()).getResultList()));
-		}
-	}
-*/
+
 	public List<OpinionBase> opinionsWithReferringOpinions(List<OpinionKey> opinionKeys) {
     	return em.createNamedQuery("OpinionBase.opinionsWithReferringOpinions", OpinionBase.class).setParameter("opinionKeys", opinionKeys).getResultList();
 	}

@@ -26,7 +26,7 @@ swarm:
               module-options:
                 dsJndiName: java:jboss/datasources/OpEEDS
                 password-stacking: useFirstPass
-                principalsQuery: select password from User where email = ?
+                principalsQuery: select password from user where email = ?
                 rolesQuery: select r.role, 'Roles' from user_role ur inner join role r on r.id = ur.roles_id inner join user u on u.id = ur.user_id where u.email = ?
                 hashAlgorithm: SHA-256
                 hashEncoding: BASE64

@@ -19,14 +19,12 @@ public class IndexController {
 	@Inject private CAOnlineUpdates caOnlineUpdates;
     
     public void testUpdate() {
-        logger.info("STARTING SCRAPER UPDATE");
+        logger.info("Starting Scraper Update");
         caOnlineUpdates.updateDatabase(new CACaseScraper(false));
 //        caOnlineUpdates.updateDatabase(new TestCACaseScraper(false));
-
-        logger.info("DONE SCRAPER UPDATE");
-		logger.info("STARTING OPINIONVIEW POSTCONSTRUCT");
+		logger.info("Starting OPINIONVIEW POSTCONSTRUCT");
         caOnlineUpdates.updatePostConstruct();
-        logger.info("DONE OPINIONVIEW POSTCONSTRUCT");
+        logger.info("Done Update");
     }
     
 	private String message;
