@@ -56,17 +56,6 @@ public class SubcodeView implements ViewReference {
 
     public int incRefCount(int amount) {
     	cumulativeRefCount = cumulativeRefCount + amount;
-/*
-    	Iterator<OpinionReference> sit = opReferences.iterator();
-    	while ( sit.hasNext() ) {
-    		OpinionReference opReference = sit.next();
-    		if ( opReference.returnOpSection() != null ) {
-	    		opReference.incRefCount(amount);
-//    		sectionRef.setSectionNumber(sectionRef.getCodeSection().getRange().toString());
-	    		opReference.setSectionNumber(null);
-    		}
-    	}
-*/    	
         return cumulativeRefCount;
     }
 
@@ -84,13 +73,8 @@ public class SubcodeView implements ViewReference {
             queue.mergeSubcodes( childReferences);
         }
     }
-/*
-    public String toString() {
-        return "\n" + codeSection + ": " + cumulativeReferenceCount + statutesNodes;
-    }
-*/
-	
-	public void addReference(ViewReference opReference) {
+
+    public void addReference(ViewReference opReference) {
 		childReferences.add(opReference);
 	}
 

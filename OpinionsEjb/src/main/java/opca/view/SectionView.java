@@ -58,8 +58,6 @@ public class SectionView implements ViewReference {
             if (  ret != 0 ) return ret;
         }
 
-//        return sectionNumber.compareTo(dcs.getSectionNumber());
-//        return section.getCodeRange().getsNumber().getSectionNumber().compareTo(dcs.getStatutesBaseClass().getCodeRange().getsNumber().getSectionNumber());
         // do a string compare for now .. really meant to compare codes 
         return sectionNumber.getSectionNumber().compareTo(dcs.getSectionNumber().getSectionNumber());
     }
@@ -67,18 +65,6 @@ public class SectionView implements ViewReference {
     public SectionNumber getSectionNumber() {
        return sectionNumber;
     }
-/*
-    // do this for the presentation layer
-    public String getDisplaySectionNumber() {
-    	String retString;
-        if ( sectionNumber != null ) {
-        	retString = "§ " + sectionNumber.toString();
-        } else  {
-        	retString = "§§ " + ((StatutesLeaf)section).getStatuteRange().toString();
-        }
-        return retString;
-    }
-*/    
 	public String getTitle() {
         return title;
     }

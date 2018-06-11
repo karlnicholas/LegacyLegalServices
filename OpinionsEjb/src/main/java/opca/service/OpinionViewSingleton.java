@@ -109,50 +109,5 @@ public class OpinionViewSingleton implements Serializable {
     	}
     	return currentIndex;
 	}
-/*
-	SimpleDateFormat sform = new SimpleDateFormat("MMM dd");
-	SimpleDateFormat lform = new SimpleDateFormat("yyyy-MM-dd");
-	List<Date[]> reportDates = slipOpinionService.getReportDates();
-	Date dateParam = null;
-	currentDate = " - ";
-	if ( startDate != null && !startDate.trim().isEmpty() ) {
-		try {
-			dateParam = lform.parse(startDate);
-		} catch (ParseException ignored) {
-		}
-	}
-	dateList = new ArrayList<String[]>();
-	int i=0;
-	currentIndex = 0;
-	Date dateRecent = null;
-	if( reportDates.size() > 0 ) {
-		dateRecent = reportDates.get(0)[0];
-    	currentDate = String.format("%s - %s", 
-			sform.format(reportDates.get(0)[0]),
-			sform.format(reportDates.get(0)[1])
-		);
-	}
-	for ( Date[] dates: reportDates ) {
-		if ( dates[0] == null || dates[1] == null ) continue;  
-		if ( dateParam != null ) {
-    		if ( dateParam.compareTo(dateRecent) < 0 ) {
-    			dateRecent = dates[0];
-    	    	currentDate = String.format("%s - %s", 
-	    			sform.format(dates[0]),
-	    			sform.format(dates[1])
-	    		);
-    	    	currentIndex = i;
-    		} 
-		}
-		i++;
-		String[] e = new String[2]; 
-		e[0] = String.format("%s - %s", 
-			sform.format(dates[0]),
-			sform.format(dates[1]));
-		e[1] = String.format("?startDate=%s", lform.format(dates[0]));
-		dateList.add(e);	
-	}    	
- */
-
 
 }

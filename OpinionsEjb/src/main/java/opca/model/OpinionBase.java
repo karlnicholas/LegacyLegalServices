@@ -21,24 +21,14 @@ import opca.parser.ParsedOpinionCitationSet;
 		query="select o from OpinionBase o where o.opinionKey in :keys"),
 	@NamedQuery(name="OpinionBase.findOpinionByKeyFetchReferringOpinions", 
 		query="select distinct o from OpinionBase o left join fetch o.referringOpinions where o.opinionKey = :key"),
-	@NamedQuery(name="OpinionBase.fetchOpinionCitations",
-		query="select distinct o from SlipOpinion o left join fetch o.opinionCitations ooc left join fetch ooc.statuteCitations oocsc left join fetch oocsc.statuteCitation where o.id = :id"), 
-//		query="select distinct o from SlipOpinion o left join fetch o.opinionCitations ooc left join fetch ooc.statuteCitations oocsc left join fetch oocsc.statuteCitation oocscsc left join fetch oocscsc.referringOpinions oocscscro left join fetch oocscscro.opinionBase where o.id = :id"), 
-	@NamedQuery(name="OpinionBase.fetchStatuteCitationsFullJoins",
-		query="select distinct so from SlipOpinion so left join fetch so.statuteCitations sc left join fetch sc.statuteCitation scsc left join fetch scsc.referringOpinions scscro left join fetch scscro.opinionBase scscroob where so.id = :id"), 
-	@NamedQuery(name="OpinionBase.fetchAllStatuteCitationsFullJoins",
-		query="select distinct so from SlipOpinion so left join fetch so.statuteCitations sc left join fetch sc.statuteCitation scsc left join fetch scsc.referringOpinions scscro left join fetch scscro.opinionBase scscroob where so.id in :ids"),
 	@NamedQuery(name="OpinionBase.opinionsWithReferringOpinions", 
 		query="select distinct o from OpinionBase o left join fetch o.referringOpinions where o.opinionKey in :opinionKeys"),
 	@NamedQuery(name="OpinionBase.fetchOpinionCitationsForOpinions", 
 		query="select distinct o from OpinionBase o left join fetch o.opinionCitations ooc left join fetch ooc.statuteCitations oocsc left join fetch oocsc.statuteCitation where o.id in :opinionIds"), 
-	@NamedQuery(name="OpinionBase.fetchReferringOpinions", 
-		query="select oro from OpinionBase o2 left outer join o2.opinionCitations oro where o2.id in :opinionIds"),
 	@NamedQuery(name="OpinionBase.fetchCitedOpinionsWithReferringOpinions", 
 		query="select distinct oro from OpinionBase o2 left outer join o2.opinionCitations oro left join fetch oro.referringOpinions where o2.id in :opinionIds"),
 	
 	})
-
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType=DiscriminatorType.INTEGER)
 @Table(indexes= {@Index(columnList = "vset,volume,page")})
@@ -130,11 +120,6 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 			}
 			// complete the other side of the reference.
 			statuteCitations.add(opinionStatuteCitation);
-/*			
-			OpinionStatuteCitation opinionStatuteCitation = new OpinionStatuteCitation(statuteCitation, this, 1);
-			statuteCitation
-			statuteCitations.add( opinionStatuteCitation );
-*/			
 		}
 	}
 	

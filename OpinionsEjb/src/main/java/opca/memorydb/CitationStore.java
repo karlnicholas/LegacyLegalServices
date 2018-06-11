@@ -32,24 +32,7 @@ public class CitationStore implements PersistenceLookup {
     public int getCount() {
         return dataBase.getStatuteTable().size();
     }
-/*
-    public List<StatuteCitation> selectForCode(String code) {
-        List<StatuteCitation> statutesForCode = Collections.synchronizedList(new ArrayList<StatuteCitation>());
-        dataBase.getStatuteTable().stream().filter(new Predicate<StatuteCitation>() {
-            @Override
-            public boolean test(StatuteCitation codeCitation) {
-            	if ( codeCitation.getStatuteKey().getCode() == null ) return false;
-                return codeCitation.getStatuteKey().getCode().contains(code);
-            }
-        }).forEach(new Consumer<StatuteCitation>() {
-            @Override
-            public void accept(StatuteCitation codeCitation) {
-                statutesForCode.add(codeCitation);
-            }
-        });
-        return statutesForCode;
-    }
-*/
+
     public StatuteCitation findStatuteByCodeSection(String title, String sectionNumber) {
         return statuteExists(new StatuteCitation(new StatuteKey(title, sectionNumber)));
     }

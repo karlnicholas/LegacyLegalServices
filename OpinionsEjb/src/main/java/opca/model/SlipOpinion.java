@@ -6,34 +6,13 @@ import java.util.regex.Pattern;
 import javax.persistence.*;
 
 @NamedQueries({
-	@NamedQuery(name="SlipOpinion.findByOpinionDate", 
-		query="select o from SlipOpinion o where o.opinionDate=:opinionDate"),
-	@NamedQuery(name="SlipOpinion.findByOpinionDateRange", 
-		query="select o from SlipOpinion o where o.opinionDate between :startDate and :endDate order by o.opinionDate desc"),
+	@NamedQuery(name="SlipOpinion.findAll", 
+		query="select s from SlipOpinion s"),
 	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoins", 
 		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation order by o.opinionDate desc"),
-//	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoins", 
-//		query="select distinct o from SlipOpinion o left join fetch o.opinionCitations left join fetch o.statuteCitations sc left join fetch sc.statuteCitation order by o.opinionDate desc"),
-	@NamedQuery(name="SlipOpinion.loadOpinions", 
-		query="select o from SlipOpinion o order by o.opinionDate desc"),
-//	@NamedQuery(name="SlipOpinion.loadByOpinionDateRange", 
-//		query="select o from SlipOpinion o order by o.opinionDate desc"),
 	@NamedQuery(name="SlipOpinion.listOpinionDates", 
 		query="select distinct o.opinionDate from SlipOpinion o order by o.opinionDate desc"),
-	@NamedQuery(name="SlipOpinion.findByOpinionKey", 
-		query="select o from SlipOpinion o where o.opinionKey = :key"),
-	@NamedQuery(name="SlipOpinion.loadOpinion", 
-		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation left join fetch o.opinionCitations left join fetch o.referringOpinions where o.opinionKey = :key"),
 })
-/*
-	@NamedQuery(name="SlipOpinion.fetchStatuteCitations", 
-		query="select elements(so.statuteCitations) from SlipOpinion as so where so.opinionKey = :key"),
-	@NamedQuery(name="SlipOpinion.fetchOpinionCitations", 
-		query="select elements(so.opinionCitations) from SlipOpinion as so where so.opinionKey = :key"),
-	@NamedQuery(name="SlipOpinion.fetchReferringOpinions", 
-		query="select elements(so.referringOpinions) from SlipOpinion as so where so.opinionKey = :key"),
- 
- */
 @SuppressWarnings("serial")
 @Entity
 public class SlipOpinion extends OpinionBase {

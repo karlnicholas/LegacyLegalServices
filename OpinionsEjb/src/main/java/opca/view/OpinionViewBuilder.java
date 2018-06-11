@@ -29,17 +29,6 @@ public class OpinionViewBuilder {
 			CaseView caseView = new CaseView(opcase.getTitle(), opinionBase.getOpinionKey().toString(), opcase.getOpinionDate(), opcase.getCountReferringOpinions());
     		cases.add(caseView);
     	}
-/*    	
-    	long maxCited = 0;
-		for ( CaseView c: cases ) {
-			if ( c.getCountReferringOpinions() > maxCited )
-				maxCited = c.getCountReferringOpinions();
-		}	
-		maxCited = (maxCited / 4)+1;
-		for ( CaseView c: cases ) {
-			c.setImportance((int)(c.getCountReferringOpinions()/maxCited)+1);
-		}	
-*/
         return new OpinionView(slipOpinion, slipOpinion.getFileName(), statuteViews, cases);
     }
 
@@ -76,9 +65,7 @@ public class OpinionViewBuilder {
 	            SectionView opSection = new SectionView(opinionBase, citation);
 	            // here we look for the Doc Section within the Code Section hierarchy
 	            // and place it within the sectionReference we previously parsed out of the opinion
-	//                opSection.setCodeReference( codesInterface.findReference(opSection.getTitle(), opSection.getSectionNumber() ) );
 	            opSection.setStatutesBaseClass(findStatutesBaseClass(responseArray, citation.getStatuteCitation().getStatuteKey()));
-	//                Section codeSection = codeList.findCodeSection(sectionReference);
 	            // We don't want to keep ones that we can't map .. so .. 
 	            if ( opSection.getStatutesBaseClass() != null ) {
 	                // First .. let's get the OpinionCode for this sectionReference
@@ -140,7 +127,6 @@ public class OpinionViewBuilder {
     	Iterator<StatuteView> cit = codes.iterator();
     	while ( cit.hasNext() ) {
     		StatuteView opCode = cit.next();
-//    		if ( opCode.getCodeReference().equals( code.getTitle())) return opCode;
     		if ( opCode.getStatutesBaseClass().equals(statutesBaseClass) ) 
     			return opCode;
     	}

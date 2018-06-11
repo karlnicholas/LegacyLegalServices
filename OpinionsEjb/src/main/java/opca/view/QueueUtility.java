@@ -42,25 +42,4 @@ public class QueueUtility extends ArrayDeque<ViewReference> {
 		opReference.addToChildren(this);
 		return opReference;
 	}
-	
-/*	
-	public void mergeSubcodes(ArrayList<OpinionReference> subcodes) {
-		OpinionReference subcode = pop();
-		for (int i = 0, j = subcodes.size(); i < j; ++i) {
-			OpinionReference listSubcode = subcodes.get(i);
-			// Right here we are checking whether the codeSections are the same
-			// and if so, then we "merge" them, which means only to discard
-			// one and update the reference count ..
-			// if ( listSubcode.getStatutesBaseClass() == subcode.getStatutesBaseClass() ) {
-			// well, yea, the codeSection has to match, or don't even consider
-			if (listSubcode.getStatutesBaseClass() == subcode.getStatutesBaseClass()) {
-                listSubcode.incorporateSubcode( subcode, this );
-                return;
-			}
-		}
-		subcodes.add(subcode);
-		subcode.addToChildren(this);
-	}
-
- */
 }

@@ -16,57 +16,10 @@ public class ParsedOpinionCitationSet {
 
 
     public ParsedOpinionCitationSet(OpinionBase opinionBase, PersistenceLookup persistence) {
-//        if ( opinionBase.getOpinionSummaryKey() != null ) putOpinionSummary(opinionBase);
-    	
-//        for ( StatuteKey statuteKey: opinionBase.getStatuteCitationKeys()) {
-//        	putStatuteCitation(persistence.statuteExists(statuteKey));
-//        }
-//        for ( OpinionKey opinionKey: opinionBase.getOpinionCitationKeys()) {
-//        	putOpinionSummary(persistence.opinionExists(opinionKey));
-//        }
-///        
-    	// Optimize this, use a named query to get all keys at once???
-    	// This above comment makes no sense, there will never be any physical DB using
-    	// this class?
-    	// why are we copying from persistence into here. Where is that needed? 
-//        statuteTable.addAll( persistence.getStatutes(opinionBase.getOnlyStatuteCitations()));
-//        opinionTable.addAll( persistence.getOpinions(opinionBase.getOpinionCitations()));
         statuteTable.addAll( opinionBase.getOnlyStatuteCitations());
         opinionTable.addAll( opinionBase.getOpinionCitations());
     }
 
-    /*
-
-    public void mergeParsedDocumentCitationsToMemoryDB(OpinionBase opinionBase, CitationStore persistence) {
-    	Iterator<OpinionSummary> opinionIterator = opinionIterator();
-    	while ( opinionIterator.hasNext() ) {
-    		OpinionSummary newOpinion = opinionIterator.next();
-        	newOpinion.addReferringOpinion(opinionBase.getOpinionKey());
-    		OpinionSummary existingOpinion = persistence.opinionExists(newOpinion.getOpinionKey());
-            if (  existingOpinion != null ) {
-                existingOpinion.addModifications(newOpinion, persistence);
-                persistence.mergeOpinion(existingOpinion);
-            } else {
-            	persistence.persistOpinion(newOpinion);
-            }
-    	}
-    
-    	Iterator<StatuteCitation> statuteIterator = statuteIterator();
-    	while ( statuteIterator.hasNext() ) {
-    		StatuteCitation newStatute = statuteIterator.next();
-    		StatuteCitation existingStatute = persistence.statuteExists(newStatute.getStatuteKey());
-    		if ( existingStatute != null) {
-    			existingStatute.setRefCount(opinionBase.getOpinionKey(), newStatute.getRefCount(opinionBase.getOpinionKey()));
-    			persistence.mergeStatute(existingStatute);
-    		} else {
-        		newStatute.setRefCount(opinionBase.getOpinionKey(), 1);
-    			persistence.persistStatute(newStatute);
-    		}
-    	}
-    }
-
-
- */
     public StatuteCitation findStatute(StatuteKey key) {
 		return findStatute(new StatuteCitation(key));
 	}

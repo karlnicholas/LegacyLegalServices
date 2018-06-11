@@ -19,23 +19,6 @@ public class OpinionDocumentParser {
     private String[] terms = {"section", "§" , "sections", "§§"};
     private StatutesTitles[] codeTitles;
 
-    // various details ...
-//	private String defCodeSection;
-//    private ArrayList<String> paragraphs;
-//    private ArrayList<String> footnotes;
-    
-//    private PrintWriter sentWrit = null; 
-
-//    private int cLength;
-//	private long total, count, avg;
-
-//    private String term;
-
-
-//    private String sentence;
-//    private int hitSpot;
-//    private int offset;
-
     public OpinionDocumentParser(StatutesTitles[] codeTitles) {
     	this.codeTitles = codeTitles;
     }
@@ -393,41 +376,22 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
         	SlipOpinion slipOpinion, 
         	ScrapedOpinionDocument parserDocument
     	) {
-            
-    //try {
-    //sentWrit = new PrintWriter(new BufferedWriter(new FileWriter("myfile.txt", true)));
-    //} catch ( Exception e ) {
-//    	System.out.println(e);
-    //}
-            SentenceParser sentenceParser = new SentenceParser();
-            Iterator<String> pit = parserDocument.getParagraphs().iterator();
-            
-            while ( pit.hasNext() ) {
+        
+        SentenceParser sentenceParser = new SentenceParser();
+        Iterator<String> pit = parserDocument.getParagraphs().iterator();
+        
+        while ( pit.hasNext() ) {
 
-            	String paragraph = pit.next();
-            	ArrayList<String> sentences = sentenceParser.stripSentences(paragraph);
+        	String paragraph = pit.next();
+        	ArrayList<String> sentences = sentenceParser.stripSentences(paragraph);
 
-            	// look for details
-            	// after a summaryParagraph is found, don't check any further .. (might have to change) 
-            	if ( slipOpinion.getSummary() == null ) {
-            		checkDetails( slipOpinion, paragraph, sentences );
-            	}
-
-/*            	
-    	        for ( int si=0, sl=sentences.size(); si < sl; ++si ) {
-    	            String sentence = sentences.get(si).toLowerCase();
-    //if ( sentWrit != null ) {
-//    	sentWrit.println("   " + sentence);
-//    	sentWrit.flush();
-    //}
-    	            parseSentence(slipOpinion, sentence);
-    	        }
-*/    	        
-            }
-//            System.out.println( disposition + ":" + summaryParagraph );
-
-    //sentWrit.close();
+        	// look for details
+        	// after a summaryParagraph is found, don't check any further .. (might have to change) 
+        	if ( slipOpinion.getSummary() == null ) {
+        		checkDetails( slipOpinion, paragraph, sentences );
+        	}
         }
+    }
 
     private void checkDetails(
     	SlipOpinion slipOpinion, 
@@ -436,61 +400,47 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
     ) {
     	String trimmed = paragraph.trim();
     	String lower = trimmed.toLowerCase();
-/*    	
-    	if ( checkParty( lower ) ) {
-    		if ( party1Name == null ) {
-    			party1Name = previous;
-    			party1Title = paragraph;    			
-    		}
-    		else if ( party2Name == null ) {
-    			party2Name = previous;
-    			party2Title = paragraph;
-    		}
-    	}
-    	if ( bodyParagraph(paragraph) ) {
-*/    	
-			if ( (lower.contains("affirm") || lower.contains("reverse") ) 
-					&& !(paragraph.trim().startsWith("appeal from") || paragraph.trim().startsWith("appeals from")) 
-			) {
-				Iterator<String> sit = sentences.iterator();
-				while (sit.hasNext()) {
-					String sentence = sit.next().trim().toLowerCase();
-					
-					if ( (sentence.contains("affirm") || sentence.contains("reverse") ) 
-						&& ( sentence.contains("we ")) 
-					) {
-						// get five sentences ... 
-						slipOpinion.setSummary( paragraph
-								.replace('\n', ' ')
-								.replace('\r', ' ')
-								.replace('\u0002', ' ')
-				                .replace('\u201D', '"')
-				                .replace('\u201C', '"')
-				                .replace('\u2018', '\'')
-				                .replace('\u2019', '\'')
-				                .replace('\u001E', '-')
-								.replace('\u00A0', ' ')
-								.replace('\u000B',  ' ')
-							);
-						StringTokenizer tok = new StringTokenizer(sentence);
-						while (tok.hasMoreTokens()) {
-							String token = tok.nextToken();
-							token = token.replace(",", "").replace(".", "");
-							if ( token.contains("affirm") || token.contains("reverse") ) {
-								if ( token.contains("ed") ) {
-									slipOpinion.setSummary(null);
-								} else {
-									StringBuffer disposition = new StringBuffer(token.trim().replace(",", "").replace(".", "").toLowerCase());
-									disposition.setCharAt(0, disposition.substring(0, 1).toUpperCase().charAt(0));
-									slipOpinion.setDisposition( disposition.toString() );
-								}
-								break;
-							}	
-						}
+		if ( (lower.contains("affirm") || lower.contains("reverse") ) 
+				&& !(paragraph.trim().startsWith("appeal from") || paragraph.trim().startsWith("appeals from")) 
+		) {
+			Iterator<String> sit = sentences.iterator();
+			while (sit.hasNext()) {
+				String sentence = sit.next().trim().toLowerCase();
+				
+				if ( (sentence.contains("affirm") || sentence.contains("reverse") ) 
+					&& ( sentence.contains("we ")) 
+				) {
+					// get five sentences ... 
+					slipOpinion.setSummary( paragraph
+							.replace('\n', ' ')
+							.replace('\r', ' ')
+							.replace('\u0002', ' ')
+			                .replace('\u201D', '"')
+			                .replace('\u201C', '"')
+			                .replace('\u2018', '\'')
+			                .replace('\u2019', '\'')
+			                .replace('\u001E', '-')
+							.replace('\u00A0', ' ')
+							.replace('\u000B',  ' ')
+						);
+					StringTokenizer tok = new StringTokenizer(sentence);
+					while (tok.hasMoreTokens()) {
+						String token = tok.nextToken();
+						token = token.replace(",", "").replace(".", "");
+						if ( token.contains("affirm") || token.contains("reverse") ) {
+							if ( token.contains("ed") ) {
+								slipOpinion.setSummary(null);
+							} else {
+								StringBuffer disposition = new StringBuffer(token.trim().replace(",", "").replace(".", "").toLowerCase());
+								disposition.setCharAt(0, disposition.substring(0, 1).toUpperCase().charAt(0));
+								slipOpinion.setDisposition( disposition.toString() );
+							}
+							break;
+						}	
 					}
 				}
 			}
-//    	}
+		}
     }
 
     private void addCaseCitation( OpinionBase opinion, TreeSet<OpinionBase> caseCitationTree ) {
@@ -700,12 +650,6 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
     }
 
     private String parseSectionNumber(int hitSpot, String sentence) {
-//        int sStart = offset;
-//        int sEnd = offset;
-
-//        int uoffsetStart;
-//        int uoffsetEnd;
-
         BreakIterator sIterator = BreakIterator.getWordInstance(Locale.ENGLISH);
 
         sIterator.setText(sentence.replace(',', ' '));

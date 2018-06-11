@@ -34,10 +34,6 @@ import javax.persistence.Table;
 		query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions ro left join fetch ro.opinionBase where s.statuteKey = :statuteKey"),
 	@NamedQuery(name="StatuteCitation.statutesWithReferringOpinions", 
 		query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions ro left join fetch ro.opinionBase where s.statuteKey in :statuteKeys"),
-	@NamedQuery(name="StatuteCitationData.findOnltStatutesForKeys", 
-		query="select s from StatuteCitation s where s.statuteKey in :keys"),
-	@NamedQuery(name="StatuteCitationData.findStatutesForKeysWithChildren", 
-		query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions where s.statuteKey in :keys"),
 })
 @SuppressWarnings("serial")
 @Entity
@@ -176,6 +172,4 @@ public class StatuteCitation implements Comparable<StatuteCitation>, Serializabl
         return statuteKey.toString();
     }
 
-
 }
-

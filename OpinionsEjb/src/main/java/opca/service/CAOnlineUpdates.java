@@ -35,9 +35,6 @@ import service.Client;
 
 /**
  * 
- * I wonder if I can break it into individual slip opinions, or if it makes sense to do so.
- * I don't see why not, the efficiencies I was striving for were based on simply playing around.
- * 
  * @author karl
  *
  */
@@ -117,12 +114,10 @@ public class CAOnlineUpdates {
 
 	}
 	
-	private void processAndPersistCases(List<SlipOpinion> opinions, OpinionScraperInterface opinionScraper) {
+	private void processAndPersistCases(List<SlipOpinion> slipOpinions, OpinionScraperInterface opinionScraper) {
 		// Create the CACodes list
-//	    QueueUtility queue = new QueueUtility(compressSections);  // true is compress references within individual titles
-		
-		logger.info("There are " + opinions.size() + " SlipOpinions to process");
-		List<ScrapedOpinionDocument> scrapedOpinionDocuments = opinionScraper.scrapeOpinionFiles(opinions);
+		logger.info("There are " + slipOpinions.size() + " SlipOpinions to process");
+		List<ScrapedOpinionDocument> scrapedOpinionDocuments = opinionScraper.scrapeOpinionFiles(slipOpinions);
 
 		StatutesTitles[] codeTitles = new StatutesTitles[0]; //parserInterface.getStatutesTitles();
 
@@ -130,7 +125,6 @@ public class CAOnlineUpdates {
 		StatutesTitlesArray statutesArray = statutesRs.getStatutesTitles();
 		codeTitles = statutesArray.getItem().toArray(codeTitles);
 
-//	    ParserInterface parserInterface = CAStatutesFactory.getInstance().getParserInterface(true);
 		OpinionDocumentParser opinionDocumentParser = new OpinionDocumentParser(codeTitles);
 		
 		// this is a holds things in memory
@@ -159,7 +153,6 @@ public class CAOnlineUpdates {
     		}
 		}
 
-		List<OpinionStatuteCitation> persistOpinionStatuteCitations = new ArrayList<>();
 		List<OpinionBase> persistOpinions = new ArrayList<>();
 		List<OpinionBase> mergeOpinions = new ArrayList<>();
 		List<StatuteCitation> mergeStatutes = new ArrayList<>();	  	
@@ -168,32 +161,16 @@ public class CAOnlineUpdates {
 		processOpinions(citationStore, mergeOpinions, persistOpinions);
 	  	processStatutes(citationStore, mergeStatutes, persistStatutes);
 		
-		for( SlipOpinion slipOpinion: opinions ) {
-//			slipOpinion.setOpinionCitations(null);		
-//			slipOpinion.getOpinionCitations().clear();
-//			OpinionBase opBase = mergeOpinions.get(0);
-//			slipOpinion.getOpinionCitations().removeAll(mergeOpinions);
-//			slipOpinion.getOpinionCitations().add(opBase);
-    		if ( slipOpinion.getStatuteCitations() != null ) {
+		List<OpinionStatuteCitation> persistOpinionStatuteCitations = new ArrayList<>();
+		for( SlipOpinion slipOpinion: slipOpinions ) {
+			if ( slipOpinion.getStatuteCitations() != null ) {
 	    		for ( OpinionStatuteCitation statuteCitation: slipOpinion.getStatuteCitations() ) {
-    				persistOpinionStatuteCitations.add(statuteCitation);
+					persistOpinionStatuteCitations.add(statuteCitation);
 	    		}
-    		}
+			}
 			em.persist(slipOpinion);
 			em.persist(slipOpinion.getSlipProperties());
 		}
-
-/*
-
-		Date startTime = new Date();
-		startTime = new Date();
-		for(OpinionStatuteCitation opinionStatuteCitation: persistOpinionStatuteCitations) {
-			em.persist(opinionStatuteCitation);
-    	}
-		logger.info("Persisted "+ persistOpinionStatuteCitations.size()+" opinionStatuteCitation in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
-		
-*/		
-		
 		Date startTime = new Date();
     	for(OpinionBase opinion: persistOpinions ) {
 			em.persist(opinion);
@@ -224,71 +201,6 @@ public class CAOnlineUpdates {
 			em.merge(statute);
     	}
 		logger.info("Merged "+mergeStatutes.size()+" statutes in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
-
-	}
-
-	private void deleteExistingOpinions(List<SlipOpinion> currentCopy) {
-		logger.info("Deleting " + currentCopy.size() + " cases." );
-		// need to fill out OpinionCitations and StatuteCitations for these opinions
-// BUG		slipOpinionService.fetchCitations(currentCopy);
-//			Object[] results = (Object[]) em.createNativeQuery("SELECT @@GLOBAL.tx_isolation, @@tx_isolation;").getSingleResult();
-//			logger.info("Transaction Level: " + results[0] + " : " + results[1]);
-		List<OpinionBase> citedOpinions = new ArrayList<>(); 
-		List<Integer> opinionIds = new ArrayList<>();
-		int i = 0;
-		TypedQuery<OpinionBase> queryCitedOpinions = em.createNamedQuery("OpinionBase.fetchCitedOpinionsWithReferringOpinions", OpinionBase.class);
-		for (SlipOpinion deleteOpinion: currentCopy) {
-			opinionIds.add(deleteOpinion.getId());
-			if ( ++i % 100 == 0 ) {
-				citedOpinions.addAll( queryCitedOpinions.setParameter("opinionIds", opinionIds).getResultList() );
-				opinionIds.clear();
-			}
-		}
-		if ( opinionIds.size() != 0 ) {
-			citedOpinions.addAll( queryCitedOpinions.setParameter("opinionIds", opinionIds).getResultList() );
-		}
-		
-		// ugly double loop ( O(n^2) )
-		// but currently only getting 350 opinions max, 
-		// operationally much lower if update every night
-		for ( OpinionBase citedOpinion: citedOpinions ) {
-			for (SlipOpinion deleteOpinion: currentCopy) {
-				citedOpinion.removeReferringOpinion(deleteOpinion);
-			}
-		}
-/*		
-do I really need this?
-		// now merge citedOpinions without slipOpinion citations 
-		for ( OpinionBase citedOpinion: citedOpinions ) {
-			em.merge(citedOpinion);
-		}
-*/		
-		
-		opinionIds.clear();
-		i = 0;
-		Query queryOpinionStatuteCitations = em.createNamedQuery("OpinionStatuteCitation.deleteOpinionStatuteCitations");
-		for (SlipOpinion deleteOpinion: currentCopy) {
-			opinionIds.add(deleteOpinion.getId());
-			if ( ++i % 100 == 0 ) {
-				queryOpinionStatuteCitations.setParameter("opinionIds", opinionIds).executeUpdate();
-				opinionIds.clear();
-			}
-		}
-		if ( opinionIds.size() != 0 ) {
-			queryOpinionStatuteCitations.setParameter("opinionIds", opinionIds).executeUpdate();
-		}
-		
-
-		List<SlipProperties> slipProperties = em.createNamedQuery("SlipProperties.findAll", SlipProperties.class).getResultList();
-		for (SlipOpinion deleteOpinion: currentCopy) {
-			for ( SlipProperties slipProperty: slipProperties ) {
-				if ( slipProperty.getOpinionKey().equals(deleteOpinion.getId())) {
-					em.remove(slipProperty);
-					break;
-				}
-			}
-			em.remove(deleteOpinion);
-		}
 	}
 
 	private void processOpinions(CitationStore citationStore,  
@@ -382,4 +294,59 @@ do I really need this?
     	}
 		logger.info("Divided "+count+" statutes in "+((new Date().getTime()-startTime.getTime())/1000) + " seconds");
     }
+
+    public void deleteExistingOpinions(List<SlipOpinion> currentCopy) {
+		logger.info("Deleting " + currentCopy.size() + " cases." );
+		// need to fill out OpinionCitations and StatuteCitations for these opinions
+		List<OpinionBase> citedOpinions = new ArrayList<>(); 
+		List<Integer> opinionIds = new ArrayList<>();
+		int i = 0;
+		TypedQuery<OpinionBase> queryCitedOpinions = em.createNamedQuery("OpinionBase.fetchCitedOpinionsWithReferringOpinions", OpinionBase.class);
+		for (SlipOpinion deleteOpinion: currentCopy) {
+			opinionIds.add(deleteOpinion.getId());
+			if ( ++i % 100 == 0 ) {
+				citedOpinions.addAll( queryCitedOpinions.setParameter("opinionIds", opinionIds).getResultList() );
+				opinionIds.clear();
+			}
+		}
+		if ( opinionIds.size() != 0 ) {
+			citedOpinions.addAll( queryCitedOpinions.setParameter("opinionIds", opinionIds).getResultList() );
+		}
+		
+		// ugly double loop ( O(n^2) )
+		// but currently only getting 350 opinions max, 
+		// operationally much lower if update every night
+		for ( OpinionBase citedOpinion: citedOpinions ) {
+			for (SlipOpinion deleteOpinion: currentCopy) {
+				citedOpinion.removeReferringOpinion(deleteOpinion);
+			}
+		}
+		
+		opinionIds.clear();
+		i = 0;
+		Query queryOpinionStatuteCitations = em.createNamedQuery("OpinionStatuteCitation.deleteOpinionStatuteCitations");
+		for (SlipOpinion deleteOpinion: currentCopy) {
+			opinionIds.add(deleteOpinion.getId());
+			if ( ++i % 100 == 0 ) {
+				queryOpinionStatuteCitations.setParameter("opinionIds", opinionIds).executeUpdate();
+				opinionIds.clear();
+			}
+		}
+		if ( opinionIds.size() != 0 ) {
+			queryOpinionStatuteCitations.setParameter("opinionIds", opinionIds).executeUpdate();
+		}
+		
+
+		List<SlipProperties> slipProperties = em.createNamedQuery("SlipProperties.findAll", SlipProperties.class).getResultList();
+		for (SlipOpinion deleteOpinion: currentCopy) {
+			for ( SlipProperties slipProperty: slipProperties ) {
+				if ( slipProperty.getOpinionKey().equals(deleteOpinion.getId())) {
+					em.remove(slipProperty);
+					break;
+				}
+			}
+			em.remove(deleteOpinion);
+		}
+	}
+
 }

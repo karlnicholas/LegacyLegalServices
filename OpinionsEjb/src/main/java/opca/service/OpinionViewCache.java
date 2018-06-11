@@ -235,11 +235,6 @@ public class OpinionViewCache {
 		return em.createNamedQuery("SlipOpinion.listOpinionDates", Date.class).getResultList();
 	}
 
-	public SlipOpinion slipOpinionExists(OpinionKey opinionKey) {
-		List<SlipOpinion> list = em.createNamedQuery("SlipOpinion.findByOpinionKey", SlipOpinion.class).setParameter("key", opinionKey).getResultList();
-		if ( list.size() > 0 ) return list.get(0);
-		return null;
-	}
 	public StatuteCitation findStatute(StatuteKey key) {
 		return (StatuteCitation) em.createNamedQuery("StatuteCitation.findByCodeSection").setParameter("code", key.getTitle()).setParameter("sectionNumber", key.getSectionNumber()).getResultList().get(0);
 	}

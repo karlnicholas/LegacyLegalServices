@@ -203,15 +203,6 @@ public class OpinionView extends SlipOpinion {
 				return o2.getImportance() - o1.getImportance();
 			}
 		});
-/*		
-		statutes.forEach(statuteView->{
-			String ds = statuteView.getDisplaySections();
-    		System.out.println(",,,"+getName()+","+statuteView.getImportance()+","+ds+"-"+statuteView.getStatutesBaseClass().getShortTitle());
-		});
-		cases.forEach(caseView->{
-    		System.out.println(","+caseView.getImportance()+","+caseView.getCitation()+","+getName()+",,");
-		});
-*/
 	}
 
 	/**
@@ -244,12 +235,6 @@ public class OpinionView extends SlipOpinion {
 				return o2.getImportance() - o1.getImportance();
 			}
 		});
-/*
-		statutes.forEach(statuteView->{
-			String ds = statuteView.getDisplaySections();
-    		System.out.println(",,,"+getName()+","+statuteView.getRefCount()+","+ds+"-"+statuteView.getStatutesBaseClass().getShortTitle());
-		});
-*/		
 	}
 	/**
 	 * Rank from 0-4
@@ -300,93 +285,3 @@ public class OpinionView extends SlipOpinion {
     }
 }
 
-/*	
-public Map<StatutesRoot, List<StatuteView>> combineCommonSections() {
-	Map<StatutesRoot, List<StatuteView>> combinedStatutes = new HashMap<StatutesRoot, List<StatuteView>>(); 
-	for ( StatuteView statuteView:  statutes) {
-		List<StatuteView> statuteViews = combinedStatutes.get(statuteView.getStatutesBaseClass().getStatutesRoot());
-		if ( statuteViews == null ) {
-			statuteViews = new ArrayList<StatuteView>(); 
-			combinedStatutes.put(statuteView.getStatutesBaseClass().getStatutesRoot(), statuteViews);
-		}
-		boolean found = false;
-		for ( StatuteView existingStatuteView:  statuteViews ) {
-			if ( statuteView.getStatutesBaseClass().getStatuteRange().equals(existingStatuteView.getStatutesBaseClass().getStatuteRange()) ) {
-				existingStatuteView.addReference(statuteView);
-				existingStatuteView.incRefCount(statuteView.getRefCount());
-				found = true;
-				break;
-			}
-		}
-		if ( !found ) {
-			statuteViews.add(statuteView);
-		}
-	}
-	statutes.clear();
-    for ( StatutesRoot key: combinedStatutes.keySet()) {
-    	List<StatuteView> statuteViews =  combinedStatutes.get(key);
-    	for ( StatuteView statuteView: statuteViews ) {
-    		statutes.add(statuteView);
-    	}
-    }
-    
-    return combinedStatutes;
-}
-*/    
-/*
-public void scoreSlipOpinionOpinions(
-	OpinionView opinionView
-) {
-	// need a collection StatutueCitations.
-    for ( OpinionBase opinionCited: opinionView.getOpinionCitations() ) {
-        // statutes ws .. getStatuteKeys list to search for 
-    	statutesrs.StatuteKeyArray statuteKeyArray = new statutesrs.StatuteKeyArray();
-        for( StatuteCitation statuteCitation: opinionCited.getOnlyStatuteCitations() ) {
-            statutesrs.StatuteKey statuteKey = new statutesrs.StatuteKey();            
-            statuteKey.setTitle(statuteCitation.getStatuteKey().getTitle());
-            statuteKey.setSectionNumber(statuteCitation.getStatuteKey().getSectionNumber());
-            statuteKeyArray.getItem().add(statuteKey);
-        }
-        // call statutesws to get details of statutes 
-        statutesrs.ResponseArray responseArray = statutesRs.findStatutes(statuteKeyArray);
-        List<StatuteView> statuteViews = createStatuteViews(opinionCited, responseArray);
-        // do a ranking
-        rankStatuteViews(statuteViews);
-
-        statuteViews.forEach(statuteView->{
-    		System.out.println(statuteView.getDisplaySections()+"-"+statuteView.getStatutesBaseClass().getShortTitle()+","+statuteView.getRefCount()+","+opinionCited.getOpinionKey()+","+opinionView.getName()+",,");
-		});		
-
-        // remove anything not in the slip opinion statutes
-        List<StatuteView> slipStatuteViews = opinionView.getStatutes();
-        Iterator<StatuteView> itsv = statuteViews.iterator();
-        int score = 0;
-        while ( itsv.hasNext() ) {
-        	StatuteView statuteView = itsv.next();
-        	int idx = slipStatuteViews.indexOf(statuteView);
-        	if ( idx < 0 ) {
-        		itsv.remove();
-        		continue;
-        	}
-            // score the rest
-        	score = score + ( statuteView.getImportance() + slipStatuteViews.get(idx).getImportance());
-        }
-        opinionView.findCaseView(opinionCited).setScore(score);
-    }
-	long maxScore = 0;
-	for ( CaseView c: opinionView.getCases() ) {
-		if ( c.getScore() > maxScore )
-			maxScore = c.getScore();
-	}	
-	double d = ((maxScore+1) / 4.0);
-	for ( CaseView c: opinionView.getCases() ) {
-		c.setImportance((int)(((double)c.getScore())/d)+1);
-	}	
-	Collections.sort(opinionView.getCases(), new Comparator<CaseView>() {
-		@Override
-		public int compare(CaseView o1, CaseView o2) {
-			return o2.getImportance() - o1.getImportance();
-		}
-	});
-}
-*/	

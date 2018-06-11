@@ -79,32 +79,18 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
     }    
 
     public int compareTo( StatuteView statuteView) {
-//      return 0;
-//        return cumulativeRefCount - statuteView.getRefCount();
     	StatutesBaseClass baseClass = getStatutesBaseClass();
-//    	StatuteRange range = baseClass.getStatuteRange();
     	StatutesBaseClass cBaseClass = statuteView.childReferences.get(0).getStatutesBaseClass();
-//    	StatuteRange cRange = cBaseClass.getStatuteRange();
     	int bCompare = baseClass.getStatutesRoot().compareTo(cBaseClass.getStatutesRoot());
     	if ( bCompare == 0 ) {
-/*    	
-    		int sComp = range.getsNumber().compareTo(cRange.getsNumber());
-    		int eComp = range.geteNumber().compareTo(cRange.geteNumber());
-    		if ( ((sComp < 0) && (eComp < 0)) || ((sComp > 0) && (eComp > 0)) ) {
-    			return sComp;
-    		} else {
-*/    		
-    			SectionView sectionView = getSectionView();
-    			SectionView sectionViewOther = statuteView.getSectionView();
-		    	SectionNumber sNumber = sectionView.getStatutesBaseClass().getStatutesLeaf().getStatuteRange().getsNumber();
-		    	SectionNumber sNumberOther = sectionViewOther.getStatutesBaseClass().getStatutesLeaf().getStatuteRange().getsNumber();
-		    	return sNumber.compareTo(sNumberOther);
-//    		}
+			SectionView sectionView = getSectionView();
+			SectionView sectionViewOther = statuteView.getSectionView();
+	    	SectionNumber sNumber = sectionView.getStatutesBaseClass().getStatutesLeaf().getStatuteRange().getsNumber();
+	    	SectionNumber sNumberOther = sectionViewOther.getStatutesBaseClass().getStatutesLeaf().getStatuteRange().getsNumber();
+	    	return sNumber.compareTo(sNumberOther);
     	} else {
     		return bCompare;
     	}
-/*		    	
-*/    	
     }
 
     public StatutesBaseClass getStatutesBaseClass() {
@@ -193,22 +179,6 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
 		});
 		return sectionList;
 	}
-/*	
-	public String getDisplaySectionNumber() {
-		if ( childReferences.size() == 1 ) 
-			return childReferences.get(0).getSectionView().getDisplaySectionNumber(); 
-		StatuteRange statuteRange = null;
-		SectionView sectionView = null;
-	    for ( ViewReference viewReference: childReferences ) {
-	    	sectionView = viewReference.getSectionView();
-	    	if ( statuteRange == null ) {
-		    	statuteRange = new StatuteRange(sectionView.getSectionNumber(), sectionView.getSectionNumber());
-	    	}
-	    	statuteRange.mergeRange(new StatuteRange(sectionView.getSectionNumber(), sectionView.getSectionNumber()));
-	    }
-    	return "§§ " + statuteRange.toString();
-	}
-*/	
 	public String getDisplayTitlePath() {
     	List<String> shortTitles = getSectionView().getShortTitles();
     	return shortTitles.toString().replace("[", "").replace("]", "") + ", " + getSectionView().getStatutesBaseClass().getTitle(true);
@@ -220,19 +190,6 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
 		}
     	return ("§§ " + statuteRange.toString());
 	}
-/*	
-    private void getAllSectionViews(List<SectionView> sortedSectionViews) {
-		handleSections(sortedSectionViews);
-    	for ( ViewReference subcode: getSubcodes() ) {
-    		getAllSectionViews(sortedSectionViews);
-    	}
-    }
-    private void handleSections(List<SectionView> sortedSectionViews) {
-		for ( SectionView sectionView: getSections() ) {
-			sortedSectionViews.add(sectionView); 
-		}
-    }
-*/
 	public int getScore() {
 		return score;
 	}
