@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="opee">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-    <jta-data-source>java:jboss/datasources/OpEEDS</jta-data-source>
+    <jta-data-source>java:jboss/datasources/MySQLDS</jta-data-source>
     <class>opca.model.OpinionBase</class>
     <class>opca.model.OpinionKey</class>
     <class>opca.model.Role</class>
