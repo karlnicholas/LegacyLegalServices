@@ -3,4 +3,9 @@ gsindexloc=/opcastorage/index
 gsindextaxoloc=/opcastorage/indextaxo
 statuteswsservice=http://gs.opca.svc.cluster.local:8080/statutesws/StatutesWS?wsdl
 
-statutesrsservice=http://rs.opca.svc.cluster.local:8080/statutesws/rs/
+statutesrsservice=http://rs.opca.svc.cluster.local:8080/statutesrs/rs/
+gsindexloc=/gsstorage/index
+gsindextaxoloc=/gsstorage/indextaxo
+
+
+JAVA_OPTIONS=-XX:MaxHeapSize

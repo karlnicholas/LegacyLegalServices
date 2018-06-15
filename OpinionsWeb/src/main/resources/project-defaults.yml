@@ -1,7 +1,7 @@
 swarm:
   datasources:
     data-sources:
-      OpEEDS:
+      MySQLDS:
         driver-name: mysql
         connection-url: jdbc:mysql://mysql:3306/${env.MYSQL_DATABASE}?autoReconnect=true&useSSL=false
         user-name: ${env.MYSQL_USER}
@@ -24,7 +24,7 @@ swarm:
               code: org.jboss.security.auth.spi.DatabaseServerLoginModule
               flag: optional
               module-options:
-                dsJndiName: java:jboss/datasources/OpEEDS
+                dsJndiName: java:jboss/datasources/MySQLDS
                 password-stacking: useFirstPass
                 principalsQuery: select password from user where email = ?
                 rolesQuery: select r.role, 'Roles' from user_role ur inner join role r on r.id = ur.roles_id inner join user u on u.id = ur.user_id where u.email = ?
