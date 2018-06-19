@@ -2,7 +2,6 @@ package opca.parser;
 
 import java.util.TreeSet;
 
-import opca.memorydb.PersistenceLookup;
 import opca.model.OpinionBase;
 import opca.model.OpinionKey;
 import opca.model.StatuteCitation;
@@ -15,7 +14,7 @@ public class ParsedOpinionCitationSet {
     public ParsedOpinionCitationSet() {}
 
 
-    public ParsedOpinionCitationSet(OpinionBase opinionBase, PersistenceLookup persistence) {
+    public ParsedOpinionCitationSet(OpinionBase opinionBase) {
         statuteTable.addAll( opinionBase.getOnlyStatuteCitations());
         opinionTable.addAll( opinionBase.getOpinionCitations());
     }

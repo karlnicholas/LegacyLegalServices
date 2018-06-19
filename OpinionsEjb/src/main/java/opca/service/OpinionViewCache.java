@@ -148,7 +148,6 @@ public class OpinionViewCache {
 		//
 		OpinionViewBuilder opinionViewBuilder = new OpinionViewBuilder(statutesRs);
 		List<SlipOpinion> opinions = findByPublishDateRange();
-		MyPersistenceLookup pl = new MyPersistenceLookup(this);
 		List<OpinionBase> opinionOpinionCitations = new ArrayList<>();
 		List<Integer> opinionIds = new ArrayList<>();
 		int i = 0;
@@ -168,7 +167,7 @@ public class OpinionViewCache {
 		}
 		for ( SlipOpinion slipOpinion: opinions ) {
 			slipOpinion.setOpinionCitations( opinionOpinionCitations.get( opinionOpinionCitations.indexOf(slipOpinion)).getOpinionCitations() );
-			ParsedOpinionCitationSet parserResults = new ParsedOpinionCitationSet(slipOpinion, pl);
+			ParsedOpinionCitationSet parserResults = new ParsedOpinionCitationSet(slipOpinion);
 			OpinionView opinionView = opinionViewBuilder.buildOpinionView(slipOpinion, parserResults);
 			opinionView.combineCommonSections();
 			opinionView.trimToLevelOfInterest(levelOfInterest, true);
