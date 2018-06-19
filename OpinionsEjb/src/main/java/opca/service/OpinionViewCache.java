@@ -7,7 +7,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import opca.memorydb.PersistenceLookup;
 import opca.model.OpinionBase;
 import opca.model.OpinionKey;
 import opca.model.SlipOpinion;
@@ -244,33 +243,4 @@ public class OpinionViewCache {
 		return em.createQuery("select from SlipOpinion", SlipOpinion.class).getResultList();
 	}
 
-	class MyPersistenceLookup implements PersistenceLookup {
-		protected OpinionViewCache slipOpinionRepository;
-		public MyPersistenceLookup(OpinionViewCache slipOpinionRepository) {
-			this.slipOpinionRepository = slipOpinionRepository;
-		}
-		@Override
-		public StatuteCitation statuteExists(StatuteCitation statuteCitation) {			
-			return slipOpinionRepository.statuteExists(statuteCitation);
-		}
-
-		@Override
-		public List<StatuteCitation> getStatutes(Collection<StatuteCitation> statuteCitations) {
-			return slipOpinionRepository.getStatutes(statuteCitations);
-		}
-
-		@Override
-		public OpinionBase opinionExists(OpinionBase opinionBase) {
-			return slipOpinionRepository.opinionExists(opinionBase);
-		}
-
-		@Override
-		public List<OpinionBase> getOpinions(Collection<OpinionBase> opinions) {
-			return slipOpinionRepository.getOpinions(opinions);
-		}	
-	}
-	
-	public PersistenceLookup getPersistenceLookup() {
-		return new MyPersistenceLookup(this); 
-	}
 }

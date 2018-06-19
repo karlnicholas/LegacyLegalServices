@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import opca.model.OpinionBase;
 import opca.model.OpinionStatuteCitation;
@@ -11,12 +12,26 @@ import opca.model.StatuteCitation;
 import opca.model.StatuteKey;
 import opca.parser.ParsedOpinionCitationSet;
 
-public class CitationStore implements PersistenceLookup {
+public class CitationStore {
     
-    protected MemoryDB dataBase;
+    private TreeSet<OpinionBase> opinionTable;
+    private TreeSet<StatuteCitation> statuteTable;
+    
+    private TreeSet<OpinionBase> getOpinionTable() {
+        return opinionTable;
+    }
+
+    private TreeSet<StatuteCitation> getStatuteTable() {
+        return statuteTable;
+    }
+
+    public void setStatuteTable(TreeSet<StatuteCitation> statuteTable) {
+        this.statuteTable = statuteTable;
+    }
 
     private CitationStore(){
-        dataBase = new MemoryDB();
+        opinionTable = new TreeSet<OpinionBase>();
+        statuteTable = new TreeSet<StatuteCitation>();
     }
     private static class SingletonHelper {
         private static final CitationStore INSTANCE = new CitationStore();
@@ -26,62 +41,59 @@ public class CitationStore implements PersistenceLookup {
     }
     
 	public void clearDB() {
-		dataBase.getStatuteTable().clear();
-		dataBase.getOpinionTable().clear();
+		getStatuteTable().clear();
+		getOpinionTable().clear();
 	}
     public int getCount() {
-        return dataBase.getStatuteTable().size();
+        return getStatuteTable().size();
     }
 
     public StatuteCitation findStatuteByCodeSection(String title, String sectionNumber) {
         return statuteExists(new StatuteCitation(new StatuteKey(title, sectionNumber)));
     }
 
-    @Override
 	public StatuteCitation statuteExists(StatuteCitation statuteCitation) {
 		return findStatuteByStatute(statuteCitation);
 	}
 
 	public StatuteCitation findStatuteByStatute(StatuteCitation statuteCitation) {
-        StatuteCitation foundCitation = dataBase.getStatuteTable().floor(statuteCitation);
+        StatuteCitation foundCitation = getStatuteTable().floor(statuteCitation);
         if ( statuteCitation.equals(foundCitation)) return foundCitation;
         return null;
 	}    
 
 	public OpinionBase findOpinionByOpinion(OpinionBase opinionBase) {
-		OpinionBase foundOpinion = dataBase.getOpinionTable().floor(opinionBase);
+		OpinionBase foundOpinion = getOpinionTable().floor(opinionBase);
         if ( opinionBase.equals(foundOpinion)) return foundOpinion;
 		return null;
 	}
 
 
 	public void persistStatute(StatuteCitation statuteCitation) {
-		dataBase.getStatuteTable().add(statuteCitation);
+		getStatuteTable().add(statuteCitation);
 	}
 
 	public void replaceStatute(StatuteCitation statuteCitation) {
-		dataBase.getStatuteTable().remove(statuteCitation);
-		dataBase.getStatuteTable().add(statuteCitation);
+		getStatuteTable().remove(statuteCitation);
+		getStatuteTable().add(statuteCitation);
 	}
 
 	public void replaceOpinion(OpinionBase existingOpinion) {
-		dataBase.getOpinionTable().remove(existingOpinion);
-		dataBase.getOpinionTable().add(existingOpinion);
+		getOpinionTable().remove(existingOpinion);
+		getOpinionTable().add(existingOpinion);
 	}
 
-	@Override
 	public OpinionBase opinionExists(OpinionBase opinionBase) {
 //        OpinionSummary tempOpinion = new OpinionSummary(opinionBase);
-        if ( dataBase.getOpinionTable().contains(opinionBase))
-        	return dataBase.getOpinionTable().floor(opinionBase);
+        if ( getOpinionTable().contains(opinionBase))
+        	return getOpinionTable().floor(opinionBase);
         else return null;
 	}
 
 	public void persistOpinion(OpinionBase opinionBase) {
-		dataBase.getOpinionTable().add(opinionBase);
+		getOpinionTable().add(opinionBase);
 	}
 
-	@Override
 	public List<StatuteCitation> getStatutes(Collection<StatuteCitation> statuteCitations) {
 		List<StatuteCitation> list = new ArrayList<StatuteCitation>();
 		for (StatuteCitation statuteCitation: statuteCitations ) {
@@ -91,7 +103,6 @@ public class CitationStore implements PersistenceLookup {
 		return list;
 	}
 
-	@Override
 	public List<OpinionBase> getOpinions(Collection<OpinionBase> opinions) {
 		List<OpinionBase> list = new ArrayList<OpinionBase>();
 		for (OpinionBase opinion: opinions ) {
@@ -101,10 +112,10 @@ public class CitationStore implements PersistenceLookup {
 		return list;
 	}
 	public Set<OpinionBase> getAllOpinions() {
-        return dataBase.getOpinionTable();
+        return getOpinionTable();
     }
 	public Set<StatuteCitation> getAllStatutes() {
-        return dataBase.getStatuteTable();
+        return getStatuteTable();
 	}
 
     public void mergeParsedDocumentCitations(OpinionBase opinionBase, ParsedOpinionCitationSet parsedOpinionResults) {
