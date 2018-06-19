@@ -13,14 +13,13 @@ import opca.model.User;
 
 /**
  * This class is a singleton that loads and holds all Role definitions from 
- * the database. Very specific to this particular 
- * application. Should really only be used by UserAccountEJB.
+ * the database. 
  * 
  * @author Karl Nicholas
  *
  */
 @Singleton
-public final class RoleSingletonBean {
+public class RoleSingletonBean {
     private List<Role> allRoles;
     @Inject private EntityManager em;
 
