@@ -73,7 +73,7 @@ public class CAOnlineUpdates {
 //		onlineOpinions = onlineOpinions.subList(0, 5);
 //		onlineOpinions = onlineOpinions.subList(0, 0);
 		//
-		List<SlipOpinion> currentOpinions = listSlipOpinions();
+		List<SlipOpinion> currentOpinions = em.createNamedQuery("SlipOpinion.findAll", SlipOpinion.class).getResultList();
 		List<SlipOpinion> currentCopy = new ArrayList<SlipOpinion>(currentOpinions);
 		logger.info("Found " + currentCopy.size() + " in the database.");
 		logger.info("Split Transactions" );		
@@ -211,15 +211,16 @@ public class CAOnlineUpdates {
 		List<OpinionKey> opinionKeys = new ArrayList<>();
 		int i = 0;
 		List<OpinionBase> existingOpinions = new ArrayList<>();
+		TypedQuery<OpinionBase> opinionsWithReferringOpinions = em.createNamedQuery("OpinionBase.opinionsWithReferringOpinions", OpinionBase.class);
     	for(OpinionBase opinion: opinions ) {
     		opinionKeys.add(opinion.getOpinionKey());
     		if ( ++i % 100 == 0 ) {
-    			existingOpinions.addAll( opinionsWithReferringOpinions(opinionKeys) );
+    			existingOpinions.addAll( opinionsWithReferringOpinions.setParameter("opinionKeys", opinionKeys).getResultList() );
     			opinionKeys.clear();
     		}
     	}
     	if ( opinionKeys.size() != 0 ) {
-    		existingOpinions.addAll( opinionsWithReferringOpinions(opinionKeys) );
+    		existingOpinions.addAll( opinionsWithReferringOpinions.setParameter("opinionKeys", opinionKeys).getResultList() );
     	}
     	Collections.sort(existingOpinions);
     	OpinionBase[] existingOpinionsArray = existingOpinions.toArray(new OpinionBase[existingOpinions.size()]);
@@ -265,15 +266,18 @@ public class CAOnlineUpdates {
 		List<StatuteKey> statuteKeys = new ArrayList<>();
 		int i = 0;
 		List<StatuteCitation> existingStatutes = new ArrayList<>();
+		TypedQuery<StatuteCitation> statutesWithReferringOpinions 
+			= em.createNamedQuery("StatuteCitation.statutesWithReferringOpinions", StatuteCitation.class);
+				
     	for(StatuteCitation statuteCitation: statutes ) {
     		statuteKeys.add(statuteCitation.getStatuteKey());
     		if ( ++i % 100 == 0 ) {
-    			existingStatutes.addAll( statutesWithReferringOpinions(statuteKeys) );
+    			existingStatutes.addAll( statutesWithReferringOpinions.setParameter("statuteKeys", statuteKeys).getResultList() );
     			statuteKeys.clear();
     		}
     	}
     	if ( statuteKeys.size() != 0 ) {
-    		existingStatutes.addAll( statutesWithReferringOpinions(statuteKeys) );
+    		existingStatutes.addAll( statutesWithReferringOpinions.setParameter("statuteKeys", statuteKeys).getResultList() );
     	}
     	Collections.sort(existingStatutes);
     	StatuteCitation[] existingStatutesArray = existingStatutes.toArray(new StatuteCitation[existingStatutes.size()]);
@@ -345,20 +349,6 @@ public class CAOnlineUpdates {
 			}
 			em.remove(deleteOpinion);
 		}
-	}
-
-	private List<SlipOpinion> listSlipOpinions() {
-		return em.createNamedQuery("SlipOpinion.findAll", SlipOpinion.class).getResultList();
-	}	
-
-	// StatuteCitation
-	private List<StatuteCitation> statutesWithReferringOpinions(List<StatuteKey> statuteKeys) {
-		return em.createNamedQuery("StatuteCitation.statutesWithReferringOpinions", StatuteCitation.class)
-			.setParameter("statuteKeys", statuteKeys).getResultList();
-	}
-
-	private List<OpinionBase> opinionsWithReferringOpinions(List<OpinionKey> opinionKeys) {
-    	return em.createNamedQuery("OpinionBase.opinionsWithReferringOpinions", OpinionBase.class).setParameter("opinionKeys", opinionKeys).getResultList();
 	}
 
 }
