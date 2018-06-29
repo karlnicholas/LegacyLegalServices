@@ -9,7 +9,7 @@
   </div>
   <div class="form-group">
     <h:outputLabel for="email" value="Email:" styleClass="col-sm-2 control-label"/>
-    <div class="col-sm-4"><h:inputText id="email" value="#{accountsController.email}" styleClass="form-control"/></div>
+    <div class="col-sm-4"><h:inputText id="email" value="#{accountsController.email}" styleClass="form-control" p:autofocus="true"/></div>
   </div>
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-2"><h:commandButton id="signin" action="#{accountsController.signIn()}" value="Sign-In" styleClass="btn btn-default"/></div>

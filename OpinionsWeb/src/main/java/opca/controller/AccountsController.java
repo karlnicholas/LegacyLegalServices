@@ -16,6 +16,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import opca.model.User;
 import opca.service.UserService;
@@ -28,6 +29,7 @@ public class AccountsController {
 //    @Inject private UserCodesController userCodesController;
     
     public static final String NAV_ACCOUNTS_REDIRECT = "/views/accounts/accounts.xhtml?faces-redirect=true";
+    public static final String NAV_GET_PASSWORD_REDIRECT = "/views/accounts/checkpassword.xhtml?faces-redirect=true";
     public static final String NAV_ACCOUNTS = "/views/accounts/accounts.xhtml";
 
     private User newUser;
@@ -36,6 +38,7 @@ public class AccountsController {
 	private String passwordConfirmation;
 	
     private String email;
+    private String password;
     
     private Map<String, Boolean> checkboxItems;
 
@@ -136,6 +139,14 @@ public class AccountsController {
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
         if ( request.getUserPrincipal() == null ) {
             try {
+            	// check here if a password has been set.
+                User testUser = userService.findByEmail(email);
+                if ( testUser.isVerified() ) {
+                	HttpSession session = request.getSession();
+                	session.setAttribute("email", email);
+                	return NAV_GET_PASSWORD_REDIRECT;                	
+                }
+                
                 request.login(email, email);
                 currentUser = userService.findByEmail(email);
                 externalContext.getSessionMap().put("user", currentUser);
@@ -148,6 +159,29 @@ public class AccountsController {
         return NAV_ACCOUNTS_REDIRECT;
     }
 
+    /**
+     * Set the user session using the email but no password.
+     * 
+     * @return Navigation to /views/account.xhtml
+     */
+    public String checkPassword() {
+        ExternalContext externalContext = facesContext.getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
+        if ( request.getUserPrincipal() == null ) {
+            try {
+            	HttpSession session = request.getSession();
+            	email = (String) session.getAttribute("email");
+                request.login(email, password);
+                currentUser = userService.findByEmail(email);
+                externalContext.getSessionMap().put("user", currentUser);
+            } catch (ServletException ignored) {
+                // Handle unknown username/password in request.login().
+                facesContext.addMessage(null, new FacesMessage("Signin Failed!", ""));
+                return null;
+            }
+        }
+        return NAV_ACCOUNTS_REDIRECT;
+    }
     /**
      * Email used for login 
      * @return Email for Login.
@@ -164,6 +198,13 @@ public class AccountsController {
         this.email = email;
     }
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
     /**
      * Logout current user
      * 
@@ -201,6 +242,10 @@ public class AccountsController {
             // check password confirmation.
             if ( !currentUser.getPassword().equals(passwordConfirmation) ) {
                 facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Passwords Must Match", ""));
+                return null;
+            }
+            if ( !currentUser.isVerified() ) {
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Please verify your email to set your password.", ""));
                 return null;
             }
             // update user
