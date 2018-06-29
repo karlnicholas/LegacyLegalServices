@@ -289,8 +289,8 @@ public class CASaveLucene {
 //		LoadInterface cloader = new CALoad();
 		
 //		Path xmlcodes = new Path("c:/users/karl/op/GuidedSearch/gs/src/main/resources/xmlcodes");
-		Path index = Paths.get("c:/users/karln/opca/GuidedSearchRs/src/main/resources/index/");
-		Path indextaxo = Paths.get("c:/users/karln/opca/GuidedSearchRs/src/main/resources/indextaxo/");
+		Path index = Paths.get("c:/users/karln/opcastorage/index/");
+		Path indextaxo = Paths.get("c:/users/karln/opcastorage/indextaxo/");
 		
 //		loader.createXMLCodes(codesDir, xmlcodes );
 		loader.loadCode(codesDir, index, indextaxo);

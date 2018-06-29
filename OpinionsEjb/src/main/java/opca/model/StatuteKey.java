@@ -10,7 +10,7 @@ import javax.persistence.Embeddable;
 public class StatuteKey implements Serializable, Comparable<StatuteKey> {
     @Column(columnDefinition="char(32)")
     protected String sectionNumber;
-    @Column(columnDefinition="char(3)")
+    @Column(columnDefinition="char(4)")
     protected String title;
 
     public StatuteKey() {}

@@ -96,6 +96,17 @@ public class UserService {
             .getSingleResult();
     }
 
+    @PermitAll
+    public User checkUserByEmail(String email) {
+        List<User > users = em.createNamedQuery(User.FIND_BY_EMAIL, User.class)
+            .setParameter("email", email)
+            .getResultList();
+        if ( users.size() > 0 ) {
+        	return users.get(0);
+        }
+        return null;
+    }
+
     /**
      * Delete User by Database Id
      * @param id to delete.

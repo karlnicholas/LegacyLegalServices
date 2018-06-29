@@ -140,8 +140,8 @@ public class AccountsController {
         if ( request.getUserPrincipal() == null ) {
             try {
             	// check here if a password has been set.
-                User testUser = userService.findByEmail(email);
-                if ( testUser.isVerified() ) {
+                User testUser = userService.checkUserByEmail(email);
+                if ( testUser != null && testUser.isVerified() ) {
                 	HttpSession session = request.getSession();
                 	session.setAttribute("email", email);
                 	return NAV_GET_PASSWORD_REDIRECT;                	
@@ -171,6 +171,7 @@ public class AccountsController {
             try {
             	HttpSession session = request.getSession();
             	email = (String) session.getAttribute("email");
+            	session.removeAttribute("email");
                 request.login(email, password);
                 currentUser = userService.findByEmail(email);
                 externalContext.getSessionMap().put("user", currentUser);
