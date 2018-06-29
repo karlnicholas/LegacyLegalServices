@@ -187,14 +187,14 @@ public class CACaseScraper implements OpinionScraperInterface {
 					// store all this in a class
 					fileName = fileName.replace(".DOC", "");
 					sopDate = opDate;
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(new Date());
 			        try {
 			        	opDate = dfs.parse(opinionDate);
 			        } catch (ParseException e ) {
 			        	if ( sopDate == null ) {
 				        	// Default to current date.
 				        	// not very good, but best that can be done, I suppose.
-							Calendar cal = Calendar.getInstance();
-							cal.setTime(new Date());
 							cal.set(Calendar.HOUR_OF_DAY, 0);
 							cal.set(Calendar.MINUTE, 0);
 							cal.set(Calendar.SECOND, 0);
@@ -204,6 +204,13 @@ public class CACaseScraper implements OpinionScraperInterface {
 			        		opDate = sopDate;
 			        	}
 			        }
+	        		Calendar parsedDate = Calendar.getInstance();
+	        		parsedDate.setTime(opDate);
+	        		// test to see if year out of whack.
+	        		if ( parsedDate.get(Calendar.YEAR) > cal.get(Calendar.YEAR) ) {
+	        			parsedDate.set(Calendar.YEAR, cal.get(Calendar.YEAR));
+	        			opDate = parsedDate.getTime();
+	        		}
 					SlipOpinion slipOpinion = new SlipOpinion(fileName, fileExtension, tempa[0].trim(),opDate, court);
 					// test for duplicates
 					if ( cases.contains(slipOpinion)) {

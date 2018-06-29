@@ -70,7 +70,8 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
         		synchronized(citationStore) {
 	                StatuteCitation existingCitation = citationStore.findStatuteByStatute(statuteCitation);
 	                if ( existingCitation != null ) {
-	                	existingCitation.incRefCount(opinionBase, 1);
+	                	OpinionStatuteCitation osr = statuteCitation.getOpinionStatuteReference(opinionBase);
+	                	existingCitation.incRefCount(opinionBase, osr.getCountReferences());
 	                	statuteCitation = existingCitation;
 	                }
         		}

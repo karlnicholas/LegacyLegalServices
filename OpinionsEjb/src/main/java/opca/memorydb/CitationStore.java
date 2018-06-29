@@ -121,22 +121,22 @@ public class CitationStore {
     public void mergeParsedDocumentCitations(OpinionBase opinionBase, ParsedOpinionCitationSet parsedOpinionResults) {
     	for ( OpinionBase opinion: parsedOpinionResults.getOpinionTable() ) { 
     		OpinionBase existingOpinion = opinionExists(opinion);
-            if (  existingOpinion != null ) {
+            if (  existingOpinion == null ) {
             	// add citations where they don't already exist.
-                existingOpinion.mergeCitedOpinion(opinion);
-            } else {
+//                existingOpinion.mergeCitedOpinion(opinion);
+//            } else {
             	persistOpinion(opinion);
             }
     	}
 //TODO: WTF is all this about?    
     	for ( StatuteCitation statuteCitation: parsedOpinionResults.getStatuteTable() ) {
     		StatuteCitation existingStatute = statuteExists(statuteCitation);
-    		if ( existingStatute != null) {
-    			OpinionStatuteCitation otherRef = statuteCitation.getOpinionStatuteReference(opinionBase);
+    		if ( existingStatute == null) {
+//    			OpinionStatuteCitation otherRef = statuteCitation.getOpinionStatuteReference(opinionBase);
 //    			if( otherRef != null ) {
-        			existingStatute.incRefCount(opinionBase, otherRef.getCountReferences());
+//        			existingStatute.incRefCount(opinionBase, otherRef.getCountReferences());
 //    			}
-    		} else {
+//    		} else {
     			persistStatute(statuteCitation);
     		}
     	}
