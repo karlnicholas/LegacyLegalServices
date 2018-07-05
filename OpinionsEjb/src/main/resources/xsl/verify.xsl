@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:template match="user">
+<xsl:template match="verifyInformation">
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
   <p><xsl:value-of select="email" /></p>
-  <p>Please click on the following link to verify your email address at <a href="http://op-cacode.rhcloud.com">Court Opinions</a>.</p>
+  <p>Please click on the following link to verify your email address at <xsl:element name="a">
+    <xsl:attribute name="href">http://<xsl:value-of select="verifyHost"/>/opinions</xsl:attribute>Court Opinions</xsl:element>.</p>
   <h4><xsl:element name="a">
-    <xsl:attribute name="href">http://op-cacode.rhcloud.com/verify?email=<xsl:value-of select="email"/>&quot;key=<xsl:value-of select="verifyKey"/></xsl:attribute>
+    <xsl:attribute name="href">http://<xsl:value-of select="verifyHost"/>/opinions/views/verify.xhtml?email=<xsl:value-of select="email"/>&amp;verifyKey=<xsl:value-of select="verifyKey"/></xsl:attribute>
     <span>Verify Me!</span>
     </xsl:element>
   </h4>

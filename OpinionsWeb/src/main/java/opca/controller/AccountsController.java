@@ -108,6 +108,16 @@ public class AccountsController {
     }
 
     /**
+     * True if a user has the ADMIN role.
+     * 
+     * @return True if ADMIN
+     */
+    public boolean isVerified() {
+        if ( currentUser == null ) return false;
+        return currentUser.isVerified();
+    }
+
+    /**
      * Login a user using the email and password fields.
      * 
      * @return Navigation to /views/account.xhtml
@@ -250,7 +260,8 @@ public class AccountsController {
                 return null;
             }
             // update user
-            userService.merge(userService.updatePassword(currentUser));
+            // userService.merge(userService.updatePassword(currentUser));
+            userService.updatePassword(currentUser);
         } catch (Exception e) {
             facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Update failed", WebResources.getRootErrorMessage(e)));
             return null;
@@ -306,6 +317,23 @@ public class AccountsController {
         // navigate
         facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Registration Successful!", "" ));
         return NAV_ACCOUNTS;
+    }
+
+    /**
+     * Register a new user
+     * 
+     * @return String navigation to /views/account.xhtml
+     */
+    public String startVerify() {
+        try {
+        	userService.startVerify(currentUser);
+        } catch (Exception e) {
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Update failed", WebResources.getRootErrorMessage(e)));
+            return null;
+        }
+        // navigate
+        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Verification Process Started!", "" ));
+        return null;
     }
 
     /**

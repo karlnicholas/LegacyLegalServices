@@ -32,3 +32,20 @@ swarm:
                 hashEncoding: BASE64
                 hashCharset: UTF-8
                 unauthenticatedIdentity: guest
+  mail:
+    mail-sessions:
+      mail-socket:
+        jndi-name: java:jboss/mail/SendGrid
+        smtp-server:
+          username: ${env.SENDGRID_USER}
+          password: ${env.SENDGRID_KEY}
+          outbound-socket-binding-ref: sendgrid-smtp
+          ssl: true
+        debug: false
+  network:
+    socket-binding-groups:
+      standard-sockets:
+        outbound-socket-bindings:
+          sendgrid-smtp:
+            remote-host: smtp.sendgrid.net
+            remote-port: 465

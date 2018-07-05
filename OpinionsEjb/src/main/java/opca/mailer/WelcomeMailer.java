@@ -35,7 +35,7 @@ public class WelcomeMailer {
 	@Inject private TransformerFactory tf;
 	@Inject private UserService userService;
 	@Inject private Logger logger;
-	@Resource(mappedName = "java:jboss/mail/Default")
+	@Resource(mappedName = "java:jboss/mail/SendGrid")
 	private Session mailSession;
 
 	public void sendEmail(User user) {

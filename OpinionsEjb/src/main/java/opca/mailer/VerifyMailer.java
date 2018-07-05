@@ -1,7 +1,6 @@
 package opca.mailer;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Date;
 import java.util.logging.Logger;
@@ -30,26 +29,26 @@ import javax.xml.transform.stream.StreamSource;
 import opca.model.User;
 import opca.service.UserService;
 
-
 public class VerifyMailer {
 	@Inject private TransformerFactory tf;
 	@Inject private UserService userService;
 	@Inject private Logger logger;
-	@Resource(mappedName = "java:jboss/mail/Default")
+	@Resource(mappedName = "java:jboss/mail/SendGrid")
 	private Session mailSession;
 
 	public void sendEmail(User user) {
 		// too many errors?
 		if ( user.getVerifyErrors() > 3 ) return;
 		try {
-			JAXBContext jc = JAXBContext.newInstance(User.class);
+			JAXBContext jc = JAXBContext.newInstance(VerifyInformation.class);
 			// jaxbContext is a JAXBContext object from which 'o' is created.
-			JAXBSource source = new JAXBSource(jc, user);
+			JAXBSource source = new JAXBSource(jc, new VerifyInformation(user));
 			// set up XSLT transformation
-			InputStream is = getClass().getResourceAsStream("/xsl/verify.xsl");
-			StreamSource streamSource = new StreamSource(is);
 			StringWriter htmlContent = null;
 			try {
+				StreamSource streamSource = new StreamSource(
+					getClass().getResourceAsStream("/xsl/verify.xsl")
+				);
 				htmlContent = new StringWriter();
 				synchronized(this) {
 					Transformer t = tf.newTransformer(streamSource);

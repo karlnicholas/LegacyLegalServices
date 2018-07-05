@@ -5,10 +5,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.persistence.*;
 import javax.xml.bind.DatatypeConverter;
 
+import opca.mailer.VerifyMailer;
 import opca.model.Role;
 import opca.model.User;
 
@@ -21,6 +23,8 @@ import javax.inject.Inject;
 public class UserService {
     @Inject private EntityManager em;
     @Inject private RoleSingletonBean roleBean;
+    @Inject private VerifyMailer verifyMailer;
+    @Inject private Logger logger;
 
     /**
      * Register new users. Encodes the password and adds the "USER" role to the user's roles.
@@ -88,12 +92,34 @@ public class UserService {
      * @param email to search for.
      * @return User found, else runtime exception.
      */
-//    @RolesAllowed({"USER"})
     @PermitAll
     public User findByEmail(String email) {
         return em.createNamedQuery(User.FIND_BY_EMAIL, User.class)
             .setParameter("email", email)
             .getSingleResult();
+    }
+
+    /**
+     * return User for email.
+     * @param email to search for.
+     * @return User found, else runtime exception.
+     */
+    @PermitAll
+    public User verifyUser(String email, String verifyKey) {
+    	User user = null;
+        List<User> users = em.createNamedQuery(User.FIND_BY_EMAIL, User.class)
+            .setParameter("email", email)
+            .getResultList();
+        if ( users.size() > 0 ) {
+        	user = users.get(0);
+        }
+        if ( user != null && user.getVerifyKey().equals(verifyKey)) {
+        	user.setVerified(true);
+        	user.setStartVerify(false);
+        	user.setVerifyErrors(0);
+        	user.setVerifyCount(0);
+        }
+        return user;
     }
 
     @PermitAll
@@ -107,6 +133,19 @@ public class UserService {
         return null;
     }
 
+    /**
+     * Merge user with Database
+     * @param user to merge.
+     * @return Merged User
+     */
+    @RolesAllowed({"USER"})
+    public User startVerify(User user) {
+    	user.setStartVerify(true);
+        verifyMailer.sendEmail(user);
+        logger.info("StartVerify email sent: " + user.getEmail()  );
+        return em.merge(user);
+    }
+    
     /**
      * Delete User by Database Id
      * @param id to delete.

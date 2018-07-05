@@ -22,7 +22,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-
 @SuppressWarnings("serial")
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 @Entity
@@ -60,6 +59,7 @@ public class User implements Serializable {
     private String lastName;
 	private boolean emailUpdates;
 	private boolean verified;
+	private boolean startVerify;
     private String verifyKey;
     private int verifyErrors;
     private int verifyCount;
@@ -288,5 +288,11 @@ public class User implements Serializable {
 	}
 	public void setTitles(String[] codes) {
 		this.titles = codes;
+	}
+	public boolean isStartVerify() {
+		return startVerify;
+	}
+	public void setStartVerify(boolean startVerify) {
+		this.startVerify = startVerify;
 	}
 }

@@ -27,6 +27,9 @@
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-2"><h:commandButton id="signout" action="#{accountsController.signOut()}" value="Sign-Out" class="btn btn-default"/></div>
     <div class="col-sm-2"><h:commandButton id="update" action="#{accountsController.updateDetails()}" value="Update Details" class="btn"/></div>
+	  <ui:fragment rendered="#{!accountsController.verified}">
+	    <div class="col-sm-2"><h:commandButton id="verify" action="#{accountsController.startVerify()}" value="Verify" class="btn"/></div>
+	  </ui:fragment>
   </div>
   <ui:fragment rendered="#{accountsController.admin}">
     <div class="form-group">
