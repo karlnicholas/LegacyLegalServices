@@ -156,6 +156,15 @@ public class UserService {
     }
     
     /**
+     * Remove verification flag for user id.
+     * @param id to find.
+     */
+    @RolesAllowed({"ADMIN"})    
+	public void unverify(Long id) {
+        User user = em.find(User.class, id);
+        user.setVerified(false);
+	}
+    /**
      * Find User by Database Id
      * @param id to find.
      * @return User or null if not exists
@@ -183,7 +192,8 @@ public class UserService {
     public User promoteUser(Long id) {
         User user = em.find(User.class, id);
         user.getRoles().add(roleBean.getAdminRole());
-        return em.merge( user );
+//        return em.merge( user );
+        return user;
     }
     
     /**
@@ -255,4 +265,5 @@ public class UserService {
     public List<User> findAllUnWelcomed() {
         return em.createNamedQuery(User.FIND_UNWELCOMED, User.class).getResultList();
 	}
+
 }

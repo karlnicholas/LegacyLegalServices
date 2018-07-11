@@ -16,8 +16,16 @@
     <h:outputText value="Op - Verify" />
   </ui:define>
   <ui:define name="content">
-  Welcome to Verify Page 
-  <p>email = ${verifyController.email}</p>
-  <p>verifyKey = ${verifyController.verifyKey}</p>
-  </ui:define>
+<h:form id="verifyForm" styleClass="form-horizontal">
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-2"><h:commandButton id="account" action="/views/accounts/accounts.xhtml" value="Account" class="btn btn-default"/></div>
+	  <ui:fragment rendered="#{accountsController.verified}">
+		<div class="col-sm-offset-2 col-sm-2"><h:button id="changepassword" outcome="/views/accounts/user/changepassword.xhtml" value="Change Password" class="btn"/></div>
+	  </ui:fragment>
+  </div>
+  <div class="form-group">
+    <h:messages p:name="userdetailForm:messages" globalOnly="true" showDetail="true"/>
+  </div>
+</h:form>
+</ui:define>
 </ui:composition>

@@ -181,8 +181,8 @@ public class AccountsController {
             try {
             	HttpSession session = request.getSession();
             	email = (String) session.getAttribute("email");
-            	session.removeAttribute("email");
                 request.login(email, password);
+            	session.removeAttribute("email");
                 currentUser = userService.findByEmail(email);
                 externalContext.getSessionMap().put("user", currentUser);
             } catch (ServletException ignored) {
@@ -396,6 +396,16 @@ public class AccountsController {
         if ( currentUser.getId() == id ) throw new RuntimeException("Cannot change current user!");
         userService.delete(id);
         facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "User removed", "") );
+    }
+
+    /**
+     * Remove a user based on id.
+     * @param id of user to be removed.
+     */
+    public void unverify(Long id) {
+        if ( currentUser.getId() == id ) throw new RuntimeException("Cannot change current user!");
+        userService.unverify(id);
+        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "User unverified", "") );
     }
 
     /**
