@@ -30,7 +30,6 @@ import javax.xml.transform.stream.StreamSource;
 import opca.model.User;
 import opca.service.UserService;
 
-
 public class WelcomeMailer {
 	@Inject private TransformerFactory tf;
 	@Inject private UserService userService;
@@ -44,9 +43,9 @@ public class WelcomeMailer {
 			return;
 		}
 		try {
-			JAXBContext jc = JAXBContext.newInstance(User.class);
+			JAXBContext jc = JAXBContext.newInstance(EmailInformation.class);
 			// jaxbContext is a JAXBContext object from which 'o' is created.
-			JAXBSource source = new JAXBSource(jc, user);
+			JAXBSource source = new JAXBSource(jc, new EmailInformation(user));
 			// set up XSLT transformation
 			InputStream is = getClass().getResourceAsStream("/xsl/welcome.xsl");
 			StreamSource streamSource = new StreamSource(is);
@@ -79,7 +78,7 @@ public class WelcomeMailer {
 			multiPart.addBodyPart(htmlPart); // <-- second
 
 			message.setContent(multiPart);
-			message.setFrom(new InternetAddress("no-reply@op-jsec.rhcloud.com"));
+			message.setFrom(new InternetAddress("no-reply@op-opca.b9ad.pro-us-east-1.openshiftapps.com"));
 			message.setSubject("Welcome to Court Opinions");
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
 			// This is not mandatory, however, it is a good

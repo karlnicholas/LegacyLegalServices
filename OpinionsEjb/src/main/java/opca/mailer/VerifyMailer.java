@@ -40,9 +40,9 @@ public class VerifyMailer {
 		// too many errors?
 		if ( user.getVerifyErrors() > 3 ) return;
 		try {
-			JAXBContext jc = JAXBContext.newInstance(VerifyInformation.class);
+			JAXBContext jc = JAXBContext.newInstance(EmailInformation.class);
 			// jaxbContext is a JAXBContext object from which 'o' is created.
-			JAXBSource source = new JAXBSource(jc, new VerifyInformation(user));
+			JAXBSource source = new JAXBSource(jc, new EmailInformation(user));
 			// set up XSLT transformation
 			StringWriter htmlContent = null;
 			try {
@@ -76,7 +76,7 @@ public class VerifyMailer {
 			multiPart.addBodyPart(htmlPart); // <-- second
 
 			message.setContent(multiPart);
-			message.setFrom(new InternetAddress("no-reply@op-jsec.rhcloud.com"));
+			message.setFrom(new InternetAddress("no-reply@op-opca.b9ad.pro-us-east-1.openshiftapps.com"));
 			message.setSubject("Court Opinions - Please Verify Your Account");
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
 			// This is not mandatory, however, it is a good
@@ -100,7 +100,7 @@ public class VerifyMailer {
 		}
 
 //		String htmlContent = mailTemplateEngine.process("verify.html", ctx);
-//		log.info("Feedback sent: " + response);
+        logger.info("StartVerify email sent: " + user.getEmail()  );
 	}
 }
 /*

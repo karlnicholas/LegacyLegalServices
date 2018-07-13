@@ -5,13 +5,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
-import opca.service.AsynchronousService;
+import opca.service.UserService;
 import opca.web.form.AboutForm;
 
 @ManagedBean
 public class OptOutController {
 	@Inject private FacesContext facesContext;
-	@Inject private AsynchronousService asyncService;
+	@Inject private UserService userService;
 	private AboutForm aboutForm;
 	@PostConstruct
 	public void postConstruct() {
@@ -28,12 +28,12 @@ public class OptOutController {
 	 * @return String navigation to about-thankyou.xhtml
 	 */
 	public String submit() {
-		asyncService.sendAboutMail(aboutForm.getEmail(), aboutForm.getComment(), facesContext.getViewRoot().getLocale());
+		userService.sendAboutEmail(aboutForm.getEmail(), aboutForm.getComment(), facesContext.getViewRoot().getLocale());
 		return "/views/about/about-thankyou.xhtml";
 	}
 
 	public String test() {
-		asyncService.sendAboutMail(aboutForm.getEmail(), aboutForm.getComment(), facesContext.getViewRoot().getLocale());
+		userService.sendAboutEmail(aboutForm.getEmail(), aboutForm.getComment(), facesContext.getViewRoot().getLocale());
 		return "/views/about/about.xhtml";
 	}
 }

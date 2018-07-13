@@ -5,17 +5,22 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.Locale;
 
 import javax.persistence.*;
 import javax.xml.bind.DatatypeConverter;
 
+import opca.mailer.AboutMailer;
 import opca.mailer.VerifyMailer;
+import opca.mailer.WelcomeMailer;
 import opca.model.Role;
 import opca.model.User;
 
+import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.ejb.Asynchronous;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -23,8 +28,10 @@ import javax.inject.Inject;
 public class UserService {
     @Inject private EntityManager em;
     @Inject private RoleSingletonBean roleBean;
-    @Inject private VerifyMailer verifyMailer;
-    @Inject private Logger logger;
+	@Inject private VerifyMailer verifyMailer;
+	@Inject private AboutMailer aboutMailer;
+	@Inject private WelcomeMailer welcomeMailer;
+    @Resource private SessionContext ctx;
 
     /**
      * Register new users. Encodes the password and adds the "USER" role to the user's roles.
@@ -132,7 +139,6 @@ public class UserService {
         }
         return null;
     }
-
     /**
      * Merge user with Database
      * @param user to merge.
@@ -141,16 +147,50 @@ public class UserService {
     @RolesAllowed({"USER"})
     public User startVerify(User user) {
     	user.setStartVerify(true);
-        verifyMailer.sendEmail(user);
-        logger.info("StartVerify email sent: " + user.getEmail()  );
+    	ctx.getBusinessObject(UserService.class).sendVerifyEmail(user);
         return em.merge(user);
     }
-    
+    	
+    @PermitAll
+    @Asynchronous
+    public void sendVerifyEmail(User user) {
+		verifyMailer.sendEmail(user);
+	}
+    	
+    /**
+     * Merge user with Database
+     * @param user to merge.
+     * @return Merged User
+     */
+    @PermitAll
+	public void sendAboutEmail(String email, String comment, Locale locale) {
+    	ctx.getBusinessObject(UserService.class).sendAboutEmailAsync(email, comment, locale);
+    }
+
+    @PermitAll
+    @Asynchronous
+    public void sendAboutEmailAsync(String email, String comment, Locale locale) {
+		aboutMailer.send(email, comment, locale);
+	}
+
+    /**
+     * Merge user with Database
+     * @param user to merge.
+     * @return Merged User
+     */
+    @PermitAll
+	public void sendWelcomeEmail(User user) {
+    	user.setWelcomed(true);
+    	em.merge(user);
+		welcomeMailer.sendEmail(user);
+    }
+
     /**
      * Delete User by Database Id
      * @param id to delete.
      */
-    @RolesAllowed({"ADMIN"})
+//    @RolesAllowed({"ADMIN"})
+    @PermitAll // because welcoming service uses it. 
     public void delete(Long id) {
         em.remove( em.find(User.class, id) );
     }

@@ -8,18 +8,20 @@ import opca.model.User;
 
 @SuppressWarnings("serial")
 @XmlRootElement
-public class VerifyInformation implements Serializable {
+public class EmailInformation implements Serializable {
 	private String email;
 	private String verifyKey;
+	private String optoutKey;
 	private int verifyCount;
 	private String verifyHost;
-	public VerifyInformation(User user) {
+	public EmailInformation(User user) {
 		this.email = user.getEmail();
 		this.verifyKey = user.getVerifyKey();
+		this.optoutKey = user.getOptoutKey();
 		this.setVerifyCount(user.getVerifyCount());
 		this.verifyHost = "localhost:8080";
 	}
-	public VerifyInformation() {
+	public EmailInformation() {
 	}
 	public String getEmail() {
 		return email;
@@ -44,5 +46,11 @@ public class VerifyInformation implements Serializable {
 	}
 	public void setVerifyCount(int verifyCount) {
 		this.verifyCount = verifyCount;
+	}
+	public String getOptoutKey() {
+		return optoutKey;
+	}
+	public void setOptoutKey(String optoutKey) {
+		this.optoutKey = optoutKey;
 	}
 }
