@@ -9,11 +9,11 @@ import javax.inject.Inject;
 import opca.scraper.CACaseScraper;
 import opca.scraper.TestCACaseScraper;
 import opca.service.CAOnlineUpdates;
-import opca.service.UserService;
+import opca.service.SystemService;
 
 @ManagedBean
 public class IndexController {
-	@Inject private UserService userService;
+	@Inject private SystemService systemService;
     private String userCountMessage;
 	@Inject Logger logger;
 	@Inject private CAOnlineUpdates caOnlineUpdates;
@@ -27,7 +27,15 @@ public class IndexController {
         logger.info("Done Update");
     }
     
-	private String message;
+    public void testWelcome() {
+    	systemService.doWelcomeService();
+    }
+
+    public void testCaseReport() {
+    	systemService.sendCaseReports();
+    }
+
+    private String message;
 
 	public String getMessage() {
 		return message;
@@ -47,12 +55,6 @@ public class IndexController {
 	public void afterPhaseListener(PhaseEvent e){
 		System.out.println("After:" + e.getPhaseId().getName());
 	}
-    /**
-     * Set UserCountMessage field with the number of registered users
-     */
-    public void updateUserCount() {
-        userCountMessage = String.format("There are %d users", userService.userCount() );
-    }
 
     /**
      * UserCountMessage field

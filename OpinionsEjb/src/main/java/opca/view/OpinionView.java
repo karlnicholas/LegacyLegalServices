@@ -4,16 +4,16 @@ import java.util.*;
 
 import opca.model.OpinionBase;
 import opca.model.SlipOpinion;
-import statutes.StatutesBaseClass;
 
-public class OpinionView extends SlipOpinion {
+public class OpinionView {
 	private static final int MAX_INFO_LENGTH = 75;
-	private static final long serialVersionUID = 1L;
 	// reverse sorted by the constructor.
 	private List<StatuteView> statutes;
 	// reverse sorted by the constructor.
 	private List<CaseView> cases;
 	private String name;
+	private String title;
+	private Date opinionDate;
 	
 	public OpinionView() {
 		super();
@@ -24,9 +24,10 @@ public class OpinionView extends SlipOpinion {
 		List<StatuteView> statutes, 
 		List<CaseView> cases
 	) {
-		super(slipOpinion);
 		this.name = name;
 		this.statutes = statutes;
+		this.title = slipOpinion.getTitle();
+		this.setOpinionDate(slipOpinion.getOpinionDate());
 		Collections.sort(this.statutes);
 //		Collections.reverse(this.statutes);
 		this.cases = cases;
@@ -38,7 +39,7 @@ public class OpinionView extends SlipOpinion {
 		StringBuilder sb = new StringBuilder();
 		boolean shortened = false;
 		for (StatuteView statuteView: statutes) {
-			sb.append(statuteView.getStatutesBaseClass().getShortTitle());
+			sb.append(statuteView.getShortTitle());
 			sb.append("  [");
 			sb.append(statuteView.getRefCount());
 			sb.append("], ");
@@ -78,53 +79,6 @@ public class OpinionView extends SlipOpinion {
 		return sb.toString();
 	}
 	// end: supporting methods for JSF pages 
-
-	/**
-	 * If there isn't a sectionView at the end of the chain then need to remove entire tree(branch)
-	 * Also, shouldn't there be incremented citation counts for removed items?
-	 * @param levelOfInterest
-	 * @param removeCodes
-	 */
-	public void trimToLevelOfInterest( int levelOfInterest, boolean removeCodes) {
-		Iterator<StatuteView> ci = statutes.iterator();
-		while ( ci.hasNext() ) {
-			StatuteView statuteView = ci.next();
-			statuteView.trimToLevelOfInterest( levelOfInterest );
-			if (removeCodes) {
-			    if ( statuteView.getRefCount() < levelOfInterest )
-			        ci.remove();
-			}
-		}
-	}
-    public void combineCommonSections() {
-    	Map<StatutesBaseClass, List<StatuteView>> combinedStatutes = new HashMap<StatutesBaseClass, List<StatuteView>>(); 
-    	for ( StatuteView statuteView:  statutes) {
-    		List<StatuteView> statuteViews = combinedStatutes.get(statuteView.getStatutesLeaf());
-    		if ( statuteViews == null ) {
-    			statuteViews = new ArrayList<StatuteView>(); 
-    			combinedStatutes.put(statuteView.getStatutesLeaf(), statuteViews);
-    		}
-    		boolean found = false;
-    		for ( StatuteView existingStatuteView:  statuteViews ) {
-    			if ( statuteView.getStatutesLeaf().getStatuteRange().equals(existingStatuteView.getStatutesLeaf().getStatuteRange()) ) {
-    				existingStatuteView.addReference(statuteView);
-    				existingStatuteView.incRefCount(statuteView.getRefCount());
-    				found = true;
-    				break;
-    			}
-    		}
-    		if ( !found ) {
-    			statuteViews.add(statuteView);
-    		}
-    	}
-    	statutes.clear();
-        for ( StatutesBaseClass key: combinedStatutes.keySet()) {
-        	List<StatuteView> statuteViews =  combinedStatutes.get(key);
-        	for ( StatuteView statuteView: statuteViews ) {
-        		statutes.add(statuteView);
-        	}
-        }
-    }
 	public void scoreCitations( OpinionViewBuilder opinionViewBuilder) {
 		scoreSlipOpinionStatutes();
 		// create a union of all statutes from the slipOpinion and the cited cases
@@ -132,7 +86,9 @@ public class OpinionView extends SlipOpinion {
 		
 		List<OpinionView> tempOpinionViewList = new ArrayList<>();
 		// need a collection StatutueCitations.
-        for ( OpinionBase opinionCited: getOpinionCitations() ) {
+//		opinionViewBuilder.getParserResults().getOpinionTable()
+//        for ( OpinionBase opinionCited: getOpinionCitations() ) {
+		for ( OpinionBase opinionCited: opinionViewBuilder.getParserResults().getOpinionTable() ) {
             List<StatuteView> statuteViews = opinionViewBuilder.createStatuteViews(opinionCited);
             rankStatuteViews(statuteViews);
             // create a temporary OpinionView to use its functions
@@ -143,8 +99,8 @@ public class OpinionView extends SlipOpinion {
             OpinionView tempOpinionView = new OpinionView();
             tempOpinionView.setStatutes(statuteViews);
             tempOpinionView.setCases(tempCaseViews); 
-            tempOpinionView.combineCommonSections();
-            tempOpinionView.trimToLevelOfInterest(2, true);
+//            tempOpinionView.combineCommonSections();
+//            tempOpinionView.trimToLevelOfInterest(2, true);
             if ( tempOpinionView.getStatutes().size() == 0 ) {
             	caseView.setScore(-1);
             	// well, just remove cases with no interesting citations
@@ -273,6 +229,12 @@ public class OpinionView extends SlipOpinion {
 	public void setName(String name) {
 		this.name = name;
 	}
+    public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
 	public List<CaseView> getCases() {
 		return cases;
 	}
@@ -283,5 +245,11 @@ public class OpinionView extends SlipOpinion {
     public String toString() {
     	return name + " " + this.getTitle();
     }
+	public Date getOpinionDate() {
+		return opinionDate;
+	}
+	public void setOpinionDate(Date opinionDate) {
+		this.opinionDate = opinionDate;
+	}
 }
 

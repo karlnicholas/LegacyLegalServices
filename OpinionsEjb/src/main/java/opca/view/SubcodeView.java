@@ -2,7 +2,6 @@ package opca.view;
 
 import java.util.*;
 
-import statutes.SectionNumber;
 import statutes.StatutesBaseClass;
 import statutes.StatutesNode;
 
@@ -13,22 +12,30 @@ import statutes.StatutesNode;
  * Time: 3:26 PM
  * To change this template use File | Settings | File Templates.
  */
-public class SubcodeView implements ViewReference {
+public class SubcodeView extends ViewReference {
     // This is holding the "chapter" section that is of interest ..
-	private StatutesNode statutesNode;
+//	private StatutesNode statutesNode;
+    private String fullFacet;
+	private String part;
+    private String partNumber;
+    private String title;
+	
     private int cumulativeRefCount;
     // and pointers to under Chapters, Parts, Articles, etc
     private ArrayList<ViewReference> childReferences;
+	private ViewReference parent;
 
-    public SubcodeView() {}
-    // Construct a branch .. with a 
-    public SubcodeView(StatutesNode statutesNode, int cumulativeRefCount ) {
+    public SubcodeView( StatutesBaseClass statutesNode, int refCount) {
     	childReferences = new ArrayList<ViewReference>();
-    	this.statutesNode = statutesNode;
-    	this.cumulativeRefCount = cumulativeRefCount;
+//    	this.statutesNode = statutesNode;
+    	this.fullFacet = statutesNode.getFullFacet();
+    	this.part = statutesNode.getPart();
+    	this.partNumber = statutesNode.getPartNumber();
+    	this.title = statutesNode.getTitle();
+    	cumulativeRefCount = refCount;
     }
     
-    public void trimToLevelOfInterest( int levelOfInterest ) {
+	public void trimToLevelOfInterest( int levelOfInterest ) {
     	Iterator<ViewReference> ori = childReferences.iterator();
     	while ( ori.hasNext() ) {
     		ViewReference opReference = ori.next();
@@ -46,10 +53,6 @@ public class SubcodeView implements ViewReference {
         return cumulativeRefCount - statutesNode.getRefCount();
     }
 
-    public StatutesBaseClass getStatutesBaseClass() {
-        return statutesNode;
-    }
-
     public int getRefCount() {
         return cumulativeRefCount;
     }
@@ -57,21 +60,6 @@ public class SubcodeView implements ViewReference {
     public int incRefCount(int amount) {
     	cumulativeRefCount = cumulativeRefCount + amount;
         return cumulativeRefCount;
-    }
-
-	
-    public void incorporateOpinionReference( ViewReference opReference, QueueUtility queue ) {
-        incRefCount(opReference.getRefCount());
-        // basically, by ignoring the statutesNode it gets left out
-        // we should so incorporate the increment count into the section .. 
-        addToChildren(queue);
-    }
-
-	
-    public void addToChildren( QueueUtility queue ) {
-        if ( queue.size() > 0 ) {
-            queue.mergeSubcodes( childReferences);
-        }
     }
 
     public void addReference(ViewReference opReference) {
@@ -82,10 +70,6 @@ public class SubcodeView implements ViewReference {
 		return childReferences;
 	}
 	
-	public void setSectionNumber(SectionNumber sectionNumber) {
-		// do nothing here ..
-	}
-	
 	public boolean iterateSections(IterateSectionsHandler handler) {
 		Iterator<ViewReference> rit = childReferences.iterator();
 		while ( rit.hasNext() ) {
@@ -94,13 +78,6 @@ public class SubcodeView implements ViewReference {
 		return true;
 	}
 
-	
-	public SectionNumber getSectionNumber() {
-		// return nothing
-		return null;
-	}
-
-	
 	public SectionView getSectionView() {
 		ViewReference tRef = this;
 		while ( !(tRef instanceof SectionView) ) {
@@ -128,27 +105,33 @@ public class SubcodeView implements ViewReference {
 		};
 		return referenceList;
 	}
+
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((statutesNode == null) ? 0 : statutesNode.hashCode());
-		return result;
+	public ViewReference getParent() {
+		return parent;
 	}
+	public void setParent(ViewReference parent) {
+		this.parent = parent;
+	}
+
+	public String getFullFacet() {
+		return fullFacet;
+	}
+
+	public String getPart() {
+		return part;
+	}
+
+	public String getPartNumber() {
+		return partNumber;
+	}
+
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SubcodeView other = (SubcodeView) obj;
-		if (statutesNode == null) {
-			if (other.statutesNode != null)
-				return false;
-		} else if (!statutesNode.equals(other.statutesNode))
-			return false;
-		return true;
+	public String getTitle() {
+		return title;
 	}
+
+	public int getCumulativeRefCount() {
+		return cumulativeRefCount;
+	}	
 }

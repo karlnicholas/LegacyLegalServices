@@ -168,8 +168,8 @@ public class OpinionViewCache {
 			slipOpinion.setOpinionCitations( opinionOpinionCitations.get( opinionOpinionCitations.indexOf(slipOpinion)).getOpinionCitations() );
 			ParsedOpinionCitationSet parserResults = new ParsedOpinionCitationSet(slipOpinion);
 			OpinionView opinionView = opinionViewBuilder.buildOpinionView(slipOpinion, parserResults);
-			opinionView.combineCommonSections();
-			opinionView.trimToLevelOfInterest(levelOfInterest, true);
+//			opinionView.combineCommonSections();
+//			opinionView.trimToLevelOfInterest(levelOfInterest, true);
 			opinionView.scoreCitations(opinionViewBuilder);
 			
 			opinionViews.add(opinionView);

@@ -2,27 +2,23 @@ package opca.view;
 
 import java.util.List;
 
-import statutes.SectionNumber;
-import statutes.StatutesBaseClass;
+public abstract class ViewReference {
 
-public interface ViewReference {
+	public abstract void trimToLevelOfInterest( int levelOfInterest );
 
-	public void trimToLevelOfInterest( int levelOfInterest );
-
-	public void addReference(ViewReference opReference);
-    public void addToChildren( QueueUtility queueUtility );
-	public void incorporateOpinionReference(ViewReference opReference, QueueUtility queueUtility);	
-	public int incRefCount(int amount);
+	public abstract void addReference(ViewReference opReference);
+	public abstract int incRefCount(int amount);
 	
-	public SectionNumber getSectionNumber();
-	public StatutesBaseClass getStatutesBaseClass();
-	public List<ViewReference> getChildReferences();
-	public SectionView getSectionView();
-	public List<SectionView> getSections();
-	public List<ViewReference> getSubcodes();
-	public int getRefCount();
+	public abstract List<ViewReference> getChildReferences();
+//	public abstract SectionView getSectionView();
+	public abstract List<SectionView> getSections();
+	public abstract List<ViewReference> getSubcodes();
+	public abstract int getRefCount();
+	public abstract ViewReference getParent();
 
     // return true to keep iterating, false to stop iteration
-	public boolean iterateSections( IterateSectionsHandler handler);
+	public abstract boolean iterateSections( IterateSectionsHandler handler);
+
+	public abstract String getTitle();
 	
 }

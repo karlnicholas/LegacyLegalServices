@@ -2,9 +2,8 @@ package opca.view;
 
 import java.util.*;
 
-import opca.model.OpinionBase;
 import opca.model.OpinionStatuteCitation;
-import statutes.SectionNumber;
+import statutes.StatuteRange;
 import statutes.StatutesBaseClass;
 import statutes.StatutesLeaf;
 
@@ -15,57 +14,63 @@ import statutes.StatutesLeaf;
  * Time: 4:06 PM
  * To change this template use File | Settings | File Templates.
  */
-public class SectionView implements ViewReference { 
+public class SectionView extends ViewReference { 
 	//	private static final Logger logger = Logger.getLogger(OpinionSection.class.getName());
 	// This stuff holds the reference .. 
 	// Which "code" it is and which section within that code is referenced
 	// Also a place for the number of reference counts
 	// as well as "designated," a working variable that shows how "strong" the reference is
     private String title;
-    private SectionNumber sectionNumber;
+    private String fullFacet;
+    private StatuteRange statuteRange;
     private int refCount;
     private boolean designated;
+    private ViewReference parent;
     
     // This holds the CodeRefence to the 
-    private StatutesBaseClass section;
+//    private StatutesBaseClass section;
 
-    public SectionView() {}
-    public SectionView(OpinionBase opinionBase, OpinionStatuteCitation citation) {
+    public SectionView(StatutesBaseClass statutesLeaf, int refCount) {
     	// this is constructed without a parent and that's added later
     	// when we build the hierarchy
 //    	logger.fine("code:" + code + ":section:" + section);
-        this.title = citation.getStatuteCitation().getStatuteKey().getTitle();
-        sectionNumber = new SectionNumber(-1, citation.getStatuteCitation().getStatuteKey().getSectionNumber());
-        refCount = citation.getCountReferences();
-        designated = citation.getStatuteCitation().getDesignated();
+
+        title = statutesLeaf.getTitle();
+        fullFacet = statutesLeaf.getFullFacet();
+        this.refCount = refCount;
+        statuteRange = statutesLeaf.getStatuteRange();
     }
 
-    public boolean equals(SectionView dcs ) {
-        if ( title == null && dcs.getTitle() != null ) return false;
-        if ( title != null && dcs.getTitle() == null ) return false;
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + fullFacet.hashCode();
+		return result;
+	}
 
-        if ( title.equals( dcs.getTitle() ) && sectionNumber.equals( dcs.getSectionNumber() ) ) return true;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SectionView other = (SectionView) obj;
+		if (fullFacet == null) {
+			if (other.fullFacet != null)
+				return false;
+		} else if (!fullFacet.equals(other.fullFacet))
+			return false;
+		return true;
+	}
 
-        return false;
+    public StatuteRange getStatuteRange() {
+        return statuteRange;
     }
-    
-    public int compareTo(SectionView dcs ) {
-        if ( title == null && dcs.getTitle() != null ) return -1;
-        if ( title != null && dcs.getTitle() == null ) return 1;
 
-        if ( title != null && dcs.getTitle() != null ) {
-            int ret = title.compareTo( dcs.getTitle() );
-            if (  ret != 0 ) return ret;
-        }
-
-        // do a string compare for now .. really meant to compare codes 
-        return sectionNumber.getSectionNumber().compareTo(dcs.getSectionNumber().getSectionNumber());
-    }
-
-    public SectionNumber getSectionNumber() {
-       return sectionNumber;
-    }
-	public String getTitle() {
+    public String getTitle() {
         return title;
     }
     public void setTitle( String code) {
@@ -90,7 +95,8 @@ public class SectionView implements ViewReference {
     public boolean getDesignated() {
         return designated;
     }
-    
+
+/*    
     public void setStatutesBaseClass( StatutesBaseClass section ) {
     	this.section = section;
     }
@@ -99,7 +105,7 @@ public class SectionView implements ViewReference {
     public StatutesBaseClass getStatutesBaseClass( ) {
     	return section;
     }
-	
+*/	
 	public void addReference(ViewReference reference) {
 		// do nothing
 	}
@@ -112,35 +118,17 @@ public class SectionView implements ViewReference {
 	public void trimToLevelOfInterest(int levelOfInterest) {
 		// nothing to do 
 	}
-
 	
 	public boolean iterateSections(IterateSectionsHandler handler) {
 		return handler.handleOpinionSection(this);
 	}
-	
-	public void incorporateOpinionReference(ViewReference opReference, QueueUtility queue) {
-	//	if ( queue.isCompressStatutesBaseClasss() ) {
-	        incRefCount(opReference.getRefCount());
-	        // basically, by ignoring the subcode it gets left out
-	        // we should so incorporate the increment count into the section .. 
-	        sectionNumber = null;
-	//	}
-	}
-	
-    public void addToChildren( QueueUtility queueUtility ) {
-		// do nothing
-	}
-
 	
 	public SectionView getSectionView() {
 		return this;
 	}
 
     public String toString() {
-    	if ( sectionNumber == null ) {
-    		return title + ":" + ((StatutesLeaf)section).getStatuteRange().toString() + ":" + refCount;
-    	}
-        return title + ":" + sectionNumber + ":" + refCount;
+        return title + ":" + statuteRange + ":" + refCount;
     }
 
 	@Override
@@ -154,8 +142,9 @@ public class SectionView implements ViewReference {
 	public List<ViewReference> getSubcodes() {
 		return null;
 	}
+/*	
 	public List<String> getShortTitles() {
-    	ArrayList<StatutesBaseClass> baseStatutes = new ArrayList<StatutesBaseClass>(); 
+    	ArrayList<ViewReference> baseStatutes = new ArrayList<ViewReference>(); 
 		getStatutesBaseClass().getParents(baseStatutes);
 		List<String> shortTitles = new ArrayList<String>();
 		Collections.reverse(baseStatutes);
@@ -163,6 +152,14 @@ public class SectionView implements ViewReference {
 			shortTitles.add(baseStatute.getShortTitle());
 		}
     	return shortTitles;
+	}
+*/
+	@Override
+	public ViewReference getParent() {
+		return parent;
+	}	
+	public void setParent(ViewReference parent) {
+		this.parent = parent;
 	}
 }
 

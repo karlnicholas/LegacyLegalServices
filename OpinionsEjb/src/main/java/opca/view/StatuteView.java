@@ -3,10 +3,7 @@ package opca.view;
 import java.util.*;
 
 import statutes.SectionNumber;
-import statutes.StatuteRange;
-import statutes.StatutesBaseClass;
-import statutes.StatutesLeaf;
-import statutes.StatutesNode;
+import statutes.StatutesRoot;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,33 +12,34 @@ import statutes.StatutesNode;
  * Time: 3:26 PM
  * To change this template use File | Settings | File Templates.
  */
-public class StatuteView implements ViewReference, Comparable<StatuteView> {
+public class StatuteView extends ViewReference implements Comparable<StatuteView> {
     // This is holding the "chapter" section that is of interest ..
     private int cumulativeRefCount;
     private ArrayList<ViewReference> childReferences;
     
     // Well, this should really be the toplevel object in the codes hierarchy ..
     // but, lets set it to this for now, come back to it later ..
-    private StatutesBaseClass statutesBaseClass;
-    private StatutesLeaf leafBaseClass;
-    
-    // this thing again
-    private QueueUtility queue;
+    private String fullFacet; 
+    private String title; 
+    private String shortTitle;
     
 	private int score;
 	private int importance;    
-
-    public StatuteView() {}
+	
     // the old one was .. Section section, OpinionSection opSectionReference
     // Section section, OpinionSection opSectionReference
-    public StatuteView(StatutesBaseClass code, StatutesLeaf leafBaseClass) {
-        this.statutesBaseClass = code;
-        this.leafBaseClass = leafBaseClass;
+    public StatuteView(StatutesRoot statutesRoot, int refCount) {
+//        this.statutesBaseClass = code;
+//        this.leafBaseClass = leafBaseClass;
+    	cumulativeRefCount = refCount;
+    	fullFacet = statutesRoot.getFullFacet();
+    	title = statutesRoot.getTitle();
+    	shortTitle = statutesRoot.getShortTitle();
+    	
         childReferences = new ArrayList<ViewReference>();
-        queue = new QueueUtility(); 
+//        queue = new QueueUtility(); 
         // even so .. we'll have think about this .. 
         // no references initially .. 
-        cumulativeRefCount = 0;
     }
     
     public void trimToLevelOfInterest( int levelOfInterest ) {
@@ -57,29 +55,12 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
     	}
     }
 
-    // push the new SectionReference and all its parents onto a stack, 
-    // then call the mergeSubcodes so the stack can combine parents that
-    // are the same
-    public void addNewSectionReference( ViewReference opReference ) {
-		queue.push(opReference);
-		//
-	    while ( opReference.getStatutesBaseClass().getParent() != null ) {
-	    	// First, check to see if are at the top ...
-	    	StatutesBaseClass statutesBaseClass = opReference.getStatutesBaseClass().getParent();
-	    	if ( statutesBaseClass.getParent() != null  ) {
-//		    	subcode = new OpinionSubcode( codeSection, subcode );
-		    	opReference = new SubcodeView( (StatutesNode) statutesBaseClass, opReference.getRefCount() );
-		        queue.push(opReference);
-	    	} else {
-	    		break;
-	    	}
-	    }
-	    // Merge the queue into the grand hierarchy 
-	    incRefCount( queue.mergeSubcodes(childReferences).getRefCount() );
-    }    
-
     public int compareTo( StatuteView statuteView) {
-    	StatutesBaseClass baseClass = getStatutesBaseClass();
+    	return shortTitle.compareTo(statuteView.shortTitle);
+    }
+/*
+    public int compareTo( StatuteView statuteView) {
+//    	StatutesBaseClass baseClass = getStatutesBaseClass();
     	StatutesBaseClass cBaseClass = statuteView.childReferences.get(0).getStatutesBaseClass();
     	int bCompare = baseClass.getStatutesRoot().compareTo(cBaseClass.getStatutesRoot());
     	if ( bCompare == 0 ) {
@@ -92,10 +73,7 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
     		return bCompare;
     	}
     }
-
-    public StatutesBaseClass getStatutesBaseClass() {
-    	return statutesBaseClass;
-    }
+*/
     public ArrayList<ViewReference> getChildReferences() {
     	return this.childReferences;
     }
@@ -113,20 +91,12 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
         return cumulativeRefCount;
     }
             
-	public void incorporateOpinionReference(ViewReference opReference, QueueUtility queue) {
-        incRefCount(opReference.getRefCount());
-	}
 	public void addReference(ViewReference opReference) {
 		childReferences.add(opReference);
 	}
 	public SectionNumber getSectionNumber() {
 		// return nothing
 		return null;
-	}
-	public void addToChildren(QueueUtility queueUtility) {
-        if ( queue.size() > 0 ) {
-            queue.mergeSubcodes( childReferences);
-        }
 	}
 	public boolean iterateSections(IterateSectionsHandler handler) {
 		Iterator<ViewReference> rit = childReferences.iterator();
@@ -138,7 +108,7 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
 	public String toString() {
         return "\n" + childReferences;
     }
-
+/*
 	public SectionView getSectionView() {
 		ViewReference tRef = this;
 		while ( !(tRef instanceof SectionView) ) {
@@ -146,6 +116,7 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
 		}
 		return (SectionView) tRef;
 	}
+*/	
 	public void setSectionNumber(SectionNumber sectionNumber) {
 		// do nothing
 	}
@@ -179,17 +150,19 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
 		});
 		return sectionList;
 	}
+/*
 	public String getDisplayTitlePath() {
     	List<String> shortTitles = getSectionView().getShortTitles();
     	return shortTitles.toString().replace("[", "").replace("]", "") + ", " + getSectionView().getStatutesBaseClass().getTitle(true);
 	}
 	public String getDisplaySections() {
-		StatuteRange statuteRange = getSectionView().getStatutesBaseClass().getStatuteRange();
+		StatuteRange statuteRange = getSectionView().getStatuteRange();
 		if ( statuteRange.geteNumber().getSectionNumber() == null ) {
 	    	return ("§ " + statuteRange.getsNumber().toString());
 		}
     	return ("§§ " + statuteRange.toString());
 	}
+*/	
 	public int getScore() {
 		return score;
 	}
@@ -202,14 +175,25 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
 	public void setImportance(int importance) {
 		this.importance = importance;
 	}
-	public StatutesLeaf getStatutesLeaf() {
-		return leafBaseClass;
+
+	public int getCumulativeRefCount() {
+		return cumulativeRefCount;
+	}
+	public String getFullFacet() {
+		return fullFacet;
+	}
+	@Override
+	public String getTitle() {
+		return title;
+	}
+	public String getShortTitle() {
+		return shortTitle;
 	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((leafBaseClass.getStatutesLeaf() == null) ? 0 : leafBaseClass.getStatutesLeaf().hashCode());
+		result = prime * result + fullFacet.hashCode();
 		return result;
 	}
 	@Override
@@ -221,13 +205,10 @@ public class StatuteView implements ViewReference, Comparable<StatuteView> {
 		if (getClass() != obj.getClass())
 			return false;
 		StatuteView other = (StatuteView) obj;
-		if (leafBaseClass == null) {
-			if (other.leafBaseClass != null)
-				return false;
-		} else if (!leafBaseClass.getStatutesLeaf().equals(other.leafBaseClass.getStatutesLeaf()))
-			return false;
-		return true;
+		return fullFacet.equals(other.getFullFacet());
 	}
-	
-	
+	@Override
+	public ViewReference getParent() {
+		return null;
+	}
 }

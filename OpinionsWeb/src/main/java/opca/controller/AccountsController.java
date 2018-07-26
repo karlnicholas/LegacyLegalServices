@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import opca.model.User;
+import opca.service.SystemService;
 import opca.service.UserService;
 import opca.web.util.WebResources;
 
@@ -26,6 +27,7 @@ import opca.web.util.WebResources;
 public class AccountsController {
     @Inject protected FacesContext facesContext;
     @Inject protected UserService userService;
+    @Inject protected SystemService systemService;
 //    @Inject private UserCodesController userCodesController;
     
     public static final String NAV_ACCOUNTS_REDIRECT = "/views/accounts/accounts.xhtml?faces-redirect=true";
@@ -326,7 +328,7 @@ public class AccountsController {
      */
     public String startVerify() {
         try {
-        	userService.startVerify(currentUser);
+        	systemService.startVerify(currentUser);
         } catch (Exception e) {
             facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Update failed", WebResources.getRootErrorMessage(e)));
             return null;

@@ -1,17 +1,16 @@
 package opca.mailer;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.Multipart;
-import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -19,7 +18,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.util.JAXBSource;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -28,26 +27,32 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import opca.model.User;
-import opca.service.UserService;
+import opca.view.OpinionView;
 
-public class WelcomeMailer {
+public class SendGridMailer {
 	@Inject private TransformerFactory tf;
-	@Inject private UserService userService;
 	@Inject private Logger logger;
 	@Resource(mappedName = "java:jboss/mail/SendGrid")
 	private Session mailSession;
 
-	public void sendEmail(User user) {
-		// too many errors?
-		if ( user.getWelcomeErrors() > 3 ) {
-			return;
-		}
+	public boolean sendComment(String email, String comment, Locale locale) {
+		return sendGridEmail(new EmailInformation(email, comment, locale), "/xsl/about.xsl");
+	}
+	
+	public boolean sendEmail(User user, String emailResource) {
+		return sendGridEmail(new EmailInformation(user), emailResource);
+	}
+
+	public boolean sendOpinionReport(User user, List<OpinionView> opinionCases) {
+		return sendGridPrint(new EmailInformation(user, opinionCases), "/xsl/opinionreport.xsl");
+	}
+	public boolean sendGridEmail(EmailInformation emailInformation, String emailResource) {
+		
 		try {
 			JAXBContext jc = JAXBContext.newInstance(EmailInformation.class);
-			// jaxbContext is a JAXBContext object from which 'o' is created.
-			JAXBSource source = new JAXBSource(jc, new EmailInformation(user));
+			JAXBSource source = new JAXBSource(jc, emailInformation);
 			// set up XSLT transformation
-			InputStream is = getClass().getResourceAsStream("/xsl/welcome.xsl");
+			InputStream is = getClass().getResourceAsStream(emailResource);
 			StreamSource streamSource = new StreamSource(is);
 			StringWriter htmlContent = null;
 			try {
@@ -80,7 +85,7 @@ public class WelcomeMailer {
 			message.setContent(multiPart);
 			message.setFrom(new InternetAddress("no-reply@op-opca.b9ad.pro-us-east-1.openshiftapps.com"));
 			message.setSubject("Welcome to Court Opinions");
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(emailInformation.getEmail()));
 			// This is not mandatory, however, it is a good
 			// practice to indicate the software which
 			// constructed the message.
@@ -92,16 +97,46 @@ public class WelcomeMailer {
 			// Sends the email
 			Transport.send(message);
 			
-			userService.setWelcomedTrue(user);
-			
-		} catch (SendFailedException e) {
-			userService.incrementWelcomeErrors(user);
-		} catch (IOException | JAXBException | MessagingException e) {
-			userService.incrementWelcomeErrors(user);
+		} catch (Exception e) {
 			logger.severe(e.getMessage());
+			return false;
 		}
+		return true;
+	}
 
-//		String htmlContent = mailTemplateEngine.process("verify.html", ctx);
-//		log.info("Feedback sent: " + response);
+	public boolean sendGridPrint(EmailInformation emailInformation, String emailResource) {
+		
+		try {
+			JAXBContext jc = JAXBContext.newInstance(EmailInformation.class);
+		    Marshaller marshaller = jc.createMarshaller();
+		    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+		    marshaller.marshal(emailInformation, System.out);
+//		    return writer.toString();			// jaxbContext is a JAXBContext object from which 'o' is created.
+			// jaxbContext is a JAXBContext object from which 'o' is created.
+			JAXBSource source = new JAXBSource(jc, emailInformation);
+			// set up XSLT transformation
+			InputStream is = getClass().getResourceAsStream(emailResource);
+			StreamSource streamSource = new StreamSource(is);
+			StringWriter htmlContent = null;
+			try {
+				htmlContent = new StringWriter();
+				synchronized(this) {
+					Transformer t = tf.newTransformer(streamSource);
+					// run transformation
+					t.transform(source, new StreamResult(htmlContent));
+				}
+			} catch (TransformerException e) {
+				throw new RuntimeException(e); 
+			} finally {
+				htmlContent.close();
+			}
+
+			System.out.println(  htmlContent );
+			
+		} catch (Exception e) {
+			logger.severe(e.getMessage());
+			return false;
+		}
+		return true;
 	}
 }
