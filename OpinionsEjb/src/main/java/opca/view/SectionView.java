@@ -2,10 +2,13 @@ package opca.view;
 
 import java.util.*;
 
-import opca.model.OpinionStatuteCitation;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
 import statutes.StatuteRange;
 import statutes.StatutesBaseClass;
-import statutes.StatutesLeaf;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +17,8 @@ import statutes.StatutesLeaf;
  * Time: 4:06 PM
  * To change this template use File | Settings | File Templates.
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class SectionView extends ViewReference { 
 	//	private static final Logger logger = Logger.getLogger(OpinionSection.class.getName());
 	// This stuff holds the reference .. 
@@ -24,21 +29,23 @@ public class SectionView extends ViewReference {
     private String fullFacet;
     private StatuteRange statuteRange;
     private int refCount;
-    private boolean designated;
+	private int score;
+	private int importance;    
+    @XmlTransient
     private ViewReference parent;
     
     // This holds the CodeRefence to the 
 //    private StatutesBaseClass section;
 
-    public SectionView(StatutesBaseClass statutesLeaf, int refCount) {
+    public void initialize(StatutesBaseClass statutesLeaf, int refCount, ViewReference parent) {
     	// this is constructed without a parent and that's added later
     	// when we build the hierarchy
 //    	logger.fine("code:" + code + ":section:" + section);
-
         title = statutesLeaf.getTitle();
         fullFacet = statutesLeaf.getFullFacet();
         this.refCount = refCount;
         statuteRange = statutesLeaf.getStatuteRange();
+        this.setParent(parent);
     }
 
     @Override
@@ -89,13 +96,6 @@ public class SectionView extends ViewReference {
         refCount = count;
     }
 
-    public void setDesignated( boolean designated ) {
-        this.designated = designated;
-    }
-    public boolean getDesignated() {
-        return designated;
-    }
-
 /*    
     public void setStatutesBaseClass( StatutesBaseClass section ) {
     	this.section = section;
@@ -131,35 +131,57 @@ public class SectionView extends ViewReference {
         return title + ":" + statuteRange + ":" + refCount;
     }
 
-	@Override
-    // nothing left to do here
-	public List<SectionView> getSections() {
-		return null;
+    @Override
+	public ViewReference getParent() {
+		return parent;
 	}
 
-	@Override
-	// nothing left to do here
-	public List<ViewReference> getSubcodes() {
-		return null;
+	public void setParent(ViewReference parent) {
+		this.parent = parent;
 	}
-/*	
+	public int getScore() {
+		return score;
+	}
+	public void setScore(int score) {
+		this.score = score;
+	}
+	public int getImportance() {
+		return importance;
+	}
+	public void setImportance(int importance) {
+		this.importance = importance;
+	}
+
+	public String getDisplayTitlePath() {
+    	List<String> shortTitles = getShortTitles();
+    	return shortTitles.toString().replace("[", "").replace("]", "") + ", " + title;
+	}
+	public String getDisplaySections() {
+		if ( statuteRange.geteNumber().getSectionNumber() == null ) {
+	    	return ("§ " + statuteRange.getsNumber().toString());
+		}
+    	return ("§§ " + statuteRange.toString());
+	}
+
+    
 	public List<String> getShortTitles() {
-    	ArrayList<ViewReference> baseStatutes = new ArrayList<ViewReference>(); 
-		getStatutesBaseClass().getParents(baseStatutes);
+    	ArrayList<ViewReference> baseViews = new ArrayList<ViewReference>();
+    	ViewReference parent = this.parent;
+    	while ( parent != null ) {
+    		baseViews.add(parent);
+    		parent = parent.getParent();
+    	}
 		List<String> shortTitles = new ArrayList<String>();
-		Collections.reverse(baseStatutes);
-		for ( StatutesBaseClass baseStatute: baseStatutes ) {
-			shortTitles.add(baseStatute.getShortTitle());
+		Collections.reverse(baseViews);
+		for ( ViewReference baseView: baseViews) {
+			shortTitles.add(baseView.getShortTitle());
 		}
     	return shortTitles;
 	}
-*/
+
 	@Override
-	public ViewReference getParent() {
-		return parent;
-	}	
-	public void setParent(ViewReference parent) {
-		this.parent = parent;
+	public String getShortTitle() {
+		return title;
 	}
 }
 

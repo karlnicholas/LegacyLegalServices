@@ -1,7 +1,7 @@
 package opca.view;
 
 import java.util.*;
-import java.util.function.BiFunction;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import service.Client;
@@ -80,15 +80,26 @@ public class OpinionViewBuilder {
 	        	StatuteView statuteView = findExistingStatuteView(statuteViews, statutesRoot);
 	            if ( statuteView == null ) {
 	                // else, construct one ...
-	            	statuteView = new StatuteView( (StatutesRoot)statutesRoot, 0);
+	            	statuteView = new StatuteView();
+	            	statuteView.initialize((StatutesRoot)statutesRoot, 0, null );
 	            	statuteViews.add(statuteView);
 	            }
                 addSectionViewToSectionRoot(statuteView, statutesLeaf, citation.getCountReferences());                
         	}
         }
+        trimToLevelOfInterest(statuteViews, 5, true);
         return statuteViews;
     }
 
+    /**
+     * Take statute hierarchy in statutesLeaf and merge into 
+     * ViewReference hierarchy in statuteView. Add reference counts
+     * into existing ViewReference hierarchy. 
+     * 
+     * @param statuteView existing StatuteView root
+     * @param statutesLeaf new StatutesLeaf citation
+     * @param refCount reference count of slip opinion for this statutesLeaf
+     */
 	private void addSectionViewToSectionRoot(
 		StatuteView statuteView, 
 		StatutesLeaf statutesLeaf,
@@ -103,20 +114,36 @@ public class OpinionViewBuilder {
 		// prime childrenViews
 		statuteView.incRefCount(refCount);
 		List<ViewReference> childrenViews = statuteView.getChildReferences();
-		// start stack loop.
+		// setup view parent
+		ViewReference viewParent = statuteView;
+		// start stack loop.		
 		while ( !statutesNodes.isEmpty()) {
 			StatutesNode statutesNode = statutesNodes.pop();
 			// do childrenViews check
-			childrenViews = checkChildrenViews(childrenViews, statutesNode, refCount, SubcodeView::new);
+			viewParent = checkChildrenViews(childrenViews, statutesNode, refCount, viewParent, SubcodeView::new);
+			childrenViews = viewParent.getChildReferences(); 
 		}
-		checkChildrenViews(childrenViews, statutesLeaf, refCount, SectionView::new);
+		checkChildrenViews(childrenViews, statutesLeaf, refCount, viewParent, SectionView::new);
 	}
 	
-	private List<ViewReference> checkChildrenViews(
+	/**
+	 * Check to see if the statutesBaseClass is in the existing childrenViews
+	 * by checking title though might change it to fullFacet.
+	 * Create new viewReference if needed with statutesBaseClass and refCount.
+	 * Return  the childrenViews of new or existing childView.
+	 * 
+	 * @param childrenViews list of ViewReferences to check against.
+	 * @param statutesBaseClass of statutesNode or StatutesLeaf
+	 * @param refCount of statutesBaseClass 
+	 * @param viewReferenceConstructor function to create new ViewReference if needed
+	 * @return childrenViews of next level in hierarchy.
+	 */
+	private ViewReference checkChildrenViews(
 		List<ViewReference> childrenViews, 
 		StatutesBaseClass statutesBaseClass,
 		int refCount, 
-		BiFunction<StatutesBaseClass, Integer, ViewReference> viewReferenceConstructor
+		ViewReference parent, 
+		Supplier<ViewReference> viewReferenceConstructor 
 	) {
 		boolean found = false;
 		ViewReference childView = null;
@@ -130,68 +157,33 @@ public class OpinionViewBuilder {
 		}
 		if ( found ) {
 			childView.incRefCount(refCount);
-			return childView.getChildReferences(); 
+			return childView; 
 		} else {
-			ViewReference viewReference = viewReferenceConstructor.apply(statutesBaseClass, refCount);
+			ViewReference viewReference = viewReferenceConstructor.get();
+			viewReference.initialize(statutesBaseClass, refCount, parent);
 			childrenViews.add(viewReference);
-			return viewReference.getChildReferences();
+			return viewReference;
 		}		
 	}
 
 	/**
-	 * If there isn't a sectionView at the end of the chain then need to remove entire tree(branch)
-	 * Also, shouldn't there be incremented citation counts for removed items?
-	 * @param levelOfInterest
-	 * @param removeCodes
+	 * Trim the ViewReference hierarchy where and refCount less than levelOfInterest. 
+	 * If removeStatuteViews then remove any statuteViews that don't meet requirement. 
+	 * 
+	 * If there isn't a sectionView at the end of the chain then need to remove entire tree(branch).
+	 *
+	 * @param levelOfInterest level to trim to.
+	 * @param removeStatuteViews remove statuteViews
 	 */
-/*    
-	public void trimToLevelOfInterest( int levelOfInterest, boolean removeCodes) {
-		Iterator<StatuteView> ci = statutes.iterator();
+	private void trimToLevelOfInterest( List<StatuteView> statuteViews, int levelOfInterest, boolean removeStatuteViews) {
+		Iterator<StatuteView> ci = statuteViews.iterator();
 		while ( ci.hasNext() ) {
 			StatuteView statuteView = ci.next();
 			statuteView.trimToLevelOfInterest( levelOfInterest );
-			if (removeCodes) {
+			if (removeStatuteViews) {
 			    if ( statuteView.getRefCount() < levelOfInterest )
 			        ci.remove();
 			}
-		}
-	}
-*/
-	/**
-	 * Use decorator pattern to Override equals and hashCode
-	 * @author karln
-	 *
-	 */
-	class SectionViewOverrides {
-		private final SectionView sectionView;
-		SectionViewOverrides(SectionView sectionView) {
-			this.sectionView = sectionView;
-		}
-		public SectionView getSectionView() {
-			return sectionView;
-		}
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + sectionView.getTitle().hashCode();
-			return result;
-		}
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (!(obj instanceof SectionViewOverrides))
-				return false;
-			SectionViewOverrides other = (SectionViewOverrides) obj;
-			if (sectionView == null) {
-				if (other.sectionView != null)
-					return false;
-			} else if (!sectionView.getTitle().equals(other.sectionView.getTitle()))
-				return false;
-			return true;
 		}
 	}
     /**
@@ -211,7 +203,6 @@ public class OpinionViewBuilder {
     			break;
     		}
     	}
-
 		StatutesBaseClass returnBaseClass = null;
     	if ( subPaths != null ) {
 			StatutesRoot statutesRoot = (StatutesRoot)subPaths.get(0);

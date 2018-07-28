@@ -2,8 +2,11 @@ package opca.view;
 
 import java.util.*;
 
-import statutes.SectionNumber;
-import statutes.StatutesRoot;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import statutes.StatutesBaseClass;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,34 +15,28 @@ import statutes.StatutesRoot;
  * Time: 3:26 PM
  * To change this template use File | Settings | File Templates.
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class StatuteView extends ViewReference implements Comparable<StatuteView> {
-    // This is holding the "chapter" section that is of interest ..
-    private int cumulativeRefCount;
-    private ArrayList<ViewReference> childReferences;
-    
-    // Well, this should really be the toplevel object in the codes hierarchy ..
-    // but, lets set it to this for now, come back to it later ..
+
     private String fullFacet; 
     private String title; 
     private String shortTitle;
-    
-	private int score;
-	private int importance;    
-	
-    // the old one was .. Section section, OpinionSection opSectionReference
-    // Section section, OpinionSection opSectionReference
-    public StatuteView(StatutesRoot statutesRoot, int refCount) {
-//        this.statutesBaseClass = code;
-//        this.leafBaseClass = leafBaseClass;
-    	cumulativeRefCount = refCount;
+    private int refCount;
+    private ArrayList<ViewReference> childReferences;
+
+	/**
+	 * 
+	 * @param statutesRoot
+	 * @param refCount
+	 */
+	@Override
+    public void initialize(StatutesBaseClass statutesRoot, int refCount, ViewReference parent) {
+    	this.refCount = refCount;
     	fullFacet = statutesRoot.getFullFacet();
     	title = statutesRoot.getTitle();
     	shortTitle = statutesRoot.getShortTitle();
-    	
         childReferences = new ArrayList<ViewReference>();
-//        queue = new QueueUtility(); 
-        // even so .. we'll have think about this .. 
-        // no references initially .. 
     }
     
     public void trimToLevelOfInterest( int levelOfInterest ) {
@@ -81,23 +78,16 @@ public class StatuteView extends ViewReference implements Comparable<StatuteView
     	this.childReferences = childReferences;
     }
     public int getRefCount() {
-        return cumulativeRefCount;
-    }
-    public void setRefCount(int refCount) {
-        cumulativeRefCount = refCount;
+        return refCount;
     }
     public int incRefCount(int amount) {
-    	cumulativeRefCount = cumulativeRefCount + amount;
-        return cumulativeRefCount;
+    	refCount = refCount + amount;
+        return refCount;
     }
-            
-	public void addReference(ViewReference opReference) {
-		childReferences.add(opReference);
-	}
-	public SectionNumber getSectionNumber() {
-		// return nothing
-		return null;
-	}
+    public void setRefCount(int count) {
+        refCount = count;
+    }
+
 	public boolean iterateSections(IterateSectionsHandler handler) {
 		Iterator<ViewReference> rit = childReferences.iterator();
 		while ( rit.hasNext() ) {
@@ -116,10 +106,7 @@ public class StatuteView extends ViewReference implements Comparable<StatuteView
 		}
 		return (SectionView) tRef;
 	}
-*/	
-	public void setSectionNumber(SectionNumber sectionNumber) {
-		// do nothing
-	}
+
 	// view layer support
 	@Override
 	public List<SectionView> getSections() {
@@ -139,6 +126,7 @@ public class StatuteView extends ViewReference implements Comparable<StatuteView
 		};
 		return referenceList;
 	}
+*/	
 	public List<SectionView> getSectionViews() {
 		final List<SectionView> sectionList = new ArrayList<SectionView>();
 		iterateSections(new IterateSectionsHandler() {			
@@ -163,22 +151,6 @@ public class StatuteView extends ViewReference implements Comparable<StatuteView
     	return ("§§ " + statuteRange.toString());
 	}
 */	
-	public int getScore() {
-		return score;
-	}
-	public void setScore(int score) {
-		this.score = score;
-	}
-	public int getImportance() {
-		return importance;
-	}
-	public void setImportance(int importance) {
-		this.importance = importance;
-	}
-
-	public int getCumulativeRefCount() {
-		return cumulativeRefCount;
-	}
 	public String getFullFacet() {
 		return fullFacet;
 	}
@@ -186,6 +158,7 @@ public class StatuteView extends ViewReference implements Comparable<StatuteView
 	public String getTitle() {
 		return title;
 	}
+	@Override
 	public String getShortTitle() {
 		return shortTitle;
 	}
@@ -207,8 +180,10 @@ public class StatuteView extends ViewReference implements Comparable<StatuteView
 		StatuteView other = (StatuteView) obj;
 		return fullFacet.equals(other.getFullFacet());
 	}
+
 	@Override
 	public ViewReference getParent() {
 		return null;
 	}
+
 }

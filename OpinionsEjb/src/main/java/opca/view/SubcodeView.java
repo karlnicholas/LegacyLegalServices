@@ -2,8 +2,12 @@ package opca.view;
 
 import java.util.*;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
 import statutes.StatutesBaseClass;
-import statutes.StatutesNode;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,27 +16,28 @@ import statutes.StatutesNode;
  * Time: 3:26 PM
  * To change this template use File | Settings | File Templates.
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class SubcodeView extends ViewReference {
-    // This is holding the "chapter" section that is of interest ..
-//	private StatutesNode statutesNode;
     private String fullFacet;
 	private String part;
     private String partNumber;
     private String title;
-	
-    private int cumulativeRefCount;
+    private int refCount;
+    @XmlTransient
+    private ViewReference parent;
     // and pointers to under Chapters, Parts, Articles, etc
     private ArrayList<ViewReference> childReferences;
-	private ViewReference parent;
 
-    public SubcodeView( StatutesBaseClass statutesNode, int refCount) {
+    @Override
+    public void initialize( StatutesBaseClass statutesNode, int refCount, ViewReference parent) {
     	childReferences = new ArrayList<ViewReference>();
-//    	this.statutesNode = statutesNode;
     	this.fullFacet = statutesNode.getFullFacet();
     	this.part = statutesNode.getPart();
     	this.partNumber = statutesNode.getPartNumber();
     	this.title = statutesNode.getTitle();
-    	cumulativeRefCount = refCount;
+    	this.refCount = refCount;
+    	this.parent = parent;
     }
     
 	public void trimToLevelOfInterest( int levelOfInterest ) {
@@ -50,21 +55,17 @@ public class SubcodeView extends ViewReference {
     }
 
     public int compareTo( SubcodeView statutesNode ) {
-        return cumulativeRefCount - statutesNode.getRefCount();
+        return refCount - statutesNode.getRefCount();
     }
 
     public int getRefCount() {
-        return cumulativeRefCount;
+        return refCount;
     }
 
     public int incRefCount(int amount) {
-    	cumulativeRefCount = cumulativeRefCount + amount;
-        return cumulativeRefCount;
+    	refCount = refCount + amount;
+        return refCount;
     }
-
-    public void addReference(ViewReference opReference) {
-		childReferences.add(opReference);
-	}
 
 	public ArrayList<ViewReference> getChildReferences() {
 		return childReferences;
@@ -78,6 +79,7 @@ public class SubcodeView extends ViewReference {
 		return true;
 	}
 
+/*
 	public SectionView getSectionView() {
 		ViewReference tRef = this;
 		while ( !(tRef instanceof SectionView) ) {
@@ -105,15 +107,7 @@ public class SubcodeView extends ViewReference {
 		};
 		return referenceList;
 	}
-
-	@Override
-	public ViewReference getParent() {
-		return parent;
-	}
-	public void setParent(ViewReference parent) {
-		this.parent = parent;
-	}
-
+*/
 	public String getFullFacet() {
 		return fullFacet;
 	}
@@ -130,8 +124,17 @@ public class SubcodeView extends ViewReference {
 	public String getTitle() {
 		return title;
 	}
+    @Override
+	public ViewReference getParent() {
+		return parent;
+	}
 
-	public int getCumulativeRefCount() {
-		return cumulativeRefCount;
-	}	
+	public void setParent(ViewReference parent) {
+		this.parent = parent;
+	}
+
+	@Override
+	public String getShortTitle() {
+		return title;
+	}
 }

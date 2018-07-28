@@ -26,14 +26,14 @@ xmlns:composite="http://xmlns.jcp.org/jsf/composite">
     </div>
     <ui:fragment rendered="#{opinionsController.opinionOpen(cc.attrs.view.name)}">
       <div class="openstat wrap">
-        <ui:repeat var="statute" value="#{cc.attrs.view.statutes}" >
+        <ui:repeat var="section" value="#{cc.attrs.view.sectionViews}" >
           <div class="openstat srow"><span class="casestar">
-          <ui:repeat var="i" value="#{opinionsController.repeatNTimes(statute.importance)}">
+          <ui:repeat var="i" value="#{opinionsController.repeatNTimes(section.importance)}">
               <span class="glyphicon glyphicon-star"/>      
           </ui:repeat>
           </span>
-          <span class="openstat code titlepath"><h:outputText value="#{statute.displayTitlePath}" /></span>
-          <span class="openstat code sections"><h:outputText value="#{statute.displaySections}" /></span>
+          <span class="openstat code titlepath"><h:outputText value="#{section.displayTitlePath}" /></span>
+          <span class="openstat code sections"><h:outputText value="#{section.displaySections}" /></span>
           </div>
         </ui:repeat>
       </div>

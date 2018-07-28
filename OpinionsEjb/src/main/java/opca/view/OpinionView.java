@@ -14,6 +14,9 @@ public class OpinionView {
 	private String name;
 	private String title;
 	private Date opinionDate;
+	private String fileName;
+	private String disposition;
+	private String summary;
 	
 	public OpinionView() {
 		super();
@@ -27,13 +30,25 @@ public class OpinionView {
 		this.name = name;
 		this.statutes = statutes;
 		this.title = slipOpinion.getTitle();
-		this.setOpinionDate(slipOpinion.getOpinionDate());
+		this.fileName = slipOpinion.getFileName();
+		this.opinionDate = slipOpinion.getOpinionDate();
+		this.disposition = slipOpinion.getDisposition();
+		this.summary = slipOpinion.getSummary();
+		
 		Collections.sort(this.statutes);
 //		Collections.reverse(this.statutes);
 		this.cases = cases;
 		Collections.sort(this.cases);
 //		Collections.reverse(this.cases);
 	}
+	
+    public List<SectionView> getSectionViews() {
+    	List<SectionView> sectionViews = new ArrayList<>();
+    	for ( StatuteView statueView: statutes ) {
+    		sectionViews.addAll( statueView.getSectionViews() );
+    	}
+    	return sectionViews;
+    }
 	// supporting methods for JSF pages
 	public String getCondensedStatuteInfo() {
 		StringBuilder sb = new StringBuilder();
@@ -78,19 +93,24 @@ public class OpinionView {
 		}
 		return sb.toString();
 	}
+	
 	// end: supporting methods for JSF pages 
 	public void scoreCitations( OpinionViewBuilder opinionViewBuilder) {
 		scoreSlipOpinionStatutes();
 		// create a union of all statutes from the slipOpinion and the cited cases
-		List<StatuteView> statuteUnion = new ArrayList<>(getStatutes());
+		List<SectionView> sectionUnion = new ArrayList<>(getSectionViews());
 		
 		List<OpinionView> tempOpinionViewList = new ArrayList<>();
 		// need a collection StatutueCitations.
 //		opinionViewBuilder.getParserResults().getOpinionTable()
 //        for ( OpinionBase opinionCited: getOpinionCitations() ) {
 		for ( OpinionBase opinionCited: opinionViewBuilder.getParserResults().getOpinionTable() ) {
-            List<StatuteView> statuteViews = opinionViewBuilder.createStatuteViews(opinionCited);
-            rankStatuteViews(statuteViews);
+			List<StatuteView> statuteViews = opinionViewBuilder.createStatuteViews(opinionCited);
+        	List<SectionView> sectionViews = new ArrayList<>();
+            for( StatuteView statuteView: statuteViews ) {
+            	sectionViews.addAll(statuteView.getSectionViews());
+            }
+            rankSectionViews(sectionViews);
             // create a temporary OpinionView to use its functions
             // store the opinionView in the Cases list.
             List<CaseView> tempCaseViews = new ArrayList<>();
@@ -114,19 +134,18 @@ public class OpinionView {
 */    				
             // save this for next loop
             tempOpinionViewList.add(tempOpinionView);
-            for ( StatuteView statuteView: tempOpinionView.getStatutes() ) {
-            	if ( !statuteUnion.contains(statuteView) ) {
-            		statuteUnion.add(statuteView);
+            for ( SectionView sectionView: sectionViews ) {
+            	if ( !sectionUnion.contains(sectionView) ) {
+            		sectionUnion.add(sectionView);
             	}
             }
-            
         }
         
         // create a ranked slipAdjacencyMatrix
-        int[] slipAdjacencyMatrix = createAdjacencyMatrix(statuteUnion, statutes);
+        int[] slipAdjacencyMatrix = createAdjacencyMatrix(sectionUnion, getSectionViews());
         for ( OpinionView tempOpinionView: tempOpinionViewList ) {
 
-            int[] opinionAdjacencyMatrix = createAdjacencyMatrix(statuteUnion, tempOpinionView.getStatutes());
+            int[] opinionAdjacencyMatrix = createAdjacencyMatrix(sectionUnion, tempOpinionView.getSectionViews());
             // find the distance between the matrices
             int sum = 0;
             for ( int i=slipAdjacencyMatrix.length-1; i >= 0; --i ) {
@@ -171,23 +190,23 @@ public class OpinionView {
 	 * @return
 	 */
 	private int[] createAdjacencyMatrix(
-		List<StatuteView> statuteUnion,
-		List<StatuteView> statuteViews
+		List<SectionView> sectionUnion,
+		List<SectionView> sectionViews
 	) {
-		int[] adjacencyMatrix = new int[statuteUnion.size()];
+		int[] adjacencyMatrix = new int[sectionUnion.size()];
 		int i = 0;
-		for (StatuteView unionStatuteView: statuteUnion ) {
-			int idx = statuteViews.indexOf(unionStatuteView);
-			adjacencyMatrix[i++] = idx == -1 ? 0 : statuteViews.get(idx).getImportance(); 
+		for (SectionView unionSectionView: sectionUnion ) {
+			int idx = sectionViews.indexOf(unionSectionView);
+			adjacencyMatrix[i++] = idx == -1 ? 0 : sectionViews.get(idx).getImportance(); 
 		}
 		return adjacencyMatrix;
 	}
 
 	private void scoreSlipOpinionStatutes() {
-		rankStatuteViews(statutes);
-		Collections.sort(statutes, new Comparator<StatuteView>() {
+		rankSectionViews(getSectionViews());
+		Collections.sort(getSectionViews(), new Comparator<SectionView>() {
 			@Override
-			public int compare(StatuteView o1, StatuteView o2) {
+			public int compare(SectionView o1, SectionView o2) {
 				return o2.getImportance() - o1.getImportance();
 			}
 		});
@@ -196,16 +215,16 @@ public class OpinionView {
 	 * Rank from 0-4
 	 * @param statuteViews
 	 */
-	private void rankStatuteViews(List<StatuteView> statuteViews) {
+	private void rankSectionViews(List<SectionView> sectionViews) {
 		long maxCount = 0;
-		for ( StatuteView c: statuteViews) {
+		for ( SectionView c: sectionViews) {
 			if ( c.getRefCount() > maxCount )
 				maxCount = c.getRefCount();
 		}
 		// Don't scale any refCounts. If less than 4 then leave as is.
 		if ( maxCount < 4) maxCount = 4;
 		double d = ((maxCount+1) / 5.0);
-		for ( StatuteView c: statuteViews ) {
+		for ( SectionView c: sectionViews ) {
 			c.setImportance((int)(((double)c.getRefCount())/d));
 		}
 	}
@@ -250,6 +269,24 @@ public class OpinionView {
 	}
 	public void setOpinionDate(Date opinionDate) {
 		this.opinionDate = opinionDate;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	public String getDisposition() {
+		return disposition;
+	}
+	public void setDisposition(String disposition) {
+		this.disposition = disposition;
+	}
+	public String getSummary() {
+		return summary;
+	}
+	public void setSummary(String summary) {
+		this.summary = summary;
 	}
 }
 
