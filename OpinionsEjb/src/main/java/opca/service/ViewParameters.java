@@ -8,13 +8,9 @@ public class ViewParameters {
 	public String navbarText;
 	public Date sd;
 	public Date ed;
-	public boolean compressCodeReferences;
-	public int levelOfInterest;
-	public ViewParameters(Date sd, Date ed, boolean compressCodeReferences, int levelOfInterest) {
+	public ViewParameters(Date sd, Date ed) {
 		this.sd = sd;
 		this.ed = ed;
-		this.compressCodeReferences = compressCodeReferences;
-		this.levelOfInterest = levelOfInterest;
 	}
 }
 

@@ -79,7 +79,7 @@ public class OpinionsController implements Serializable {
     public List<OpinionView> getOpinionViewList() {
 		// done this way so that this information is not serialized in the viewScope
     	Date[] dates = opinionViewSingleton.getReportDates().get(currentIndex);
-		ViewParameters viewInfo = new ViewParameters(dates[0],dates[1],true,2);
+		ViewParameters viewInfo = new ViewParameters(dates[0],dates[1]);
 		return opinionViewSingleton.getOpinionCasesForAccount(viewInfo);
 	}
 	public String getStartDate() {

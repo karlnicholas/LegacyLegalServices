@@ -55,8 +55,8 @@ public class OpinionViewCache {
 	}
 
 	private List<OpinionView> initOpinionCases() {
-		ViewParameters viewInfo = new ViewParameters(firstDate, lastDate, true, 2);
-		return getOpinionCases(viewInfo.sd, viewInfo.ed, viewInfo.compressCodeReferences, viewInfo.levelOfInterest);
+//		ViewParameters viewInfo = new ViewParameters(firstDate, lastDate);
+		return getOpinionCases();
 	}
 	
 	public List<Date[]> initReportDates() {
@@ -136,12 +136,7 @@ public class OpinionViewCache {
 		lastDay.add(Calendar.WEEK_OF_YEAR, 1);
 	}
 	
-	public List<OpinionView> getOpinionCases(
-		Date sd, 
-		Date ed, 
-		boolean compressCodeReferences, 
-		int levelOfInterest
-	) {
+	public List<OpinionView> getOpinionCases() {
 		List<OpinionView> opinionViews = new ArrayList<OpinionView>();
         Client statutesRs = new RestServicesFactory().connectStatutesRsService();
 		//
@@ -168,10 +163,6 @@ public class OpinionViewCache {
 			slipOpinion.setOpinionCitations( opinionOpinionCitations.get( opinionOpinionCitations.indexOf(slipOpinion)).getOpinionCitations() );
 			ParsedOpinionCitationSet parserResults = new ParsedOpinionCitationSet(slipOpinion);
 			OpinionView opinionView = opinionViewBuilder.buildOpinionView(slipOpinion, parserResults);
-//			opinionView.combineCommonSections();
-//			opinionView.trimToLevelOfInterest(levelOfInterest, true);
-			opinionView.scoreCitations(opinionViewBuilder);
-			
 			opinionViews.add(opinionView);
 		}
 		return opinionViews;

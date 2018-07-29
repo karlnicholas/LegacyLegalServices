@@ -110,7 +110,7 @@ public class SystemService {
         for ( User user: users ) {
         	if ( !user.isOptout() ) {
 	            // Prepare the evaluation context
-        		ViewParameters viewInfo= new ViewParameters(calLastWeek.getTime(), calNow.getTime(), true, 2);
+        		ViewParameters viewInfo= new ViewParameters(calLastWeek.getTime(), calNow.getTime());
         		sendGridMailer.sendOpinionReport(user, opinionViewSingleton.getOpinionCasesForAccount(viewInfo));
 	            logger.info("Case Report sent: " + user.getEmail());
 	            //            System.out.println("Resend = " + account.getEmail());

@@ -4,6 +4,7 @@ import java.util.*;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -18,7 +19,7 @@ import statutes.StatutesBaseClass;
  * To change this template use File | Settings | File Templates.
  */
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.PROPERTY)
 public class SectionView extends ViewReference { 
 	//	private static final Logger logger = Logger.getLogger(OpinionSection.class.getName());
 	// This stuff holds the reference .. 
@@ -31,7 +32,6 @@ public class SectionView extends ViewReference {
     private int refCount;
 	private int score;
 	private int importance;    
-    @XmlTransient
     private ViewReference parent;
     
     // This holds the CodeRefence to the 
@@ -73,16 +73,19 @@ public class SectionView extends ViewReference {
 		return true;
 	}
 
+	@XmlTransient
     public StatuteRange getStatuteRange() {
         return statuteRange;
     }
 
+	@XmlTransient
     public String getTitle() {
         return title;
     }
     public void setTitle( String code) {
     	this.title = code;
     }
+	@XmlTransient
     public int getRefCount() {
         return refCount;
     }
@@ -110,6 +113,7 @@ public class SectionView extends ViewReference {
 		// do nothing
 	}
 
+	@XmlTransient
 	public ArrayList<ViewReference> getChildReferences() {
 		// nothing to return
 		return null;
@@ -123,6 +127,7 @@ public class SectionView extends ViewReference {
 		return handler.handleOpinionSection(this);
 	}
 	
+	@XmlTransient
 	public SectionView getSectionView() {
 		return this;
 	}
@@ -132,6 +137,7 @@ public class SectionView extends ViewReference {
     }
 
     @Override
+	@XmlTransient
 	public ViewReference getParent() {
 		return parent;
 	}
@@ -139,6 +145,7 @@ public class SectionView extends ViewReference {
 	public void setParent(ViewReference parent) {
 		this.parent = parent;
 	}
+	@XmlTransient
 	public int getScore() {
 		return score;
 	}
@@ -152,10 +159,12 @@ public class SectionView extends ViewReference {
 		this.importance = importance;
 	}
 
+	@XmlElement
 	public String getDisplayTitlePath() {
     	List<String> shortTitles = getShortTitles();
     	return shortTitles.toString().replace("[", "").replace("]", "") + ", " + title;
 	}
+	@XmlElement
 	public String getDisplaySections() {
 		if ( statuteRange.geteNumber().getSectionNumber() == null ) {
 	    	return ("§ " + statuteRange.getsNumber().toString());
@@ -164,7 +173,7 @@ public class SectionView extends ViewReference {
 	}
 
     
-	public List<String> getShortTitles() {
+	private List<String> getShortTitles() {
     	ArrayList<ViewReference> baseViews = new ArrayList<ViewReference>();
     	ViewReference parent = this.parent;
     	while ( parent != null ) {
@@ -180,6 +189,7 @@ public class SectionView extends ViewReference {
 	}
 
 	@Override
+    @XmlTransient
 	public String getShortTitle() {
 		return title;
 	}

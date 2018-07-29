@@ -2,14 +2,24 @@ package opca.view;
 
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class CaseView implements Comparable<CaseView> {
-	private final String title;
-	private final String citation;
-	private final Date opinionDate;
-	private final int countReferringOpinions;
+	private String title;
+	private String citation;
+	private Date opinionDate;
+	@XmlTransient
+	private int countReferringOpinions;
+	@XmlTransient
 	private int score;
 	private int importance;
 	
+	public CaseView() {}
 	public CaseView(String title, String citation, Date opinionDate, int countReferringOpinions) {
 		this.title = title;
 		this.citation = citation;

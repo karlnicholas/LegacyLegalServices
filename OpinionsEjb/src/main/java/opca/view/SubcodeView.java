@@ -135,6 +135,6 @@ public class SubcodeView extends ViewReference {
 
 	@Override
 	public String getShortTitle() {
-		return title;
+		return part + " " + partNumber;
 	}
 }

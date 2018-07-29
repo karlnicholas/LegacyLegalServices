@@ -4,7 +4,9 @@ import java.util.*;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import statutes.StatutesBaseClass;
 
@@ -16,7 +18,7 @@ import statutes.StatutesBaseClass;
  * To change this template use File | Settings | File Templates.
  */
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.PROPERTY)
 public class StatuteView extends ViewReference implements Comparable<StatuteView> {
 
     private String fullFacet; 
@@ -71,12 +73,14 @@ public class StatuteView extends ViewReference implements Comparable<StatuteView
     	}
     }
 */
+    @XmlTransient
     public ArrayList<ViewReference> getChildReferences() {
     	return this.childReferences;
     }
     public void setChildReferences(ArrayList<ViewReference> childReferences) {
     	this.childReferences = childReferences;
     }
+    @XmlTransient
     public int getRefCount() {
         return refCount;
     }
@@ -127,6 +131,7 @@ public class StatuteView extends ViewReference implements Comparable<StatuteView
 		return referenceList;
 	}
 */	
+    @XmlTransient
 	public List<SectionView> getSectionViews() {
 		final List<SectionView> sectionList = new ArrayList<SectionView>();
 		iterateSections(new IterateSectionsHandler() {			
@@ -151,13 +156,16 @@ public class StatuteView extends ViewReference implements Comparable<StatuteView
     	return ("§§ " + statuteRange.toString());
 	}
 */	
+    @XmlTransient
 	public String getFullFacet() {
 		return fullFacet;
 	}
+    @XmlTransient
 	@Override
 	public String getTitle() {
 		return title;
 	}
+    @XmlTransient
 	@Override
 	public String getShortTitle() {
 		return shortTitle;
@@ -182,6 +190,7 @@ public class StatuteView extends ViewReference implements Comparable<StatuteView
 	}
 
 	@Override
+    @XmlTransient
 	public ViewReference getParent() {
 		return null;
 	}

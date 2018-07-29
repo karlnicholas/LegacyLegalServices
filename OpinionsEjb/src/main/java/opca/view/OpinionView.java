@@ -2,9 +2,17 @@ package opca.view;
 
 import java.util.*;
 
-import opca.model.OpinionBase;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import opca.model.SlipOpinion;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.PROPERTY)
 public class OpinionView {
 	private static final int MAX_INFO_LENGTH = 75;
 	// reverse sorted by the constructor.
@@ -35,13 +43,14 @@ public class OpinionView {
 		this.disposition = slipOpinion.getDisposition();
 		this.summary = slipOpinion.getSummary();
 		
-		Collections.sort(this.statutes);
+//		Collections.sort(this.statutes);
 //		Collections.reverse(this.statutes);
 		this.cases = cases;
-		Collections.sort(this.cases);
+//		Collections.sort(this.cases);
 //		Collections.reverse(this.cases);
 	}
 	
+    @XmlElement
     public List<SectionView> getSectionViews() {
     	List<SectionView> sectionViews = new ArrayList<>();
     	for ( StatuteView statueView: statutes ) {
@@ -93,149 +102,7 @@ public class OpinionView {
 		}
 		return sb.toString();
 	}
-	
-	// end: supporting methods for JSF pages 
-	public void scoreCitations( OpinionViewBuilder opinionViewBuilder) {
-		scoreSlipOpinionStatutes();
-		// create a union of all statutes from the slipOpinion and the cited cases
-		List<SectionView> sectionUnion = new ArrayList<>(getSectionViews());
-		
-		List<OpinionView> tempOpinionViewList = new ArrayList<>();
-		// need a collection StatutueCitations.
-//		opinionViewBuilder.getParserResults().getOpinionTable()
-//        for ( OpinionBase opinionCited: getOpinionCitations() ) {
-		for ( OpinionBase opinionCited: opinionViewBuilder.getParserResults().getOpinionTable() ) {
-			List<StatuteView> statuteViews = opinionViewBuilder.createStatuteViews(opinionCited);
-        	List<SectionView> sectionViews = new ArrayList<>();
-            for( StatuteView statuteView: statuteViews ) {
-            	sectionViews.addAll(statuteView.getSectionViews());
-            }
-            rankSectionViews(sectionViews);
-            // create a temporary OpinionView to use its functions
-            // store the opinionView in the Cases list.
-            List<CaseView> tempCaseViews = new ArrayList<>();
-            CaseView caseView = findCaseView(opinionCited);
-            tempCaseViews.add( caseView );
-            OpinionView tempOpinionView = new OpinionView();
-            tempOpinionView.setStatutes(statuteViews);
-            tempOpinionView.setCases(tempCaseViews); 
-//            tempOpinionView.combineCommonSections();
-//            tempOpinionView.trimToLevelOfInterest(2, true);
-            if ( tempOpinionView.getStatutes().size() == 0 ) {
-            	caseView.setScore(-1);
-            	// well, just remove cases with no interesting citations
-            	cases.remove(caseView);
-            	continue;
-            }
-/*            
-        	tempOpinionView.getStatutes().forEach(statuteView->{
-        		System.out.println(statuteView.getDisplaySections()+"-"+statuteView.getStatutesBaseClass().getShortTitle()+","+statuteView.getRefCount()+","+opinionCited.getOpinionKey()+","+getName()+",,");
-    		});
-*/    				
-            // save this for next loop
-            tempOpinionViewList.add(tempOpinionView);
-            for ( SectionView sectionView: sectionViews ) {
-            	if ( !sectionUnion.contains(sectionView) ) {
-            		sectionUnion.add(sectionView);
-            	}
-            }
-        }
-        
-        // create a ranked slipAdjacencyMatrix
-        int[] slipAdjacencyMatrix = createAdjacencyMatrix(sectionUnion, getSectionViews());
-        for ( OpinionView tempOpinionView: tempOpinionViewList ) {
-
-            int[] opinionAdjacencyMatrix = createAdjacencyMatrix(sectionUnion, tempOpinionView.getSectionViews());
-            // find the distance between the matrices
-            int sum = 0;
-            for ( int i=slipAdjacencyMatrix.length-1; i >= 0; --i ) {
-            	sum = sum + Math.abs( slipAdjacencyMatrix[i] - opinionAdjacencyMatrix[i] ); 
-            }
-            tempOpinionView.getCases().get(0).setScore(sum);
-        }
-        // rank "scores"
-        // note that scores is actually a distance computation
-        // and lower is better
-        // so the final result is subtracted from 4
-        // because importance is higher is better.
-    	long maxScore = 0;
-		for ( CaseView c: cases ) {
-			if ( c.getScore() > maxScore )
-				maxScore = c.getScore();
-		}	
-		double d = ((maxScore+1) / 4.0);
-		for ( CaseView c: cases ) {
-			if ( c.getScore() == -1 ) {
-				c.setImportance(0);
-			} else {
-				int imp = (int)(((double)c.getScore())/d)+1;
-				c.setImportance(5-imp);
-			}
-		}	
-		Collections.sort(cases, new Comparator<CaseView>() {
-			@Override
-			public int compare(CaseView o1, CaseView o2) {
-				return o2.getImportance() - o1.getImportance();
-			}
-		});
-	}
-
-	/**
-	 * This is only a single row adjacency matrix because all of the rows
-	 * past the first row would contain 0's and they would not be used in 
-	 * the distance computation
-	 * 
-	 * @param statuteUnion
-	 * @param statuteViews
-	 * @return
-	 */
-	private int[] createAdjacencyMatrix(
-		List<SectionView> sectionUnion,
-		List<SectionView> sectionViews
-	) {
-		int[] adjacencyMatrix = new int[sectionUnion.size()];
-		int i = 0;
-		for (SectionView unionSectionView: sectionUnion ) {
-			int idx = sectionViews.indexOf(unionSectionView);
-			adjacencyMatrix[i++] = idx == -1 ? 0 : sectionViews.get(idx).getImportance(); 
-		}
-		return adjacencyMatrix;
-	}
-
-	private void scoreSlipOpinionStatutes() {
-		rankSectionViews(getSectionViews());
-		Collections.sort(getSectionViews(), new Comparator<SectionView>() {
-			@Override
-			public int compare(SectionView o1, SectionView o2) {
-				return o2.getImportance() - o1.getImportance();
-			}
-		});
-	}
-	/**
-	 * Rank from 0-4
-	 * @param statuteViews
-	 */
-	private void rankSectionViews(List<SectionView> sectionViews) {
-		long maxCount = 0;
-		for ( SectionView c: sectionViews) {
-			if ( c.getRefCount() > maxCount )
-				maxCount = c.getRefCount();
-		}
-		// Don't scale any refCounts. If less than 4 then leave as is.
-		if ( maxCount < 4) maxCount = 4;
-		double d = ((maxCount+1) / 5.0);
-		for ( SectionView c: sectionViews ) {
-			c.setImportance((int)(((double)c.getRefCount())/d));
-		}
-	}
-	public CaseView findCaseView(OpinionBase opinionCited) {
-		for ( CaseView caseView: cases) {
-			if ( caseView.getCitation().equals(opinionCited.getOpinionKey().toString())) {
-				return caseView;
-			}
-		}
-		return null;
-	}
+    @XmlTransient
     public List<StatuteView> getStatutes() {
         return statutes;
     }
@@ -254,6 +121,7 @@ public class OpinionView {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+    @XmlTransient
 	public List<CaseView> getCases() {
 		return cases;
 	}
@@ -264,6 +132,8 @@ public class OpinionView {
     public String toString() {
     	return name + " " + this.getTitle();
     }
+	@XmlElement
+	@XmlJavaTypeAdapter(DateTimeAdapter.class)
 	public Date getOpinionDate() {
 		return opinionDate;
 	}
@@ -276,12 +146,14 @@ public class OpinionView {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
+    @XmlTransient
 	public String getDisposition() {
 		return disposition;
 	}
 	public void setDisposition(String disposition) {
 		this.disposition = disposition;
 	}
+    @XmlTransient
 	public String getSummary() {
 		return summary;
 	}
