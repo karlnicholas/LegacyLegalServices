@@ -2,6 +2,7 @@ package opca.view;
 
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import service.Client;
@@ -73,7 +74,9 @@ public class OpinionViewBuilder {
         		// find the statutesLeaf from the Statutes service and return with all parents filled out.
 	            StatutesLeaf statutesLeaf = findStatutesLeaf(responseArray, citation.getStatuteCitation().getStatuteKey());
 	            if ( statutesLeaf == null ) {
-	            	errorKeys.add(citation.getStatuteCitation().getStatuteKey());
+	            	if ( logger.getLevel() == Level.FINE ) {
+	            		errorKeys.add(citation.getStatuteCitation().getStatuteKey());
+	            	}
 	            	continue;
 	            }
 	            // get the root
@@ -93,8 +96,8 @@ public class OpinionViewBuilder {
         	}
         }
         trimToLevelOfInterest(statuteViews, 5, true);
-        if ( errorKeys.size() > 0 ) {
-        	logger.info("Error Keys: " + Arrays.toString(errorKeys.toArray()));
+        if ( errorKeys.size() > 0 && logger.getLevel() == Level.FINE) {
+        	logger.fine("Error Keys: " + Arrays.toString(errorKeys.toArray()));
         }
         return statuteViews;
     }
@@ -241,18 +244,14 @@ public class OpinionViewBuilder {
 	public ParsedOpinionCitationSet getParserResults() {
 		return parserResults;
 	}    
-
 	
 	// end: supporting methods for JSF pages 
 	private void scoreCitations() {
 		scoreSlipOpinionStatutes();
 		// create a union of all statutes from the slipOpinion and the cited cases
-		List<SectionView> sectionUnion = new ArrayList<>(sectionViews);
-		
+		List<SectionView> sectionUnion = new ArrayList<>(sectionViews);		
 		List<OpinionView> tempOpinionViewList = new ArrayList<>();
 		// need a collection StatutueCitations.
-//		opinionViewBuilder.getParserResults().getOpinionTable()
-//        for ( OpinionBase opinionCited: getOpinionCitations() ) {
 		for ( OpinionBase opinionCited: getParserResults().getOpinionTable() ) {
 			List<StatuteView> statuteViews = createStatuteViews(opinionCited);
         	List<SectionView> sectionViews = new ArrayList<>();

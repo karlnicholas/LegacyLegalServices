@@ -70,9 +70,16 @@ public class ScheduledService {
 //        String htmlContent = mailTemplateEngine.process("verify.html", ctx);
         logger.info("VerifyEmail's sent"  );
     }
-*/
     @Schedule(second="0", minute="27", hour="14", persistent=false)        // 04:00 am every day
     public void welcomingService() {
     	systemService.doWelcomeService();
+    }
+    public void opinionReport() {
+    	systemService.doWelcomeService();
+    }
+*/
+    @Schedule(second="0", minute="0", hour="0", persistent=false)        // 12:00 am every day
+    public void welcomingService() {
+    	systemService.sendOpinionReports();
     }
 }

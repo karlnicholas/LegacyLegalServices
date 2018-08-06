@@ -31,8 +31,8 @@ public class IndexController {
     	systemService.doWelcomeService();
     }
 
-    public void testCaseReport() {
-    	systemService.sendCaseReports();
+    public void testOpinionReport() {
+    	systemService.sendOpinionReports();
     }
 
     private String message;

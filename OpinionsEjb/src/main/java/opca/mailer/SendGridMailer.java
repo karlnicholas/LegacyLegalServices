@@ -44,7 +44,7 @@ public class SendGridMailer {
 	}
 
 	public boolean sendOpinionReport(User user, List<OpinionView> opinionCases) {
-		return sendGridPrint(new EmailInformation(user, opinionCases), "/xsl/opinionreport.xsl");
+		return sendGridEmail(new EmailInformation(user, opinionCases), "/xsl/opinionreport.xsl");
 	}
 	public boolean sendGridEmail(EmailInformation emailInformation, String emailResource) {
 		
@@ -108,9 +108,11 @@ public class SendGridMailer {
 		
 		try {
 			JAXBContext jc = JAXBContext.newInstance(EmailInformation.class);
+/*			
 		    Marshaller marshaller = jc.createMarshaller();
 		    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 		    marshaller.marshal(emailInformation, System.out);
+*/		    
 //		    return writer.toString();			// jaxbContext is a JAXBContext object from which 'o' is created.
 			// jaxbContext is a JAXBContext object from which 'o' is created.
 			JAXBSource source = new JAXBSource(jc, emailInformation);

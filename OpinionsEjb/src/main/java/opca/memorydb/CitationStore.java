@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import opca.model.OpinionBase;
-import opca.model.OpinionStatuteCitation;
 import opca.model.StatuteCitation;
 import opca.model.StatuteKey;
 import opca.parser.ParsedOpinionCitationSet;

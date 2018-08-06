@@ -34,13 +34,7 @@ public class SectionView extends ViewReference {
 	private int importance;    
     private ViewReference parent;
     
-    // This holds the CodeRefence to the 
-//    private StatutesBaseClass section;
-
     public void initialize(StatutesBaseClass statutesLeaf, int refCount, ViewReference parent) {
-    	// this is constructed without a parent and that's added later
-    	// when we build the hierarchy
-//    	logger.fine("code:" + code + ":section:" + section);
         title = statutesLeaf.getTitle();
         fullFacet = statutesLeaf.getFullFacet();
         this.refCount = refCount;
@@ -48,37 +42,13 @@ public class SectionView extends ViewReference {
         this.setParent(parent);
     }
 
-    @Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + fullFacet.hashCode();
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SectionView other = (SectionView) obj;
-		if (fullFacet == null) {
-			if (other.fullFacet != null)
-				return false;
-		} else if (!fullFacet.equals(other.fullFacet))
-			return false;
-		return true;
-	}
-
 	@XmlTransient
     public StatuteRange getStatuteRange() {
         return statuteRange;
     }
 
 	@XmlTransient
+	@Override
     public String getTitle() {
         return title;
     }
@@ -86,6 +56,7 @@ public class SectionView extends ViewReference {
     	this.title = code;
     }
 	@XmlTransient
+	@Override
     public int getRefCount() {
         return refCount;
     }
@@ -99,30 +70,23 @@ public class SectionView extends ViewReference {
         refCount = count;
     }
 
-/*    
-    public void setStatutesBaseClass( StatutesBaseClass section ) {
-    	this.section = section;
-    }
-
-    @Override
-    public StatutesBaseClass getStatutesBaseClass( ) {
-    	return section;
-    }
-*/	
 	public void addReference(ViewReference reference) {
 		// do nothing
 	}
 
 	@XmlTransient
+	@Override
 	public ArrayList<ViewReference> getChildReferences() {
 		// nothing to return
 		return null;
 	}
 	
+	@Override
 	public void trimToLevelOfInterest(int levelOfInterest) {
 		// nothing to do 
 	}
 	
+	@Override
 	public boolean iterateSections(IterateSectionsHandler handler) {
 		return handler.handleOpinionSection(this);
 	}
@@ -171,7 +135,6 @@ public class SectionView extends ViewReference {
 		}
     	return ("§§ " + statuteRange.toString());
 	}
-
     
 	private List<String> getShortTitles() {
     	ArrayList<ViewReference> baseViews = new ArrayList<ViewReference>();
@@ -193,5 +156,30 @@ public class SectionView extends ViewReference {
 	public String getShortTitle() {
 		return title;
 	}
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + fullFacet.hashCode();
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SectionView other = (SectionView) obj;
+		if (fullFacet == null) {
+			if (other.fullFacet != null)
+				return false;
+		} else if (!fullFacet.equals(other.fullFacet))
+			return false;
+		return true;
+	}
+
 }
 

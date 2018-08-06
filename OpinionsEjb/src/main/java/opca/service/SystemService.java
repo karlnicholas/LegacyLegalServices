@@ -92,8 +92,8 @@ public class SystemService {
         logger.info("Welcome service completed");
 	}
 
-	public void sendCaseReports() {
-        logger.info("Case Reports started");
+	public void sendOpinionReports() {
+        logger.info("Opinion Reports started");
         Calendar calNow = Calendar.getInstance();
         Calendar calLastWeek = Calendar.getInstance();
         int year = calLastWeek.get(Calendar.YEAR);
