@@ -24,8 +24,6 @@ import javax.persistence.Table;
  */
 
 @NamedQueries({
-	@NamedQuery(name="StatuteCitation.findByStatuteKey", 
-		query="select s from StatuteCitation s where s.statuteKey = :statuteKey"),
 	@NamedQuery(name="StatuteCitation.findStatutesForKeys", 
 		query="select s from StatuteCitation s where s.statuteKey in :keys"),
 	@NamedQuery(name="StatuteCitation.selectForTitle", 
