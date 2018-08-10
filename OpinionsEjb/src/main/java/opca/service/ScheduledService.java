@@ -1,6 +1,5 @@
 package opca.service;
 
-import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.ejb.EJB;
@@ -23,19 +22,12 @@ public class ScheduledService {
     // this is handled in wildfly standalone.xml configuration file
     // though it is currently pretty fast, so maybe not needed.
     public void updateSlipOpinions() {
-        Date currentTime = new Date();
-        logger.info("STARTING SCRAPER UPDATE");
-        caOnlineUpdates.updateDatabase(new CACaseScraper(false));
-//        caOnlineUpdates.updateDatabase(new TestCACaseScraper(false));
-        logger.info("DONE SCRAPER UPDATE");
-
-        logger.info("STARTING OPINIONVIEW POSTCONSTRUCT");
-        Date lastBuildDate = opinionViewSingleton.getLastBuildDate();
-        if ( lastBuildDate == null || lastBuildDate.compareTo(currentTime) < 0 ) {
-            logger.info("calling postConstruct()");
-            opinionViewSingleton.postConstruct();
-        }
-        logger.info("DONE OPINIONVIEW POSTCONSTRUCT");
+        logger.info("STARTING updateOpinionViews");
+//      caOnlineUpdates.updateDatabase(new TestCACaseScraper(false));
+        opinionViewSingleton.updateOpinionViews(
+    		caOnlineUpdates.updateDatabase(new CACaseScraper(false))
+		);
+        logger.info("DONE updateOpinionViews");
     }
 
 /*

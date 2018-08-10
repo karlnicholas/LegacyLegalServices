@@ -53,20 +53,15 @@ public class CAOnlineUpdates {
 		logger = Logger.getLogger(CAOnlineUpdates.class.getName());
 	}
 
-	public void updatePostConstruct() {
-        Date currentTime = new Date();
-        Date lastBuildDate = opinionViewSingleton.getLastBuildDate();
-        if ( lastBuildDate == null || lastBuildDate.compareTo(currentTime) < 0 ) {
-            logger.info("calling postConstruct()");
-            opinionViewSingleton.postConstruct();
-        }
+	public void updateOpinionViews(List<OpinionKey> opinionKeys) {
+        opinionViewSingleton.updateOpinionViews(opinionKeys);
 	}
 
-	public void updateDatabase(OpinionScraperInterface caseScraper) {
+	public List<OpinionKey> updateDatabase(OpinionScraperInterface caseScraper) {
  		List<SlipOpinion> onlineOpinions = caseScraper.getCaseList();
 		if ( onlineOpinions == null || onlineOpinions.size() == 0 ) {
 			logger.info("No cases found online: returning.");
-			return;
+			return null;
 		}
 		//
 //		onlineOpinions.remove(0);
@@ -105,11 +100,17 @@ public class CAOnlineUpdates {
 		if ( onlineOpinions.size() > 0 ) {
 			// no retries
 			processAndPersistCases(onlineOpinions, caseScraper);
+			List<OpinionKey> opinionKeys = new ArrayList<>();
+			for( SlipOpinion slipOpinion: onlineOpinions) {
+				opinionKeys.add(slipOpinion.getOpinionKey());
+			}
+			return opinionKeys; 
+
 		} else {
 			logger.info("No new cases.");
 		}		
 //		processAndPersistCases(onlineOpinions, caseScraper);
-
+		return null;
 	}
 	
 	private void processAndPersistCases(List<SlipOpinion> slipOpinions, OpinionScraperInterface opinionScraper) {

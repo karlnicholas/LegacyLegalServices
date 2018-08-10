@@ -17,10 +17,18 @@
 </ui:define>
 <ui:param name="onLoadValue" value="#{opinionsController.anchorScript}" />
 <ui:define name="content">
+<ui:fragment rendered="#{!opinionsController.cacheReady}">
+	<h3>Slip Opinions loading from database. Please refresh to try again.</h3>
+	<h:form id="opinionForm">
+   <p><h:commandButton action="/views/opinions/opinions.xhtml" value="Refresh" /></p>
+   </h:form>
+</ui:fragment>
+<ui:fragment rendered="#{opinionsController.cacheReady}">
   <div>
     <ui:repeat varStatus="st" var="o" value="#{opinionsController.opinionViewList}">
       <opview:opview view="#{o}"/>
     </ui:repeat>
   </div>
+</ui:fragment>
 </ui:define>
 </ui:composition>

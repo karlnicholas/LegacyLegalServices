@@ -7,7 +7,6 @@ import javax.faces.event.PhaseEvent;
 import javax.inject.Inject;
 
 import opca.scraper.CACaseScraper;
-import opca.scraper.TestCACaseScraper;
 import opca.service.CAOnlineUpdates;
 import opca.service.SystemService;
 
@@ -20,10 +19,7 @@ public class IndexController {
     
     public void testUpdate() {
         logger.info("Starting Scraper Update");
-        caOnlineUpdates.updateDatabase(new CACaseScraper(false));
-//        caOnlineUpdates.updateDatabase(new TestCACaseScraper(false));
-		logger.info("Starting OPINIONVIEW POSTCONSTRUCT");
-        caOnlineUpdates.updatePostConstruct();
+        caOnlineUpdates.updateOpinionViews(caOnlineUpdates.updateDatabase(new CACaseScraper(false)));
         logger.info("Done Update");
     }
     

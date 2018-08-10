@@ -2,7 +2,6 @@ package opca.controller;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +31,7 @@ public class OpinionsController implements Serializable {
     private void postConstruct() {
 		openOpinion = null; 
     	dateList = new ArrayList<String[]>();
+/*    	
     	SimpleDateFormat lform = new SimpleDateFormat("yyyy-MM-dd");
     	SimpleDateFormat sform = new SimpleDateFormat("MMM dd");
     	List<Date[]> reportDates = opinionViewSingleton.getReportDates();
@@ -45,6 +45,7 @@ public class OpinionsController implements Serializable {
     		e[1] = String.format("?startDate=%s", lform.format(dates[0]));
     		dateList.add(e);	
     	}
+*/    	
     }
     
     public String getAnchorScript() {
@@ -52,6 +53,7 @@ public class OpinionsController implements Serializable {
     }
     
     public void checkStartDate() {
+/*    	
     	if ( startDate != null ) {
         	currentIndex = opinionViewSingleton.currentDateIndex(startDate);
     	} else {
@@ -65,6 +67,7 @@ public class OpinionsController implements Serializable {
 				sform.format(reportDates.get(currentIndex)[1])
 			));
     	}
+*/    	
     }
     public void openOpinion(String name) throws IOException {
     	openOpinion = name;
@@ -96,6 +99,9 @@ public class OpinionsController implements Serializable {
 	}
 	public List<String[]> getDateList() {
 		return dateList;
+	}
+	public boolean isCacheReady() {
+		return opinionViewSingleton.isReady();
 	}
 	//TODO: does this belong in JsfUtils?
 	public List<Integer> repeatNTimes(int count) {
