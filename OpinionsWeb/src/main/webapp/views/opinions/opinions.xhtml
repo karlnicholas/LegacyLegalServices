@@ -18,10 +18,17 @@
 <ui:param name="onLoadValue" value="#{opinionsController.anchorScript}" />
 <ui:define name="content">
 <ui:fragment rendered="#{!opinionsController.cacheReady}">
-	<h3>Slip Opinions loading from database. Please refresh to try again.</h3>
-	<h:form id="opinionForm">
-   <p><h:commandButton action="/views/opinions/opinions.xhtml" value="Refresh" /></p>
-   </h:form>
+  <h:form id="opinionForm" styleClass="form-horizontal">
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-4"><h:outputText value="Slip Opinions loading from database." styleClass="control-label"/></div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-4"><h:outputText value="Please refresh to try again." styleClass="control-label"/></div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-4"><h:commandButton id="submit" action="/views/opinions/opinions.xhtml" value="Refresh" styleClass="btn btn-default" /></div>
+  </div>
+  </h:form>
 </ui:fragment>
 <ui:fragment rendered="#{opinionsController.cacheReady}">
   <div>

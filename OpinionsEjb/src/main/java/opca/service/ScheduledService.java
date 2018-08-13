@@ -16,7 +16,7 @@ public class ScheduledService {
     @EJB private SystemService systemService;
     @EJB private OpinionViewSingleton opinionViewSingleton;
 
-    @Schedule(second="0", minute="30", hour="03", persistent=false)        // 03:30 am (12:30 am AZ ) every day
+    @Schedule(second="0", minute="30", hour="00", persistent=false)        // 03:30 am (12:30 am AZ ) every day
     // timeout issue.
     // @TransactionTimeout(value=1, unit = TimeUnit.HOURS)
     // this is handled in wildfly standalone.xml configuration file
@@ -70,7 +70,7 @@ public class ScheduledService {
     	systemService.doWelcomeService();
     }
 */
-    @Schedule(second="0", minute="0", hour="0", persistent=false)        // 12:00 am every day
+    @Schedule(second="0", minute="0", hour="01", persistent=false)        // 12:00 am every day
     public void welcomingService() {
     	systemService.sendOpinionReports();
     }

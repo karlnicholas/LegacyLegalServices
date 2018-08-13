@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Observer;
 import java.util.logging.Logger;
 
 import javax.ejb.Asynchronous;
@@ -45,6 +46,8 @@ public class OpinionViewLoad  implements Serializable {
 		initReportDates(opinionViewData);
 		buildOpinionViews(opinionViewData);
 		logger.info("load finish: " + opinionViewData.getOpinionViews().size());
+		// poor mans notification
+		opinionViewData.setStringDateList();
 		opinionViewData.setReady( true );
 	}
 

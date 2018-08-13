@@ -2,6 +2,7 @@ package opca.controller;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,35 +26,21 @@ public class OpinionsController implements Serializable {
     private String openOpinion;
     private String startDate;
 	private String currentDate;
-    private List<String[]> dateList;
-    
-    @PostConstruct
-    private void postConstruct() {
-		openOpinion = null; 
-    	dateList = new ArrayList<String[]>();
-/*    	
-    	SimpleDateFormat lform = new SimpleDateFormat("yyyy-MM-dd");
-    	SimpleDateFormat sform = new SimpleDateFormat("MMM dd");
-    	List<Date[]> reportDates = opinionViewSingleton.getReportDates();
-    	for ( Date[] dates: reportDates ) {
-    		//TODO fix this dates having null in the dates list
-    		if ( dates[0] == null || dates[1] == null ) continue;  
-    		String[] e = new String[2]; 
-    		e[0] = String.format("%s - %s", 
-    			sform.format(dates[0]),
-    			sform.format(dates[1]));
-    		e[1] = String.format("?startDate=%s", lform.format(dates[0]));
-    		dateList.add(e);	
-    	}
-*/    	
-    }
     
     public String getAnchorScript() {
     	return openOpinion!=null?"location.href='#anchor_"+openOpinion+"'":null;
     }
     
+    @PostConstruct
+    public void postConstruct() {
+    	openOpinion = null;
+    }
+    
     public void checkStartDate() {
-/*    	
+    	if ( !opinionViewSingleton.isReady() ) {
+	    	setCurrentDate("Loading"); 
+    		return;
+    	}
     	if ( startDate != null ) {
         	currentIndex = opinionViewSingleton.currentDateIndex(startDate);
     	} else {
@@ -67,7 +54,6 @@ public class OpinionsController implements Serializable {
 				sform.format(reportDates.get(currentIndex)[1])
 			));
     	}
-*/    	
     }
     public void openOpinion(String name) throws IOException {
     	openOpinion = name;
@@ -98,7 +84,7 @@ public class OpinionsController implements Serializable {
 		this.currentDate = currentDate;
 	}
 	public List<String[]> getDateList() {
-		return dateList;
+		return opinionViewSingleton.getStringDateList();
 	}
 	public boolean isCacheReady() {
 		return opinionViewSingleton.isReady();

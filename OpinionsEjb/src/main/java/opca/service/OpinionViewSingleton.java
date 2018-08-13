@@ -23,6 +23,7 @@ public class OpinionViewSingleton implements Serializable {
 	public class OpinionViewData {
 	    private List<Date[]> reportDates;
 	    private List<OpinionView> opinionViews;    
+		private List<String[]> stringDateList = new ArrayList<>();
 		private boolean ready = false;
 		
 		public synchronized List<Date[]> getReportDates() {
@@ -43,6 +44,22 @@ public class OpinionViewSingleton implements Serializable {
 		public synchronized void setReady(boolean ready) {
 			this.ready = ready;
 		}
+		public void setStringDateList() {
+			stringDateList.clear();
+			SimpleDateFormat lform = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat sform = new SimpleDateFormat("MMM dd");
+			List<Date[]> reportDates = getReportDates();
+			for ( Date[] dates: reportDates ) {
+				//TODO fix this dates having null in the dates list
+				if ( dates[0] == null || dates[1] == null ) continue;  
+				String[] e = new String[2]; 
+				e[0] = String.format("%s - %s", 
+					sform.format(dates[0]),
+					sform.format(dates[1]));
+				e[1] = String.format("?startDate=%s", lform.format(dates[0]));
+				stringDateList.add(e);	
+			}
+		}
 	}
 	
 	public OpinionViewSingleton() {
@@ -58,7 +75,7 @@ public class OpinionViewSingleton implements Serializable {
 //		opinionViewCache = ctx.getBusinessObject(OpinionViewCache.class);
 		opinionViewLoad.load(opinionViewData);
 	}
-	
+
 	/*
 	 * Dynamic method (for now?)
 	 */
@@ -123,5 +140,7 @@ public class OpinionViewSingleton implements Serializable {
 	public void updateOpinionViews(List<OpinionKey> opinionKeys) {
 		opinionViewLoad.loadNewOpinions(opinionViewData, opinionKeys);
 	}
-
+	public List<String[]> getStringDateList() {
+		return opinionViewData.stringDateList;
+	}
 }
