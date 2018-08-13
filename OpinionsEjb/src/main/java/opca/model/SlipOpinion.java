@@ -9,9 +9,9 @@ import javax.persistence.*;
 	@NamedQuery(name="SlipOpinion.findAll", 
 		query="select s from SlipOpinion s"),
 	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoins", 
-		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation order by o.opinionDate desc"),
-	@NamedQuery(name="SlipOpinion.listOpinionDates", 
-		query="select distinct o.opinionDate from SlipOpinion o order by o.opinionDate desc"),
+		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation"),
+	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoinsForKeys", 
+		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation where o.opinionKey in (:opinionKeys)"),
 })
 @SuppressWarnings("serial")
 @Entity

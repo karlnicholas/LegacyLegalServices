@@ -682,15 +682,15 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
 
         // Lets just try the hard code approach for now ..
         for ( int idx = 0, len = codeTitles.length; idx < len; ++idx ) {
-            if ( sentence.contains(codeTitles[idx].getFullTitle())) {
+            if ( sentence.contains(codeTitles[idx].getCommonTitle())) {
                 // found a hit ... lets see if it is in a good place ...
                 int iCode = sentence.indexOf(codeTitles[idx].getFullTitle());
-                int lenCode = codeTitles[idx].getFullTitle().length();
+                int lenCode = codeTitles[idx].getCommonTitle().length();
                 boolean imp;
                 do {
                 	imp = false;
                 	// plus one is ok because all titles have a length greater than 1
-                    int nxtiCode = sentence.indexOf(codeTitles[idx].getFullTitle(), iCode+1);
+                    int nxtiCode = sentence.indexOf(codeTitles[idx].getCommonTitle(), iCode+1);
                     if ( nxtiCode != -1 ) {
                     	if ( offset - nxtiCode > 0  ) {
                     		if ( nxtiCode > iCode ) iCode = nxtiCode;

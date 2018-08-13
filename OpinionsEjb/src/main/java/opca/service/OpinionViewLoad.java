@@ -3,9 +3,10 @@ package opca.service;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Observer;
 import java.util.logging.Logger;
 
 import javax.ejb.Asynchronous;
@@ -39,32 +40,25 @@ public class OpinionViewLoad  implements Serializable {
 
 	@Asynchronous
 	public void load(OpinionViewData opinionViewData) {
-		opinionViewData.setReady( false );
 		logger.info("load start");
-		// ignore synchronization issues
-		// so maybe someone get report dates a little out of whack.
-		initReportDates(opinionViewData);
+		opinionViewData.setReady( false );
 		buildOpinionViews(opinionViewData);
-		logger.info("load finish: " + opinionViewData.getOpinionViews().size());
-		// poor mans notification
 		opinionViewData.setStringDateList();
 		opinionViewData.setReady( true );
+		logger.info("load finish: " + opinionViewData.getOpinionViews().size());
 	}
 
 	@Asynchronous
 	public void loadNewOpinions(OpinionViewData opinionViewData, List<OpinionKey> opinionKeys) {
-		opinionViewData.setReady( false );
 		logger.info("loadNewOpinions start");
-		// ignore synchronization issues
-		// so maybe someone get report dates a little out of whack.
-		initReportDates(opinionViewData);
-		buildOpinionViews(opinionViewData);
-		logger.info("loadNewOpinions finish: " + opinionViewData.getOpinionViews().size());
+		opinionViewData.setReady( false );
+		buildNewOpinionViews(opinionViewData, opinionKeys);
+		opinionViewData.setStringDateList();
 		opinionViewData.setReady( true );
+		logger.info("loadNewOpinions finish: " + opinionViewData.getOpinionViews().size());
 	}
 
-	private void initReportDates(OpinionViewData opinionViewData) {
-		List<Date> dates = listPublishDates();
+	private void initReportDates(OpinionViewData opinionViewData, List<Date> dates) {
 		List<Date[]> reportDates = new ArrayList<Date[]>();
 		if ( dates.size() == 0 ) return;
 		// do the work.
@@ -137,8 +131,45 @@ public class OpinionViewLoad  implements Serializable {
 	}
 	
 	private void buildOpinionViews(OpinionViewData opinionViewData) {
-		List<OpinionView> opinionViews = new ArrayList<>();
+		opinionViewData.setOpinionViews(new ArrayList<>());
 		List<SlipOpinion> opinions = loadAllSlipOpinions();
+		buildListedOpinionViews(opinionViewData, opinions);
+	}
+	private void buildNewOpinionViews(OpinionViewData opinionViewData, List<OpinionKey> opinionKeys) {
+		// remove deleted opinions from cache
+		Iterator<OpinionView> ovIt = opinionViewData.getOpinionViews().iterator();
+		while ( ovIt.hasNext() ) {
+			OpinionView opinionView = ovIt.next();
+			boolean found = false;
+			for ( OpinionKey opinionKey: opinionKeys) {
+				if ( opinionView.getOpinionKey().equals(opinionKey) ) {
+					found = true;
+					break;
+				}
+			}
+			if ( !found ) {
+				ovIt.remove();
+			}
+		}
+		// remove existing opinions from opinionKeys list
+		Iterator<OpinionKey> okIt = opinionKeys.iterator();
+		while ( okIt.hasNext() ) {
+			OpinionKey opinionKey = okIt.next();
+			boolean found = false;
+			for ( OpinionView opinionView: opinionViewData.getOpinionViews()) {
+				if ( opinionView.getOpinionKey().equals(opinionKey) ) {
+					found = true;
+					break;
+				}
+			}
+			if ( found ) {
+				okIt.remove();
+			}
+		}
+		List<SlipOpinion> opinions = loadSlipOpinionsForKeys(opinionKeys);
+		buildListedOpinionViews(opinionViewData, opinions);
+	}
+	private void buildListedOpinionViews(OpinionViewData opinionViewData, List<SlipOpinion> opinions) {
 		List<OpinionBase> opinionOpinionCitations = new ArrayList<>();
 		List<Integer> opinionIds = new ArrayList<>();
 		TypedQuery<OpinionBase> fetchOpinionCitationsForOpinions = em.createNamedQuery("OpinionBase.fetchOpinionCitationsForOpinions", OpinionBase.class);
@@ -163,9 +194,26 @@ public class OpinionViewLoad  implements Serializable {
 			slipOpinion.setOpinionCitations( opinionOpinionCitations.get( opinionOpinionCitations.indexOf(slipOpinion)).getOpinionCitations() );
 			ParsedOpinionCitationSet parserResults = new ParsedOpinionCitationSet(slipOpinion);
 			OpinionView opinionView = opinionViewBuilder.buildOpinionView(slipOpinion, parserResults);
-			opinionViews.add(opinionView);
+			opinionViewData.getOpinionViews().add(opinionView);
 		}
-		opinionViewData.setOpinionViews(opinionViews);
+		// sort results in descending date order
+		Collections.sort(
+			opinionViewData.getOpinionViews(), 
+			(view1, view2) -> {
+				int dc = view2.getOpinionDate().compareTo(view1.getOpinionDate());
+				if ( dc != 0 ) return dc;
+				return view1.getName().compareTo(view2.getName());
+			}
+		);
+		// build report dates
+		List<Date> dates = new ArrayList<>();
+		for ( OpinionView opinionView: opinionViewData.getOpinionViews() ) {
+			Date date = opinionView.getOpinionDate();
+			if ( !dates.contains(date)) {
+				dates.add(date);
+			}
+		}
+		initReportDates(opinionViewData, dates);
 	}
 
 	/**
@@ -186,8 +234,16 @@ public class OpinionViewLoad  implements Serializable {
 		}
 		return opinions;
 	}
-
-	private List<Date> listPublishDates() {
-		return em.createNamedQuery("SlipOpinion.listOpinionDates", Date.class).getResultList();
+	private List<SlipOpinion> loadSlipOpinionsForKeys(List<OpinionKey> opinionKeys) {
+		// just get all slip opinions
+		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.loadOpinionsWithJoinsForKeys", SlipOpinion.class)
+				.setParameter("opinionKeys", opinionKeys).getResultList();
+		// load slipOpinion properties from the database here ... ?
+		List<SlipProperties> spl = em.createNamedQuery("SlipProperties.findAll", SlipProperties.class).getResultList();
+		for ( SlipOpinion slipOpinion: opinions ) {
+			slipOpinion.setSlipProperties(spl.get(spl.indexOf(new SlipProperties(slipOpinion))));
+		}
+		return opinions;
 	}
+
 }

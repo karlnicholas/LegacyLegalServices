@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import opca.model.OpinionKey;
 import opca.model.SlipOpinion;
 
 @XmlRootElement
@@ -25,6 +26,7 @@ public class OpinionView {
 	private String fileName;
 	private String disposition;
 	private String summary;
+	private OpinionKey opinionKey;
 	
 	public OpinionView() {
 		super();
@@ -36,18 +38,14 @@ public class OpinionView {
 		List<CaseView> cases
 	) {
 		this.name = name;
-		this.statutes = statutes;
 		this.title = slipOpinion.getTitle();
 		this.fileName = slipOpinion.getFileName();
 		this.opinionDate = slipOpinion.getOpinionDate();
 		this.disposition = slipOpinion.getDisposition();
 		this.summary = slipOpinion.getSummary();
-		
-//		Collections.sort(this.statutes);
-//		Collections.reverse(this.statutes);
+		this.opinionKey = slipOpinion.getOpinionKey();		
+		this.statutes = statutes;
 		this.cases = cases;
-//		Collections.sort(this.cases);
-//		Collections.reverse(this.cases);
 	}
 	
     @XmlElement
@@ -159,6 +157,13 @@ public class OpinionView {
 	}
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+    @XmlTransient
+	public OpinionKey getOpinionKey() {
+		return opinionKey;
+	}
+	public void setOpinionKey(OpinionKey opinionKey) {
+		this.opinionKey = opinionKey;
 	}
 }
 

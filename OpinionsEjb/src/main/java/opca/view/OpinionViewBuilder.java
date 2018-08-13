@@ -15,6 +15,7 @@ import opca.parser.ParsedOpinionCitationSet;
 
 public class OpinionViewBuilder {
 	private Logger logger = Logger.getLogger(OpinionViewBuilder.class.getName());
+	private static final int LEVEL_OF_INTEREST = 3; 
 	private final Client statutesRs;
 	private ParsedOpinionCitationSet parserResults;
 	private OpinionView opinionView;
@@ -95,7 +96,7 @@ public class OpinionViewBuilder {
                 addSectionViewToSectionRoot(statuteView, statutesLeaf, citation.getCountReferences());                
         	}
         }
-        trimToLevelOfInterest(statuteViews, 5, true);
+        trimToLevelOfInterest(statuteViews, LEVEL_OF_INTEREST, true);
         if ( errorKeys.size() > 0 && logger.getLevel() == Level.FINE) {
         	logger.fine("Error Keys: " + Arrays.toString(errorKeys.toArray()));
         }

@@ -59,9 +59,14 @@ public class CAOnlineUpdates {
 
 	public List<OpinionKey> updateDatabase(OpinionScraperInterface caseScraper) {
  		List<SlipOpinion> onlineOpinions = caseScraper.getCaseList();
+ 		// save OpinionKeys for cache handling 
+		List<OpinionKey> opinionKeys = new ArrayList<>();
+		for( SlipOpinion slipOpinion: onlineOpinions) {
+			opinionKeys.add(slipOpinion.getOpinionKey());
+		}
 		if ( onlineOpinions == null || onlineOpinions.size() == 0 ) {
 			logger.info("No cases found online: returning.");
-			return null;
+			return opinionKeys;
 		}
 		//
 //		onlineOpinions.remove(0);
@@ -100,17 +105,11 @@ public class CAOnlineUpdates {
 		if ( onlineOpinions.size() > 0 ) {
 			// no retries
 			processAndPersistCases(onlineOpinions, caseScraper);
-			List<OpinionKey> opinionKeys = new ArrayList<>();
-			for( SlipOpinion slipOpinion: onlineOpinions) {
-				opinionKeys.add(slipOpinion.getOpinionKey());
-			}
-			return opinionKeys; 
-
 		} else {
 			logger.info("No new cases.");
 		}		
 //		processAndPersistCases(onlineOpinions, caseScraper);
-		return null;
+		return opinionKeys; 
 	}
 	
 	private void processAndPersistCases(List<SlipOpinion> slipOpinions, OpinionScraperInterface opinionScraper) {
