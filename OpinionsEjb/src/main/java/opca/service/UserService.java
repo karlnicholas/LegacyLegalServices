@@ -78,7 +78,7 @@ public class UserService {
      * @param user to merge.
      * @return Merged User
      */
-    @RolesAllowed({"USER"})
+    @PermitAll
     public User merge(User user) {
         return em.merge(user);
     }

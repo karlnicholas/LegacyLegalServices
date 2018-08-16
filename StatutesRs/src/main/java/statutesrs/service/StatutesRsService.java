@@ -13,12 +13,12 @@ import javax.ws.rs.core.MediaType;
 
 import client.ClientImpl;
 import parser.ParserInterface;
-import service.Client;
+import service.StatutesService;
 import statutes.SectionNumber;
 import statutes.StatutesBaseClass;
 import statutes.StatutesTitles;
 import statutesca.factory.CAStatutesFactory;
-import statutesrs.ReferencesWithReferences;
+import statutesrs.StatutesHierarchy;
 import statutesrs.ResponseArray;
 import statutesrs.ResponsePair;
 import statutesrs.StatuteKey;
@@ -27,7 +27,7 @@ import statutesrs.StatutesRootArray;
 import statutesrs.StatutesTitlesArray;
 
 @Path("/")
-public class StatutesRsService implements Client {
+public class StatutesRsService implements StatutesService {
 	private ParserInterface parserInterface;
 
 	public StatutesRsService() {
@@ -59,8 +59,8 @@ public class StatutesRsService implements Client {
 	@Path(ClientImpl.REFERENCEBYTITLE)
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public ReferencesWithReferences returnReferencesByTitle(@QueryParam("fullFacet") String fullFacet) {
-		return parserInterface.returnReferencesByTitle(fullFacet);
+	public StatutesHierarchy getStatutesForFacet(@QueryParam("fullFacet") String fullFacet) {
+		return parserInterface.getStatutesHierarchy(fullFacet);
 	}
 
 	@Override	
@@ -90,10 +90,10 @@ public class StatutesRsService implements Client {
 				// opinion
 				StatutesBaseClass statutesBaseClass = parserInterface.findReference(title, sectionNumber);
 				if (statutesBaseClass != null) {
-					ReferencesWithReferences referencesWithReferences = parserInterface.returnReferencesByTitle( statutesBaseClass.getFullFacet() );
+					StatutesHierarchy statutesHierarchy = parserInterface.getStatutesHierarchy( statutesBaseClass.getFullFacet() );
 					ResponsePair responsePair = new ResponsePair();
 					responsePair.setStatuteKey(key);
-					responsePair.setStatutesPath(referencesWithReferences.getStatutesPath());
+					responsePair.setStatutesPath(statutesHierarchy.getStatutesPath());
 					responseArray.getItem().add(responsePair);
 				}
 				// Section codeSection = codeList.findCodeSection(sectionReference);

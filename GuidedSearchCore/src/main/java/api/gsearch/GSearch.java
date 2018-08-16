@@ -46,7 +46,7 @@ import statutes.SectionNumber;
 import statutes.SectionNumberPosition;
 import statutes.StatutesBaseClass;
 import statutes.StatutesRoot;
-import statutesrs.ReferencesWithReferences;
+import statutesrs.StatutesHierarchy;
 
 /*
  * Changes to match spec and make thread safe .. 
@@ -143,7 +143,7 @@ public class GSearch {
 
 	private void processPathAndSubcodeList( ViewModel viewModel ) {
 		// at this point, only exhange.path is filled out ..
-		ReferencesWithReferences rwr = parserInterface.returnReferencesByTitle(viewModel.getPath());
+		StatutesHierarchy rwr = parserInterface.getStatutesHierarchy(viewModel.getPath());
 
 		List<StatutesBaseClass> subPaths = rwr.getStatutesPath();
 

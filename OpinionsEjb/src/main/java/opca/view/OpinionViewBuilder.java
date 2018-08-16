@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import service.Client;
+import service.StatutesService;
 import statutes.StatutesBaseClass;
 import statutes.StatutesLeaf;
 import statutes.StatutesNode;
@@ -16,12 +16,13 @@ import opca.parser.ParsedOpinionCitationSet;
 public class OpinionViewBuilder {
 	private Logger logger = Logger.getLogger(OpinionViewBuilder.class.getName());
 	private static final int LEVEL_OF_INTEREST = 3; 
-	private final Client statutesRs;
+	private final StatutesService statutesRs;
 	private ParsedOpinionCitationSet parserResults;
 	private OpinionView opinionView;
 	private List<CaseView> cases; 
 	private List<SectionView> sectionViews;
-	public OpinionViewBuilder(Client statutesRs) {
+	
+	public OpinionViewBuilder(StatutesService statutesRs) {
 		this.statutesRs = statutesRs;
 	}
 	

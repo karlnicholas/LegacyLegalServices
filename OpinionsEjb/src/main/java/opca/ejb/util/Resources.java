@@ -16,6 +16,8 @@
  */
 package opca.ejb.util;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.Logger;
 
 import javax.enterprise.inject.Produces;
@@ -23,6 +25,9 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.xml.transform.TransformerFactory;
+
+import client.StatutesRsService;
+import service.StatutesService;
 
 /**
  * This class uses CDI to alias Java EE resources, such as the persistence context, to CDI beans
@@ -55,6 +60,36 @@ public class Resources {
     	}
     	return tf;
     }
-
+    
+	private static final String defaultAddress = "http://localhost:8080/statutesrs/rs/";
+	
+	@Produces
+	public StatutesService getStatutesService() {
+		try {
+			String s = System.getenv("statutesrsservice");
+			URL rsLocation;
+			if (s != null)
+				rsLocation = new URL(s);
+			else
+				rsLocation = new URL(defaultAddress);
+			int retryCount = 10;
+			Exception eLast = null;
+			while (retryCount-- > 0) {
+				try {
+					return new StatutesRsService(rsLocation).getRsService();
+				} catch (Exception e) {
+					eLast = e; 
+					try {
+						Thread.sleep(10000);
+					} catch (InterruptedException e2) {
+						throw new RuntimeException(e2);
+					}
+				}
+			}
+			throw new IllegalStateException("Unable to connect to StatutesService" + eLast.getMessage());
+		} catch (MalformedURLException e1) {
+			throw new RuntimeException(e1);
+		}
+	}
 
 }

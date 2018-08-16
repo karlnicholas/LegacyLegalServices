@@ -2,17 +2,17 @@ package client;
 
 import java.net.URL;
 
-import service.Client;
+import service.StatutesService;
 
 public class StatutesRsService  {
-	private URL apiLocation;
+	private ClientImpl clientImpl;
 	
 	public StatutesRsService(URL apiLocation) {
-		this.apiLocation = apiLocation;
+		clientImpl = new ClientImpl(apiLocation);
 	}
 
-	public Client getRsService() {
-		return new ClientImpl(apiLocation);
+	public StatutesService getRsService() {
+		return clientImpl;
 	}
 
 }

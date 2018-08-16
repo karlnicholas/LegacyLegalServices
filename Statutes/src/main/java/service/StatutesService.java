@@ -1,18 +1,18 @@
 package service;
 
-import statutesrs.ReferencesWithReferences;
+import statutesrs.StatutesHierarchy;
 import statutesrs.ResponseArray;
 import statutesrs.StatuteKeyArray;
 import statutesrs.StatutesRootArray;
 import statutesrs.StatutesTitlesArray;
 
-public interface Client {
+public interface StatutesService {
 
 	StatutesRootArray getStatutes();
 
 	StatutesTitlesArray getStatutesTitles();
 
-	ReferencesWithReferences returnReferencesByTitle(String fullFacet);
+	StatutesHierarchy getStatutesForFacet(String fullFacet);
 
 	ResponseArray findStatutes(StatuteKeyArray statuteKeyArray);
 

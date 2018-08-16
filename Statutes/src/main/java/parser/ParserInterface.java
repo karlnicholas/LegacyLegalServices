@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import statutes.StatutesTitles;
-import statutesrs.ReferencesWithReferences;
+import statutesrs.StatutesHierarchy;
 import statutes.SectionNumber;
 import statutes.StatutesBaseClass;
 import statutes.StatutesRoot;
@@ -24,6 +24,6 @@ public interface ParserInterface {
 
 	public StatutesRoot findReferenceByTitle(String title);
     
-	public ReferencesWithReferences returnReferencesByTitle(String fullFacet);
+	public StatutesHierarchy getStatutesHierarchy(String fullFacet);
 
 }

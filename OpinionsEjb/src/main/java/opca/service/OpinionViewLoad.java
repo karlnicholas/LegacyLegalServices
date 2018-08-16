@@ -23,13 +23,14 @@ import opca.parser.ParsedOpinionCitationSet;
 import opca.service.OpinionViewSingleton.OpinionViewData;
 import opca.view.OpinionView;
 import opca.view.OpinionViewBuilder;
-import service.Client;
+import service.StatutesService;
 
 @SuppressWarnings("serial")
 @Stateless
 public class OpinionViewLoad  implements Serializable {
 	@Inject private Logger logger;
 	@Inject private EntityManager em;
+	@Inject private StatutesService statutesService;
 
 	public OpinionViewLoad() {}
 	
@@ -188,8 +189,7 @@ public class OpinionViewLoad  implements Serializable {
 				fetchOpinionCitationsForOpinions.setParameter("opinionIds", opinionIds).getResultList()
 			);
 		}
-        Client statutesRs = new RestServicesFactory().connectStatutesRsService();
-		OpinionViewBuilder opinionViewBuilder = new OpinionViewBuilder(statutesRs);
+		OpinionViewBuilder opinionViewBuilder = new OpinionViewBuilder(statutesService);
 		for ( SlipOpinion slipOpinion: opinions ) {
 			slipOpinion.setOpinionCitations( opinionOpinionCitations.get( opinionOpinionCitations.indexOf(slipOpinion)).getOpinionCitations() );
 			ParsedOpinionCitationSet parserResults = new ParsedOpinionCitationSet(slipOpinion);

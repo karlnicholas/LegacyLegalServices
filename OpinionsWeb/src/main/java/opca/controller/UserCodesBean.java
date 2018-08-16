@@ -8,10 +8,10 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.inject.Inject;
 
-import opca.service.RestServicesFactory;
 import statutes.StatutesTitles;
-import service.Client;
+import service.StatutesService;
 
 /**
  * Simply provide the statutes to be combined with the user preferences.
@@ -25,13 +25,13 @@ import service.Client;
 public class UserCodesBean {
     private List<List<StatutesTitles>> titleMatrix;
     private String[] titleArray;
+    @Inject private StatutesService statutesService;
 	
 	@PostConstruct
 	public void postConstruct() {
-		Client statutesRsS = new RestServicesFactory().connectStatutesRsService();
 		
 		@SuppressWarnings({ "unchecked", "rawtypes" })
-		List<StatutesTitles> statutesTitles = (List)statutesRsS.getStatutesTitles().getItem();
+		List<StatutesTitles> statutesTitles = (List)statutesService.getStatutesTitles().getItem();
 
 		Collections.sort(statutesTitles, new Comparator<StatutesTitles>() {
 			@Override

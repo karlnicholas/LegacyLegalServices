@@ -7,12 +7,12 @@ import java.util.Map;
 
 import client.StatutesRsService;
 import parser.ParserInterface;
-import service.Client;
+import service.StatutesService;
 import statutes.SectionNumber;
 import statutes.StatutesBaseClass;
 import statutes.StatutesRoot;
 import statutes.StatutesTitles;
-import statutesrs.ReferencesWithReferences;
+import statutesrs.StatutesHierarchy;
 
 public class ParserInterfaceRsCa implements ParserInterface {
 	private StatutesRsService service;
@@ -41,7 +41,7 @@ public class ParserInterfaceRsCa implements ParserInterface {
 
 	@Override
 	public List<StatutesRoot> getStatutes() {
-		Client statutesRs = service.getRsService();
+		StatutesService statutesRs = service.getRsService();
 		List<StatutesRoot> statutesList = statutesRs.getStatutes().getItem();
 //		for ( int i=0, l=objectList.size(); i<l; ++i ) {
 //			statutesList.add(  (StatutesRoot) objectList.get(i) );
@@ -58,7 +58,7 @@ public class ParserInterfaceRsCa implements ParserInterface {
 	@Override
 	public StatutesTitles[] getStatutesTitles() {
 		StatutesTitles[] statutesTitles; 
-		Client statutesRs = service.getRsService();
+		StatutesService statutesRs = service.getRsService();
 		List<StatutesTitles> statutesTitlesList = statutesRs.getStatutesTitles().getItem();
 		statutesTitles = new StatutesTitles[statutesTitlesList.size()];
 		for (int i=0; i < statutesTitlesList.size(); ++i ) {
@@ -98,9 +98,9 @@ public class ParserInterfaceRsCa implements ParserInterface {
 	}
 
 	@Override
-	public ReferencesWithReferences returnReferencesByTitle(String fullFacet) {
-		Client statutesRs = service.getRsService();
-		return statutesRs.returnReferencesByTitle(fullFacet);
+	public StatutesHierarchy getStatutesHierarchy(String fullFacet) {
+		StatutesService statutesRs = service.getRsService();
+		return statutesRs.getStatutesForFacet(fullFacet);
 	}
 
 }

@@ -1,7 +1,6 @@
 package opca.controller;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,7 +8,6 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import opca.service.OpinionViewSingleton;
@@ -17,9 +15,7 @@ import opca.service.ViewParameters;
 import opca.view.OpinionView;
 
 @ManagedBean
-@ViewScoped
-@SuppressWarnings("serial")
-public class OpinionsController implements Serializable {
+public class OpinionsController {
 	@Inject private OpinionViewSingleton opinionViewSingleton;
 
     private int currentIndex;

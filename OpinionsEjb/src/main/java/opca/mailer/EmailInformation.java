@@ -15,6 +15,8 @@ import opca.view.OpinionView;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class EmailInformation implements Serializable {
+	private String firstName;
+	private String lastName;
 	private String email;
 	private String verifyKey;
 	private int verifyCount;
@@ -24,6 +26,8 @@ public class EmailInformation implements Serializable {
 	private List<OpinionView> opinionCases;
 	public EmailInformation(User user) {
 		this();
+		this.firstName = user.getFirstName();
+		this.lastName = user.getLastName();
 		this.email = user.getEmail();
 		this.verifyKey = user.getVerifyKey();
 		this.verifyCount = user.getVerifyCount();
@@ -62,5 +66,11 @@ public class EmailInformation implements Serializable {
 	}
 	public List<OpinionView> getOpinionCases() {
 		return opinionCases;
+	}
+	public String getFirstName() {
+		return firstName;
+	}
+	public String getLastName() {
+		return lastName;
 	}
 }

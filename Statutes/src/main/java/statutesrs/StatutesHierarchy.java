@@ -20,7 +20,7 @@ import statutes.StatutesBaseClass;
 @XmlType(name = "statutesRootWithReferences", propOrder = {
     "statutesPath", "finalReferences"
 })
-public class ReferencesWithReferences {
+public class StatutesHierarchy {
 
     @XmlElement
     protected List<StatutesBaseClass> statutesPath;

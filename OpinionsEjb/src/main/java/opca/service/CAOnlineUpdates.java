@@ -28,10 +28,10 @@ import opca.model.StatuteKey;
 import opca.parser.OpinionScraperInterface;
 import opca.parser.OpinionDocumentParser;
 import opca.parser.ScrapedOpinionDocument;
+import service.StatutesService;
 import opca.parser.ParsedOpinionCitationSet;
 import statutes.StatutesTitles;
 import statutesrs.StatutesTitlesArray;
-import service.Client;
 
 /**
  * 
@@ -43,6 +43,7 @@ public class CAOnlineUpdates {
 	@Inject private Logger logger;
 	@Inject private EntityManager em;
     @EJB private OpinionViewSingleton opinionViewSingleton;
+	@Inject private StatutesService statutesService;
 	
 	public CAOnlineUpdates() {}
 
@@ -119,8 +120,7 @@ public class CAOnlineUpdates {
 
 		StatutesTitles[] codeTitles = new StatutesTitles[0]; //parserInterface.getStatutesTitles();
 
-		Client statutesRs = new RestServicesFactory().connectStatutesRsService();
-		StatutesTitlesArray statutesArray = statutesRs.getStatutesTitles();
+		StatutesTitlesArray statutesArray = statutesService.getStatutesTitles();
 		codeTitles = statutesArray.getItem().toArray(codeTitles);
 
 		OpinionDocumentParser opinionDocumentParser = new OpinionDocumentParser(codeTitles);

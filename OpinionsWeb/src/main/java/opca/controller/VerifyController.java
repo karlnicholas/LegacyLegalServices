@@ -1,7 +1,6 @@
 package opca.controller;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.security.Principal;
 
 import javax.faces.application.FacesMessage;
@@ -16,8 +15,7 @@ import opca.model.User;
 import opca.service.UserService;
 
 @ManagedBean
-@SuppressWarnings("serial")
-public class VerifyController implements Serializable {
+public class VerifyController {
 	@Inject private UserService userService;
 	@Inject private FacesContext facesContext;
 
