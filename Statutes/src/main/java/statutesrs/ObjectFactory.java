@@ -53,19 +53,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ResponseArray }
+     * Create an instance of {@link KeyHierarchyPairs }
      * 
      */
-    public ResponseArray createResponseArray() {
-        return new ResponseArray();
+    public KeyHierarchyPairs createResponseArray() {
+        return new KeyHierarchyPairs();
     }
 
     /**
-     * Create an instance of {@link ResponsePair }
+     * Create an instance of {@link KeyHierarchyPair }
      * 
      */
-    public ResponsePair createResponsePair() {
-        return new ResponsePair();
+    public KeyHierarchyPair createResponsePair() {
+        return new KeyHierarchyPair();
     }
 
     /**

@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 import parser.ParserInterface;
 import statutes.StatutesTitles;
-import statutesrs.StatutesHierarchy;
+import statutesrs.StatuteHierarchy;
 import statutes.SectionNumber;
 import statutes.StatutesBaseClass;
 import statutes.StatutesLeaf;
@@ -460,13 +460,13 @@ public class CALoadStatutes implements ParserInterface {
 	}
 
 	@Override
-	public StatutesHierarchy getStatutesHierarchy(String fullFacet) {
+	public StatuteHierarchy getStatutesHierarchy(String fullFacet) {
 		StatutesTitles[] statutesTitles = getStatutesTitles();
 		String fullTitle = FacetUtils.findFullTitleFromFacet(statutesTitles, fullFacet);
 		
 		StatutesRoot statutesRoot = findReferenceByTitle(fullTitle);
 
-		StatutesHierarchy rwr = new StatutesHierarchy();
+		StatuteHierarchy rwr = new StatuteHierarchy();
 		
 		StatutesRoot returnStatutesRoot = new StatutesRoot(
 				statutesRoot.getTitle(), 

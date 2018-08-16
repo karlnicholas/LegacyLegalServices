@@ -70,7 +70,7 @@ public class ClientImpl implements StatutesService {
 	}
 	
 	@Override
-	public StatutesRootArray getStatutes() {
+	public StatutesRootArray getStatutesRoots() {
 		return statutes
 			.request(MediaType.APPLICATION_JSON_TYPE)
 			.get(StatutesRootArray.class);
@@ -84,18 +84,18 @@ public class ClientImpl implements StatutesService {
 	}
 
 	@Override
-	public StatutesHierarchy getStatutesForFacet(String fullFacet) {
+	public StatuteHierarchy getStatuteHierarchy(String fullFacet) {
 		return statuteHierarchy
 			.queryParam("fullFacet", fullFacet)
 			.request(MediaType.APPLICATION_JSON_TYPE)
-			.get(StatutesHierarchy.class);
+			.get(StatuteHierarchy.class);
 	}
 
 	@Override
-	public ResponseArray findStatutes(StatuteKeyArray statuteKeyArray) {
+	public KeyHierarchyPairs getStatutesAndHierarchies(StatuteKeyArray statuteKeyArray) {
 		return findStatutes
 			.request(MediaType.APPLICATION_JSON_TYPE)
-			.post(Entity.entity(statuteKeyArray, MediaType.APPLICATION_JSON_TYPE), ResponseArray.class);
+			.post(Entity.entity(statuteKeyArray, MediaType.APPLICATION_JSON_TYPE), KeyHierarchyPairs.class);
 	}
 
 }

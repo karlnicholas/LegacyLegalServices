@@ -12,7 +12,7 @@ import statutes.SectionNumber;
 import statutes.StatutesBaseClass;
 import statutes.StatutesRoot;
 import statutes.StatutesTitles;
-import statutesrs.StatutesHierarchy;
+import statutesrs.StatuteHierarchy;
 
 public class ParserInterfaceRsCa implements ParserInterface {
 	private StatutesRsService service;
@@ -42,7 +42,7 @@ public class ParserInterfaceRsCa implements ParserInterface {
 	@Override
 	public List<StatutesRoot> getStatutes() {
 		StatutesService statutesRs = service.getRsService();
-		List<StatutesRoot> statutesList = statutesRs.getStatutes().getItem();
+		List<StatutesRoot> statutesList = statutesRs.getStatutesRoots().getItem();
 //		for ( int i=0, l=objectList.size(); i<l; ++i ) {
 //			statutesList.add(  (StatutesRoot) objectList.get(i) );
 //		}		
@@ -98,9 +98,9 @@ public class ParserInterfaceRsCa implements ParserInterface {
 	}
 
 	@Override
-	public StatutesHierarchy getStatutesHierarchy(String fullFacet) {
+	public StatuteHierarchy getStatutesHierarchy(String fullFacet) {
 		StatutesService statutesRs = service.getRsService();
-		return statutesRs.getStatutesForFacet(fullFacet);
+		return statutesRs.getStatuteHierarchy(fullFacet);
 	}
 
 }

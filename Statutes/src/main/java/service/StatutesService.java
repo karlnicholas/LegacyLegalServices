@@ -1,19 +1,19 @@
 package service;
 
-import statutesrs.StatutesHierarchy;
-import statutesrs.ResponseArray;
+import statutesrs.StatuteHierarchy;
+import statutesrs.KeyHierarchyPairs;
 import statutesrs.StatuteKeyArray;
 import statutesrs.StatutesRootArray;
 import statutesrs.StatutesTitlesArray;
 
 public interface StatutesService {
 
-	StatutesRootArray getStatutes();
+	StatutesRootArray getStatutesRoots();
 
 	StatutesTitlesArray getStatutesTitles();
 
-	StatutesHierarchy getStatutesForFacet(String fullFacet);
+	StatuteHierarchy getStatuteHierarchy(String fullFacet);
 
-	ResponseArray findStatutes(StatuteKeyArray statuteKeyArray);
+	KeyHierarchyPairs getStatutesAndHierarchies(StatuteKeyArray statuteKeyArray);
 
 }

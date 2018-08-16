@@ -17,10 +17,10 @@ import statutes.StatutesBaseClass;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "statutesRootWithReferences", propOrder = {
+@XmlType(name = "statuteHierarchy", propOrder = {
     "statutesPath", "finalReferences"
 })
-public class StatutesHierarchy {
+public class StatuteHierarchy {
 
     @XmlElement
     protected List<StatutesBaseClass> statutesPath;

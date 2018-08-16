@@ -18,9 +18,9 @@ import statutes.SectionNumber;
 import statutes.StatutesBaseClass;
 import statutes.StatutesTitles;
 import statutesca.factory.CAStatutesFactory;
-import statutesrs.StatutesHierarchy;
-import statutesrs.ResponseArray;
-import statutesrs.ResponsePair;
+import statutesrs.StatuteHierarchy;
+import statutesrs.KeyHierarchyPairs;
+import statutesrs.KeyHierarchyPair;
 import statutesrs.StatuteKey;
 import statutesrs.StatuteKeyArray;
 import statutesrs.StatutesRootArray;
@@ -38,7 +38,7 @@ public class StatutesRsService implements StatutesService {
 	@Path(ClientImpl.STATUTES)
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public StatutesRootArray getStatutes() {
+	public StatutesRootArray getStatutesRoots() {
 		StatutesRootArray statutesRootArray = new StatutesRootArray();
 		statutesRootArray.getItem().addAll(parserInterface.getStatutes());
 		return statutesRootArray;
@@ -59,7 +59,7 @@ public class StatutesRsService implements StatutesService {
 	@Path(ClientImpl.REFERENCEBYTITLE)
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public StatutesHierarchy getStatutesForFacet(@QueryParam("fullFacet") String fullFacet) {
+	public StatuteHierarchy getStatuteHierarchy(@QueryParam("fullFacet") String fullFacet) {
 		return parserInterface.getStatutesHierarchy(fullFacet);
 	}
 
@@ -68,8 +68,8 @@ public class StatutesRsService implements StatutesService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ResponseArray findStatutes(StatuteKeyArray keys) {
-		ResponseArray responseArray = new ResponseArray();
+	public KeyHierarchyPairs getStatutesAndHierarchies(StatuteKeyArray keys) {
+		KeyHierarchyPairs keyHierarchyPairs = new KeyHierarchyPairs();
 		// copy results into the new list ..
 		// Fill out the codeSections that these section are referencing ..
 		// If possible ...
@@ -90,17 +90,17 @@ public class StatutesRsService implements StatutesService {
 				// opinion
 				StatutesBaseClass statutesBaseClass = parserInterface.findReference(title, sectionNumber);
 				if (statutesBaseClass != null) {
-					StatutesHierarchy statutesHierarchy = parserInterface.getStatutesHierarchy( statutesBaseClass.getFullFacet() );
-					ResponsePair responsePair = new ResponsePair();
-					responsePair.setStatuteKey(key);
-					responsePair.setStatutesPath(statutesHierarchy.getStatutesPath());
-					responseArray.getItem().add(responsePair);
+					StatuteHierarchy statuteHierarchy = parserInterface.getStatutesHierarchy( statutesBaseClass.getFullFacet() );
+					KeyHierarchyPair keyHierarchyPair = new KeyHierarchyPair();
+					keyHierarchyPair.setStatuteKey(key);
+					keyHierarchyPair.setStatutesPath(statuteHierarchy.getStatutesPath());
+					keyHierarchyPairs.getItem().add(keyHierarchyPair);
 				}
 				// Section codeSection = codeList.findCodeSection(sectionReference);
 				// We don't want to keep ones that we can't map .. so ..
 			}
 		}
-		return responseArray;
+		return keyHierarchyPairs;
 	}
 
 }

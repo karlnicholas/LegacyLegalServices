@@ -17,12 +17,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for responseArray complex type.
+ * <p>Java class for keyHierarchyPairs complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="responseArray"&gt;
+ * &lt;complexType name="keyHierarchyPairs"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
@@ -36,13 +36,13 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "responseArray", propOrder = {
+@XmlType(name = "keyHierarchyPairs", propOrder = {
     "item"
 })
-public class ResponseArray {
+public class KeyHierarchyPairs {
 
     @XmlElement(nillable = true)
-    protected List<ResponsePair> item;
+    protected List<KeyHierarchyPair> item;
 
     /**
      * Gets the value of the item property.
@@ -62,13 +62,13 @@ public class ResponseArray {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link ResponsePair }
+     * {@link KeyHierarchyPair }
      * 
      * 
      */
-    public List<ResponsePair> getItem() {
+    public List<KeyHierarchyPair> getItem() {
         if (item == null) {
-            item = new ArrayList<ResponsePair>();
+            item = new ArrayList<KeyHierarchyPair>();
         }
         return this.item;
     }

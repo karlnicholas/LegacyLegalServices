@@ -18,7 +18,6 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.util.JAXBSource;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -108,13 +107,6 @@ public class SendGridMailer {
 		
 		try {
 			JAXBContext jc = JAXBContext.newInstance(EmailInformation.class);
-/*			
-		    Marshaller marshaller = jc.createMarshaller();
-		    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-		    marshaller.marshal(emailInformation, System.out);
-*/		    
-//		    return writer.toString();			// jaxbContext is a JAXBContext object from which 'o' is created.
-			// jaxbContext is a JAXBContext object from which 'o' is created.
 			JAXBSource source = new JAXBSource(jc, emailInformation);
 			// set up XSLT transformation
 			InputStream is = getClass().getResourceAsStream(emailResource);

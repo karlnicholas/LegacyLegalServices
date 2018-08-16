@@ -64,7 +64,7 @@ public class OpinionViewBuilder {
             statuteKeyArray.getItem().add(statuteKey);
         }
         // call statutesws to get details of statutes 
-        statutesrs.ResponseArray responseArray = statutesRs.findStatutes(statuteKeyArray);
+        statutesrs.KeyHierarchyPairs keyHierarchyPairs = statutesRs.getStatutesAndHierarchies(statuteKeyArray);
         //
     	List<StatuteView> statuteViews = new ArrayList<>();
         // copy results into the new list ..
@@ -74,7 +74,7 @@ public class OpinionViewBuilder {
         	OpinionStatuteCitation citation = itc.next();
         	if ( citation.getStatuteCitation().getStatuteKey().getTitle() != null ) {
         		// find the statutesLeaf from the Statutes service and return with all parents filled out.
-	            StatutesLeaf statutesLeaf = findStatutesLeaf(responseArray, citation.getStatuteCitation().getStatuteKey());
+	            StatutesLeaf statutesLeaf = findStatutesLeaf(keyHierarchyPairs, citation.getStatuteCitation().getStatuteKey());
 	            if ( statutesLeaf == null ) {
 	            	if ( logger.getLevel() == Level.FINE ) {
 	            		errorKeys.add(citation.getStatuteCitation().getStatuteKey());
@@ -201,18 +201,18 @@ public class OpinionViewBuilder {
 	}
     /**
      * Build out the StatutesBaseClass with parent pointers
-     * @param responseArray
+     * @param keyHierarchyPairs
      * @param key
      * @return
      */
-    private StatutesLeaf findStatutesLeaf(statutesrs.ResponseArray responseArray, StatuteKey key) {
+    private StatutesLeaf findStatutesLeaf(statutesrs.KeyHierarchyPairs keyHierarchyPairs, StatuteKey key) {
 		List<StatutesBaseClass> subPaths = null;
     	final String title = key.getTitle();
     	final String sectionNumber = key.getSectionNumber();
-    	for ( statutesrs.ResponsePair responsePair: responseArray.getItem()) {
-    		statutesrs.StatuteKey statuteKey = responsePair.getStatuteKey();
+    	for ( statutesrs.KeyHierarchyPair keyHierarchyPair: keyHierarchyPairs.getItem()) {
+    		statutesrs.StatuteKey statuteKey = keyHierarchyPair.getStatuteKey();
     		if ( title.equals(statuteKey.getTitle()) && sectionNumber.equals(statuteKey.getSectionNumber()) ) {
-    			subPaths = responsePair.getStatutesPath();
+    			subPaths = keyHierarchyPair.getStatutesPath();
     			break;
     		}
     	}

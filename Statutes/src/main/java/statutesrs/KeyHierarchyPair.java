@@ -17,12 +17,12 @@ import javax.xml.bind.annotation.XmlType;
 import statutes.StatutesBaseClass;
 
 /**
- * <p>Java class for responsePair complex type.
+ * <p>Java class for KeyHierarchyPair complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="responsePair"&gt;
+ * &lt;complexType name="keyPathPair"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
@@ -37,11 +37,11 @@ import statutes.StatutesBaseClass;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "responsePair", propOrder = {
+@XmlType(name = "keyHierarchyPair", propOrder = {
     "statuteKey",
     "statutesPath"
 })
-public class ResponsePair {
+public class KeyHierarchyPair {
 
     protected StatuteKey statuteKey;
     protected List<StatutesBaseClass> statutesPath;
