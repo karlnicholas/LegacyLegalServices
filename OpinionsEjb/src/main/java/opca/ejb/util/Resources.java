@@ -52,15 +52,6 @@ public class Resources {
         return Logger.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
     }
 
-    private TransformerFactory tf;
-    @Produces
-    public TransformerFactory produceTransformerFactory() {
-    	if ( tf == null ) {
-	    	tf = TransformerFactory.newInstance();
-    	}
-    	return tf;
-    }
-    
 	private static final String defaultAddress = "http://localhost:8080/statutesrs/rs/";
 	
 	@Produces

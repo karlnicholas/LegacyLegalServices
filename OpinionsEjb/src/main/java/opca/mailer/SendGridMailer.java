@@ -29,7 +29,6 @@ import opca.model.User;
 import opca.view.OpinionView;
 
 public class SendGridMailer {
-	@Inject private TransformerFactory tf;
 	@Inject private Logger logger;
 	@Resource(mappedName = "java:jboss/mail/SendGrid")
 	private Session mailSession;
@@ -48,6 +47,7 @@ public class SendGridMailer {
 	public boolean sendGridEmail(EmailInformation emailInformation, String emailResource) {
 		
 		try {
+			TransformerFactory tf = TransformerFactory.newInstance();
 			JAXBContext jc = JAXBContext.newInstance(EmailInformation.class);
 			JAXBSource source = new JAXBSource(jc, emailInformation);
 			// set up XSLT transformation
@@ -106,6 +106,7 @@ public class SendGridMailer {
 	public boolean sendGridPrint(EmailInformation emailInformation, String emailResource) {
 		
 		try {
+			TransformerFactory tf = TransformerFactory.newInstance();
 			JAXBContext jc = JAXBContext.newInstance(EmailInformation.class);
 			JAXBSource source = new JAXBSource(jc, emailInformation);
 			// set up XSLT transformation
