@@ -1,7 +1,10 @@
 package opca.controller;
 
+import java.util.List;
 import java.util.logging.Logger;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.event.PhaseEvent;
 import javax.inject.Inject;
@@ -9,14 +12,20 @@ import javax.inject.Inject;
 import opca.scraper.CACaseScraper;
 import opca.service.CAOnlineUpdates;
 import opca.service.SystemService;
+import service.StatutesService;
+import statutes.StatutesTitles;
 
 @ManagedBean
 public class IndexController {
-	@Inject private SystemService systemService;
+	@EJB private SystemService systemService;
     private String userCountMessage;
 	@Inject Logger logger;
-	@Inject private CAOnlineUpdates caOnlineUpdates;
+	@EJB private CAOnlineUpdates caOnlineUpdates;
     
+    public void testNothing() {
+        logger.info("Test Nothing");
+    }
+
     public void testUpdate() {
         logger.info("Starting Scraper Update");
         caOnlineUpdates.updateOpinionViews(caOnlineUpdates.updateDatabase(new CACaseScraper(false)));

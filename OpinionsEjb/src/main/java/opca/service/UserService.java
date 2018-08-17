@@ -14,13 +14,14 @@ import opca.model.User;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 @Stateless
 public class UserService {
     @Inject private EntityManager em;
-    @Inject private RoleSingletonBean roleBean;
+    @EJB private RoleSingletonBean roleBean;
 
     /**
      * Register new users. Encodes the password and adds the "USER" role to the user's roles.

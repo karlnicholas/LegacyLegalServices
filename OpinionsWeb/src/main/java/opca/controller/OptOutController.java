@@ -1,6 +1,7 @@
 package opca.controller;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -11,7 +12,7 @@ import opca.web.form.AboutForm;
 @ManagedBean
 public class OptOutController {
 	@Inject private FacesContext facesContext;
-	@Inject private SystemService systemService;
+	@EJB private SystemService systemService;
 	private AboutForm aboutForm;
 	@PostConstruct
 	public void postConstruct() {

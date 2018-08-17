@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.inject.Inject;
 
 import opca.service.OpinionViewSingleton;
 import opca.service.ViewParameters;
@@ -16,7 +16,7 @@ import opca.view.OpinionView;
 
 @ManagedBean
 public class OpinionsController {
-	@Inject private OpinionViewSingleton opinionViewSingleton;
+	@EJB private OpinionViewSingleton opinionViewSingleton;
 
     private int currentIndex;
     private String openOpinion;

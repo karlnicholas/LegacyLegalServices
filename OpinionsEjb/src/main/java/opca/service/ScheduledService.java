@@ -12,7 +12,7 @@ import opca.scraper.CACaseScraper;
 @Singleton
 public class ScheduledService {
     @Inject private Logger logger;
-    @Inject private CAOnlineUpdates caOnlineUpdates;
+    @EJB private CAOnlineUpdates caOnlineUpdates;
     @EJB private SystemService systemService;
     @EJB private OpinionViewSingleton opinionViewSingleton;
 

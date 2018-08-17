@@ -1,6 +1,5 @@
 package opca.service;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -25,9 +24,8 @@ import opca.view.OpinionView;
 import opca.view.OpinionViewBuilder;
 import service.StatutesService;
 
-@SuppressWarnings("serial")
 @Stateless
-public class OpinionViewLoad  implements Serializable {
+public class OpinionViewLoad {
 	@Inject private Logger logger;
 	@Inject private EntityManager em;
 	@Inject private StatutesService statutesService;
@@ -167,8 +165,12 @@ public class OpinionViewLoad  implements Serializable {
 				okIt.remove();
 			}
 		}
-		List<SlipOpinion> opinions = loadSlipOpinionsForKeys(opinionKeys);
-		buildListedOpinionViews(opinionViewData, opinions);
+		if ( opinionKeys.size() > 0 ) {
+			List<SlipOpinion> opinions = loadSlipOpinionsForKeys(opinionKeys);
+			buildListedOpinionViews(opinionViewData, opinions);
+		} else {
+			buildOpinionViews(opinionViewData);
+		}
 	}
 	private void buildListedOpinionViews(OpinionViewData opinionViewData, List<SlipOpinion> opinions) {
 		List<OpinionBase> opinionOpinionCitations = new ArrayList<>();

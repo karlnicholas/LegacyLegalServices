@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +17,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+
+import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import opca.memorydb.CitationStore;
 import opca.model.OpinionBase;
@@ -39,6 +42,7 @@ import statutesrs.StatutesTitlesArray;
  *
  */
 @Stateless
+@TransactionTimeout(value = 600, unit = TimeUnit.SECONDS)
 public class CAOnlineUpdates {	
 	@Inject private Logger logger;
 	@Inject private EntityManager em;
@@ -49,9 +53,10 @@ public class CAOnlineUpdates {
 
 	// for testing only
 	// hmmm
-	public CAOnlineUpdates(EntityManager em) {
+	public CAOnlineUpdates(EntityManager em, StatutesService statutesService) {
 		this.em = em;
 		logger = Logger.getLogger(CAOnlineUpdates.class.getName());
+		this.statutesService = statutesService;
 	}
 
 	public void updateOpinionViews(List<OpinionKey> opinionKeys) {
@@ -71,7 +76,7 @@ public class CAOnlineUpdates {
 		}
 		//
 //		onlineOpinions.remove(0);
-//		onlineOpinions = onlineOpinions.subList(0, 5);
+//		onlineOpinions = onlineOpinions.subList(0, 340);
 //		onlineOpinions = onlineOpinions.subList(0, 0);
 		//
 		List<SlipOpinion> currentOpinions = em.createNamedQuery("SlipOpinion.findAll", SlipOpinion.class).getResultList();
@@ -320,7 +325,8 @@ public class CAOnlineUpdates {
 		// operationally much lower if update every night
 		for ( OpinionBase citedOpinion: citedOpinions ) {
 			for (SlipOpinion deleteOpinion: currentCopy) {
-				citedOpinion.removeReferringOpinion(deleteOpinion);
+				if ( citedOpinion != null )
+					citedOpinion.removeReferringOpinion(deleteOpinion);
 			}
 		}
 		

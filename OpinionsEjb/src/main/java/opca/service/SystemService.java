@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 import javax.ejb.Asynchronous;
+import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -17,8 +18,8 @@ import opca.model.User;
 
 @Stateless
 public class SystemService {
-	@Inject private UserService userService;
-	@Inject private OpinionViewSingleton opinionViewSingleton;
+	@EJB private UserService userService;
+	@EJB private OpinionViewSingleton opinionViewSingleton;
 	@Inject private SendGridMailer sendGridMailer;
     @Resource private SessionContext ctx;
     @Inject private Logger logger;

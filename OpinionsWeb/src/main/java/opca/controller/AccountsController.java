@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
@@ -26,8 +27,8 @@ import opca.web.util.WebResources;
 @ManagedBean
 public class AccountsController {
     @Inject protected FacesContext facesContext;
-    @Inject protected UserService userService;
-    @Inject protected SystemService systemService;
+    @EJB protected UserService userService;
+    @EJB protected SystemService systemService;
 //    @Inject private UserCodesController userCodesController;
     
     public static final String NAV_ACCOUNTS_REDIRECT = "/views/accounts/accounts.xhtml?faces-redirect=true";

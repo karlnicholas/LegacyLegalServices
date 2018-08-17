@@ -24,7 +24,6 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.xml.transform.TransformerFactory;
 
 import client.StatutesRsService;
 import service.StatutesService;

@@ -3,6 +3,7 @@ package opca.controller;
 import java.io.IOException;
 import java.security.Principal;
 
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
@@ -16,7 +17,7 @@ import opca.service.UserService;
 
 @ManagedBean
 public class VerifyController {
-	@Inject private UserService userService;
+	@EJB private UserService userService;
 	@Inject private FacesContext facesContext;
 
 	private String email;
