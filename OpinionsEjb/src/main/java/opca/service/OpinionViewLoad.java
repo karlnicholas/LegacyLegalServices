@@ -39,6 +39,7 @@ public class OpinionViewLoad {
 
 	@Asynchronous
 	public void load(OpinionViewData opinionViewData) {
+		// prevent all exceptions from leaving @Asynchronous block
 		try {
 			logger.info("load start");
 			opinionViewData.setReady( false );
@@ -53,6 +54,7 @@ public class OpinionViewLoad {
 
 	@Asynchronous
 	public void loadNewOpinions(OpinionViewData opinionViewData, List<OpinionKey> opinionKeys) {
+		// prevent all exceptions from leaving @Asynchronous block
 		try {
 			logger.info("loadNewOpinions start");
 			opinionViewData.setReady( false );

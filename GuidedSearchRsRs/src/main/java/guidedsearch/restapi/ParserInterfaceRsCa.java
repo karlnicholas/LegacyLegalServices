@@ -15,7 +15,7 @@ import statutes.StatutesTitles;
 import statutesrs.StatuteHierarchy;
 
 public class ParserInterfaceRsCa implements ParserInterface {
-	private StatutesRsService service;
+	private StatutesService statutesService;
 
 	public ParserInterfaceRsCa() {
 		init("http://localhost:8080/statutesrs/rs/");
@@ -33,7 +33,7 @@ public class ParserInterfaceRsCa implements ParserInterface {
 				rsLocation = new URL(s);
 			else 
 				rsLocation = new URL(defaultAddress);
-			service = new StatutesRsService(rsLocation);
+			statutesService = new StatutesRsService(rsLocation).getRsService();
 		} catch (MalformedURLException e) {
 			throw new RuntimeException( e );
 		}
@@ -41,8 +41,7 @@ public class ParserInterfaceRsCa implements ParserInterface {
 
 	@Override
 	public List<StatutesRoot> getStatutes() {
-		StatutesService statutesRs = service.getRsService();
-		List<StatutesRoot> statutesList = statutesRs.getStatutesRoots().getItem();
+		List<StatutesRoot> statutesList = statutesService.getStatutesRoots().getItem();
 //		for ( int i=0, l=objectList.size(); i<l; ++i ) {
 //			statutesList.add(  (StatutesRoot) objectList.get(i) );
 //		}		
@@ -51,15 +50,13 @@ public class ParserInterfaceRsCa implements ParserInterface {
 
 	@Override
 	public StatutesBaseClass findReference(String title, SectionNumber sectionNumber) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public StatutesTitles[] getStatutesTitles() {
 		StatutesTitles[] statutesTitles; 
-		StatutesService statutesRs = service.getRsService();
-		List<StatutesTitles> statutesTitlesList = statutesRs.getStatutesTitles().getItem();
+		List<StatutesTitles> statutesTitlesList = statutesService.getStatutesTitles().getItem();
 		statutesTitles = new StatutesTitles[statutesTitlesList.size()];
 		for (int i=0; i < statutesTitlesList.size(); ++i ) {
 			statutesTitles[i] = (StatutesTitles) statutesTitlesList.get(i); 
@@ -69,38 +66,32 @@ public class ParserInterfaceRsCa implements ParserInterface {
 
 	@Override
 	public String getShortTitle(String title) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getFacetHead(String title) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Map<String, StatutesTitles> getMapStatutesToTitles() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean loadStatutes() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public StatutesRoot findReferenceByTitle(String title) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public StatuteHierarchy getStatutesHierarchy(String fullFacet) {
-		StatutesService statutesRs = service.getRsService();
-		return statutesRs.getStatuteHierarchy(fullFacet);
+		return statutesService.getStatuteHierarchy(fullFacet);
 	}
 
 }

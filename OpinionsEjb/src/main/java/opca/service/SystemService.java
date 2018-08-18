@@ -28,11 +28,15 @@ public class SystemService {
      */
     @Asynchronous
     public void startVerify(User user) {
-//    	ctx.getBusinessObject(SystemService.class).sendVerifyEmail(user);
-    	sendGridMailer.sendEmail(user, "/xsl/verify.xsl");
-    	user.setStartVerify(true);
-    	userService.merge(user);
-    	logger.info("Verification started: " + user.getEmail());
+		// prevent all exceptions from leaving @Asynchronous block
+    	try {
+	    	sendGridMailer.sendEmail(user, "/xsl/verify.xsl");
+	    	user.setStartVerify(true);
+	    	userService.merge(user);
+	    	logger.info("Verification started: " + user.getEmail());
+    	} catch ( Exception ex ) {
+	    	logger.severe("Verification failed: " + ex.getMessage());
+    	}
     }
     	
     /**
@@ -42,7 +46,13 @@ public class SystemService {
      */
     @Asynchronous
 	public void sendAboutEmail(String email, String comment, Locale locale) {
-    	sendGridMailer.sendComment(email, comment, locale);
+		// prevent all exceptions from leaving @Asynchronous block
+    	try {
+	    	sendGridMailer.sendComment(email, comment, locale);
+	    	logger.info("Comment sent" );
+		} catch ( Exception ex ) {
+	    	logger.severe("Comment send failed: " + ex.getMessage());
+		}
     }
 
 	public void sendWelcomeEmail(User user) {
