@@ -39,22 +39,30 @@ public class OpinionViewLoad {
 
 	@Asynchronous
 	public void load(OpinionViewData opinionViewData) {
-		logger.info("load start");
-		opinionViewData.setReady( false );
-		buildOpinionViews(opinionViewData);
-		opinionViewData.setStringDateList();
-		opinionViewData.setReady( true );
-		logger.info("load finish: " + opinionViewData.getOpinionViews().size());
+		try {
+			logger.info("load start");
+			opinionViewData.setReady( false );
+			buildOpinionViews(opinionViewData);
+			opinionViewData.setStringDateList();
+			opinionViewData.setReady( true );
+			logger.info("load finish: " + opinionViewData.getOpinionViews().size());
+		} catch ( Exception ex ) {
+			logger.info("load failed: " + ex.getLocalizedMessage());
+		}
 	}
 
 	@Asynchronous
 	public void loadNewOpinions(OpinionViewData opinionViewData, List<OpinionKey> opinionKeys) {
-		logger.info("loadNewOpinions start");
-		opinionViewData.setReady( false );
-		buildNewOpinionViews(opinionViewData, opinionKeys);
-		opinionViewData.setStringDateList();
-		opinionViewData.setReady( true );
-		logger.info("loadNewOpinions finish: " + opinionViewData.getOpinionViews().size());
+		try {
+			logger.info("loadNewOpinions start");
+			opinionViewData.setReady( false );
+			buildNewOpinionViews(opinionViewData, opinionKeys);
+			opinionViewData.setStringDateList();
+			opinionViewData.setReady( true );
+			logger.info("loadNewOpinions finish: " + opinionViewData.getOpinionViews().size());
+		} catch ( Exception ex ) {
+			logger.info("load failed: " + ex.getLocalizedMessage());
+		}
 	}
 
 	private void initReportDates(OpinionViewData opinionViewData, List<Date> dates) {

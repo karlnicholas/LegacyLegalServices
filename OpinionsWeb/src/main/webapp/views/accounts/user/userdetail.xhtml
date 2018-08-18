@@ -27,12 +27,20 @@
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-2"><h:commandButton id="signout" action="#{accountsController.signOut()}" value="Sign-Out" class="btn btn-default"/></div>
     <div class="col-sm-2"><h:commandButton id="update" action="#{accountsController.updateDetails()}" value="Update Details" class="btn"/></div>
-	  <ui:fragment rendered="#{!accountsController.verified}">
-	    <div class="col-sm-2"><h:commandButton id="verify" action="#{accountsController.startVerify()}" value="Verify" class="btn"/></div>
-	  </ui:fragment>
-	  <ui:fragment rendered="#{accountsController.verified}">
-		<div class="col-sm-offset-2 col-sm-2"><h:button id="changepassword" outcome="/views/accounts/user/changepassword.xhtml" value="Change Password" class="btn"/></div>
-	  </ui:fragment>
+  </div>
+  <div class="form-group">
+	<ui:fragment rendered="#{!accountsController.verified}">
+	  <div class="col-sm-offset-2 col-sm-2"><h:commandButton id="verify" action="#{accountsController.startVerify()}" value="Verify" class="btn"/></div>
+	</ui:fragment>
+	<ui:fragment rendered="#{accountsController.verified}">
+	  <div class="col-sm-offset-2 col-sm-2"><h:button id="changepassword" outcome="/views/accounts/user/changepassword.xhtml" value="Change Password" class="btn"/></div>
+	</ui:fragment>
+	<ui:fragment rendered="#{!accountsController.optout}">
+      <div class="col-sm-2"><h:commandButton id="optout" action="#{accountsController.setOptout(true)}" value="Opt-Out" class="btn"/></div>
+	</ui:fragment>
+	<ui:fragment rendered="#{accountsController.optout}">
+      <div class="col-sm-2"><h:commandButton id="optin" action="#{accountsController.setOptout(false)}" value="Opt-In" class="btn"/></div>
+	</ui:fragment>
   </div>
   <ui:fragment rendered="#{accountsController.admin}">
     <div class="form-group">

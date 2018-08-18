@@ -6,10 +6,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
 
-import javax.annotation.Resource;
 import javax.ejb.Asynchronous;
 import javax.ejb.EJB;
-import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -19,39 +17,33 @@ import opca.model.User;
 @Stateless
 public class SystemService {
 	@EJB private UserService userService;
+	@EJB private SystemService systemService;
 	@EJB private OpinionViewSingleton opinionViewSingleton;
 	@Inject private SendGridMailer sendGridMailer;
-    @Resource private SessionContext ctx;
     @Inject private Logger logger;
     /**
      * Merge user with Database
      * @param user to merge.
      * @return Merged User
      */
+    @Asynchronous
     public void startVerify(User user) {
+//    	ctx.getBusinessObject(SystemService.class).sendVerifyEmail(user);
+    	sendGridMailer.sendEmail(user, "/xsl/verify.xsl");
     	user.setStartVerify(true);
     	userService.merge(user);
-    	ctx.getBusinessObject(SystemService.class).sendVerifyEmail(user);
+    	logger.info("Verification started: " + user.getEmail());
     }
-    	
-    @Asynchronous
-    public void sendVerifyEmail(User user) {
-    	sendGridMailer.sendEmail(user, "/xsl/verify.xsl");
-	}
     	
     /**
      * Merge user with Database
      * @param user to merge.
      * @return Merged User
      */
-	public void sendAboutEmail(String email, String comment, Locale locale) {
-    	ctx.getBusinessObject(SystemService.class).sendAboutEmailAsync(email, comment, locale);
-    }
-
     @Asynchronous
-    public void sendAboutEmailAsync(String email, String comment, Locale locale) {
+	public void sendAboutEmail(String email, String comment, Locale locale) {
     	sendGridMailer.sendComment(email, comment, locale);
-	}
+    }
 
 	public void sendWelcomeEmail(User user) {
     	user.setWelcomed(true);

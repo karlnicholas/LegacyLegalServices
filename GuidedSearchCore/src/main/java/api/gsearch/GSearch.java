@@ -1,7 +1,6 @@
 package api.gsearch;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -16,14 +15,9 @@ import org.apache.lucene.facet.FacetsCollector;
 import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.facet.LabelAndValue;
 import org.apache.lucene.facet.taxonomy.FastTaxonomyFacetCounts;
-import org.apache.lucene.facet.taxonomy.TaxonomyReader;
-import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser;
 import org.apache.lucene.search.Collector;
-import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.MultiCollector;
 import org.apache.lucene.search.Query;
@@ -36,7 +30,6 @@ import org.apache.lucene.search.highlight.QueryScorer;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.search.highlight.TextFragment;
 import org.apache.lucene.search.highlight.TokenSources;
-import org.apache.lucene.store.FSDirectory;
 
 import api.gsearch.util.FacetUtils;
 import api.gsearch.viewmodel.*;
@@ -58,24 +51,18 @@ public class GSearch {
 	
 	// The parsed statute hierarchy
 //	private StatutesTitles[] statutesTitles; 
-	private IndexReader indexReader;
-	private TaxonomyReader taxoReader;
-	private IndexSearcher searcher;
 	private FacetsConfig facetsConfig;
 	private Analyzer analyzer;
 	private StandardQueryParser parser;
 	private int maxTopDocs;
 	private ParserInterface parserInterface;
 
-
 	// This is meant to be put into an application scope
 	// after instantiation .. 
-	public GSearch(ParserInterface parserInterface, Path index, Path indexTaxo) throws IOException {
+	public GSearch(ParserInterface parserInterface) throws IOException {
 //		statutesTitles = parserInterface.getStatutesTitles();
+		
 		this.parserInterface = parserInterface;
-		indexReader = DirectoryReader.open( FSDirectory.open(index));
-        taxoReader = new DirectoryTaxonomyReader(FSDirectory.open(indexTaxo));
-        searcher = new IndexSearcher(indexReader);
         facetsConfig = new FacetsConfig();
 	    facetsConfig.setHierarchical(FacetsConfig.DEFAULT_INDEX_FIELD_NAME, true);
 //	    facetsConfig.setRequireDimCount(FacetsConfig.DEFAULT_INDEX_FIELD_NAME, true);
@@ -84,11 +71,6 @@ public class GSearch {
 	    maxTopDocs = 1000;
 	}
 	
-	public void destroy() throws IOException {
-		indexReader.close();
-		taxoReader.close();
-	}
-
 /*		
 	public boolean viewModelIsTerminatingSubcode(viewModel viewModel) {
 		return viewModel.pathList.get(viewModel.pathList.size()-1).section;
@@ -302,13 +284,13 @@ public class GSearch {
 			collector = topScoreDocCollector = TopScoreDocCollector.create(maxTopDocs);
 		}
 		
-    	searcher.search(query, collector);
+    	LuceneSingleton.getInstance().getSearcher().search(query, collector);
     	
     	// 2
     	if ( viewModel.getState() == STATES.START ) {
 	    	// Here have used multiple CategoryPaths, so
 	    	// ignore the subresults and get the various first level facet results
-    	    Facets facets = new FastTaxonomyFacetCounts(taxoReader, facetsConfig, facetsCollector);
+    	    Facets facets = new FastTaxonomyFacetCounts(LuceneSingleton.getInstance().getTaxoReader(), facetsConfig, facetsCollector);
     	    FacetResult result = facets.getTopChildren(maxTopDocs, FacetsConfig.DEFAULT_INDEX_FIELD_NAME );
     	    
     	    if ( result != null ) {
@@ -327,7 +309,7 @@ public class GSearch {
     	// 3 or 4 
     	else if ( viewModel.getState() == STATES.BROWSE) {
         	// using the path, so only one CategoryPath ... (with some number of sub-results)
-    	    Facets facets = new FastTaxonomyFacetCounts(taxoReader, facetsConfig, facetsCollector);
+    	    Facets facets = new FastTaxonomyFacetCounts(LuceneSingleton.getInstance().getTaxoReader(), facetsConfig, facetsCollector);
     	    FacetResult result = facets.getTopChildren(maxTopDocs, FacetsConfig.DEFAULT_INDEX_FIELD_NAME, catPath );
     		
 	    	// specific path, so get the result
@@ -368,7 +350,7 @@ public class GSearch {
 	    	for (int i = start; i < end; i++) {
 	
 	            int docId = hits[i].doc;
-	            Document doc = searcher.doc(docId);
+	            Document doc = LuceneSingleton.getInstance().getSearcher().doc(docId);
 	            
 	            IndexableField textField = doc.getField("sectiontext");
 	            SectionNumberPosition sectionNumber = new SectionNumberPosition( 
@@ -382,9 +364,7 @@ public class GSearch {
 	            if ( viewModel.isFragments() ) { 
 	            	// getTokenStream(String field, Fields tvFields, String text, Analyzer analyzer, int maxStartOffset)
 	            	// Get a token stream from either un-inverting a term vector if possible, or by analyzing the text.
-	            	//IndexReader.getTermVectors(int docId)
-//	    	    	TokenStream tokenStream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), docId, "sectiontext", analyzer);
-	    	    	TokenStream tokenStream = TokenSources.getTokenStream("sectiontext", indexReader.getTermVectors(docId), text, analyzer,  highlighter.getMaxDocCharsToAnalyze() - 1);
+	    	    	TokenStream tokenStream = TokenSources.getTokenStream("sectiontext", LuceneSingleton.getInstance().getIndexReader().getTermVectors(docId), text, analyzer,  highlighter.getMaxDocCharsToAnalyze() - 1);
 	            	TextFragment[] frag = null;
 	    			try {
 	    				frag = highlighter.getBestTextFragments(tokenStream, text, false, 1);
@@ -426,7 +406,6 @@ public class GSearch {
 	    		StatutesBaseClass termSection = viewModel.findPathEnd();
 	    		if ( termSection != null && termSection.getStatutesLeaf() != null ) {
 //	    			String fullFacet = FacetUtils.toString(FacetUtils.getFullFacet(viewModel.getFacetHead(), termSection));
-	    			//TODO: This has changed
 	    			String fullFacet = termSection.getFullFacet();
 		        	for (SectionNumber sectionNumber : termSection.getStatutesLeaf().getSectionNumbers() ) {
 		        		int sectionNumberPosition = sectionNumber.getPosition();
@@ -509,7 +488,6 @@ public class GSearch {
 	    	try {
 	    		q = parser.parse(viewModel.getTerm(), "sectiontext");
 	    	} catch (Throwable t) {
-				// TODO Auto-generated catch block
 				logger.severe("Parser error for term |"+viewModel.getTerm()+"| = " + t.getMessage());
 				q = new MatchAllDocsQuery();
 			}

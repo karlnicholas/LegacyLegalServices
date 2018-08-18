@@ -74,7 +74,6 @@ public class OpinionViewSingleton {
 	
 	@PostConstruct
 	public void postConstruct() {
-//		opinionViewCache = ctx.getBusinessObject(OpinionViewCache.class);
 		opinionViewLoad.load(opinionViewData);
 	}
 

@@ -1,8 +1,6 @@
 package guidedsearch.restapi;
 
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -10,7 +8,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import api.gsearch.GSearch;
-import api.gsearch.viewmodel.EntryReference;
 import api.gsearch.viewmodel.ViewModel;
 import statutes.StatutesBaseClass;
 import statutes.StatutesLeaf;
@@ -20,34 +17,14 @@ import statutes.StatutesRoot;
 @Path("gs")
 @Produces("application/json")
 public class GuidedSearchApi {
-	private GSearch gsearch;
 
     public GuidedSearchApi() {
-		try {
-			String gsindexloc = System.getenv("gsindexloc");
-			if ( gsindexloc == null ) {
-				gsindexloc = "c:/users/karln/opcastorage/index";
-			}
-
-			String gsindextaxoloc = System.getenv("gsindextaxoloc");
-			if ( gsindextaxoloc == null ) {
-				gsindextaxoloc = "c:/users/karln/opcastorage/indextaxo";
-			}
-
-			ParserInterfaceRsCa parserInterface = new ParserInterfaceRsCa();
-			gsearch = new GSearch(parserInterface, Paths.get(gsindexloc), Paths.get(gsindextaxoloc));
-
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} 
-		
 	}
 
     @GET
 	public ViewModel handleRequest( @QueryParam("path") String path, @QueryParam("term") String term, @QueryParam("fragments") boolean fragments) {
-		// yea, this is all wrong .. 
 		try {
-			ViewModel viewModel = gsearch.handleRequest(path, term, fragments);
+			ViewModel viewModel = new GSearch(new ParserInterfaceRsCa()).handleRequest(path, term, fragments);
 			if ( viewModel.getStatutesBaseClass() != null ) {
 				viewModel.setStatutesBaseClass( createNewBaseClass(viewModel.getStatutesBaseClass()) );
 			}
@@ -57,7 +34,7 @@ public class GuidedSearchApi {
 			throw new RuntimeException(e);
 		}
 	}
-
+/*
 	private void recurseEntries(List<EntryReference> entries) {
 		for ( EntryReference entryReference: entries) {
 			if ( entryReference.getStatutesBaseClass() != null ) {
@@ -69,7 +46,7 @@ public class GuidedSearchApi {
 			}
 		}
 	}
-	
+*/	
 	private StatutesBaseClass createNewBaseClass(StatutesBaseClass statutesBaseClass) {
 		StatutesBaseClass newBaseClass;
 		if ( statutesBaseClass instanceof StatutesRoot) {

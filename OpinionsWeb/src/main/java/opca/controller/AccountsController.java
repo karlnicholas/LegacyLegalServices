@@ -239,6 +239,35 @@ public class AccountsController {
     }
 
     /**
+     * optout current user
+     * 
+     * @return Naviation to /views/account.xhtml
+     */
+    public String setOptout(boolean optout) {
+        try {
+        	if ( optout ) {
+        		userService.setOptOut(currentUser);
+        	} else {
+        		userService.clearOptOut(currentUser);
+        	}
+        } catch (Exception e) {
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Update failed", WebResources.getRootErrorMessage(e)));
+            return null;
+        }
+        // message and navigation
+        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Opt-" + (optout?"Out":"In") + " Succeeded", ""));
+        
+        return NAV_ACCOUNTS;
+    }
+    /**
+     * Test to see if current user opted out
+     * @return true if opted out
+     */
+    public boolean isOptout() {
+        if ( currentUser == null ) return false;
+        return currentUser.isOptout();
+    }
+    /**
      * Currently logged user or null.
      *  
      * @return User
