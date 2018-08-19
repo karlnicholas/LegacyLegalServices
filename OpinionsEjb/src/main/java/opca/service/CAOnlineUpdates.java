@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,8 +16,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-
-import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import opca.memorydb.CitationStore;
 import opca.model.OpinionBase;
@@ -42,7 +39,6 @@ import statutesrs.StatutesTitlesArray;
  *
  */
 @Stateless
-@TransactionTimeout(value = 600, unit = TimeUnit.SECONDS)
 public class CAOnlineUpdates {	
 	@Inject private Logger logger;
 	@Inject private EntityManager em;

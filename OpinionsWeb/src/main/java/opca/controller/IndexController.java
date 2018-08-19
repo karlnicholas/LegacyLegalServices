@@ -7,33 +7,28 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.event.PhaseEvent;
 import javax.inject.Inject;
 
-import opca.scraper.CACaseScraper;
-import opca.service.CAOnlineUpdates;
-import opca.service.SystemService;
+import opca.service.ScheduledService;
 
 @ManagedBean
 public class IndexController {
-	@EJB private SystemService systemService;
     private String userCountMessage;
 	@Inject Logger logger;
-	@EJB private CAOnlineUpdates caOnlineUpdates;
+	@EJB private ScheduledService scheduledService;
     
     public void testNothing() {
         logger.info("Test Nothing");
     }
 
     public void testUpdate() {
-        logger.info("Starting Scraper Update");
-        caOnlineUpdates.updateOpinionViews(caOnlineUpdates.updateDatabase(new CACaseScraper(false)));
-        logger.info("Done Update");
+    	scheduledService.updateSlipOpinions();
     }
     
     public void testWelcome() {
-    	systemService.doWelcomeService();
+    	scheduledService.welcomingService();;
     }
 
     public void testOpinionReport() {
-    	systemService.sendOpinionReports();
+    	scheduledService.opinionReport();
     }
 
     private String message;

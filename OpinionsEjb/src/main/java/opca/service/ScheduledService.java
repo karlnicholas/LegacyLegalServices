@@ -1,35 +1,83 @@
 package opca.service;
 
+import java.util.List;
 import java.util.logging.Logger;
 
+import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.ejb.EJBContext;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
+import javax.transaction.UserTransaction;
 
+import opca.model.OpinionKey;
 import opca.scraper.CACaseScraper;
 
+@TransactionManagement(TransactionManagementType.BEAN)
 @Singleton
 public class ScheduledService {
     @Inject private Logger logger;
     @EJB private CAOnlineUpdates caOnlineUpdates;
     @EJB private SystemService systemService;
     @EJB private OpinionViewSingleton opinionViewSingleton;
+    @Resource private EJBContext context;
 
-    @Schedule(second="0", minute="30", hour="00", persistent=false)        // 03:30 am (12:30 am AZ ) every day
+    @Schedule(second="0", minute="00", hour="01", persistent=false)        // 03:30 am (12:30 am AZ ) every day
     // timeout issue.
     // @TransactionTimeout(value=1, unit = TimeUnit.HOURS)
     // this is handled in wildfly standalone.xml configuration file
     // though it is currently pretty fast, so maybe not needed.
     public void updateSlipOpinions() {
-        logger.info("STARTING updateOpinionViews");
+        logger.info("STARTING updateSlipOpinions");
 //      caOnlineUpdates.updateDatabase(new TestCACaseScraper(false));
-        opinionViewSingleton.updateOpinionViews(
-    		caOnlineUpdates.updateDatabase(new CACaseScraper(false))
-		);
-        logger.info("DONE updateOpinionViews");
+        List<OpinionKey> opinionKeys = null;
+        UserTransaction userTransaction = context.getUserTransaction();
+        try {
+			userTransaction.begin();
+	        opinionKeys = caOnlineUpdates.updateDatabase(new CACaseScraper(false));
+			userTransaction.commit();
+		} catch (Exception e) {
+			try {
+				userTransaction.rollback();
+			} catch (Exception e1) {
+				throw new RuntimeException(e1);
+			}
+	        logger.severe(e.getMessage());
+	        return;
+		}
+        if ( opinionKeys != null ) {
+        	opinionViewSingleton.updateOpinionViews(opinionKeys);
+        }
+        logger.info("DONE updateSlipOpinions");
     }
 
+    @Schedule(second="0", minute="10", hour="01", persistent=false)        // 12:00 am every day
+    public void opinionReport() {
+    	systemService.sendOpinionReports();
+    }
+
+    @Schedule(second="0", minute="20", hour="01", persistent=false)        // 04:00 am every day
+    public void welcomingService() {
+        logger.info("STARTING welcomingService");
+        UserTransaction userTransaction = context.getUserTransaction();
+        try {
+			userTransaction.begin();
+			systemService.doWelcomeService();
+			userTransaction.commit();
+		} catch (Exception e) {
+			try {
+				userTransaction.rollback();
+			} catch (Exception e1) {
+				throw new RuntimeException(e1);
+			}
+	        logger.severe(e.getMessage());
+	        return;
+		}
+        logger.info("DONE welcomingService");
+    }
 /*
     @Schedule(second="0", minute="30", hour="0", persistent=false)        // 12:30 am every day
     public void verifyHousekeeping() {
@@ -62,16 +110,5 @@ public class ScheduledService {
 //        String htmlContent = mailTemplateEngine.process("verify.html", ctx);
         logger.info("VerifyEmail's sent"  );
     }
-    @Schedule(second="0", minute="27", hour="14", persistent=false)        // 04:00 am every day
-    public void welcomingService() {
-    	systemService.doWelcomeService();
-    }
-    public void opinionReport() {
-    	systemService.doWelcomeService();
-    }
 */
-    @Schedule(second="0", minute="0", hour="01", persistent=false)        // 12:00 am every day
-    public void welcomingService() {
-    	systemService.sendOpinionReports();
-    }
 }

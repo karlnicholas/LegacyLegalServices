@@ -52,19 +52,13 @@ public class OpinionViewLoad {
 		}
 	}
 
-	@Asynchronous
 	public void loadNewOpinions(OpinionViewData opinionViewData, List<OpinionKey> opinionKeys) {
-		// prevent all exceptions from leaving @Asynchronous block
-		try {
-			logger.info("loadNewOpinions start");
-			opinionViewData.setReady( false );
-			buildNewOpinionViews(opinionViewData, opinionKeys);
-			opinionViewData.setStringDateList();
-			opinionViewData.setReady( true );
-			logger.info("loadNewOpinions finish: " + opinionViewData.getOpinionViews().size());
-		} catch ( Exception ex ) {
-			logger.info("load failed: " + ex.getLocalizedMessage());
-		}
+		logger.info("loadNewOpinions start: " + opinionKeys.size());
+		opinionViewData.setReady( false );
+		buildNewOpinionViews(opinionViewData, opinionKeys);
+		opinionViewData.setStringDateList();
+		opinionViewData.setReady( true );
+		logger.info("loadNewOpinions finish: " + opinionViewData.getOpinionViews().size());
 	}
 
 	private void initReportDates(OpinionViewData opinionViewData, List<Date> dates) {
@@ -177,8 +171,10 @@ public class OpinionViewLoad {
 		}
 		if ( opinionKeys.size() > 0 ) {
 			List<SlipOpinion> opinions = loadSlipOpinionsForKeys(opinionKeys);
+			logger.info("opinions size " + opinions.size());
 			buildListedOpinionViews(opinionViewData, opinions);
 		} else {
+			logger.info("Rebuilding entire cache" + opinionKeys.size());
 			buildOpinionViews(opinionViewData);
 		}
 	}

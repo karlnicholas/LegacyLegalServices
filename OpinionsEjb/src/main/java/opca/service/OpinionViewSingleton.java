@@ -5,20 +5,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 
-import org.jboss.ejb3.annotation.TransactionTimeout;
-
 import opca.model.OpinionKey;
 import opca.view.OpinionView;
 
 @Singleton
-@TransactionTimeout(value = 600, unit = TimeUnit.SECONDS)
 public class OpinionViewSingleton {
 	@EJB private OpinionViewLoad opinionViewLoad;
 	private OpinionViewData opinionViewData;
