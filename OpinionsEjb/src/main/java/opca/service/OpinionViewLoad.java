@@ -174,7 +174,7 @@ public class OpinionViewLoad {
 			logger.info("opinions size " + opinions.size());
 			buildListedOpinionViews(opinionViewData, opinions);
 		} else {
-			logger.info("Rebuilding entire cache" + opinionKeys.size());
+			logger.info("Rebuilding entire cache");
 			buildOpinionViews(opinionViewData);
 		}
 	}

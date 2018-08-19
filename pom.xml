@@ -30,30 +30,24 @@
     <!-- Explicitly declaring the source encoding eliminates the following message: -->
     <!-- [WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent! -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
     <!-- JBoss dependency versions -->
-
-    <version.wildfly.maven.plugin>1.2.1.Final</version.wildfly.maven.plugin>
-
+    <version.wildfly.maven.plugin>1.2.2.Final</version.wildfly.maven.plugin>
     <!-- Define the version of the JBoss BOMs we want to import to specify tested stacks. -->
     <version.wildfly.bom>11.0.0.Final</version.wildfly.bom>
     <version.wildfly>11.0.0.Final</version.wildfly>
     <version.wildfly.swarm>2018.5.0</version.wildfly.swarm>
-
     <!-- other plugin versions -->
-    <version.compiler.plugin>3.1</version.compiler.plugin>
-    <version.ear.plugin>2.10</version.ear.plugin>
-    <version.surefire.plugin>2.16</version.surefire.plugin>
-    <version.war.plugin>2.6</version.war.plugin>
-
+    <version.compiler.plugin>3.8.0</version.compiler.plugin>
+    <version.ear.plugin>3.0.1</version.ear.plugin>
+    <version.surefire.plugin>2.22.0</version.surefire.plugin>
+    <version.war.plugin>3.2.2</version.war.plugin>
+    <version.ejb.plugin>3.0.1</version.ejb.plugin>
     <!-- maven-compiler-plugin -->
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
   </properties>
-
   <dependencyManagement>
     <dependencies>
-
       <!-- Define the version of the WAR so that we don't need to repeat ourselves in every module -->
       <dependency>
         <groupId>legalservices</groupId>
@@ -66,7 +60,7 @@
         <groupId>legalservices</groupId>
         <artifactId>opinions-ejb</artifactId>
         <version>${project.version}</version>
-        <type>jar</type>
+        <type>ejb</type>
         <scope>compile</scope>
       </dependency>
       <dependency>
@@ -138,6 +132,14 @@
           <inherited>true</inherited>
           <configuration>
             <skip>true</skip>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-ejb-plugin</artifactId>
+          <version>${version.ejb.plugin}</version>
+          <configuration>
+            <ejbVersion>3.1</ejbVersion>
           </configuration>
         </plugin>
       </plugins>

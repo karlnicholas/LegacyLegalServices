@@ -54,16 +54,19 @@
               <groupId>legalservices</groupId>
               <artifactId>guidedsearch-rs-rs</artifactId>
               <contextRoot>/</contextRoot>
+              <bundleFileName>guidedsearch-rs-rs.war</bundleFileName>
             </webModule>
             <webModule>
               <groupId>legalservices</groupId>
               <artifactId>statutesrs</artifactId>
               <contextRoot>statutesrs</contextRoot>
+              <bundleFileName>statutesrs.war</bundleFileName>
             </webModule>
             <webModule>
               <groupId>legalservices</groupId>
               <artifactId>opinions-web</artifactId>
               <contextRoot>opinions</contextRoot>
+              <bundleFileName>opinions-web.war</bundleFileName>
             </webModule>
           </modules>
         </configuration>
