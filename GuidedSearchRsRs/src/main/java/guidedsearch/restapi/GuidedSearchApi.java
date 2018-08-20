@@ -7,8 +7,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import api.gsearch.GSearch;
-import api.gsearch.viewmodel.ViewModel;
+import gsearch.GSearch;
+import gsearch.viewmodel.ViewModel;
 import statutes.StatutesBaseClass;
 import statutes.StatutesLeaf;
 import statutes.StatutesNode;

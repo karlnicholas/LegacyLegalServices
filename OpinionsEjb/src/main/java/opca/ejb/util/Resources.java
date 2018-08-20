@@ -25,8 +25,8 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import client.StatutesRsService;
-import service.StatutesService;
+import statutes.service.client.StatutesServiceClient;
+import statutes.service.client.StatutesServiceClientImpl;
 
 /**
  * This class uses CDI to alias Java EE resources, such as the persistence context, to CDI beans
@@ -54,7 +54,7 @@ public class Resources {
 	private static final String defaultAddress = "http://localhost:8080/statutesrs/rs/";
 	
 	@Produces
-	public StatutesService getStatutesService() {
+	public StatutesServiceClient getStatutesServiceClient() {
 		try {
 			String s = System.getenv("statutesrsservice");
 			URL rsLocation;
@@ -66,7 +66,7 @@ public class Resources {
 			Exception eLast = null;
 			while (retryCount-- > 0) {
 				try {
-					return new StatutesRsService(rsLocation).getRsService();
+					return new StatutesServiceClientImpl(rsLocation);
 				} catch (Exception e) {
 					eLast = e; 
 					try {

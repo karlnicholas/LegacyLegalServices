@@ -12,12 +12,13 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Logger;
 
-import parser.ParserInterface;
 import statutes.IteratorHandler;
 import statutes.SectionNumber;
 import statutes.StatuteRange;
 import statutes.StatutesLeaf;
 import statutes.StatutesRoot;
+import statutes.api.IStatutesApi;
+import statutesca.statutesapi.CAStatutesApiImpl;
 
 public class CASaveStatutes {
 	private static final Logger logger = Logger.getLogger(CASaveStatutes.class.getName());
@@ -29,7 +30,9 @@ public class CASaveStatutes {
 	public List<Path> createSerializedStatutes(Path codesDir, Path xmlcodes) throws Exception {
 		List<Path> outputFiles = new ArrayList<Path>();
 
-		ParserInterface parserInterface = new CALoadStatutes();
+		// purposely don't call loadStatutes because we are getting them from the raw files
+		IStatutesApi iStatutesApi = new CAStatutesApiImpl();
+		
 
 		List<Path> files = new ArrayList<Path>();
 	    try (DirectoryStream<Path> stream = Files.newDirectoryStream(codesDir)) {
@@ -48,14 +51,14 @@ public class CASaveStatutes {
 		
 		for ( Path file: files ) {
 			logger.info( "Processing " + file);
-			outputFiles.add(processFile(parserInterface, file, xmlcodes));
+			outputFiles.add(processFile(iStatutesApi, file, xmlcodes));
 		}
 		return outputFiles;
 	}
 		
-	private Path processFile(ParserInterface parserInterface, Path file, Path xmlcodes) throws Exception {
+	private Path processFile(IStatutesApi iStatutesApi, Path file, Path xmlcodes) throws Exception {
 		StatutesParser parser = new StatutesParser();
-		StatutesRoot c = parser.parse(parserInterface, StandardCharsets.ISO_8859_1, file);
+		StatutesRoot c = parser.parse(iStatutesApi, StandardCharsets.ISO_8859_1, file);
 
 /*
 // debug code

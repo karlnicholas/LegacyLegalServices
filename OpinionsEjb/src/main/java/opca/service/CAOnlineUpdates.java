@@ -28,10 +28,10 @@ import opca.model.StatuteKey;
 import opca.parser.OpinionScraperInterface;
 import opca.parser.OpinionDocumentParser;
 import opca.parser.ScrapedOpinionDocument;
-import service.StatutesService;
 import opca.parser.ParsedOpinionCitationSet;
 import statutes.StatutesTitles;
-import statutesrs.StatutesTitlesArray;
+import statutes.service.client.StatutesServiceClient;
+import statutes.service.dto.StatutesTitlesArray;
 
 /**
  * 
@@ -43,13 +43,13 @@ public class CAOnlineUpdates {
 	@Inject private Logger logger;
 	@Inject private EntityManager em;
     @EJB private OpinionViewSingleton opinionViewSingleton;
-	@Inject private StatutesService statutesService;
+	@Inject private StatutesServiceClient statutesService;
 	
 	public CAOnlineUpdates() {}
 
 	// for testing only
 	// hmmm
-	public CAOnlineUpdates(EntityManager em, StatutesService statutesService) {
+	public CAOnlineUpdates(EntityManager em, StatutesServiceClient statutesService) {
 		this.em = em;
 		logger = Logger.getLogger(CAOnlineUpdates.class.getName());
 		this.statutesService = statutesService;

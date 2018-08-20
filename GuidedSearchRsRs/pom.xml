@@ -43,14 +43,9 @@
       <groupId>legalservices</groupId>
       <artifactId>statutesca</artifactId>
     </dependency>
-    <dependency>
-      <groupId>legalservices</groupId>
-      <artifactId>statutesrs</artifactId>
-      <type>war</type>
-    </dependency>
   </dependencies>
   <build>
-    <finalName>${project.artifactId}</finalName> 
+    <finalName>${project.artifactId}</finalName>
   </build>
   <profiles>
     <profile>

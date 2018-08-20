@@ -11,7 +11,7 @@ import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
 
 import statutes.StatutesTitles;
-import service.StatutesService;
+import statutes.service.client.StatutesServiceClient;
 
 /**
  * Simply provide the statutes to be combined with the user preferences.
@@ -25,7 +25,7 @@ import service.StatutesService;
 public class UserCodesBean {
     private List<List<StatutesTitles>> titleMatrix;
     private String[] titleArray;
-    @Inject private StatutesService statutesService;
+    @Inject private StatutesServiceClient statutesService;
 	
 	@PostConstruct
 	public void postConstruct() {

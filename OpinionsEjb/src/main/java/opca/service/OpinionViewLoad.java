@@ -22,13 +22,13 @@ import opca.parser.ParsedOpinionCitationSet;
 import opca.service.OpinionViewSingleton.OpinionViewData;
 import opca.view.OpinionView;
 import opca.view.OpinionViewBuilder;
-import service.StatutesService;
+import statutes.service.client.StatutesServiceClient;
 
 @Stateless
 public class OpinionViewLoad {
 	@Inject private Logger logger;
 	@Inject private EntityManager em;
-	@Inject private StatutesService statutesService;
+	@Inject private StatutesServiceClient statutesService;
 
 	public OpinionViewLoad() {}
 	

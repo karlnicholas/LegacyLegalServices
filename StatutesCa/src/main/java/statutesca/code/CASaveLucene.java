@@ -24,11 +24,12 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-import api.gsearch.load.LuceneCodeModel;
-import api.gsearch.load.LuceneSectionModel;
-import api.gsearch.util.FacetUtils;
-import parser.ParserInterface;
+import gsearch.load.LuceneCodeModel;
+import gsearch.load.LuceneSectionModel;
+import gsearch.util.FacetUtils;
 import statutes.*;
+import statutes.api.IStatutesApi;
+import statutesca.statutesapi.CAStatutesApiImpl;
 
 public class CASaveLucene {
 	private static final Logger logger = Logger.getLogger(CASaveLucene.class.getName());
@@ -55,7 +56,7 @@ public class CASaveLucene {
      */
 	public void loadCode(Path codesDir, Path index, Path indextaxo) throws IOException {
 		Date start = new Date();
-		CALoadStatutes parserInterface = new CALoadStatutes();
+		CAStatutesApiImpl parserInterface = new CAStatutesApiImpl();
 //		statutesTitles = parserInterface.getStatutesTitles(); 
 		logger.info("Indexing to directory 'index'...");
 
@@ -125,9 +126,9 @@ public class CASaveLucene {
 		logger.info("From " + "codes" + " " + nDocsAdded + ": Facets = " + nFacetsAdded);
 	}
 
-	private void processCodesFile(ParserInterface parserInterface, Path codesDir, Path path) throws IOException {
+	private void processCodesFile(IStatutesApi iStatutesApi, Path codesDir, Path path) throws IOException {
 		StatutesParser parser = new StatutesParser();
-		StatutesRoot r = parser.parse(parserInterface, StandardCharsets.ISO_8859_1, path);
+		StatutesRoot r = parser.parse(iStatutesApi, StandardCharsets.ISO_8859_1, path);
 		String abvr = path.getFileName().toString().substring(0, path.getFileName().toString().indexOf('_'));
 		position = 1;
 /*

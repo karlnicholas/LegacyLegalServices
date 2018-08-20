@@ -9,13 +9,13 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
-import parser.ParserInterface;
 import statutes.StatuteRange;
 import statutes.SectionNumber;
 import statutes.StatutesBaseClass;
 import statutes.StatutesLeaf;
 import statutes.StatutesNode;
 import statutes.StatutesRoot;
+import statutes.api.IStatutesApi;
 
 public class StatutesParser {
 	
@@ -24,8 +24,15 @@ public class StatutesParser {
 	private String title;
 	private StatuteRange range;
 
+    public static final String[] sectionTitles = {
+            "title",
+            "part",
+            "division",
+            "chapter",
+            "article"
+        };
    
-   public StatutesRoot parse(ParserInterface parserInterface, Charset encoding, Path file) throws FileNotFoundException  { 
+   public StatutesRoot parse(IStatutesApi iStatutesApi, Charset encoding, Path file) throws FileNotFoundException  { 
 
 	   Stack<String> secStack = new Stack<String>();
        boolean veryFirst = true;
@@ -35,10 +42,10 @@ public class StatutesParser {
 	       StatutesBaseClass codeMember = null;
 	       // This is the top level, it is not a section
 	       String statutesTitle = changeTitleCase(scanner.nextLine());
-           String facetHead = parserInterface.getFacetHead(statutesTitle);
+           String facetHead = iStatutesApi.getFacetHead(statutesTitle);
 	       StatutesRoot code = new StatutesRoot( 
 	    		   statutesTitle, 
-	    		   parserInterface.getShortTitle(statutesTitle), 
+	    		   iStatutesApi.getShortTitle(statutesTitle), 
 	    		   facetHead+"-0"
     		   );
 	//       s = new Section(title, false, 0);
@@ -269,11 +276,11 @@ public class StatutesParser {
 
        // look for
        String ln = line.toLowerCase();
-       if ( ln.contains(CALoadStatutes.sectionTitles[0]) ||
-           ln.contains(CALoadStatutes.sectionTitles[1]) ||
-           ln.contains(CALoadStatutes.sectionTitles[2]) ||
-           ln.contains(CALoadStatutes.sectionTitles[3]) ||
-           ln.contains(CALoadStatutes.sectionTitles[4]) ) {
+       if ( ln.contains(sectionTitles[0]) ||
+           ln.contains(sectionTitles[1]) ||
+           ln.contains(sectionTitles[2]) ||
+           ln.contains(sectionTitles[3]) ||
+           ln.contains(sectionTitles[4]) ) {
 
            tsindex = 0;
            int eindex = 0;
@@ -449,8 +456,8 @@ public class StatutesParser {
 	   if ( num.length() < 1) return null;
 	   if ( !Character.isDigit(num.charAt(0))) return null;
 
-       for ( int tc=0; tc<CALoadStatutes.sectionTitles.length; ++tc ) {
-    	   String sectionTitle = CALoadStatutes.sectionTitles[tc];
+       for ( int tc=0; tc<sectionTitles.length; ++tc ) {
+    	   String sectionTitle = sectionTitles[tc];
            if ( header.equals(sectionTitle) ) return sectionTitle;
        }
        return null;

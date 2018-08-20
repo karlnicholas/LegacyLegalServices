@@ -5,11 +5,11 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import service.StatutesService;
 import statutes.StatutesBaseClass;
 import statutes.StatutesLeaf;
 import statutes.StatutesNode;
 import statutes.StatutesRoot;
+import statutes.service.StatutesService;
 import opca.model.*;
 import opca.parser.ParsedOpinionCitationSet;
 
@@ -56,15 +56,15 @@ public class OpinionViewBuilder {
     public List<StatuteView> createStatuteViews(OpinionBase opinionBase) {
     	List<StatuteKey> errorKeys = new ArrayList<>();
         // statutes ws .. getStatuteKeys list to search for 
-    	statutesrs.StatuteKeyArray statuteKeyArray = new statutesrs.StatuteKeyArray();
+    	statutes.service.dto.StatuteKeyArray statuteKeyArray = new statutes.service.dto.StatuteKeyArray();
         for( StatuteCitation statuteCitation: opinionBase.getOnlyStatuteCitations() ) {
-            statutesrs.StatuteKey statuteKey = new statutesrs.StatuteKey();            
+            statutes.service.dto.StatuteKey statuteKey = new statutes.service.dto.StatuteKey();            
             statuteKey.setTitle(statuteCitation.getStatuteKey().getTitle());
             statuteKey.setSectionNumber(statuteCitation.getStatuteKey().getSectionNumber());
             statuteKeyArray.getItem().add(statuteKey);
         }
         // call statutesws to get details of statutes 
-        statutesrs.KeyHierarchyPairs keyHierarchyPairs = statutesRs.getStatutesAndHierarchies(statuteKeyArray);
+        statutes.service.dto.KeyHierarchyPairs keyHierarchyPairs = statutesRs.getStatutesAndHierarchies(statuteKeyArray);
         //
     	List<StatuteView> statuteViews = new ArrayList<>();
         // copy results into the new list ..
@@ -205,12 +205,12 @@ public class OpinionViewBuilder {
      * @param key
      * @return
      */
-    private StatutesLeaf findStatutesLeaf(statutesrs.KeyHierarchyPairs keyHierarchyPairs, StatuteKey key) {
+    private StatutesLeaf findStatutesLeaf(statutes.service.dto.KeyHierarchyPairs keyHierarchyPairs, StatuteKey key) {
 		List<StatutesBaseClass> subPaths = null;
     	final String title = key.getTitle();
     	final String sectionNumber = key.getSectionNumber();
-    	for ( statutesrs.KeyHierarchyPair keyHierarchyPair: keyHierarchyPairs.getItem()) {
-    		statutesrs.StatuteKey statuteKey = keyHierarchyPair.getStatuteKey();
+    	for ( statutes.service.dto.KeyHierarchyPair keyHierarchyPair: keyHierarchyPairs.getItem()) {
+    		statutes.service.dto.StatuteKey statuteKey = keyHierarchyPair.getStatuteKey();
     		if ( title.equals(statuteKey.getTitle()) && sectionNumber.equals(statuteKey.getSectionNumber()) ) {
     			subPaths = keyHierarchyPair.getStatutesPath();
     			break;

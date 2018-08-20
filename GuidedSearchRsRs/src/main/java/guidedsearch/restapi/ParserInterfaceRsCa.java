@@ -5,16 +5,16 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import client.StatutesRsService;
-import parser.ParserInterface;
-import service.StatutesService;
 import statutes.SectionNumber;
 import statutes.StatutesBaseClass;
 import statutes.StatutesRoot;
 import statutes.StatutesTitles;
-import statutesrs.StatuteHierarchy;
+import statutes.api.IStatutesApi;
+import statutes.service.StatutesService;
+import statutes.service.client.StatutesServiceClientImpl;
+import statutes.service.dto.StatuteHierarchy;
 
-public class ParserInterfaceRsCa implements ParserInterface {
+public class ParserInterfaceRsCa implements IStatutesApi {
 	private StatutesService statutesService;
 
 	public ParserInterfaceRsCa() {
@@ -33,7 +33,7 @@ public class ParserInterfaceRsCa implements ParserInterface {
 				rsLocation = new URL(s);
 			else 
 				rsLocation = new URL(defaultAddress);
-			statutesService = new StatutesRsService(rsLocation).getRsService();
+			statutesService = new StatutesServiceClientImpl(rsLocation);
 		} catch (MalformedURLException e) {
 			throw new RuntimeException( e );
 		}
