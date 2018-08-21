@@ -11,7 +11,7 @@ import javax.persistence.*;
 	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoins", 
 		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation"),
 	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoinsForKeys", 
-		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation where o.opinionKey in (:opinionKeys)"),
+		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation where o.opinionKey in :opinionKeys"),
 })
 @SuppressWarnings("serial")
 @Entity

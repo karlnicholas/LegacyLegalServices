@@ -16,7 +16,7 @@ import statutes.service.dto.StatuteKeyArray;
 import statutes.service.dto.StatutesRootArray;
 import statutes.service.dto.StatutesTitlesArray;
 
-public class StatutesServiceClientImpl implements StatutesServiceClient {
+public class StatutesServiceClientImpl implements StatutesService {
 	private WebTarget statutes;
 	private WebTarget statutesTitles;
 	private WebTarget statuteHierarchy;

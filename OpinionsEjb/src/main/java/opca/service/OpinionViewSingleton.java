@@ -11,8 +11,10 @@ import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 
+import opca.ejb.util.StatutesServiceFactory;
 import opca.model.OpinionKey;
 import opca.view.OpinionView;
+import statutes.service.StatutesService;
 
 @Singleton
 public class OpinionViewSingleton {
@@ -70,7 +72,8 @@ public class OpinionViewSingleton {
 	
 	@PostConstruct
 	public void postConstruct() {
-		opinionViewLoad.load(opinionViewData);
+		StatutesService statutesService = StatutesServiceFactory.getInstance().getStatutesServiceClient();
+		opinionViewLoad.load(opinionViewData, statutesService);
 	}
 
 	/*
@@ -134,9 +137,9 @@ public class OpinionViewSingleton {
 		return opinionViewData.getReportDates();
 	}
 
-	public void updateOpinionViews(List<OpinionKey> opinionKeys) {
+	public void updateOpinionViews(List<OpinionKey> opinionKeys, StatutesService statutesService) {
 		if ( opinionViewData.isReady() ) {
-			opinionViewLoad.loadNewOpinions(opinionViewData, opinionKeys);
+			opinionViewLoad.loadNewOpinions(opinionViewData, opinionKeys, statutesService);
 		}
 	}
 	public List<String[]> getStringDateList() {

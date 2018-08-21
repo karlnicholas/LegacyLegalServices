@@ -13,8 +13,10 @@ import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.transaction.UserTransaction;
 
+import opca.ejb.util.StatutesServiceFactory;
 import opca.model.OpinionKey;
 import opca.scraper.CACaseScraper;
+import statutes.service.StatutesService;
 
 @TransactionManagement(TransactionManagementType.BEAN)
 @Singleton
@@ -35,9 +37,10 @@ public class ScheduledService {
 //      caOnlineUpdates.updateDatabase(new TestCACaseScraper(false));
         List<OpinionKey> opinionKeys = null;
         UserTransaction userTransaction = context.getUserTransaction();
+        StatutesService statutesService = StatutesServiceFactory.getInstance().getStatutesServiceClient();
         try {
 			userTransaction.begin();
-	        opinionKeys = caOnlineUpdates.updateDatabase(new CACaseScraper(false));
+	        opinionKeys = caOnlineUpdates.updateDatabase(new CACaseScraper(false), statutesService);
 			userTransaction.commit();
 		} catch (Exception e) {
 			try {
@@ -49,7 +52,7 @@ public class ScheduledService {
 	        return;
 		}
         if ( opinionKeys != null ) {
-        	opinionViewSingleton.updateOpinionViews(opinionKeys);
+        	opinionViewSingleton.updateOpinionViews(opinionKeys, statutesService);
         }
         logger.info("DONE updateSlipOpinions");
     }

@@ -22,13 +22,12 @@ import opca.parser.ParsedOpinionCitationSet;
 import opca.service.OpinionViewSingleton.OpinionViewData;
 import opca.view.OpinionView;
 import opca.view.OpinionViewBuilder;
-import statutes.service.client.StatutesServiceClient;
+import statutes.service.StatutesService;
 
 @Stateless
 public class OpinionViewLoad {
 	@Inject private Logger logger;
 	@Inject private EntityManager em;
-	@Inject private StatutesServiceClient statutesService;
 
 	public OpinionViewLoad() {}
 	
@@ -36,14 +35,14 @@ public class OpinionViewLoad {
 		this.em = em;
 		this.logger = Logger.getLogger(OpinionViewLoad.class.getName());
 	}
-
+	
 	@Asynchronous
-	public void load(OpinionViewData opinionViewData) {
+	public void load(OpinionViewData opinionViewData, StatutesService statutesService) {
 		// prevent all exceptions from leaving @Asynchronous block
 		try {
 			logger.info("load start");
 			opinionViewData.setReady( false );
-			buildOpinionViews(opinionViewData);
+			buildOpinionViews(opinionViewData, statutesService);
 			opinionViewData.setStringDateList();
 			opinionViewData.setReady( true );
 			logger.info("load finish: " + opinionViewData.getOpinionViews().size());
@@ -52,10 +51,10 @@ public class OpinionViewLoad {
 		}
 	}
 
-	public void loadNewOpinions(OpinionViewData opinionViewData, List<OpinionKey> opinionKeys) {
+	public void loadNewOpinions(OpinionViewData opinionViewData, List<OpinionKey> opinionKeys, StatutesService statutesService) {
 		logger.info("loadNewOpinions start: " + opinionKeys.size());
 		opinionViewData.setReady( false );
-		buildNewOpinionViews(opinionViewData, opinionKeys);
+		buildNewOpinionViews(opinionViewData, opinionKeys, statutesService);
 		opinionViewData.setStringDateList();
 		opinionViewData.setReady( true );
 		logger.info("loadNewOpinions finish: " + opinionViewData.getOpinionViews().size());
@@ -133,12 +132,12 @@ public class OpinionViewLoad {
 		lastDay.add(Calendar.WEEK_OF_YEAR, 1);
 	}
 	
-	private void buildOpinionViews(OpinionViewData opinionViewData) {
+	private void buildOpinionViews(OpinionViewData opinionViewData, StatutesService statutesService) {
 		opinionViewData.setOpinionViews(new ArrayList<>());
 		List<SlipOpinion> opinions = loadAllSlipOpinions();
-		buildListedOpinionViews(opinionViewData, opinions);
+		buildListedOpinionViews(opinionViewData, opinions, statutesService);
 	}
-	private void buildNewOpinionViews(OpinionViewData opinionViewData, List<OpinionKey> opinionKeys) {
+	private void buildNewOpinionViews(OpinionViewData opinionViewData, List<OpinionKey> opinionKeys, StatutesService statutesService) {
 		// remove deleted opinions from cache
 		Iterator<OpinionView> ovIt = opinionViewData.getOpinionViews().iterator();
 		while ( ovIt.hasNext() ) {
@@ -172,13 +171,13 @@ public class OpinionViewLoad {
 		if ( opinionKeys.size() > 0 ) {
 			List<SlipOpinion> opinions = loadSlipOpinionsForKeys(opinionKeys);
 			logger.info("opinions size " + opinions.size());
-			buildListedOpinionViews(opinionViewData, opinions);
+			buildListedOpinionViews(opinionViewData, opinions, statutesService);
 		} else {
 			logger.info("Rebuilding entire cache");
-			buildOpinionViews(opinionViewData);
+			buildOpinionViews(opinionViewData, statutesService);
 		}
 	}
-	private void buildListedOpinionViews(OpinionViewData opinionViewData, List<SlipOpinion> opinions) {
+	private void buildListedOpinionViews(OpinionViewData opinionViewData, List<SlipOpinion> opinions, StatutesService statutesService) {
 		List<OpinionBase> opinionOpinionCitations = new ArrayList<>();
 		List<Integer> opinionIds = new ArrayList<>();
 		TypedQuery<OpinionBase> fetchOpinionCitationsForOpinions = em.createNamedQuery("OpinionBase.fetchOpinionCitationsForOpinions", OpinionBase.class);

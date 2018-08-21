@@ -30,7 +30,7 @@ import opca.parser.OpinionDocumentParser;
 import opca.parser.ScrapedOpinionDocument;
 import opca.parser.ParsedOpinionCitationSet;
 import statutes.StatutesTitles;
-import statutes.service.client.StatutesServiceClient;
+import statutes.service.StatutesService;
 import statutes.service.dto.StatutesTitlesArray;
 
 /**
@@ -43,23 +43,21 @@ public class CAOnlineUpdates {
 	@Inject private Logger logger;
 	@Inject private EntityManager em;
     @EJB private OpinionViewSingleton opinionViewSingleton;
-	@Inject private StatutesServiceClient statutesService;
 	
 	public CAOnlineUpdates() {}
-
+	
 	// for testing only
 	// hmmm
-	public CAOnlineUpdates(EntityManager em, StatutesServiceClient statutesService) {
+	public CAOnlineUpdates(EntityManager em) {
 		this.em = em;
 		logger = Logger.getLogger(CAOnlineUpdates.class.getName());
-		this.statutesService = statutesService;
 	}
 
-	public void updateOpinionViews(List<OpinionKey> opinionKeys) {
-        opinionViewSingleton.updateOpinionViews(opinionKeys);
+	public void updateOpinionViews(List<OpinionKey> opinionKeys, StatutesService statutesService) {
+        opinionViewSingleton.updateOpinionViews(opinionKeys, statutesService);
 	}
 
-	public List<OpinionKey> updateDatabase(OpinionScraperInterface caseScraper) {
+	public List<OpinionKey> updateDatabase(OpinionScraperInterface caseScraper, StatutesService statutesService) {
  		List<SlipOpinion> onlineOpinions = caseScraper.getCaseList();
  		// save OpinionKeys for cache handling 
 		List<OpinionKey> opinionKeys = new ArrayList<>();
@@ -106,7 +104,7 @@ public class CAOnlineUpdates {
 		}
 		if ( onlineOpinions.size() > 0 ) {
 			// no retries
-			processAndPersistCases(onlineOpinions, caseScraper);
+			processAndPersistCases(onlineOpinions, caseScraper, statutesService);
 		} else {
 			logger.info("No new cases.");
 		}		
@@ -114,7 +112,7 @@ public class CAOnlineUpdates {
 		return opinionKeys; 
 	}
 	
-	private void processAndPersistCases(List<SlipOpinion> slipOpinions, OpinionScraperInterface opinionScraper) {
+	private void processAndPersistCases(List<SlipOpinion> slipOpinions, OpinionScraperInterface opinionScraper, StatutesService statutesService) {
 		// Create the CACodes list
 		logger.info("There are " + slipOpinions.size() + " SlipOpinions to process");
 		List<ScrapedOpinionDocument> scrapedOpinionDocuments = opinionScraper.scrapeOpinionFiles(slipOpinions);
