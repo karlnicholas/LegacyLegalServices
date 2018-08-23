@@ -7,21 +7,16 @@
 <p><xsl:value-of select="email" /></p>
 <p>New Opinions at Court Reports</p>
 <table>
-  <tr bgcolor="#9acd32">
-    <th>Date</th>
-    <th>Title</th>
-    <th>Filename</th>
-  </tr>
+  <tr bgcolor="#9acd32"><th>Date</th><th>Title</th></tr>
   <xsl:for-each select="opinionCases">
-    <tr>
-      <td><xsl:value-of select="opinionDate" /></td>
-      <td><xsl:value-of select="title" /></td>
-    </tr>
-    <tr>
-    <td colspan="2"><xsl:for-each select="sectionViews">
-       <xsl:value-of select="displayTitlePath" /><xsl:text>  </xsl:text><xsl:value-of select="displaySections" /><br />
-       </xsl:for-each></td>
-    </tr>
+  <tr>
+    <td nowrap="true"><xsl:value-of select="opinionDate" /></td>
+    <td><xsl:value-of select="title" /></td>
+  </tr>
+  <tr>
+  <td><xsl:text>  </xsl:text></td><td><xsl:for-each select="sectionViews">
+  <xsl:value-of select="displayTitlePath" /><xsl:text>  </xsl:text><xsl:value-of select="displaySections" /><br/></xsl:for-each></td>
+  </tr>
   </xsl:for-each>
 </table>
 <p>Regards,<br /><br />Court Opinions.</p>
