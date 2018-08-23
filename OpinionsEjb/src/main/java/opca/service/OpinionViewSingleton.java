@@ -72,7 +72,7 @@ public class OpinionViewSingleton {
 	
 	@PostConstruct
 	public void postConstruct() {
-		StatutesService statutesService = StatutesServiceFactory.getInstance().getStatutesServiceClient();
+		StatutesService statutesService = StatutesServiceFactory.getStatutesServiceClient();
 		opinionViewLoad.load(opinionViewData, statutesService);
 	}
 

@@ -7,10 +7,9 @@ import statutes.service.StatutesService;
 import statutes.service.client.StatutesServiceClientImpl;
 
 public class StatutesServiceFactory {
-	private static URL rsLocation;
+	private static final URL rsLocation;
 	private static final String defaultAddress = "http://localhost:8080/statutesrs/rs/";
-	private static StatutesServiceFactory instance = new StatutesServiceFactory();
-	private StatutesServiceFactory() {
+	static {
 		try {
 			String s = System.getenv("statutesrsservice");
 			if (s != null)
@@ -21,10 +20,7 @@ public class StatutesServiceFactory {
 			throw new RuntimeException(e);
 		}
 	}
-	public static StatutesServiceFactory getInstance() {
-		return instance;
-	}
-	public StatutesService getStatutesServiceClient() {
+	public static StatutesService getStatutesServiceClient() {
 			return new StatutesServiceClientImpl(rsLocation);
 	}
 }

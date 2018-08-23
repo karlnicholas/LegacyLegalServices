@@ -28,7 +28,7 @@ public class UserCodesBean {
 	
 	@PostConstruct
 	public void postConstruct() {
-		StatutesService statutesService = StatutesServiceFactory.getInstance().getStatutesServiceClient();
+		StatutesService statutesService = StatutesServiceFactory.getStatutesServiceClient();
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		List<StatutesTitles> statutesTitles = (List)statutesService.getStatutesTitles().getItem();
 

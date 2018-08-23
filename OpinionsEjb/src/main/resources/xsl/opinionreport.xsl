@@ -16,16 +16,11 @@
     <tr>
       <td><xsl:value-of select="opinionDate" /></td>
       <td><xsl:value-of select="title" /></td>
-      <td><xsl:value-of select="fileName" /></td>
     </tr>
     <tr>
-    <td><xsl:text> </xsl:text></td>
-    <td><xsl:text> </xsl:text>
-        <xsl:for-each select="sectionViews">
-          <xsl:value-of select="displayTitlePath" /><xsl:text>  </xsl:text><xsl:value-of select="displaySections" /><br />
-        </xsl:for-each>
-      </td>
-    <td><xsl:text> </xsl:text></td>
+    <td colspan="2"><xsl:for-each select="sectionViews">
+       <xsl:value-of select="displayTitlePath" /><xsl:text>  </xsl:text><xsl:value-of select="displaySections" /><br />
+       </xsl:for-each></td>
     </tr>
   </xsl:for-each>
 </table>

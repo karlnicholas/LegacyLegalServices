@@ -37,7 +37,7 @@ public class ScheduledService {
 //      caOnlineUpdates.updateDatabase(new TestCACaseScraper(false));
         List<OpinionKey> opinionKeys = null;
         UserTransaction userTransaction = context.getUserTransaction();
-        StatutesService statutesService = StatutesServiceFactory.getInstance().getStatutesServiceClient();
+        StatutesService statutesService = StatutesServiceFactory.getStatutesServiceClient();
         try {
 			userTransaction.begin();
 	        opinionKeys = caOnlineUpdates.updateDatabase(new CACaseScraper(false), statutesService);
