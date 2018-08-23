@@ -1,4 +1,4 @@
-package guidedsearch.restapi;
+package guidedsearchweb.restapi;
 
 import java.io.IOException;
 
@@ -14,10 +14,10 @@ import statutes.StatutesLeaf;
 import statutes.StatutesNode;
 import statutes.StatutesRoot;
 
-//@Path("gs")
-//@Produces("application/json")
+@Path("gs")
+@Produces("application/json")
 public class GuidedSearchApi {
-/*
+
     public GuidedSearchApi() {
 	}
 
@@ -34,6 +34,19 @@ public class GuidedSearchApi {
 			throw new RuntimeException(e);
 		}
 	}
+/*
+	private void recurseEntries(List<EntryReference> entries) {
+		for ( EntryReference entryReference: entries) {
+			if ( entryReference.getStatutesBaseClass() != null ) {
+				StatutesBaseClass cloneBaseClass = createNewBaseClass(entryReference.getStatutesBaseClass());
+				entryReference.setStatutesBaseClass(cloneBaseClass);
+				if ( entryReference.getEntries() != null ) {
+					recurseEntries(entryReference.getEntries());
+				}
+			}
+		}
+	}
+*/	
 	private StatutesBaseClass createNewBaseClass(StatutesBaseClass statutesBaseClass) {
 		StatutesBaseClass newBaseClass;
 		if ( statutesBaseClass instanceof StatutesRoot) {
@@ -70,18 +83,5 @@ public class GuidedSearchApi {
 		newBaseClass.setStatuteRange(statutesBaseClass.getStatuteRange());
 		return newBaseClass;
 	}
-*/
+
 }
-/*
-private void recurseEntries(List<EntryReference> entries) {
-	for ( EntryReference entryReference: entries) {
-		if ( entryReference.getStatutesBaseClass() != null ) {
-			StatutesBaseClass cloneBaseClass = createNewBaseClass(entryReference.getStatutesBaseClass());
-			entryReference.setStatutesBaseClass(cloneBaseClass);
-			if ( entryReference.getEntries() != null ) {
-				recurseEntries(entryReference.getEntries());
-			}
-		}
-	}
-}
-*/	

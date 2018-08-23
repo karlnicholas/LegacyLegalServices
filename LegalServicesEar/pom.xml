@@ -22,6 +22,11 @@
     <!-- Depend on the ejb module and war so that we can package them -->
     <dependency>
       <groupId>legalservices</groupId>
+      <artifactId>guidedsearch-web</artifactId>
+      <type>war</type>
+    </dependency>
+    <dependency>
+      <groupId>legalservices</groupId>
       <artifactId>guidedsearch-rs-rs</artifactId>
       <type>war</type>
     </dependency>
@@ -52,20 +57,26 @@
           <modules>
             <webModule>
               <groupId>legalservices</groupId>
-              <artifactId>guidedsearch-rs-rs</artifactId>
+              <artifactId>guidedsearch-web</artifactId>
               <contextRoot>/</contextRoot>
+              <bundleFileName>guidedsearch-web.war</bundleFileName>
+            </webModule>
+            <webModule>
+              <groupId>legalservices</groupId>
+              <artifactId>guidedsearch-rs-rs</artifactId>
+              <contextRoot>/search</contextRoot>
               <bundleFileName>guidedsearch-rs-rs.war</bundleFileName>
             </webModule>
             <webModule>
               <groupId>legalservices</groupId>
               <artifactId>statutesrs</artifactId>
-              <contextRoot>statutesrs</contextRoot>
+              <contextRoot>/statutesrs</contextRoot>
               <bundleFileName>statutesrs.war</bundleFileName>
             </webModule>
             <webModule>
               <groupId>legalservices</groupId>
               <artifactId>opinions-web</artifactId>
-              <contextRoot>opinions</contextRoot>
+              <contextRoot>/opinions</contextRoot>
               <bundleFileName>opinions-web.war</bundleFileName>
             </webModule>
           </modules>
@@ -84,42 +95,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <!-- When built in OpenShift the 'openshift' profile will be used when invoking mvn. -->
-      <!-- Use this profile for any OpenShift specific customization your app will need. -->
-      <!-- By default that is to put the resulting archive into the 'deployments' folder. -->
-      <!-- http://maven.apache.org/guides/mini/guide-building-for-different-environments.html -->
-      <id>openshift</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-ear-plugin</artifactId>
-            <version>${version.ear.plugin}</version>
-            <configuration>
-              <outputDirectory>deployments</outputDirectory>
-              <modules>
-                <webModule>
-                  <groupId>legalservices</groupId>
-                  <artifactId>guidedsearch-rs-rs</artifactId>
-                  <contextRoot>/</contextRoot>
-                </webModule>
-                <webModule>
-                  <groupId>legalservices</groupId>
-                  <artifactId>statutesrs</artifactId>
-                  <contextRoot>statutesrs</contextRoot>
-                </webModule>
-                <webModule>
-                  <groupId>legalservices</groupId>
-                  <artifactId>opinions-web</artifactId>
-                  <contextRoot>opinions</contextRoot>
-                </webModule>
-              </modules>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>

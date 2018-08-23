@@ -23,11 +23,6 @@
   </licenses>
   <repositories>
     <repository>
-      <id>project.local</id>
-      <name>project</name>
-      <url>file:${project.basedir}/../repo</url>
-    </repository>
-    <repository>
       <id>jboss-ga-repository</id>
       <url>https://maven.repository.redhat.com/nexus/content/repositories/developer</url>
     </repository>
@@ -91,12 +86,6 @@
       <groupId>io.undertow.jastow</groupId>
       <artifactId>jastow</artifactId>
       <version>2.0.1.Final</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.faces</groupId>
-      <artifactId>jsf-impl</artifactId>
-      <version>2.2.13.SP1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

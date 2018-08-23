@@ -1,4 +1,4 @@
-package guidedsearch.restapi;
+package guidedsearchweb.restapi;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -11,7 +11,7 @@ import javax.ws.rs.core.Application;
  * Resources are served relative to the servlet path specified in the {@link ApplicationPath} annotation.
  * </p>
  */
-//@ApplicationPath("/rest")
-public class JaxRsActivator { // extends Application {
+@ApplicationPath("/restweb")
+public class JaxRsActivator extends Application {
     /* class body intentionally left blank */
 }

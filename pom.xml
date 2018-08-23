@@ -13,6 +13,7 @@
     <module>Statutes</module>
     <module>GuidedSearchCore</module>
     <module>StatutesCa</module>
+    <module>GuidedSearchWeb</module>
     <module>GuidedSearchRsRs</module>
     <module>OpinionsEjb</module>
     <module>OpinionsWeb</module>
@@ -52,6 +53,13 @@
       <dependency>
         <groupId>legalservices</groupId>
         <artifactId>guidedsearch-rs-rs</artifactId>
+        <version>${project.version}</version>
+        <type>war</type>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>legalservices</groupId>
+        <artifactId>guidedsearch-web</artifactId>
         <version>${project.version}</version>
         <type>war</type>
         <scope>compile</scope>
