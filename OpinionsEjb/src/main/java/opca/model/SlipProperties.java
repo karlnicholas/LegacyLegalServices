@@ -13,7 +13,7 @@ public class SlipProperties implements Serializable {
 	// does this space count? Don't think so, row allocation is dynamic anyway.
 	@Id
 	private Integer opinionId;
-    @OneToOne @MapsId
+    @OneToOne(fetch=FetchType.LAZY) @MapsId
 	private SlipOpinion slipOpinion; 
 	@Column(columnDefinition="varchar(15)")
 	private String court;

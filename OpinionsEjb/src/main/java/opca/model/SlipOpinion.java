@@ -8,10 +8,27 @@ import javax.persistence.*;
 @NamedQueries({
 	@NamedQuery(name="SlipOpinion.findAll", 
 		query="select s from SlipOpinion s"),
+/*	
 	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoins", 
 		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation"),
 	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoinsForKeys", 
 		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation where o.opinionKey in :opinionKeys"),
+*/
+	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoins", 
+		query="select distinct o from SlipOpinion o"),
+	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoinsForKeys", 
+		query="select distinct o from SlipOpinion o where o.opinionKey in :opinionKeys"),
+})
+@NamedEntityGraphs({ 
+	@NamedEntityGraph(name="fetchGraphForOpinionsWithJoins", attributeNodes= {
+		@NamedAttributeNode(value="statuteCitations", subgraph="fetchGraphForOpinionsWithJoinsPartB")
+	}, 
+	subgraphs= {
+		@NamedSubgraph(
+			name = "fetchGraphForOpinionsWithJoinsPartB", 
+			attributeNodes = { @NamedAttributeNode(value = "statuteCitation") } 
+		),
+	}) 
 })
 @SuppressWarnings("serial")
 @Entity

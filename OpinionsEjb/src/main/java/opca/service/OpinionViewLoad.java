@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
@@ -181,6 +182,8 @@ public class OpinionViewLoad {
 		List<OpinionBase> opinionOpinionCitations = new ArrayList<>();
 		List<Integer> opinionIds = new ArrayList<>();
 		TypedQuery<OpinionBase> fetchOpinionCitationsForOpinions = em.createNamedQuery("OpinionBase.fetchOpinionCitationsForOpinions", OpinionBase.class);
+		EntityGraph<?> fetchGraphForSlipOpinions = em.getEntityGraph("fetchGraphForSlipOpinions");
+		fetchOpinionCitationsForOpinions.setHint("javax.persistence.fetchgraph", fetchGraphForSlipOpinions);
 		int i = 0;
 		for ( SlipOpinion slipOpinion: opinions ) {
 			opinionIds.add(slipOpinion.getId());
@@ -232,8 +235,10 @@ public class OpinionViewLoad {
 	 */
 	private List<SlipOpinion> loadAllSlipOpinions() {
 		// just get all slip opinions
-		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.loadOpinionsWithJoins", SlipOpinion.class).getResultList();
-
+		EntityGraph<?> fetchGraphForOpinionsWithJoins = em.getEntityGraph("fetchGraphForOpinionsWithJoins");
+		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.loadOpinionsWithJoins", SlipOpinion.class)
+				.setHint("javax.persistence.fetchgraph", fetchGraphForOpinionsWithJoins)
+				.getResultList();
 		// load slipOpinion properties from the database here ... ?
 		List<SlipProperties> spl = em.createNamedQuery("SlipProperties.findAll", SlipProperties.class).getResultList();
 		for ( SlipOpinion slipOpinion: opinions ) {
@@ -243,8 +248,11 @@ public class OpinionViewLoad {
 	}
 	private List<SlipOpinion> loadSlipOpinionsForKeys(List<OpinionKey> opinionKeys) {
 		// just get all slip opinions
+		EntityGraph<?> fetchGraphForOpinionsWithJoins = em.getEntityGraph("fetchGraphForOpinionsWithJoins");
 		List<SlipOpinion> opinions = em.createNamedQuery("SlipOpinion.loadOpinionsWithJoinsForKeys", SlipOpinion.class)
-				.setParameter("opinionKeys", opinionKeys).getResultList();
+				.setHint("javax.persistence.fetchgraph", fetchGraphForOpinionsWithJoins)
+				.setParameter("opinionKeys", opinionKeys)
+				.getResultList();
 		// load slipOpinion properties from the database here ... ?
 		List<SlipProperties> spl = em.createNamedQuery("SlipProperties.findAll", SlipProperties.class).getResultList();
 		for ( SlipOpinion slipOpinion: opinions ) {

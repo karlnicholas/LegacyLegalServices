@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -267,7 +268,9 @@ public class CAOnlineUpdates {
 		List<StatuteCitation> existingStatutes = new ArrayList<>();
 		TypedQuery<StatuteCitation> statutesWithReferringOpinions 
 			= em.createNamedQuery("StatuteCitation.statutesWithReferringOpinions", StatuteCitation.class);
-				
+		EntityGraph<?> fetchGraphForStatutesWithReferringOpinions = em.getEntityGraph("fetchGraphForStatutesWithReferringOpinions");
+		statutesWithReferringOpinions.setHint("javax.persistence.fetchgraph", fetchGraphForStatutesWithReferringOpinions);
+		
     	for(StatuteCitation statuteCitation: statutes ) {
     		statuteKeys.add(statuteCitation.getStatuteKey());
     		if ( ++i % 100 == 0 ) {

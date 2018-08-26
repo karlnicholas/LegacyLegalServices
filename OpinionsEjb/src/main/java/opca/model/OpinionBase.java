@@ -19,12 +19,29 @@ import opca.parser.ParsedOpinionCitationSet;
 		query="select distinct o from OpinionBase o left join fetch o.referringOpinions where o.opinionKey = :key"),
 	@NamedQuery(name="OpinionBase.opinionsWithReferringOpinions", 
 		query="select distinct o from OpinionBase o left join fetch o.referringOpinions where o.opinionKey in :opinionKeys"),
+//	@NamedQuery(name="OpinionBase.fetchOpinionCitationsForOpinions", 
+//	query="select distinct o from OpinionBase o left join fetch o.opinionCitations ooc left join fetch ooc.statuteCitations oocsc left join fetch oocsc.statuteCitation where o.id in :opinionIds"), 
 	@NamedQuery(name="OpinionBase.fetchOpinionCitationsForOpinions", 
-		query="select distinct o from OpinionBase o left join fetch o.opinionCitations ooc left join fetch ooc.statuteCitations oocsc left join fetch oocsc.statuteCitation where o.id in :opinionIds"), 
+		query="select distinct o from OpinionBase o where o.id in :opinionIds"), 
 	@NamedQuery(name="OpinionBase.fetchCitedOpinionsWithReferringOpinions", 
 		query="select distinct oro from OpinionBase o2 left outer join o2.opinionCitations oro left join fetch oro.referringOpinions where o2.id in :opinionIds"),
 	
 	})
+@NamedEntityGraphs({ 
+	@NamedEntityGraph(name="fetchGraphForSlipOpinions", attributeNodes= {
+		@NamedAttributeNode(value="opinionCitations", subgraph="fetchGraphForSlipOpinionsPartB")
+	}, 
+	subgraphs= {
+		@NamedSubgraph(
+			name = "fetchGraphForSlipOpinionsPartB", 
+			attributeNodes = { @NamedAttributeNode(value = "statuteCitations", subgraph="fetchGraphForSlipOpinionsPartC") } 
+		),
+		@NamedSubgraph(
+			name = "fetchGraphForSlipOpinionsPartC", 
+			attributeNodes = { @NamedAttributeNode(value = "statuteCitation") } 
+		),
+	}) 
+})
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType=DiscriminatorType.INTEGER)
 @Table(indexes= {@Index(columnList = "vset,volume,page")})

@@ -10,8 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -28,10 +32,25 @@ import javax.persistence.Table;
 		query="select s from StatuteCitation s where s.statuteKey in :keys"),
 	@NamedQuery(name="StatuteCitation.selectForTitle", 
 		query="select s from StatuteCitation s where s.statuteKey.title like :title"),
+/*	
 	@NamedQuery(name="StatuteCitation.findByStatuteKeyJoinReferringOpinions", 
-		query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions ro left join fetch ro.opinionBase where s.statuteKey = :statuteKey"),
+	query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions ro left join fetch ro.opinionBase where s.statuteKey = :statuteKey"),
 	@NamedQuery(name="StatuteCitation.statutesWithReferringOpinions", 
-		query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions ro left join fetch ro.opinionBase where s.statuteKey in :statuteKeys"),
+	query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions ro left join fetch ro.opinionBase where s.statuteKey in :statuteKeys"),
+*/
+	@NamedQuery(name="StatuteCitation.statutesWithReferringOpinions", 
+		query="select distinct(s) from StatuteCitation s where s.statuteKey in :statuteKeys"),
+})
+@NamedEntityGraphs({ 
+	@NamedEntityGraph(name="fetchGraphForStatutesWithReferringOpinions", attributeNodes= {
+		@NamedAttributeNode(value="referringOpinions", subgraph="fetchGraphForStatutesWithReferringOpinionsPartB")
+	}, 
+	subgraphs= {
+		@NamedSubgraph(
+			name = "fetchGraphForStatutesWithReferringOpinionsPartB", 
+			attributeNodes = { @NamedAttributeNode(value = "opinionBase") } 
+		),
+	}) 
 })
 @SuppressWarnings("serial")
 @Entity
