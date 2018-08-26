@@ -27,11 +27,6 @@
     </dependency>
     <dependency>
       <groupId>legalservices</groupId>
-      <artifactId>guidedsearch-rs-rs</artifactId>
-      <type>war</type>
-    </dependency>
-    <dependency>
-      <groupId>legalservices</groupId>
       <artifactId>opinions-web</artifactId>
       <type>war</type>
     </dependency>
@@ -60,12 +55,6 @@
               <artifactId>guidedsearch-web</artifactId>
               <contextRoot>/</contextRoot>
               <bundleFileName>guidedsearch-web.war</bundleFileName>
-            </webModule>
-            <webModule>
-              <groupId>legalservices</groupId>
-              <artifactId>guidedsearch-rs-rs</artifactId>
-              <contextRoot>/search</contextRoot>
-              <bundleFileName>guidedsearch-rs-rs.war</bundleFileName>
             </webModule>
             <webModule>
               <groupId>legalservices</groupId>

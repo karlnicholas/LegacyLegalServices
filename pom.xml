@@ -14,7 +14,6 @@
     <module>GuidedSearchCore</module>
     <module>StatutesCa</module>
     <module>GuidedSearchWeb</module>
-    <module>GuidedSearchRsRs</module>
     <module>OpinionsEjb</module>
     <module>OpinionsWeb</module>
     <module>LegalServicesEar</module>
@@ -50,13 +49,6 @@
   <dependencyManagement>
     <dependencies>
       <!-- Define the version of the WAR so that we don't need to repeat ourselves in every module -->
-      <dependency>
-        <groupId>legalservices</groupId>
-        <artifactId>guidedsearch-rs-rs</artifactId>
-        <version>${project.version}</version>
-        <type>war</type>
-        <scope>compile</scope>
-      </dependency>
       <dependency>
         <groupId>legalservices</groupId>
         <artifactId>guidedsearch-web</artifactId>
