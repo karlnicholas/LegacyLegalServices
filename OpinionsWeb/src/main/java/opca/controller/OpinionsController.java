@@ -9,12 +9,14 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 
 import opca.service.OpinionViewSingleton;
 import opca.service.ViewParameters;
 import opca.view.OpinionView;
 
 @ManagedBean
+@ViewScoped
 public class OpinionsController {
 	@EJB private OpinionViewSingleton opinionViewSingleton;
 
