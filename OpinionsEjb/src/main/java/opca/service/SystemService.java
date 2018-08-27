@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.ejb.Asynchronous;
@@ -119,7 +120,21 @@ public class SystemService {
 	            //            System.out.println("Resend = " + account.getEmail());
         	}
         }
-        logger.info("Case Reports completed");
+        logger.info("Opinion Reports completed");
+	}
+
+	public void sendSystemReport(Map<String, Long> memoryMap) {
+        logger.info("System Report started");
+        List<User> users = userService.findAll();
+        for ( User user: users ) {
+        	if ( user.isAdmin() ) {
+	            // Prepare the evaluation context
+        		sendGridMailer.sendSystemReport(user, memoryMap);
+	            logger.info("System Report sent: " + user.getEmail());
+	            //            System.out.println("Resend = " + account.getEmail());
+        	}
+        }
+        logger.info("System Report completed");
 	}
 
 

@@ -1,6 +1,13 @@
 package opca.service;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
+import java.lang.management.OperatingSystemMXBean;
+import java.lang.management.ThreadMXBean;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
@@ -62,6 +69,30 @@ public class ScheduledService {
     	systemService.sendOpinionReports();
     }
 
+    @Schedule(second="0", minute="15", hour="01", persistent=false)        // 12:00 am every day
+    public void systemReport() {
+        Map<String, Long> memoryMap = new TreeMap<>();
+        OperatingSystemMXBean osMxBean = ManagementFactory.getOperatingSystemMXBean();
+        memoryMap.put("0 cpuLoad", (long)osMxBean.getSystemLoadAverage());
+
+        ThreadMXBean threadmxBean = ManagementFactory.getThreadMXBean();
+        int threadCount = threadmxBean.getThreadCount();
+        memoryMap.put("1 cpuRunningThreads", (long)threadCount);
+
+        MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
+        MemoryUsage memHeapUsage = memBean.getHeapMemoryUsage();
+        MemoryUsage nonHeapUsage = memBean.getNonHeapMemoryUsage();
+        memoryMap.put("2 heapInit", memHeapUsage.getInit() / (1024*1024));
+        memoryMap.put("3 heapMax", memHeapUsage.getMax() / (1024*1024));
+        memoryMap.put("4 heapCommit", memHeapUsage.getCommitted() / (1024*1024));
+        memoryMap.put("5 heapUsed", memHeapUsage.getUsed() / (1024*1024));
+        memoryMap.put("5 nonHeapInit", nonHeapUsage.getInit() / (1024*1024));
+        memoryMap.put("7 nonHeapMax", nonHeapUsage.getMax() / (1024*1024));
+        memoryMap.put("8 nonHeapCommit", nonHeapUsage.getCommitted() / (1024*1024));
+        memoryMap.put("9 nonHeapUsed", nonHeapUsage.getUsed() / (1024*1024));
+    	systemService.sendSystemReport(memoryMap);
+    }
+    
     @Schedule(second="0", minute="20", hour="01", persistent=false)        // 04:00 am every day
     public void welcomingService() {
         logger.info("STARTING welcomingService");

@@ -3,6 +3,7 @@ package opca.mailer;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -24,6 +25,7 @@ public class EmailInformation implements Serializable {
 	private String comment;
 	private Locale locale;
 	private List<OpinionView> opinionCases;
+	private Map<String, Long> memoryMap;
 	public EmailInformation(User user) {
 		this();
 		this.firstName = user.getFirstName();
@@ -45,6 +47,11 @@ public class EmailInformation implements Serializable {
 	}
 	public EmailInformation() {
 		this.verifyHost = "localhost:8080";
+	}
+	public EmailInformation(User user, Map<String, Long> memoryMap) {
+		this();
+		this.email = user.getEmail();
+		this.memoryMap = memoryMap;
 	}
 	public String getEmail() {
 		return email;
@@ -72,5 +79,8 @@ public class EmailInformation implements Serializable {
 	}
 	public String getLastName() {
 		return lastName;
+	}
+	public Map<String, Long> getMemoryMap() {
+		return memoryMap;
 	}
 }

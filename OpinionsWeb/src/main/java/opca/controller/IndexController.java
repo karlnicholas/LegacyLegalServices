@@ -15,10 +15,6 @@ public class IndexController {
 	@Inject Logger logger;
 	@EJB private ScheduledService scheduledService;
     
-    public void testNothing() {
-        logger.info("Test Nothing");
-    }
-
     public void testUpdate() {
     	scheduledService.updateSlipOpinions();
     }
@@ -29,6 +25,14 @@ public class IndexController {
 
     public void testOpinionReport() {
     	scheduledService.opinionReport();
+    }
+
+    public void testSystemReport() {
+    	scheduledService.systemReport();
+    }
+
+    public void testNothing() {
+        logger.info("Test Nothing");
     }
 
     private String message;

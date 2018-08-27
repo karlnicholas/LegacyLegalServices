@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
@@ -43,6 +44,10 @@ public class SendGridMailer {
 
 	public boolean sendOpinionReport(User user, List<OpinionView> opinionCases) {
 		return sendGridEmail(new EmailInformation(user, opinionCases), "/xsl/opinionreport.xsl");
+	}
+
+	public boolean sendSystemReport(User user, Map<String, Long> memoryMap) {
+		return sendGridEmail(new EmailInformation(user, memoryMap), "/xsl/systemreport.xsl");
 	}
 	public boolean sendGridEmail(EmailInformation emailInformation, String emailResource) {
 		
@@ -109,6 +114,9 @@ public class SendGridMailer {
 			TransformerFactory tf = TransformerFactory.newInstance();
 			JAXBContext jc = JAXBContext.newInstance(EmailInformation.class);
 			JAXBSource source = new JAXBSource(jc, emailInformation);
+//			Marshaller marshaller = jc.createMarshaller();
+//			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+//			marshaller.marshal(emailInformation, System.out);
 			// set up XSLT transformation
 			InputStream is = getClass().getResourceAsStream(emailResource);
 			StreamSource streamSource = new StreamSource(is);
