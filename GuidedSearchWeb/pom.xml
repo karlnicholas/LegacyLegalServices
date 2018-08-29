@@ -22,6 +22,11 @@
     <m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
   </properties>
   <dependencies>
+    <!-- Import the JSF API, we use provided scope as the API is included in JBoss WildFly -->
+    <dependency>
+      <groupId>org.jboss.spec.javax.faces</groupId>
+      <artifactId>jboss-jsf-api_2.2_spec</artifactId>
+    </dependency>
     <dependency>
       <groupId>legalservices</groupId>
       <artifactId>statutes</artifactId>
@@ -33,6 +38,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
@@ -42,6 +48,16 @@
     <dependency>
       <groupId>legalservices</groupId>
       <artifactId>statutesca</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>jquery</artifactId>
+      <version>1.12.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>bootstrap</artifactId>
+      <version>3.3.7</version>
     </dependency>
   </dependencies>
   <build>

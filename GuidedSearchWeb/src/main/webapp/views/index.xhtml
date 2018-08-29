@@ -1,0 +1,26 @@
+<ui:composition template="/views/template/template.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+  xmlns:h="http://xmlns.jcp.org/jsf/html" 
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+  xmlns:gscomp="http://xmlns.jcp.org/jsf/composite/gscomp">
+  <ui:define name="prehead">
+    <f:metadata>
+      <f:viewParam name="path" value="#{guidedSearchController.path}" />
+      <f:viewParam name="term" value="#{guidedSearchController.term}" />
+      <f:viewParam name="fragments" value="#{guidedSearchController.fragments}" />
+    </f:metadata>
+  </ui:define>
+  <ui:define name="title">
+    <h:outputText value="Op - Home" />
+  </ui:define>
+  <ui:define name="content">
+	<div class="container-fluid">
+	<div class="panel-group" id="accordion">
+	<div class='panel panel-default'>
+	<gscomp:gsview entries="#{guidedSearchController.viewModel.entries}"/>
+	</div>
+	</div>
+	</div>
+  </ui:define>
+</ui:composition>

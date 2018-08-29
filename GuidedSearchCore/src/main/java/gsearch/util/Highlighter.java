@@ -5,11 +5,13 @@ import org.tartarus.snowball.ext.PorterStemmer;
 
 public class Highlighter {
 	private static final PorterStemmer stemmer = new PorterStemmer();
+	public static final String preTag = "\"<mark><strong><u>\"";
+	public static final String postTag = "\"</u></strong></mark>\"";
 
 	/*
 	 * Definitely need to fix this up ... 
 	 */
-	public String highlightText( String text, String term, String preTag, String postTag ) {
+	public String highlightText( String text, String term) {
 		if ( term == null || term.isEmpty() ) return text;
 		String lText = text.toLowerCase();
 		String lTerm = StringEscapeUtils.unescapeHtml4( term.toLowerCase() );

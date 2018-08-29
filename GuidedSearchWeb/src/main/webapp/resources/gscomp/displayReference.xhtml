@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:composite="http://xmlns.jcp.org/jsf/composite">
+<!-- INTERFACE -->
+<composite:interface>
+	<composite:attribute name="entry" type="gsearch.viewmodel.EntryReference" required="true" />
+	<composite:attribute name="index" type="java.lang.Integer" required="true" />
+</composite:interface>
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+<c:if test="#{!cc.attrs.entry.pathPart and !cc.attrs.entry.sectionText}">
+<c:if test="#{!guidedSearchController.terminate}">
+  <h:outputText value="&lt;div class=&quot;panel-heading&quot;&gt;" escape="false"/>
+</c:if>
+  <div class="row panel-title">
+    <p>
+      <span class="col-xs-1">
+        <c:if test="#{cc.attrs.entry.count > 0 and guidedSearchController.viewModel.fragments}">
+          <a p:data-toggle="collapse" p:data-parent="#accordion" href="#collapse#{index}">
+            <span class="glyphicon glyphicon-asterisk"></span></a>
+        </c:if>
+      </span>
+      <h:outputLink value="#{guidedSearchController.newPathUrl(cc.attrs.entry.fullFacet)}">
+        <span class="col-xs-3">
+          #{cc.attrs.entry.statutesBaseClass.getTitle(false)}
+          <c:if test="#{cc.attrs.entry.count > 0}"><span class="badge pull-right"><h:outputText value="#{cc.attrs.entry.count}" /></span></c:if>
+          <c:if test="#{cc.attrs.entry.count == 0}">&nbsp;</c:if>
+        </span>
+        <span class="col-xs-5">#{cc.attrs.entry.statutesBaseClass.title}</span>
+        <span class="col-xs-3">§§&nbsp;#{cc.attrs.entry.statutesBaseClass.statuteRange}
+        </span>
+      </h:outputLink>
+    </p>
+  </div>
+<c:if test="#{!empty cc.attrs.entry.entries}">
+  <div class="panel-collapse collapse" id="collapse#{index}">
+    <div class="panel-body">
+      <pre>
+        <ui:repeat value="#{cc.attrs.entry.entries}" var="entryText">
+          <h:outputText value="#{guidedSearchController.highlighter.highlightText(entryText.text, guidedSearchController.viewModel.term)}" escape="false" />
+          <br />
+        </ui:repeat>
+      </pre>
+    </div>
+  </div>
+</c:if>
+<c:if test="#{!guidedSearchController.terminate}">
+  <h:outputText value="&lt;/div&gt;" escape="false"/>
+</c:if>
+</c:if>
+</composite:implementation>
+</html>

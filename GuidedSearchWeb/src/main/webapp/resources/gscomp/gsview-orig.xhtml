@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:gscomp="http://xmlns.jcp.org/jsf/composite/gscomp"
+	xmlns:composite="http://xmlns.jcp.org/jsf/composite">
+<!-- INTERFACE -->
+<composite:interface>
+	<composite:attribute name="entries" type="java.util.List" required="true" />
+</composite:interface>
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+	<ui:repeat value="entries" var="entry" varStatus="status">
+		<gscomp:displayReference entry="#{entry}" index="#{status.index}" />
+		<gscomp:displayText entry="#{entry}" />
+		<ui:fragment rendered="#{entry.pathPart}">
+			<gscomp:gsview entries="#{entry.entries}"/>
+		</ui:fragment>
+	</ui:repeat>
+</composite:implementation>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+<ui:insert name="prehead" />
+<h:head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <link rel="stylesheet" type="text/css" media="all" href="#{request.contextPath}/webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <title><ui:insert name="title"><h:outputText value="Opinions" /></ui:insert></title>
+  <ui:insert name="additionalheader" />
+  <h:outputStylesheet name="non-responsive.css" library="css"/>    
+</h:head>
+<h:body a:onScroll="#{onScrollValue}" a:onLoad="#{onLoadValue}">
+<div class="container">
+<ui:include src="/views/template/header.xhtml" />
+<ui:insert name="content" />
+</div>
+<!-- jQuery first, then Bootstrap JS. -->
+<script src="#{request.contextPath}/webjars/jquery/1.12.4/jquery.min.js" type="text/javascript"/>
+<ui:insert name="bodyprebs" />
+<script src="#{request.contextPath}/webjars/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"/>
+</h:body>
+</html>

@@ -1,4 +1,4 @@
-package guidedsearchweb.restapi;
+package guidedsearchweb.controller;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,28 +15,22 @@ import statutes.service.client.StatutesServiceClientImpl;
 import statutes.service.dto.StatuteHierarchy;
 
 public class ParserInterfaceRsCa implements IStatutesApi {
-	private StatutesService statutesService;
-
-	public ParserInterfaceRsCa() {
-		init("http://localhost:8080/statutesrs/rs/");
-	}
-	
-	public ParserInterfaceRsCa(final String defaultAddress) {
-		init(defaultAddress);
-	}
-
-	private void init(final String defaultAddress) {
+	private static final URL serviceURL;	
+	static {
 		try {
 			String s = System.getenv("statutesrsservice");
-			URL rsLocation;
 			if ( s != null )
-				rsLocation = new URL(s);
+				serviceURL = new URL(s);
 			else 
-				rsLocation = new URL(defaultAddress);
-			statutesService = new StatutesServiceClientImpl(rsLocation);
+				serviceURL = new URL("http://localhost:8080/statutesrs/rs/");
 		} catch (MalformedURLException e) {
-			throw new RuntimeException( e );
+			throw new RuntimeException(e);
 		}
+	}
+
+	private StatutesService statutesService;
+	public ParserInterfaceRsCa() {
+		statutesService = new StatutesServiceClientImpl(serviceURL);
 	}
 
 	@Override
