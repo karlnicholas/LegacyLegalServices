@@ -18,7 +18,10 @@
 	<div class="container-fluid">
 	<div class="panel-group" id="accordion">
 	<div class='panel panel-default'>
-	<gscomp:gsview entries="#{guidedSearchController.viewModel.entries}"/>
+	<ui:repeat value="#{guidedSearchController.entries}" var="entry" varStatus="status">
+		<gscomp:displayReference entry="#{entry}" index="#{status.index}" />
+		<gscomp:displayText entry="#{entry}" />
+	</ui:repeat>
 	</div>
 	</div>
 	</div>

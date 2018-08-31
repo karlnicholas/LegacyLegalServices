@@ -2,11 +2,13 @@ package guidedsearchweb.controller;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 
 import gsearch.GSearch;
 import gsearch.util.Highlighter;
+import gsearch.viewmodel.EntryReference;
 import gsearch.viewmodel.ViewModel;
 import statutes.StatutesBaseClass;
 import statutes.StatutesLeaf;
@@ -40,7 +42,17 @@ public class GuidedSearchController {
 	public void setFragments(boolean fragments) {
 		this.fragments = fragments;
 	}
-	public ViewModel getViewModel() {
+	public List<EntryReference> getEntries() {
+		if ( getViewModel().getEntries().size() == 1 ) {
+			EntryReference currentEntry = getViewModel().getEntries().get(0);
+			while ( currentEntry.getEntries() != null && currentEntry.getEntries().size() == 1 ) {
+				currentEntry = currentEntry.getEntries().get(0);
+			}
+			return currentEntry.getEntries();
+		}
+		return viewModel.getEntries();
+	}
+	private ViewModel getViewModel() {
 		if ( viewModel == null ) {
 			try {
 				viewModel = new GSearch(new ParserInterfaceRsCa()).handleRequest(path, term, fragments);

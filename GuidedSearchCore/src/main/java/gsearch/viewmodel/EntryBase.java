@@ -41,18 +41,21 @@ public abstract class EntryBase implements EntryReference {
 	public void setStatutesBaseClass(StatutesBaseClass cloneBaseClass) {
 		this.statutesBaseClass = cloneBaseClass;
 	}
+	@Override
 	public int getCount() {
 		return count;
 	}
 	public void setCount(int count) {
 		this.count = count;
 	}
+	@Override
 	public boolean isPathPart() {
 		return pathPart;
 	}
 	public void setPathPart(boolean pathPart) {
 		this.pathPart = pathPart;
 	}
+	@Override
 	public String getFullFacet() {
 		if ( statutesBaseClass != null )
 			return statutesBaseClass.getFullFacet();

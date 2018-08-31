@@ -14,7 +14,7 @@
   <c:if test="#{cc.attrs.entry.sectionText}">
     <div class="panel-body">
       <pre>
-        <h:outputText value="#{guidedSearchController.highlighter.highlightText(cc.attrs.entry.text, guidedSearchController.viewModel.term)}" escape="false" />
+        <h:outputText value="#{guidedSearchController.highlighter.highlightText(cc.attrs.entry.text, guidedSearchController.term)}" escape="false" />
       </pre>
     </div>
   </c:if>

@@ -18,7 +18,7 @@ public class StatuteEntry extends EntryBase {
 	@Override
 	public List<EntryReference> getEntries() { return entries; }
 	@Override
-	public String getText() { return null;}
+	public String getText() { return getDisplayTitle();}
 	@Override
 	public boolean isSectionText() { return false; }
 }

@@ -16,11 +16,6 @@
 	<ui:repeat value="#{cc.attrs.entries}" var="entry" varStatus="status">
 		<gscomp:displayReference entry="#{entry}" index="#{status.index}" />
 		<gscomp:displayText entry="#{entry}" />
-	    <h:outputText value="#{entry.pathPart}" /> - <h:outputText value="#{entry.entries.size()}" />
-		<ui:fragment rendered="#{entry.pathPart}">
-		    <h:outputText value="pp = true" />
-			<gscomp:gsview entries="#{entry.entries}"/>
-		</ui:fragment>
 	</ui:repeat>
 </composite:implementation>
 </html>

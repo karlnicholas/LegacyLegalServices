@@ -21,14 +21,14 @@
   <div class="row panel-title">
     <p>
       <span class="col-xs-1">
-        <c:if test="#{cc.attrs.entry.count > 0 and guidedSearchController.viewModel.fragments}">
+        <c:if test="#{cc.attrs.entry.count > 0 and guidedSearchController.fragments}">
           <a p:data-toggle="collapse" p:data-parent="#accordion" href="#collapse#{index}">
             <span class="glyphicon glyphicon-asterisk"></span></a>
         </c:if>
       </span>
       <h:outputLink value="#{guidedSearchController.newPathUrl(cc.attrs.entry.fullFacet)}">
         <span class="col-xs-3">
-          #{cc.attrs.entry.statutesBaseClass.getTitle(false)}
+          #{cc.attrs.entry.text}
           <c:if test="#{cc.attrs.entry.count > 0}"><span class="badge pull-right"><h:outputText value="#{cc.attrs.entry.count}" /></span></c:if>
           <c:if test="#{cc.attrs.entry.count == 0}">&nbsp;</c:if>
         </span>
@@ -43,7 +43,7 @@
     <div class="panel-body">
       <pre>
         <ui:repeat value="#{cc.attrs.entry.entries}" var="entryText">
-          <h:outputText value="#{guidedSearchController.highlighter.highlightText(entryText.text, guidedSearchController.viewModel.term)}" escape="false" />
+          <h:outputText value="#{guidedSearchController.highlighter.highlightText(entryText.text, guidedSearchController.term)}" escape="false" />
           <br />
         </ui:repeat>
       </pre>
