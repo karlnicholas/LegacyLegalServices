@@ -2,6 +2,7 @@ package guidedsearchweb.controller;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -42,6 +43,18 @@ public class GuidedSearchController {
 	public void setFragments(boolean fragments) {
 		this.fragments = fragments;
 	}
+	public List<EntryReference> getBreadcrumb() {
+		List<EntryReference> path = new ArrayList<>(); 
+		if ( getViewModel().getEntries().size() == 1 ) {
+			EntryReference currentEntry = getViewModel().getEntries().get(0);
+			while ( currentEntry.getEntries() != null && currentEntry.getEntries().size() == 1 ) {
+				path.add(currentEntry);
+				currentEntry = currentEntry.getEntries().get(0);
+			}
+			path.add(currentEntry);
+		}
+		return path;
+	}
 	public List<EntryReference> getEntries() {
 		if ( getViewModel().getEntries().size() == 1 ) {
 			EntryReference currentEntry = getViewModel().getEntries().get(0);
@@ -71,11 +84,14 @@ public class GuidedSearchController {
 		return terminate;
 	}
 	public Highlighter getHighlighter() {
+		if ( highlighter == null ) {
+			highlighter = new Highlighter();
+		}
 		return highlighter;
 	}
 
 	public String newPathUrl(String newPath) throws Exception {
-		return UrlArgs( newPath, viewModel.getTerm(), viewModel.isFragments() );
+		return UrlArgs( newPath, term, fragments );
 	}
 	
 	public String UrlArgs(String path, String term, boolean frag) throws Exception {

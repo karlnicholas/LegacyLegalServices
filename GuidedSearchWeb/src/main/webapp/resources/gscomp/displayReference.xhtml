@@ -14,7 +14,6 @@
 </composite:interface>
 <!-- IMPLEMENTATION -->
 <composite:implementation>
-<c:if test="#{!cc.attrs.entry.pathPart and !cc.attrs.entry.sectionText}">
 <c:if test="#{!guidedSearchController.terminate}">
   <h:outputText value="&lt;div class=&quot;panel-heading&quot;&gt;" escape="false"/>
 </c:if>
@@ -52,7 +51,6 @@
 </c:if>
 <c:if test="#{!guidedSearchController.terminate}">
   <h:outputText value="&lt;/div&gt;" escape="false"/>
-</c:if>
 </c:if>
 </composite:implementation>
 </html>

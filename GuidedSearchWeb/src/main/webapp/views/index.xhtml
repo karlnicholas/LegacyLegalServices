@@ -15,12 +15,27 @@
     <h:outputText value="Op - Home" />
   </ui:define>
   <ui:define name="content">
+	<ol class="breadcrumb">
+	<li><h:outputLink value="/" p:data-toggle="tooltip" p:data-placement="bottom" title="Home">Home</h:outputLink></li>
+	<ui:repeat value="#{guidedSearchController.breadcrumb}" var="breadcrumb">
+		<li>
+		<h:outputLink value="/" p:data-toggle="tooltip" p:data-placement="bottom" title="#{breadcrumb.statutesBaseClass.title}">
+		<ui:fragment rendered="#{breadcrumb.entries.size() eq 1}"><h:outputText value="#{breadcrumb.text}"/></ui:fragment>
+		<ui:fragment rendered="#{breadcrumb.entries.size() gt 1}"><h:outputText value="#{breadcrumb.text}"/> - <h:outputText value="#{breadcrumb.statutesBaseClass.title}"/></ui:fragment>
+		<f:param name="path" value="#{breadcrumb.fullFacet}" />
+		</h:outputLink>
+		</li>
+	</ui:repeat>
+	<ui:fragment rendered="#{!empty guidedSearchController.term}">
+	<li><span class="badge pull-right">${viewModel.totalCount}</span></li>
+	</ui:fragment>
+	</ol>
 	<div class="container-fluid">
 	<div class="panel-group" id="accordion">
-	<div class='panel panel-default'>
+	<div class='panel'>
 	<ui:repeat value="#{guidedSearchController.entries}" var="entry" varStatus="status">
-		<gscomp:displayReference entry="#{entry}" index="#{status.index}" />
-		<gscomp:displayText entry="#{entry}" />
+		<gscomp:displayReference rendered="#{!entry.pathPart and !entry.sectionText}" entry="#{entry}" index="#{status.index}" />
+		<gscomp:displayText rendered="#{entry.sectionText}" entry="#{entry}" />
 	</ui:repeat>
 	</div>
 	</div>
