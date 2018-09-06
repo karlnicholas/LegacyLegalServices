@@ -14,11 +14,7 @@
 </composite:interface>
 <!-- IMPLEMENTATION -->
 <composite:implementation>
-<c:if test="#{!guidedSearchController.terminate}">
-  <h:outputText value="&lt;div class=&quot;panel-heading&quot;&gt;" escape="false"/>
-</c:if>
   <div class="row panel-title">
-    <p>
       <span class="col-xs-1">
         <c:if test="#{cc.attrs.entry.count > 0 and guidedSearchController.fragments}">
           <a p:data-toggle="collapse" p:data-parent="#accordion" href="#collapse#{index}">
@@ -35,7 +31,6 @@
         <span class="col-xs-3">§§&nbsp;#{cc.attrs.entry.statutesBaseClass.statuteRange}
         </span>
       </h:outputLink>
-    </p>
   </div>
 <c:if test="#{!empty cc.attrs.entry.entries}">
   <div class="panel-collapse collapse" id="collapse#{index}">
@@ -48,9 +43,6 @@
       </pre>
     </div>
   </div>
-</c:if>
-<c:if test="#{!guidedSearchController.terminate}">
-  <h:outputText value="&lt;/div&gt;" escape="false"/>
 </c:if>
 </composite:implementation>
 </html>

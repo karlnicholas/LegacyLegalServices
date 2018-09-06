@@ -77,7 +77,12 @@ public class StatuteRange implements Serializable {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder(sNumber.toString());
+		StringBuilder sb; 
+		if ( sNumber != null ) {
+			sb = new StringBuilder(sNumber.toString());
+		} else {
+			sb = new StringBuilder();
+		}
 		if ( eNumber != null ) sb.append(" - " + eNumber);
 		String ret = sb.toString();
 		logger.finer(ret);

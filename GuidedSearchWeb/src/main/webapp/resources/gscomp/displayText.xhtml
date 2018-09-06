@@ -12,7 +12,7 @@
 <!-- IMPLEMENTATION -->
 <composite:implementation>
   <div class="panel-body">
-    <pre><h:outputText value="#{guidedSearchController.highlighter.highlightText(cc.attrs.entry.text, guidedSearchController.term)}" escape="false" /></pre>
+    <h:outputText style="white-space: pre" value="#{guidedSearchController.highlighter.highlightText(cc.attrs.entry.text, guidedSearchController.term)}" escape="false" />
   </div>
 </composite:implementation>
 </html>

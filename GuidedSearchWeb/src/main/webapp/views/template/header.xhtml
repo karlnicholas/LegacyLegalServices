@@ -2,23 +2,26 @@
   xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
   xmlns:h="http://xmlns.jcp.org/jsf/html"
   xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
-  xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+  xmlns:searchterms="http://searchterms">
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <a href="#{request.contextPath}/" class="pull-left" ><h:graphicImage library="img" name="javaee.png" /></a>
+      <h:outputLink classStyle="pull-left" value="#{request.contextPath}/" ><h:graphicImage library="img" name="javaee.png" />
+      <f:param name="term" value="#{guidedSearchController.term}"/></h:outputLink>
     </div>
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-      <li><h:link id="headerTabHome" value="Home" outcome="/views/index.xhtml"/></li>
-      </ul>
+	<h:form id="searchInputForm" styleClass="navbar-form navbar-left form-horizontal">
+	<searchterms:searchterms value="#{guidedSearchController.term}"/>
+	</h:form>
 	<ul class="nav navbar-nav navbar-right">
 	  <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">Applications <span class="caret"></span></a>
 	    <ul class="dropdown-menu" role="menu">
-	      <li><a href="/">Guided Search</a></li>
-	      <li><a href="/opinions/">Court Opinions</a></li>
+	      <li><a href="#{request.contextPath}/">Guided Search</a></li>
+	      <li><a href="#{request.contextPath}/opinions/">Court Opinions</a></li>
 	    </ul>
 	  </li>
 	</ul>
@@ -26,3 +29,32 @@
   </div>
 </nav>
 </ui:composition>
+
+<!-- 
+      <div class="btn-group dropdown" >
+        <button type="submit" class="btn btn-default">Submit</button>
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+        <div class="dropdown-menu container" style="width: 350px; padding: 15px">
+            <div class="row">
+            <label for="inAll" class="control-label col-sm-4">All&#160;Of:&#160;&#160;</label>
+            <div class="col-sm-4"><input type="text" class="form-control" name="inAll" value="" id="inAll" /></div>
+            </div>
+            <div class="row">
+            <label for="inNot" class="control-label col-sm-4">None&#160;Of:&#160;&#160;</label>
+            <div class="col-sm-4"><input type="text" class="form-control" name="inNot" value="" id="inNot" /></div>
+            </div>
+            <div class="row">
+            <label for="inAny" class="control-label col-sm-4">Any&#160;Of:&#160;&#160;</label>
+            <div class="col-sm-4"><input type="text" class="form-control" name="inAny" value="" id="inAny" /></div>
+            </div>
+            <div class="row">
+            <label for="inExact" class="control-label col-sm-4">Exact&#160;Phrase:&#160;&#160;</label>
+            <div class="col-sm-4"><input type="text" class="form-control" name="inExact" value="" id="inExact" /></div>
+            </div>
+            <div class="row">
+            <label for="submit" class="control-label col-sm-4"></label>
+            <div class="col-sm-4"><button type="submit" class="form-control" id="submit">Submit</button></div>
+            </div>
+        </div>
+      </div>
+ -->
