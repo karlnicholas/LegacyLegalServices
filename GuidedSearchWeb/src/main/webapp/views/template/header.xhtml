@@ -16,12 +16,16 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	<h:form id="searchInputForm" styleClass="navbar-form navbar-left form-horizontal">
 	<searchterms:searchterms value="#{guidedSearchController.term}"/>
+	<input type="hidden" name="path" value="#{guidedSearchController.path}"/>
+	<input type="hidden" name="fragements" value="#{guidedSearchController.fragments}"/>
+	<h:button styleClass="btn" outcome="/views/search.xhtml" value="Clear" />
+	<h:button styleClass="btn" outcome="#{guidedSearchController.fragmentsUrl('/views/search.xhtml')}" value="Fragments" />
 	</h:form>
 	<ul class="nav navbar-nav navbar-right">
 	  <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">Applications <span class="caret"></span></a>
 	    <ul class="dropdown-menu" role="menu">
-	      <li><a href="#{request.contextPath}/">Guided Search</a></li>
-	      <li><a href="#{request.contextPath}/opinions/">Court Opinions</a></li>
+	      <li><a href="/views/search.xhtml">Guided Search</a></li>
+	      <li><a href="/opinions">Court Opinions</a></li>
 	    </ul>
 	  </li>
 	</ul>

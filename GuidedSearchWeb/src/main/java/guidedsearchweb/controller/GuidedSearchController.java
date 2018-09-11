@@ -1,7 +1,10 @@
 package guidedsearchweb.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,18 +27,22 @@ public class GuidedSearchController {
 	private ViewModel viewModel;
 	private boolean terminate;
 	private Highlighter highlighter;
+	
+	public String someAction() {
+		return "/views/search.xhtml";
+	}
 
 	public String getPath() {
 		return path;
 	}
-	public void setPath(String path) {
-		this.path = path;
+	public void setPath(String path) throws UnsupportedEncodingException {
+		this.path = URLDecoder.decode(path, StandardCharsets.UTF_8.name());
 	}
 	public String getTerm() {
 		return term;
 	}
-	public void setTerm(String term) {
-		this.term = term;
+	public void setTerm(String term) throws UnsupportedEncodingException {
+		this.term = URLDecoder.decode(term, StandardCharsets.UTF_8.name());
 	}
 	public boolean isFragments() {
 		return fragments;
@@ -90,12 +97,34 @@ public class GuidedSearchController {
 		return highlighter;
 	}
 
-	public String newPathUrl(String newPath) throws Exception {
-		return UrlArgs( newPath, term, fragments );
+	public String fragmentsUrl(String baseURL) throws Exception {
+		StringBuilder sb = new StringBuilder(baseURL);
+		char firstArg = '?';
+		if ( path != null ) {
+			sb.append(firstArg);
+			sb.append("path=");
+			sb.append(path);
+			firstArg = '&';
+		}
+		if ( term != null ) {
+			sb.append(firstArg);
+			sb.append("term=");
+			sb.append(term);
+			firstArg = '&';
+		}
+		if ( fragments == false ) {
+			sb.append(firstArg + "fragments=true");
+			firstArg = '&';
+		}
+		return sb.toString();
 	}
 	
-	public String UrlArgs(String path, String term, boolean frag) throws Exception {
-		StringBuilder sb = new StringBuilder();
+	public String newPathUrl(String baseURL, String newPath) throws Exception {
+		return UrlArgs( baseURL, newPath, term, fragments );
+	}
+
+	public String UrlArgs(String baseURL, String path, String term, boolean frag) throws Exception {
+		StringBuilder sb = new StringBuilder(baseURL);
 		char firstArg = '?';
 		if ( path != null ) {
 			sb.append(firstArg + "path="+URLEncoder.encode(path, "UTF-8" ));
@@ -106,7 +135,7 @@ public class GuidedSearchController {
 			firstArg = '&';
 		}
 		if ( frag != false ) {
-			sb.append(firstArg + "frag=true");
+			sb.append(firstArg + "fragments=true");
 			firstArg = '&';
 		}
 		return sb.toString();
@@ -117,11 +146,11 @@ public class GuidedSearchController {
 		StringBuilder sb = new StringBuilder();
 		char firstArg = '?';
 		if (! viewModel.getTerm().isEmpty() ) {
-			sb.append(firstArg + "term=" + URLEncoder.encode(viewModel.getTerm(), "UTF-8"));
+			sb.append(firstArg + "term=" + URLEncoder.encode(term, "UTF-8"));
 			firstArg = '&';
 		}
 		if ( viewModel.isFragments() ) {
-			sb.append( firstArg + "frag=true" );
+			sb.append( firstArg + "fragments=true" );
 			firstArg = '&';
 		}
 		return sb.toString();

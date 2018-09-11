@@ -1,29 +1,61 @@
 package guidedsearch.component;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.faces.component.FacesComponent;
-import javax.faces.component.UIInput;
+import javax.faces.component.UICommand;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 @FacesComponent("SearchTerms")
-public class SearchTerms extends UIInput {
+public class SearchTerms extends UICommand {
 	private Logger logger = Logger.getLogger(SearchTerms.class.getName());
-	private String all;
-	private String not;
-	private String any;
-	private String exact;
-	private String term;
 
 	@Override
 	public void encodeEnd(FacesContext context) throws IOException {
-		if ( term == null ) {
-			term = (String)getValue();
-		}
-	    setAdvancedSearchFields(context, term);
+		String all = null, not = null, any = null, exact = null, term;
+		term = (String)getValue();
+    	if ( term != null && !term.isEmpty() ) {
+	    	try {
+		    	String[] terms = term.split(" ");
+		    	all = new String();
+		    	not = new String();
+		    	any = new String();
+		    	exact = new String();
+		    	boolean ex = false;
+		    	for(String t: terms) {
+		    		if ( !ex && t.startsWith("+")) all=all.concat(t.substring(1) + " ");
+		    		else if ( !ex && t.startsWith("-")) not=not.concat(t.substring(1) + " " );
+		    		else if ( !ex && (t.startsWith("\"") && t.trim().endsWith("\"")) ) {
+		    			exact=exact.concat(t.substring(1, t.length()-1) + " ");
+		    		}
+		    		else if ( !ex && t.startsWith("\"")) {
+		    			exact=exact.concat(t.substring(1) + " ");
+		    			ex = true;
+		    		}
+		    		else if ( ex && !t.endsWith("\"") ) {
+		    			exact=exact.concat(t) + " ";
+		    		}
+		    		else if ( ex && t.endsWith("\"")) {
+		    			exact=exact.concat(t.substring(0, t.length()-1)) + " ";
+		    			ex = false;
+		    		}
+		    		else any = any.concat(t) + " ";
+		    	}
+		    	all = all.trim();
+		    	any = any.trim();
+		    	not = not.trim();
+		    	exact = exact.trim();
+	    	} catch ( Throwable t) {
+	    		// silent exception
+	    		logger.warning("Exception:" + t.getMessage());
+	    	}
+    	}
 	    ResponseWriter writer = context.getResponseWriter();
 	    // <input type="hidden" name="hiddenTerm" value="#{guidedSearchController.term}" />
 	    writer.startElement("input", this);
@@ -71,9 +103,10 @@ public class SearchTerms extends UIInput {
 	    writer.writeAttribute("for", "inAll", null);
 	    writer.write("All Of:  ");
 	    writer.endElement("label");
-	    // <div class="col-sm-4"><input type="text" class="form-control" name="inAll" value="" id="inAll" /></div>
+	    // <div class="col-sm-4">
 	    writer.startElement("div", this);
 	    writer.writeAttribute("class", "col-sm-4", null);
+	    // <input type="text" class="form-control" name="inAll" value="" id="inAll" />
 	    writer.startElement("input", this);
 	    writer.writeAttribute("class", "form-control", null);
 	    writer.writeAttribute("type", "text", null);
@@ -81,6 +114,7 @@ public class SearchTerms extends UIInput {
 	    writer.writeAttribute("value", all, null);
 	    writer.writeAttribute("id", "inAll", null);
 	    writer.endElement("input");
+	    // </div>
 	    writer.endElement("div");
 	    // </div>
 	    writer.endElement("div");
@@ -140,9 +174,10 @@ public class SearchTerms extends UIInput {
 	    writer.writeAttribute("for", "inExact", null);
 	    writer.write("Exact Phrase:  ");
 	    writer.endElement("label");
-	    // <div class="col-sm-4"><input type="text" class="form-control" name="inExact" value="" id="inExact" /></div>
+	    // <div class="col-sm-4">
 	    writer.startElement("div", this);
 	    writer.writeAttribute("class", "col-sm-4", null);
+	    // <input type="text" class="form-control" name="inExact" value="" id="inExact" />
 	    writer.startElement("input", this);
 	    writer.writeAttribute("class", "form-control", null);
 	    writer.writeAttribute("type", "text", null);
@@ -150,10 +185,10 @@ public class SearchTerms extends UIInput {
 	    writer.writeAttribute("value", exact, null);
 	    writer.writeAttribute("id", "inExact", null);
 	    writer.endElement("input");
+	    // </div>
 	    writer.endElement("div");	    
 	    // </div>
 	    writer.endElement("div");
-
 	    // <div class="row">
 	    writer.startElement("div", this);
 	    writer.writeAttribute("class", "row", null);
@@ -162,15 +197,17 @@ public class SearchTerms extends UIInput {
 	    writer.writeAttribute("class", "control-label col-sm-4", null);
 	    writer.writeAttribute("for", "submit", null);
 	    writer.endElement("label");
-	    // <div class="col-sm-4"><button type="submit" class="form-control" id="submit">Submit</button></div>
+	    // <div class="col-sm-4">
 	    writer.startElement("div", this);
 	    writer.writeAttribute("class", "col-sm-4", null);
+	    // <button class="btn" value="Submit">
 	    writer.startElement("button", this);
 	    writer.writeAttribute("class", "form-control", null);
 	    writer.writeAttribute("type", "submit", null);
 	    writer.writeAttribute("id", "submit", null);
 	    writer.write("Submit");
 	    writer.endElement("button");
+	    // </div>
 	    writer.endElement("div");	    
 	    // </div>
 	    writer.endElement("div");
@@ -181,10 +218,30 @@ public class SearchTerms extends UIInput {
 	    writer.endElement("div");
     }
 		
+	
 	@Override
 	public void decode(FacesContext context) {
+		String term = null;
+		String path, fragments;
 		/* Grab the request map from the external context */
 		Map<String, String> requestParameterMap = context.getExternalContext().getRequestParameterMap();
+    	try {
+			/* Get client ID, use client ID to grab value from parameters */
+			path = requestParameterMap.get("path");
+			if ( path == null ) {
+				path = "";
+			} else {
+				path = URLEncoder.encode(path, StandardCharsets.UTF_8.name());
+			}
+			fragments = requestParameterMap.get("fragments");
+			if ( fragments == null ) {
+				fragments = "";
+			} else {
+				fragments = URLEncoder.encode(fragments, StandardCharsets.UTF_8.name());
+			}
+    	} catch ( UnsupportedEncodingException ex) {
+    		throw new RuntimeException(ex);
+    	}    	
 		/* Get client ID, use client ID to grab value from parameters */
 		String newTerm = requestParameterMap.get("term");
 		String hiddenTerm = requestParameterMap.get("hiddenTerm");
@@ -226,8 +283,20 @@ public class SearchTerms extends UIInput {
 			term = bTerm;
 		} else if ( !newTerm.equals(hiddenTerm) ) {
 			term = newTerm;
+		} else {
+			term = hiddenTerm;
 		}
 		setValue(term);
+		try {
+			if ( term == null ) {
+				term = "";
+			} else {
+				term = URLEncoder.encode(term, StandardCharsets.UTF_8.name());
+			}
+			context.getExternalContext().redirect("/views/search.xhtml?path="+path+"&term="+term+"&fragments="+fragments);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
     private String appendOp(String val, char op) {
@@ -241,42 +310,5 @@ public class SearchTerms extends UIInput {
     	return sb.toString().trim();
     }
     
-    private void setAdvancedSearchFields(FacesContext context, String term) {
-    	if ( term == null || term.isEmpty() ) return;
-    	try {
-	    	String[] terms = term.split(" ");
-	    	all = new String();
-	    	not = new String();
-	    	any = new String();
-	    	exact = new String();
-	    	boolean ex = false;
-	    	for(String t: terms) {
-	    		if ( !ex && t.startsWith("+")) all=all.concat(t.substring(1) + " ");
-	    		else if ( !ex && t.startsWith("-")) not=not.concat(t.substring(1) + " " );
-	    		else if ( !ex && (t.startsWith("\"") && t.trim().endsWith("\"")) ) {
-	    			exact=exact.concat(t.substring(1, t.length()-1) + " ");
-	    		}
-	    		else if ( !ex && t.startsWith("\"")) {
-	    			exact=exact.concat(t.substring(1) + " ");
-	    			ex = true;
-	    		}
-	    		else if ( ex && !t.endsWith("\"") ) {
-	    			exact=exact.concat(t) + " ";
-	    		}
-	    		else if ( ex && t.endsWith("\"")) {
-	    			exact=exact.concat(t.substring(0, t.length()-1)) + " ";
-	    			ex = false;
-	    		}
-	    		else any = any.concat(t) + " ";
-	    	}
-	    	all = all.trim();
-	    	any = any.trim();
-	    	not = not.trim();
-	    	exact = exact.trim();
-    	} catch ( Throwable t) {
-    		// silent exception
-    		logger.warning("Exception:" + t.getMessage());
-    	}
-    }
 }
 

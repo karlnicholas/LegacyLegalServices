@@ -21,7 +21,7 @@
             <span class="glyphicon glyphicon-asterisk"></span></a>
         </c:if>
       </span>
-      <h:outputLink value="#{guidedSearchController.newPathUrl(cc.attrs.entry.fullFacet)}">
+      <h:outputLink value="#{guidedSearchController.newPathUrl('/views/search.xhtml', cc.attrs.entry.fullFacet)}">
         <span class="col-xs-3">
           #{cc.attrs.entry.text}
           <c:if test="#{cc.attrs.entry.count > 0}"><span class="badge pull-right"><h:outputText value="#{cc.attrs.entry.count}" /></span></c:if>
