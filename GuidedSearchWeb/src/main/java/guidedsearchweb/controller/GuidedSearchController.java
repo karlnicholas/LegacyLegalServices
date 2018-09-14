@@ -34,26 +34,9 @@ public class GuidedSearchController {
 	private boolean terminate;
 	private Highlighter highlighter;
 	
-	public String submitFromTerm() throws UnsupportedEncodingException {
-		System.out.print("submitFromTerm: ");
-		checkTermUpdate();
-		return getUrl();
-	}
-
-/*	
-	public String submitFromDropdown() throws UnsupportedEncodingException {
-		System.out.print("submitFromDropdown: ");
-		checkTermUpdate();
-		return getUrl();
-	}
-*/
-	
-	private void checkTermUpdate() {
+	public String submitTerm() throws UnsupportedEncodingException {
 		FacesContext context = FacesContext.getCurrentInstance();
-		String hiddenTerm = context.getExternalContext().getRequestParameterMap().get("searchInputForm:hiddenTerm");
-		printVars(hiddenTerm);
-//		String clear = null;
-//		boolean fragment;
+		String hiddenTerm = context.getExternalContext().getRequestParameterMap().get("hiddenTerm");
 		String bTerm = null;
 		if ( 
 			!inAll.isEmpty()
@@ -76,16 +59,12 @@ public class GuidedSearchController {
 			}
 			bTerm = sb.toString().trim();
 		}
-/*		
-		if ( clear != null ) {
-			term = null;
-//			fragment = false;
-		} else */ if ( bTerm != null && ( hiddenTerm == null || !bTerm.equals(hiddenTerm) && term.equals(hiddenTerm)) ) {
+		if ( bTerm != null && ( hiddenTerm == null || !bTerm.equals(hiddenTerm) && term.equals(hiddenTerm)) ) {
 			term = bTerm;
 		}
-		
+		return getUrl();
 	}
-
+	
     private String appendOp(String val, char op) {
     	val = val.trim();
     	if ( val.isEmpty()) return "";
@@ -98,16 +77,13 @@ public class GuidedSearchController {
     }
 
     public String submitClear() throws UnsupportedEncodingException {
-		System.out.print("submitClear: ");
-		String hiddenTerm = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("hiddenTerm");
-		printVars(hiddenTerm);
+		term = null;
+		fragments = false;
 		return getUrl();
 	}
 
 	public String submitFragments() throws UnsupportedEncodingException {
-		System.out.print("submitFragments: ");
-		String hiddenTerm = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("hiddenTerm");
-		printVars(hiddenTerm);
+		fragments = !fragments;
 		return getUrl();
 	}
 	
@@ -129,19 +105,6 @@ public class GuidedSearchController {
 		return sb.toString();
 	}
 
-	private void printVars(String hiddenTerm) {
-		System.out.print("path="+path);
-		System.out.print(" term="+term);
-		System.out.print(" fragments="+fragments);
-		System.out.print(" inAll="+inAll);
-		System.out.print(" inNot="+inNot);
-		System.out.print(" inAny="+inAny);
-		System.out.print(" inExact="+inExact);
-		System.out.print(" hiddenTerm="+hiddenTerm);
-		System.out.print(" termBuilt="+termBuilt);
-		System.out.println();
-	}
-	
 	private void buildTerm() {
     	if ( !termBuilt && term != null && !term.isEmpty() ) {
 	    	try {
@@ -274,64 +237,6 @@ public class GuidedSearchController {
 		return highlighter;
 	}
 
-	public String fragmentsUrl(String baseURL) throws Exception {
-		StringBuilder sb = new StringBuilder(baseURL);
-		char firstArg = '?';
-		if ( path != null ) {
-			sb.append(firstArg);
-			sb.append("path=");
-			sb.append(path);
-			firstArg = '&';
-		}
-		if ( term != null ) {
-			sb.append(firstArg);
-			sb.append("term=");
-			sb.append(term);
-			firstArg = '&';
-		}
-		if ( fragments == false ) {
-			sb.append(firstArg + "fragments=true");
-			firstArg = '&';
-		}
-		return sb.toString();
-	}
-	
-	public String newPathUrl(String baseURL, String newPath) throws Exception {
-		return UrlArgs( baseURL, newPath, term, fragments );
-	}
-
-	public String UrlArgs(String baseURL, String path, String term, boolean frag) throws Exception {
-		StringBuilder sb = new StringBuilder(baseURL);
-		char firstArg = '?';
-		if ( path != null ) {
-			sb.append(firstArg + "path="+URLEncoder.encode(path, "UTF-8" ));
-			firstArg = '&';
-		}
-		if ( term != null ) {
-			sb.append(firstArg + "term="+URLEncoder.encode(term, "UTF-8" ));
-			firstArg = '&';
-		}
-		if ( frag != false ) {
-			sb.append(firstArg + "fragments=true");
-			firstArg = '&';
-		}
-		return sb.toString();
-		
-	}
-
-	public String homeUrl() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		char firstArg = '?';
-		if (! viewModel.getTerm().isEmpty() ) {
-			sb.append(firstArg + "term=" + URLEncoder.encode(term, "UTF-8"));
-			firstArg = '&';
-		}
-		if ( viewModel.isFragments() ) {
-			sb.append( firstArg + "fragments=true" );
-			firstArg = '&';
-		}
-		return sb.toString();
-	}
 /*
 	private void recurseEntries(List<EntryReference> entries) {
 		for ( EntryReference entryReference: entries) {

@@ -16,10 +16,10 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	<h:form id="searchInputForm" styleClass="navbar-form navbar-left form-horizontal">
-	  <h:inputHidden value="#{guidedSearchController.term}" id="hiddenTerm" />
+	  <input type="hidden" value="#{guidedSearchController.term}" name="hiddenTerm" />
 	  <h:inputText value="#{guidedSearchController.term}" styleClass="form-control" p:placeholder="Search" />
       <div class="btn-group dropdown" >
-        <h:commandButton action="#{guidedSearchController.submitFromTerm()}" value="Submit" styleClass="btn btn-default" />
+        <h:commandButton action="#{guidedSearchController.submitTerm()}" value="Submit" styleClass="btn btn-default" />
         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
         <div class="dropdown-menu container" style="width: 350px; padding: 15px">
             <div class="row">
@@ -38,6 +38,10 @@
             <h:outputLabel for="inExact" styleClass="control-label col-sm-4" value=" Exact Phrase:"/>
             <div class="col-sm-4"><h:inputText styleClass="form-control" value="#{guidedSearchController.inExact}" id="inExact" /></div>
             </div>
+            <div class="row">
+            <h:outputLabel for="submit" styleClass="control-label col-sm-4" value=""/>
+            <div class="col-sm-4"><h:commandButton action="#{guidedSearchController.submitTerm()}" value="Submit" styleClass="form-control" id="submit"/></div>
+            </div>
         </div>
       </div>
 	<h:commandButton styleClass="btn" style="margin-left:4px;" action="#{guidedSearchController.submitClear()}" value="Clear" />
@@ -55,32 +59,3 @@
   </div>
 </nav>
 </ui:composition>
-
-<!-- 
-      <div class="btn-group dropdown" >
-        <button type="submit" class="btn btn-default">Submit</button>
-        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-        <div class="dropdown-menu container" style="width: 350px; padding: 15px">
-            <div class="row">
-            <label for="inAll" class="control-label col-sm-4">All&#160;Of:&#160;&#160;</label>
-            <div class="col-sm-4"><input type="text" class="form-control" name="inAll" value="" id="inAll" /></div>
-            </div>
-            <div class="row">
-            <label for="inNot" class="control-label col-sm-4">None&#160;Of:&#160;&#160;</label>
-            <div class="col-sm-4"><input type="text" class="form-control" name="inNot" value="" id="inNot" /></div>
-            </div>
-            <div class="row">
-            <label for="inAny" class="control-label col-sm-4">Any&#160;Of:&#160;&#160;</label>
-            <div class="col-sm-4"><input type="text" class="form-control" name="inAny" value="" id="inAny" /></div>
-            </div>
-            <div class="row">
-            <label for="inExact" class="control-label col-sm-4">Exact&#160;Phrase:&#160;&#160;</label>
-            <div class="col-sm-4"><input type="text" class="form-control" name="inExact" value="" id="inExact" /></div>
-            </div>
-            <div class="row">
-            <label for="submit" class="control-label col-sm-4"></label>
-            <div class="col-sm-4"><button type="submit" class="form-control" id="submit">Submit</button></div>
-            </div>
-        </div>
-      </div>
- -->

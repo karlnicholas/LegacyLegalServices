@@ -25,6 +25,7 @@
 		<ui:fragment rendered="#{breadcrumb.entries.size() gt 1}"><h:outputText value="#{breadcrumb.text}"/> - <h:outputText value="#{breadcrumb.statutesBaseClass.title}"/></ui:fragment>
 		<f:param name="path" value="#{breadcrumb.fullFacet}" />
 		<f:param name="term" value="#{guidedSearchController.term}" />
+		<f:param name="fragments" value="#{guidedSearchController.fragments}" />
 		</h:outputLink>
 		</li>
 	</ui:repeat>
