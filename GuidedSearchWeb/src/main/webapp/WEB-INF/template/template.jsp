@@ -1,6 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page trimDirectiveWhitespaces="true" %>
-<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -10,10 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Guided Code Search</title>
     <!-- Bootstrap -->
-    <link href="<c:url value="/resources/css/bootstrap.min.css"/>" rel="stylesheet">
-    <link href="<c:url value="/resources/css/core.css"/>" rel="stylesheet">
-    <script src="<c:url value="/resources/js/jquery-1.11.1.min.js"/>"></script>
-    <script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
+	<link rel='stylesheet' type='text/css' href='webjars/bootstrap/3.3.7/css/bootstrap.min.css'/>
+	<script src="webjars/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>
+	<script src="webjars/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
 	<style>
 	body { padding-top: 50px; }
 	</style>    
@@ -25,8 +22,6 @@
     <![endif]-->
   </head>
 <body>
-<tiles:insertAttribute name="navigation" />
-<tiles:insertAttribute name="body" />
-<tiles:insertAttribute name="footer" />
+<jsp:include page="/WEB-INF/template/navigation.jsp" />
 </body>
 </html>

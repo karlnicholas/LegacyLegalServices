@@ -28,9 +28,9 @@ ${panelDOpen}
           </c:choose>
         </span>
         <span class="col-xs-5">
-        ${entry.codeReference.title}
+        ${entry.statutesBaseClass.title}
         </span>
-        <span class="col-xs-3">§§&nbsp;${entry.codeReference.codeRange}
+        <span class="col-xs-3">§§&nbsp;${entry.statutesBaseClass.statuteRange}
         </span>
       </a>
     </p>

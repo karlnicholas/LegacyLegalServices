@@ -13,7 +13,7 @@ import gsearch.GSearch;
 import gsearch.viewmodel.ViewModel;
 
 @SuppressWarnings("serial")
-@WebServlet({"/search", "/"})
+@WebServlet({"/search"})
 public class GuidedSearchController extends HttpServlet {
 	private static final Logger logger = Logger.getLogger(GuidedSearchController.class.getName());		
 	private UrlBuilder urlBuilder = new UrlBuilder();
@@ -40,7 +40,7 @@ public class GuidedSearchController extends HttpServlet {
 		logger.fine("1: State = " + viewModel.getState() );
 		logger.fine("1: Path = " + viewModel.getPath() + ": Term = " + viewModel.getTerm() );
 
-		request.getRequestDispatcher("search.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/search.jsp").forward(request, response);
 	}
     
 	@Override

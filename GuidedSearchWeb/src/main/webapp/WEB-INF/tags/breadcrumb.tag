@@ -5,10 +5,10 @@
 <c:if test="${entries.size() == 1 }" >
 <c:forEach items="${entries}" var="entry">
 <li>
-<a href="${urlBuilder.newPathUrl(viewModel, entry.fullFacet)}" data-toggle="tooltip" data-placement="bottom" title="${entry.codeReference.title}">
+<a href="${urlBuilder.newPathUrl(viewModel, entry.fullFacet)}" data-toggle="tooltip" data-placement="bottom" title="${entry.statutesBaseClass.title}">
 <c:choose>
-<c:when test="${entry.entries.size()==1}"><c:out value="${entry.displayTitle}"/></c:when>
-<c:when test="${entry.entries.size()>1}"><c:out value="${entry.displayTitle}"/> - <c:out value="${entry.codeReference.title}"/></c:when>
+<c:when test="${entry.entries.size()==1}"><c:out value="${entry.text}"/></c:when>
+<c:when test="${entry.entries.size()>1}"><c:out value="${entry.text}"/> - <c:out value="${entry.statutesBaseClass.title}"/></c:when>
 </c:choose>
 </a>
 </li>
