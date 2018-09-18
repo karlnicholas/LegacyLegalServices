@@ -16,7 +16,7 @@ public class UrlBuilder {
 		@RequestParam(required=false) String ho, 
 	 */
 	public String newPathUrl(ViewModel viewModel, String newPath) throws UnsupportedEncodingException {
-		return "search" + UrlArgs( newPath, viewModel.getTerm(), viewModel.isFragments() );
+		return UrlArgs( newPath, viewModel.getTerm(), viewModel.isFragments() );
 	}
 	
 	public String UrlArgs(String path, String term, boolean frag) throws UnsupportedEncodingException {
@@ -39,7 +39,7 @@ public class UrlBuilder {
 	}
 
 	public String homeUrl(ViewModel viewModel) throws UnsupportedEncodingException {
-		StringBuilder sb = new StringBuilder("search");
+		StringBuilder sb = new StringBuilder();
 		char firstArg = '?';
 		if (! viewModel.getTerm().isEmpty() ) {
 			sb.append(firstArg + "term=" + URLEncoder.encode(viewModel.getTerm(), "UTF-8"));

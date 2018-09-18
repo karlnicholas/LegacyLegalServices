@@ -13,7 +13,7 @@ import gsearch.GSearch;
 import gsearch.viewmodel.ViewModel;
 
 @SuppressWarnings("serial")
-@WebServlet({"/search"})
+@WebServlet({""})
 public class GuidedSearchController extends HttpServlet {
 	private static final Logger logger = Logger.getLogger(GuidedSearchController.class.getName());		
 	private UrlBuilder urlBuilder = new UrlBuilder();

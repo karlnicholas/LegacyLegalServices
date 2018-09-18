@@ -5,7 +5,7 @@
 <c:if test="${entry.sectionText}">
 <div class="panel-body">
 <pre>
-<c:out value="${highlighter.highlightText(entry.text, viewModel.term, \"<mark><strong><u>\", \"</u></strong></mark>\")}" escapeXml="false" />
+<c:out value="${highlighter.highlightText(entry.text, viewModel.term, '<mark><strong><u>', '</u></strong></mark>')}" escapeXml="false" />
 </pre>
 </div>
 </c:if>

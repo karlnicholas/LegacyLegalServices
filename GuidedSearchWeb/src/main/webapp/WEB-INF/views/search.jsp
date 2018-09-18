@@ -10,11 +10,11 @@
 <c:if test="${not empty viewModel.term}">
 <li><span class="badge pull-right">${viewModel.totalCount}</span></li>
 </c:if>
-</ol><div class="container-fluid">
+</ol>
+<div class="container-fluid">
 <div class="panel-group" id="accordion">
-<div class='panel panel-default'>
+<div class="panel">
 <myTags:recurse entries="${viewModel.entries}"/>
 </div>
 </div>
 </div>
-<jsp:include page="/WEB-INF/template/footer.jsp" />

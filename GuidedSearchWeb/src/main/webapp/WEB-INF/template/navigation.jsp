@@ -11,8 +11,12 @@ $(function() {
 });
 </script>
 <nav id="navigation" class="navbar navbar-default navbar-fixed-top" role="navigation">
+ <div class="container">
   <div class="navbar-header">
-    <a href="${urlBuilder.homeUrl(viewModel)}" class="navbar-brand" >Guided Search</a>
+    <a href="${urlBuilder.homeUrl(viewModel)}" class="pull-left" ><img src="/image/javaee.png" /></a>
+  </div>
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse">
     <form class="navbar-form navbar-left form-horizontal" role="form" method="post">
       <input type="text" class="form-control" name="ntm" value="<c:out value="${viewModel.term}"/>" placeholder="Search">
       <div class="btn-group dropdown" >
@@ -55,15 +59,14 @@ $(function() {
       </c:choose>
       <input type="hidden" name="fs" value="${viewModel.fragments}" />
     </form>
-  </div>
-  <div class="navbar-right">
-    <ul class="nav navbar-nav">
-      <li class="dropdown"><a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown">Applications <span class="caret"></span></a>
-        <ul class="dropdown-menu" role="menu">
-          <li><a href="http://op-op.b9ad.pro-us-east-1.openshiftapps.com">Court Opinions</a></li>
-          <li><a href="http://gs-op.b9ad.pro-us-east-1.openshiftapps.com">Guided Search</a></li>
-        </ul>
+	<ul class="nav navbar-nav navbar-right">
+	  <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">Applications <span class="caret"></span></a>
+	    <ul class="dropdown-menu" role="menu">
+	      <li><a href="/">Guided Search</a></li>
+	      <li><a href="/opinions">Court Opinions</a></li>
+	    </ul>
       </li>
     </ul>
+    </div>
   </div>
 </nav>
