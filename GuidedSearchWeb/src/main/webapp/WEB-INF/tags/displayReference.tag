@@ -30,14 +30,7 @@
 </div>
 <c:if test="${!empty entry.entries }">
   <div class="panel-collapse collapse" id="collapse${index}">
-    <div class="panel-body">
-      <pre>
-        <c:forEach items="${entry.entries}" var="entryText">
-          <c:out value="${highlighter.highlightText(entryText.text, viewModel.term, '<mark><strong><u>', '</u></strong></mark>')}" escapeXml="false" />
-          <br>
-        </c:forEach>
-      </pre>
-    </div>
+    <c:forEach items="${entry.entries}" var="entryText"><div class="row" style="white-space: pre;"><c:out value="${highlighter.highlightText(entryText.text, viewModel.term)}" escapeXml="false" /></div><br></c:forEach>
   </div>
 </c:if>
 </c:if>

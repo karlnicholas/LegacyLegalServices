@@ -1,4 +1,4 @@
-thorntail:
+swarm:
   datasources:
     data-sources:
       MySQLDS:
