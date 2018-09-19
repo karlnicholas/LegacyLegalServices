@@ -97,7 +97,7 @@ public class GuidedSearchController extends HttpServlet {
 			term = ntm;
 		}
 				
-		response.sendRedirect("search.jsp"+urlBuilder.UrlArgs(path, term, frag));    	
+		response.sendRedirect("/"+urlBuilder.UrlArgs(path, term, frag));    	
     }
     
     private String appendOp(String val, char op) {

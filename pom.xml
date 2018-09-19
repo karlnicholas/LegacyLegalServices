@@ -35,7 +35,7 @@
     <!-- Define the version of the JBoss BOMs we want to import to specify tested stacks. -->
     <version.wildfly.bom>11.0.0.Final</version.wildfly.bom>
     <version.wildfly>11.0.0.Final</version.wildfly>
-    <version.wildfly.swarm>2018.5.0</version.wildfly.swarm>
+    <version.wildfly.thorntail>2.2.0.Final</version.wildfly.thorntail>
     <!-- other plugin versions -->
     <version.compiler.plugin>3.8.0</version.compiler.plugin>
     <version.ear.plugin>3.0.1</version.ear.plugin>
@@ -106,9 +106,9 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>org.wildfly.swarm</groupId>
-        <artifactId>bom-all</artifactId>
-        <version>${version.wildfly.swarm}</version>
+        <groupId>io.thorntail</groupId>
+        <artifactId>bom</artifactId>
+        <version>${version.wildfly.thorntail}</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -116,7 +116,7 @@
   </dependencyManagement>
   <profiles>
     <profile>
-      <id>swarm</id>
+      <id>thorntail</id>
     </profile>
   </profiles>
   <build>

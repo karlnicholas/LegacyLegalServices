@@ -90,13 +90,13 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>swarm</id>
+			<id>thorntail</id>
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.wildfly.swarm</groupId>
-						<artifactId>wildfly-swarm-plugin</artifactId>
-						<version>${version.wildfly.swarm}</version>
+					  <groupId>io.thorntail</groupId>
+					  <artifactId>thorntail-maven-plugin</artifactId>
+						<version>${version.wildfly.thorntail}</version>
 						<executions>
 							<execution>
 								<goals>
@@ -104,7 +104,6 @@
 								</goals>
 								<configuration>
 									<fractions>
-										<fraction>jsf</fraction>
 										<fraction>container</fraction>
 										<fraction>jaxrs</fraction>
 										<fraction>logging</fraction>

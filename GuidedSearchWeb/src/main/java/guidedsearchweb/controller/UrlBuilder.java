@@ -39,7 +39,7 @@ public class UrlBuilder {
 	}
 
 	public String homeUrl(ViewModel viewModel) throws UnsupportedEncodingException {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder("/");
 		char firstArg = '?';
 		if (! viewModel.getTerm().isEmpty() ) {
 			sb.append(firstArg + "term=" + URLEncoder.encode(viewModel.getTerm(), "UTF-8"));

@@ -1,15 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<script>
-$(function() {
-  // Setup drop down menu
-  $('.dropdown-toggle').dropdown();
-  // Fix input element click problem
-  $('.dropdown input, .dropdown label').click(function(e) {
-    e.stopPropagation();
-  });
-});
-</script>
 <nav id="navigation" class="navbar navbar-default navbar-fixed-top" role="navigation">
  <div class="container">
   <div class="navbar-header">
@@ -17,7 +7,10 @@ $(function() {
   </div>
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse">
-    <form class="navbar-form navbar-left form-horizontal" role="form" method="post">
+    <form action="/" class="navbar-form navbar-left form-horizontal" role="form" method="post">
+      <input type="hidden" name="path" value="<c:out value="${viewModel.path}"/>">
+      <input type="hidden" name="term" value="<c:out value="${viewModel.term}"/>">
+      <input type="hidden" name="frag" value="<c:out value="${viewModel.fragments}"/>">
       <input type="text" class="form-control" name="ntm" value="<c:out value="${viewModel.term}"/>" placeholder="Search">
       <div class="btn-group dropdown" >
         <button type="submit" class="btn btn-default">Submit</button>
