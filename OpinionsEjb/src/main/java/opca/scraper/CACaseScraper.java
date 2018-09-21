@@ -93,7 +93,7 @@ public class CACaseScraper implements OpinionScraperInterface {
 		return documents;
 	}
 	
-	private ByteArrayInputStream convertInputStream(InputStream inputStream) {
+	public static ByteArrayInputStream convertInputStream(InputStream inputStream) {
 		ByteArrayInputStream bais = null;
         try ( ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ) {
 	    	int b;
@@ -227,7 +227,7 @@ public class CACaseScraper implements OpinionScraperInterface {
 		return cases;
 	}
 
-	private void saveCopyOfCaseList(Reader reader) {
+	public void saveCopyOfCaseList(Reader reader) {
 /*		
 		try ( BufferedWriter writer = Files.newBufferedWriter(Paths.get(caseListFile)) ) {
 			char[] chars = new char[1024];

@@ -8,12 +8,6 @@ import javax.persistence.*;
 @NamedQueries({
 	@NamedQuery(name="SlipOpinion.findAll", 
 		query="select s from SlipOpinion s"),
-/*	
-	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoins", 
-		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation"),
-	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoinsForKeys", 
-		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation where o.opinionKey in :opinionKeys"),
-*/
 	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoins", 
 		query="select distinct o from SlipOpinion o"),
 	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoinsForKeys", 
@@ -38,6 +32,14 @@ public class SlipOpinion extends OpinionBase {
 
 	@Transient
 	private SlipProperties slipProperties;
+	@Transient
+	private Summary summary;
+	@Transient
+	private Disposition disposition;
+	@Transient
+	private PartiesAndAttornies partiesAndAttornies;
+	@Transient
+	private TrialCourt trialCourt;
 
     public SlipOpinion() {
     	super();
