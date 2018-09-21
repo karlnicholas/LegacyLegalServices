@@ -6,15 +6,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.*;
 
 public class UrlBuilder {
-	/*
-		@RequestParam(required=false) String ct, 
-		@RequestParam(required=false) String cp, 
-		@RequestParam(required=false) String nt, 
-		@RequestParam(required=false) String np, 
-		@RequestParam(required=false) boolean hs, 
-		@RequestParam(required=false) String to, 
-		@RequestParam(required=false) String ho, 
-	 */
 	public String newPathUrl(ViewModel viewModel, String newPath) throws UnsupportedEncodingException {
 		return UrlArgs( newPath, viewModel.getTerm(), viewModel.isFragments() );
 	}
