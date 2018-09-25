@@ -86,7 +86,7 @@
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
-      <version>4.5</version>
+      <version>4.5.2</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -98,6 +98,12 @@
       <artifactId>poi-ooxml</artifactId>
       <version>3.17</version>
     </dependency>
+	<dependency>
+	  <groupId>org.jsoup</groupId>
+	  <artifactId>jsoup</artifactId>
+	  <version>1.8.3</version>
+	  <scope>provided</scope>
+	</dependency>
     <dependency>
       <groupId>org.jboss.ejb3</groupId>
       <artifactId>jboss-ejb3-ext-api</artifactId>

@@ -6,15 +6,28 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.Column;
+
 import org.apache.http.*;
 import org.apache.http.client.methods.*;
 import org.apache.http.impl.client.*;
+import org.apache.http.protocol.HttpContext;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.select.Elements;
 
+import opca.model.Disposition;
+import opca.model.PartiesAndAttornies;
 import opca.model.SlipOpinion;
+import opca.model.Summary;
+import opca.model.TrialCourt;
 import opca.parser.OpinionScraperInterface;
 import opca.parser.ScrapedOpinionDocument;
 
@@ -22,10 +35,17 @@ public class CACaseScraper implements OpinionScraperInterface {
 	private static final Logger logger = Logger.getLogger(CACaseScraper.class.getName());
 	
 	public final static String casesDir = "c:/users/karln/opca/opjpa/cases/";
-	public final static String caseListFile = "c:/users/karln/opca/opjpa/html/60days.html";
-	private final static String downloadURL = "http://www.courts.ca.gov/opinions/documents/";	
+	protected final static String caseListFile = "60days.html";
+	protected final static String caseListDir = "c:/users/karln/opca/opjpa/html";
+	private final static String downloadURL = "http://www.courts.ca.gov/opinions/documents/";
+	private final static String baseUrl = "http://appellatecases.courtinfo.ca.gov";
 	private final boolean debugFiles; 
-	
+	public static final String  mainCaseScreen = "mainCaseScreen";
+	public static final String  disposition = "disposition";
+	public static final String  partiesAndAttorneys = "partiesAndAttorneys";
+	public static final String  trialCourt = "trialCourt";
+	private static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		
 	public CACaseScraper(boolean debugFiles) {
 		this.debugFiles = debugFiles;
 		logger.info("CACaseScraper");
@@ -45,7 +65,7 @@ public class CACaseScraper implements OpinionScraperInterface {
 			ByteArrayInputStream bais = convertInputStream(entity.getContent());
 			response.close();
 			if ( debugFiles ) {
-				saveCopyOfCaseList(new BufferedReader( new InputStreamReader(bais, "UTF-8" )));
+				saveCopyOfCase(caseListDir, caseListFile, new BufferedInputStream(bais));
 				bais.reset();
 			}
 			slipOpinionList = parseCaseList(bais);
@@ -77,8 +97,10 @@ public class CACaseScraper implements OpinionScraperInterface {
 		        	} else {
 		        		is = response.getEntity().getContent();
 		        	}
-					documents.add( parseScrapedDocument.parseScrapedDocument(slipOpinion, is) ); 
+		        	ScrapedOpinionDocument parsedDoc = parseScrapedDocument.parseScrapedDocument(slipOpinion, is);
+					documents.add( parsedDoc ); 
 					response.close();
+					parseOpinionDetails(slipOpinion);
 				} catch (IOException ex) {
 					logger.log(Level.SEVERE, null, ex);
 					logger.log(Level.SEVERE, "Problem with file " + slipOpinion.getFileName()+slipOpinion.getFileExtension());
@@ -93,6 +115,139 @@ public class CACaseScraper implements OpinionScraperInterface {
 		return documents;
 	}
 	
+	public void parseOpinionDetails(SlipOpinion slipOpinion) {
+		if ( slipOpinion.getSearchUrl() == null ) { 
+			return;
+		}
+		MyRedirectStrategy myRedirectStrategy = new MyRedirectStrategy();
+		try ( CloseableHttpClient httpClient = HttpClientBuilder.create().setRedirectStrategy(myRedirectStrategy).build() ) {
+			HttpGet httpGet = new HttpGet(slipOpinion.getSearchUrl());
+			try ( CloseableHttpResponse response = httpClient.execute(httpGet) ) {
+				InputStream is;
+	        	if ( debugFiles ) {
+					ByteArrayInputStream bais = CACaseScraper.convertInputStream(response.getEntity().getContent());
+	        		saveCopyOfCaseDetail(CACaseScraper.casesDir, slipPropertyFilename(slipOpinion.getFileName(), mainCaseScreen), new BufferedInputStream(bais));
+	        		bais.reset();
+	        		is = bais;
+	        	} else {
+	        		is = response.getEntity().getContent();
+	        	}
+				slipOpinion.setSummary( parseMainCaseScreenDetail(is) ); 
+				response.close();
+			} catch (IOException ex) {
+				logger.log(Level.SEVERE, null, ex);
+			}
+			if ( myRedirectStrategy.location == null ) {
+				logger.warning("Search SlipOpinionDetails failed: " + slipOpinion.getFileName());
+				return;
+			}
+			httpGet = new HttpGet(baseUrl+myRedirectStrategy.location.replace(mainCaseScreen, disposition));
+			try ( CloseableHttpResponse response = httpClient.execute(httpGet) ) {
+				InputStream is;
+	        	if ( debugFiles ) {
+					ByteArrayInputStream bais = CACaseScraper.convertInputStream(response.getEntity().getContent());
+	        		saveCopyOfCaseDetail(CACaseScraper.casesDir, slipPropertyFilename(slipOpinion.getFileName(), disposition), new BufferedInputStream(bais));
+	        		bais.reset();
+	        		is = bais;
+	        	} else {
+	        		is = response.getEntity().getContent();
+	        	}
+	        	slipOpinion.setDisposition( parseDispositionDetail(is) ); 
+				response.close();
+			} catch (IOException ex) {
+				logger.log(Level.SEVERE, null, ex);
+				// retry three times
+			}
+			httpGet = new HttpGet(baseUrl+myRedirectStrategy.location.replace(mainCaseScreen, partiesAndAttorneys));
+			try ( CloseableHttpResponse response = httpClient.execute(httpGet) ) {
+				InputStream is;
+	        	if ( debugFiles ) {
+					ByteArrayInputStream bais = CACaseScraper.convertInputStream(response.getEntity().getContent());
+	        		saveCopyOfCaseDetail(CACaseScraper.casesDir, slipPropertyFilename(slipOpinion.getFileName(), partiesAndAttorneys), new BufferedInputStream(bais));
+	        		bais.reset();
+	        		is = bais;
+	        	} else {
+	        		is = response.getEntity().getContent();
+	        	}
+				slipOpinion.setPartiesAndAttornies( parsePartiesAndAttorneysDetail(is) ); 
+				response.close();
+			} catch (IOException ex) {
+				logger.log(Level.SEVERE, null, ex);
+			}
+			httpGet = new HttpGet(baseUrl+myRedirectStrategy.location.replace("mainCaseScreen", trialCourt));
+			try ( CloseableHttpResponse response = httpClient.execute(httpGet) ) {
+				InputStream is;
+	        	if ( debugFiles ) {
+					ByteArrayInputStream bais = CACaseScraper.convertInputStream(response.getEntity().getContent());
+	        		saveCopyOfCaseDetail(CACaseScraper.casesDir, slipPropertyFilename(slipOpinion.getFileName(), trialCourt), new BufferedInputStream(bais));
+	        		bais.reset();
+	        		is = bais;
+	        	} else {
+	        		is = response.getEntity().getContent();
+	        	}
+	        	slipOpinion.setTrialCourt( parseTrialCourtDetail(is) );
+				response.close();
+			} catch (IOException ex) {
+				logger.log(Level.SEVERE, null, ex);
+			}
+			// we are going to shut down the connection manager before leaving
+			httpClient.close();
+		} catch (IOException ex) {
+	    	logger.log(Level.SEVERE, null, ex);
+		}
+		
+	}
+
+	protected TrialCourt parseTrialCourtDetail(InputStream is) {
+		TrialCourt trialCourt = new TrialCourt();
+		return trialCourt;
+	}
+
+	protected PartiesAndAttornies parsePartiesAndAttorneysDetail(InputStream is) {
+		// TODO Auto-generated method stub
+		return new PartiesAndAttornies(); 
+	}
+
+	protected Disposition parseDispositionDetail(InputStream is) {
+		// TODO Auto-generated method stub
+		return new Disposition(); 
+	}
+
+	protected Summary parseMainCaseScreenDetail(InputStream is) {
+		Summary summary = new Summary();
+		try {
+			Document d = Jsoup.parse(is, StandardCharsets.UTF_8.name(), baseUrl);
+			Elements rows = d.select("h2.bold ~ div.row");
+			for ( Element row: rows) {
+				List<Node> rowData = row.childNodes();
+				if ( rowData.size() == 5 && rowData.get(1) instanceof Element && rowData.get(3) instanceof Element) {
+					String nodeName = ((Element)rowData.get(1)).text().replace(" ", "").replace(":","").trim();
+					String nodeValue = ((Element)rowData.get(3)).text().trim();
+					if ( nodeName.equalsIgnoreCase("trialCourtCase") ) {
+						summary.setTrialCourtCase(nodeValue);
+					} else if ( nodeName.equalsIgnoreCase("caseCaption") ) {
+						summary.setCaseCaption(nodeValue);
+					} else if ( nodeName.equalsIgnoreCase("division") ) {
+						summary.setDivision(nodeValue);
+					} else if ( nodeName.equalsIgnoreCase("caseType") ) {
+						summary.setCaseType(nodeValue);
+					} else if ( nodeName.equalsIgnoreCase("filingDate") ) {
+						try {
+							summary.setFilingDate(dateFormat.parse(nodeValue));
+						} catch (Exception ignored) {}
+					} else if ( nodeName.equalsIgnoreCase("completionDate") ) {
+						try {
+							summary.setCompletionDate(dateFormat.parse(nodeValue));
+						} catch (Exception ignored) {}
+					}
+				}
+			}
+		} catch (IOException e) {
+			logger.info(e.getMessage());
+		}
+		return summary; 
+	}
+
 	public static ByteArrayInputStream convertInputStream(InputStream inputStream) {
 		ByteArrayInputStream bais = null;
         try ( ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ) {
@@ -211,7 +366,17 @@ public class CACaseScraper implements OpinionScraperInterface {
 	        			parsedDate.set(Calendar.YEAR, cal.get(Calendar.YEAR));
 	        			opDate = parsedDate.getTime();
 	        		}
-					SlipOpinion slipOpinion = new SlipOpinion(fileName, fileExtension, tempa[0].trim(),opDate, court);
+	        		// get searchUrl
+					loc = line.indexOf("http://appellatecases.courtinfo.ca.gov/search/");
+					int loce = line.indexOf("\" target=\"_blank\">Case Details");
+					String searchUrl = null;
+					try {
+						searchUrl = line.substring(loc, loce);
+					} catch (Exception ex ) {
+				    	logger.warning("No Case Details: " + fileName);
+					}
+	        		
+					SlipOpinion slipOpinion = new SlipOpinion(fileName, fileExtension, tempa[0].trim(),opDate, court, searchUrl);
 					// test for duplicates
 					if ( cases.contains(slipOpinion)) {
 				    	logger.warning("Duplicate Detected:" + slipOpinion);
@@ -227,27 +392,38 @@ public class CACaseScraper implements OpinionScraperInterface {
 		return cases;
 	}
 
-	public void saveCopyOfCaseList(Reader reader) {
-/*		
-		try ( BufferedWriter writer = Files.newBufferedWriter(Paths.get(caseListFile)) ) {
-			char[] chars = new char[1024];
-			int count;
-			while ( (count = reader.read(chars)) != -1 ) {
-				writer.write(chars, 0, count);
-			}
-			writer.close();
-		} catch ( IOException ex) {
-			logger.log(Level.SEVERE, null, ex);			
+	private void saveCopyOfCaseDetail(String directory, String fileName, InputStream inputStream ) {		
+	    try ( OutputStream out = Files.newOutputStream(Paths.get(directory + "/" + fileName)) ) {
+		    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+	    	int b;
+	    	while ( (b = inputStream.read()) != -1 ) {
+	    		out.write(b);
+	    		baos.write(b);
+	    	}
+	    	out.close();
+	    	baos.close();
+	    	inputStream.close();
+	    } catch( IOException ex) {
+	    	logger.log(Level.SEVERE, null, ex);
+	    }
+	}
+	
+	public static String slipPropertyFilename(String slipOpinionName, String propertyName) {
+		return slipOpinionName+"-" + propertyName+ ".html";		
+	}
+
+	static class MyRedirectStrategy extends LaxRedirectStrategy {
+		private String location;
+		
+		@Override
+		public boolean isRedirected(HttpRequest arg0, HttpResponse arg1, HttpContext arg2) throws ProtocolException {
+			return super.isRedirected(arg0, arg1, arg2);
 		}
-*/
-		try ( BufferedWriter writer = Files.newBufferedWriter(Paths.get(caseListFile), StandardCharsets.US_ASCII) ) {
-			int b;
-			while ( (b = reader.read()) != -1 ) {
-				writer.write(b);
-			}
-			writer.close();
-		} catch ( IOException ex) {
-			logger.log(Level.SEVERE, null, ex);			
+		
+		@Override
+		public HttpUriRequest getRedirect(HttpRequest arg0, HttpResponse arg1, HttpContext arg2) throws ProtocolException {
+			location = arg1.getHeaders("Location")[0].getValue();
+			return super.getRedirect(arg0, arg1, arg2);
 		}
 	}
 	

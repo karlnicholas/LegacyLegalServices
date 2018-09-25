@@ -25,7 +25,6 @@ public class OpinionView {
 	private Date opinionDate;
 	private String fileName;
 	private String disposition;
-	private String summary;
 	private OpinionKey opinionKey;
 	
 	public OpinionView() {
@@ -41,8 +40,7 @@ public class OpinionView {
 		this.title = slipOpinion.getTitle();
 		this.fileName = slipOpinion.getFileName();
 		this.opinionDate = slipOpinion.getOpinionDate();
-		this.disposition = slipOpinion.getDisposition();
-		this.summary = slipOpinion.getSummary();
+		this.disposition = slipOpinion.getDisposition().getDispositionType();
 		this.opinionKey = slipOpinion.getOpinionKey();		
 		this.statutes = statutes;
 		this.cases = cases;
@@ -150,13 +148,6 @@ public class OpinionView {
 	}
 	public void setDisposition(String disposition) {
 		this.disposition = disposition;
-	}
-    @XmlTransient
-	public String getSummary() {
-		return summary;
-	}
-	public void setSummary(String summary) {
-		this.summary = summary;
 	}
     @XmlTransient
 	public OpinionKey getOpinionKey() {

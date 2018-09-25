@@ -40,18 +40,21 @@ public class SlipOpinion extends OpinionBase {
 	private PartiesAndAttornies partiesAndAttornies;
 	@Transient
 	private TrialCourt trialCourt;
+	@Transient
+	private String searchUrl;
 
-    public SlipOpinion() {
+	public SlipOpinion() {
     	super();
     }
 	public SlipOpinion(SlipOpinion slipOpinion) {
 		super(slipOpinion);
 		this.slipProperties = new SlipProperties(this, slipOpinion);
     }
-	public SlipOpinion(String fileName, String fileExtension, String title, Date opinionDate, String court) {
+	public SlipOpinion(String fileName, String fileExtension, String title, Date opinionDate, String court, String searchUrl) {
 		super(null, title, opinionDate, court);
 		setOpinionKey(new OpinionKey("1 Slip.Op " + generateOpinionKey(fileName)));
-		slipProperties = new SlipProperties(this, fileName, fileExtension, court, null, null);
+		slipProperties = new SlipProperties(this, fileName, fileExtension, court);
+		this.searchUrl = searchUrl;
     }
 
 //	public Long getId() {
@@ -120,17 +123,29 @@ public class SlipOpinion extends OpinionBase {
 	public void setCourt(String court) {
     	slipProperties.setCourt(court);
 	}
-	public String getDisposition() {
-		return slipProperties.getDisposition();
+	public Summary getSummary() {
+		return summary;
 	}
-	public void setDisposition(String disposition) {
-    	slipProperties.setDisposition(disposition);
+	public void setSummary(Summary summary) {
+		this.summary = summary;
 	}
-	public String getSummary() {
-		return slipProperties.getSummary();
+	public Disposition getDisposition() {
+		return disposition;
 	}
-	public void setSummary(String summary) {
-    	slipProperties.setSummary(summary);
+	public void setDisposition(Disposition disposition) {
+		this.disposition = disposition;
+	}
+	public PartiesAndAttornies getPartiesAndAttornies() {
+		return partiesAndAttornies;
+	}
+	public void setPartiesAndAttornies(PartiesAndAttornies partiesAndAttornies) {
+		this.partiesAndAttornies = partiesAndAttornies;
+	}
+	public TrialCourt getTrialCourt() {
+		return trialCourt;
+	}
+	public void setTrialCourt(TrialCourt trialCourt) {
+		this.trialCourt = trialCourt;
 	}
 	@Override
 	public String toString() {
@@ -144,5 +159,8 @@ public class SlipOpinion extends OpinionBase {
 	}
 	public void setSlipProperties(SlipProperties slipProperties) {
 		this.slipProperties = slipProperties;
+	}
+    public String getSearchUrl() {
+		return searchUrl;
 	}
 }

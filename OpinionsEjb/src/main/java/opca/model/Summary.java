@@ -20,6 +20,8 @@ public class Summary {
 	
     @Column(columnDefinition="varchar(63)")
     private String trialCourtCase;
+    @Column(columnDefinition="varchar(255)")
+    private String caseCaption;    
     @Column(columnDefinition="varchar(31)")
     private String division;
     @Column(columnDefinition="varchar(15)")
@@ -30,7 +32,7 @@ public class Summary {
     private Set<String> crossReferencedCases;
 
 	public Summary() {}
-	public Summary(SlipOpinion slipOpinion, String trialCourtCase, String division, String caseType,
+	public Summary(SlipOpinion slipOpinion, String trialCourtCase, String caseCaption, String division, String caseType,
 			Date filingDate, Date completionDate, Set<String> crossReferencedCases) {
 		setSlipOpinion(slipOpinion);
 		setTrialCourtCase(trialCourtCase);
@@ -58,6 +60,13 @@ public class Summary {
 	public void setTrialCourtCase(String trialCourtCase) {
 		if ( trialCourtCase != null && trialCourtCase.length() > 63 ) trialCourtCase = trialCourtCase.substring(0, 63);
 		this.trialCourtCase = trialCourtCase;
+	}
+	public String getCaseCaption() {
+		return caseCaption;
+	}
+	public void setCaseCaption(String caseCaption) {
+		if ( caseCaption != null && caseCaption.length() > 255 ) caseCaption = caseCaption.substring(0, 255);
+		this.caseCaption = caseCaption;
 	}
 	public String getDivision() {
 		return division;

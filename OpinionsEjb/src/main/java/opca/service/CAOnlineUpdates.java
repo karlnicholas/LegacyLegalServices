@@ -133,7 +133,6 @@ public class CAOnlineUpdates {
 		for (ScrapedOpinionDocument scrapedOpinionDocument: scrapedOpinionDocuments ) {
 			ParsedOpinionCitationSet parsedOpinionResults = opinionDocumentParser.parseOpinionDocument(scrapedOpinionDocument, scrapedOpinionDocument.getOpinionBase(), citationStore );
 			// maybe someday deal with court issued modifications
-    		opinionDocumentParser.parseSlipOpinionDetails((SlipOpinion) scrapedOpinionDocument.getOpinionBase(), scrapedOpinionDocument);
     		OpinionBase opinionBase = scrapedOpinionDocument.getOpinionBase();
     		citationStore.mergeParsedDocumentCitations(scrapedOpinionDocument.getOpinionBase(), parsedOpinionResults);
     		if ( logger.getLevel() == Level.FINE ) {
