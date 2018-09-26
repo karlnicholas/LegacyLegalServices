@@ -7,16 +7,22 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.persistence.Column;
-
-import org.apache.http.*;
-import org.apache.http.client.methods.*;
-import org.apache.http.impl.client.*;
-import org.apache.http.protocol.HttpContext;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,6 +31,7 @@ import org.jsoup.select.Elements;
 
 import opca.model.Disposition;
 import opca.model.PartiesAndAttornies;
+import opca.model.PartyAttorneyPair;
 import opca.model.SlipOpinion;
 import opca.model.Summary;
 import opca.model.TrialCourt;
@@ -137,11 +144,11 @@ public class CACaseScraper implements OpinionScraperInterface {
 			} catch (IOException ex) {
 				logger.log(Level.SEVERE, null, ex);
 			}
-			if ( myRedirectStrategy.location == null ) {
+			if ( myRedirectStrategy.getLocation() == null ) {
 				logger.warning("Search SlipOpinionDetails failed: " + slipOpinion.getFileName());
 				return;
 			}
-			httpGet = new HttpGet(baseUrl+myRedirectStrategy.location.replace(mainCaseScreen, disposition));
+			httpGet = new HttpGet(baseUrl+myRedirectStrategy.getLocation().replace(mainCaseScreen, disposition));
 			try ( CloseableHttpResponse response = httpClient.execute(httpGet) ) {
 				InputStream is;
 	        	if ( debugFiles ) {
@@ -158,7 +165,7 @@ public class CACaseScraper implements OpinionScraperInterface {
 				logger.log(Level.SEVERE, null, ex);
 				// retry three times
 			}
-			httpGet = new HttpGet(baseUrl+myRedirectStrategy.location.replace(mainCaseScreen, partiesAndAttorneys));
+			httpGet = new HttpGet(baseUrl+myRedirectStrategy.getLocation().replace(mainCaseScreen, partiesAndAttorneys));
 			try ( CloseableHttpResponse response = httpClient.execute(httpGet) ) {
 				InputStream is;
 	        	if ( debugFiles ) {
@@ -174,7 +181,7 @@ public class CACaseScraper implements OpinionScraperInterface {
 			} catch (IOException ex) {
 				logger.log(Level.SEVERE, null, ex);
 			}
-			httpGet = new HttpGet(baseUrl+myRedirectStrategy.location.replace("mainCaseScreen", trialCourt));
+			httpGet = new HttpGet(baseUrl+myRedirectStrategy.getLocation().replace("mainCaseScreen", trialCourt));
 			try ( CloseableHttpResponse response = httpClient.execute(httpGet) ) {
 				InputStream is;
 	        	if ( debugFiles ) {
@@ -200,24 +207,101 @@ public class CACaseScraper implements OpinionScraperInterface {
 
 	protected TrialCourt parseTrialCourtDetail(InputStream is) {
 		TrialCourt trialCourt = new TrialCourt();
+		try {
+			Document d = Jsoup.parse(is, StandardCharsets.UTF_8.name(), baseUrl);
+			Elements rows = d.select("h2.bold~div.row");
+			for ( Element row: rows) {
+				List<Node> rowData = row.childNodes();
+				if ( rowData.size() == 5 && rowData.get(1) instanceof Element && rowData.get(3) instanceof Element) {
+					String nodeName = ((Element)rowData.get(1)).text().replace(" ", "").replace(":","").trim();
+					String nodeValue = ((Element)rowData.get(3)).text().trim();
+					if ( nodeName.equalsIgnoreCase("TrialCourtName") ) {
+						trialCourt.setTrialCourtName(nodeValue);
+					} else if ( nodeName.equalsIgnoreCase("County") ) {
+						trialCourt.setCounty(nodeValue);
+					} else if ( nodeName.equalsIgnoreCase("trialCourtCaseNumber") ) {
+						trialCourt.setTrialCourtCaseNumber(nodeValue);
+					} else if ( nodeName.equalsIgnoreCase("trialCourtJudge") ) {
+						trialCourt.setTrialCourtJudge(nodeValue);
+					} else if ( nodeName.equalsIgnoreCase("trialCourtJudgmentDate") ) {
+						try {
+							trialCourt.setTrialCourtJudgmentDate(dateFormat.parse(nodeValue));
+						} catch (Exception ignored) {}						
+					}
+				}
+			}
+		} catch (IOException e) {
+			logger.info(e.getMessage());
+		}
 		return trialCourt;
 	}
 
 	protected PartiesAndAttornies parsePartiesAndAttorneysDetail(InputStream is) {
-		// TODO Auto-generated method stub
-		return new PartiesAndAttornies(); 
+		PartiesAndAttornies partiesAndAttornies = new PartiesAndAttornies();
+		try {
+			Document d = Jsoup.parse(is, StandardCharsets.UTF_8.name(), baseUrl);
+			Elements rows = d.select("div#PartyList>table>tbody>tr");
+			if ( rows.size() > 0 ) {
+				Set<PartyAttorneyPair> partyAttorneyPairs = new HashSet<>();
+				rows.remove(0);
+				for ( Element row: rows) {
+					Elements tds = row.select("td");
+					if ( tds.size() == 2) {
+						String party = tds.get(0).text();
+						String attorney = tds.get(1).text();
+						partyAttorneyPairs.add(new PartyAttorneyPair(partiesAndAttornies, party, attorney));
+					}
+				}
+				if ( partyAttorneyPairs.size() > 0 ) {
+					partiesAndAttornies.setPartyAttorneyPairs(partyAttorneyPairs);
+				}
+			}
+		} catch (IOException e) {
+			logger.info(e.getMessage());
+		}
+		return partiesAndAttornies; 
 	}
 
 	protected Disposition parseDispositionDetail(InputStream is) {
-		// TODO Auto-generated method stub
-		return new Disposition(); 
+		Disposition disposition = new Disposition();
+		try {
+			Document d = Jsoup.parse(is, StandardCharsets.UTF_8.name(), baseUrl);
+			Elements rows = d.select("div#DispositionList div.row.flex-container");
+			for ( Element row: rows) {
+				List<Node> rowData = row.childNodes();
+				if ( rowData.size() == 5 && rowData.get(1) instanceof Element && rowData.get(3) instanceof Element) {
+					String nodeName = ((Element)rowData.get(1)).text().replace(" ", "").replace(":","").trim();
+					String nodeValue = ((Element)rowData.get(3)).text().trim();
+					if ( nodeName.equalsIgnoreCase("description") ) {
+						disposition.setDescription(nodeValue);
+					} else if ( nodeName.equalsIgnoreCase("date") ) {
+						try {
+							disposition.setDate(dateFormat.parse(nodeValue));
+						} catch (Exception ignored) {}
+					} else if ( nodeName.equalsIgnoreCase("dispositionType") ) {
+						disposition.setDispositionType(nodeValue);
+					} else if ( nodeName.equalsIgnoreCase("publicationStatus") ) {
+						disposition.setPublicationStatus(nodeValue);
+					} else if ( nodeName.equalsIgnoreCase("author") ) {
+						disposition.setAuthor(nodeValue);
+					} else if ( nodeName.equalsIgnoreCase("participants") ) {
+						disposition.setParticipants(nodeValue);
+					} else if ( nodeName.equalsIgnoreCase("caseCitation") ) {
+						disposition.setCaseCitation(nodeValue);
+					}
+				}
+			}
+		} catch (IOException e) {
+			logger.info(e.getMessage());
+		}
+		return disposition; 
 	}
 
 	protected Summary parseMainCaseScreenDetail(InputStream is) {
 		Summary summary = new Summary();
 		try {
 			Document d = Jsoup.parse(is, StandardCharsets.UTF_8.name(), baseUrl);
-			Elements rows = d.select("h2.bold ~ div.row");
+			Elements rows = d.select("h2.bold~div.row");
 			for ( Element row: rows) {
 				List<Node> rowData = row.childNodes();
 				if ( rowData.size() == 5 && rowData.get(1) instanceof Element && rowData.get(3) instanceof Element) {
@@ -410,21 +494,6 @@ public class CACaseScraper implements OpinionScraperInterface {
 	
 	public static String slipPropertyFilename(String slipOpinionName, String propertyName) {
 		return slipOpinionName+"-" + propertyName+ ".html";		
-	}
-
-	static class MyRedirectStrategy extends LaxRedirectStrategy {
-		private String location;
-		
-		@Override
-		public boolean isRedirected(HttpRequest arg0, HttpResponse arg1, HttpContext arg2) throws ProtocolException {
-			return super.isRedirected(arg0, arg1, arg2);
-		}
-		
-		@Override
-		public HttpUriRequest getRedirect(HttpRequest arg0, HttpResponse arg1, HttpContext arg2) throws ProtocolException {
-			location = arg1.getHeaders("Location")[0].getValue();
-			return super.getRedirect(arg0, arg1, arg2);
-		}
 	}
 	
 }

@@ -19,6 +19,8 @@ public class PartyAttorneyPair {
     @Column(columnDefinition="varchar(3071)")
 	private String attorney;
     
+	public PartyAttorneyPair() {}
+
 	public PartyAttorneyPair(PartiesAndAttornies partiesAndAttornies, String party, String attorney) {
 		this.partiesAndAttornies = partiesAndAttornies;
 		this.party = party;

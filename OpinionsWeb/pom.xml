@@ -159,7 +159,7 @@
           <failOnMissingWebXml>false</failOnMissingWebXml>
           <archive>
              <manifestEntries>
-                <Dependencies>org.apache.httpcomponents</Dependencies>
+                <Dependencies>org.apache.httpcomponents, org.jsoup</Dependencies>
              </manifestEntries>
           </archive>
         </configuration>

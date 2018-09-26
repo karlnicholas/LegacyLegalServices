@@ -6,7 +6,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import opca.model.Disposition;
+import opca.model.PartiesAndAttornies;
 import opca.model.SlipOpinion;
+import opca.model.Summary;
+import opca.model.TrialCourt;
 import opca.parser.ScrapedOpinionDocument;
 
 public class TestCAParseSlipDetails extends CACaseScraper {
@@ -43,28 +47,32 @@ public class TestCAParseSlipDetails extends CACaseScraper {
 			) {
 				slipOpinion.setSummary( parseMainCaseScreenDetail(inputStream) ); 
 			} catch (IOException e) {
-				e.printStackTrace();
+				slipOpinion.setSummary( new Summary() ); 
+				System.out.println("File error: " + e.getMessage());
 			}
 			try ( InputStream inputStream = Files.newInputStream( 
 					Paths.get(casesDir + slipPropertyFilename(slipOpinion.getFileName(), disposition))) 
 			) {
 				slipOpinion.setDisposition( parseDispositionDetail(inputStream) ); 
 			} catch (IOException e) {
-				e.printStackTrace();
+				slipOpinion.setDisposition( new Disposition() ); 
+				System.out.println("File error: " + e.getMessage());
 			}
 			try ( InputStream inputStream = Files.newInputStream( 
 					Paths.get(casesDir + slipPropertyFilename(slipOpinion.getFileName(), partiesAndAttorneys))) 
 			) {
 				slipOpinion.setPartiesAndAttornies( parsePartiesAndAttorneysDetail(inputStream) ); 
 			} catch (IOException e) {
-				e.printStackTrace();
+				slipOpinion.setPartiesAndAttornies( new PartiesAndAttornies() ); 
+				System.out.println("File error: " + e.getMessage());
 			}
 			try ( InputStream inputStream = Files.newInputStream( 
 					Paths.get(casesDir + slipPropertyFilename(slipOpinion.getFileName(), trialCourt))) 
 			) {
 				slipOpinion.setTrialCourt( parseTrialCourtDetail(inputStream) ); 
 			} catch (IOException e) {
-				e.printStackTrace();
+				slipOpinion.setTrialCourt( new TrialCourt() ); 
+				System.out.println("File error: " + e.getMessage());
 			}
 			
 		}		

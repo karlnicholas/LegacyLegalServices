@@ -18,4 +18,17 @@ public class PartiesAndAttornies {
 
     @OneToMany(mappedBy="partiesAndAttornies")
     private Set<PartyAttorneyPair> partyAttorneyPairs;
+
+	public SlipOpinion getSlipOpinion() {
+		return slipOpinion;
+	}
+	public void setSlipOpinion(SlipOpinion slipOpinion) {
+		this.slipOpinion = slipOpinion;
+	}
+	public Set<PartyAttorneyPair> getPartyAttorneyPairs() {
+		return partyAttorneyPairs;
+	}
+	public void setPartyAttorneyPairs(Set<PartyAttorneyPair> partyAttorneyPairs) {
+		this.partyAttorneyPairs = partyAttorneyPairs;
+	}
 }
