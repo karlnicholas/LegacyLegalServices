@@ -67,7 +67,7 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
     public OpinionBase() {}
 	public OpinionBase(OpinionBase opinionBase) {
 		this.opinionKey = opinionBase.opinionKey;
-    	this.title = opinionBase.title;
+    	setTitle(opinionBase.title);
     	this.opinionDate = opinionBase.opinionDate;
     	this.statuteCitations = opinionBase.statuteCitations;
     	this.opinionCitations = opinionBase.opinionCitations;
@@ -76,7 +76,7 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
     }
 	public OpinionBase(OpinionKey opinionKey, String title, Date opinionDate, String court) {
 		this.opinionKey = opinionKey;
-        this.title = title;
+		setTitle(title);
     	this.opinionDate = opinionDate;
     	this.newlyLoadedOpinion = true;
     }
@@ -153,6 +153,7 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 		return title;
 	}
 	public void setTitle(String title) {
+		if ( title != null && title.length() > 127 ) title = title.substring(0, 127);
 		this.title = title;
 	}
 	public Date getOpinionDate() {
