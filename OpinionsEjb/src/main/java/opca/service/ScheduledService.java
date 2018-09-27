@@ -23,7 +23,6 @@ import javax.transaction.UserTransaction;
 import opca.ejb.util.StatutesServiceFactory;
 import opca.model.OpinionKey;
 import opca.scraper.CACaseScraper;
-import opca.scraper.TestCAParseSlipDetails;
 import statutes.service.StatutesService;
 
 @TransactionManagement(TransactionManagementType.BEAN)
@@ -49,7 +48,7 @@ public class ScheduledService {
         StatutesService statutesService = StatutesServiceFactory.getStatutesServiceClient();
         try {
 			userTransaction.begin();
-	        opinionKeys = caOnlineUpdates.updateDatabase(new TestCAParseSlipDetails(false), statutesService);
+	        opinionKeys = caOnlineUpdates.updateDatabase(new CACaseScraper(false), statutesService);
 			userTransaction.commit();
 		} catch (Exception e) {
 			try {
