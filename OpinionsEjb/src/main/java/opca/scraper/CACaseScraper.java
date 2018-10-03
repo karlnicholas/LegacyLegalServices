@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -29,12 +28,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
-import opca.model.Disposition;
-import opca.model.PartiesAndAttornies;
 import opca.model.PartyAttorneyPair;
 import opca.model.SlipOpinion;
-import opca.model.Summary;
-import opca.model.TrialCourt;
 import opca.parser.OpinionScraperInterface;
 import opca.parser.ScrapedOpinionDocument;
 
@@ -126,6 +121,7 @@ public class CACaseScraper implements OpinionScraperInterface {
 		if ( slipOpinion.getSearchUrl() == null ) { 
 			return;
 		}
+		boolean goodtogo = true;
 		MyRedirectStrategy myRedirectStrategy = new MyRedirectStrategy();
 		try ( CloseableHttpClient httpClient = HttpClientBuilder.create().setRedirectStrategy(myRedirectStrategy).build() ) {
 			HttpGet httpGet = new HttpGet(slipOpinion.getSearchUrl());
@@ -139,10 +135,14 @@ public class CACaseScraper implements OpinionScraperInterface {
 	        	} else {
 	        		is = response.getEntity().getContent();
 	        	}
-				slipOpinion.setSummary( parseMainCaseScreenDetail(is) ); 
+	        	goodtogo = parseMainCaseScreenDetail(is, slipOpinion); 
 				response.close();
 			} catch (IOException ex) {
 				logger.log(Level.SEVERE, null, ex);
+				goodtogo = false;
+			}
+			if ( !goodtogo ) {
+				return;
 			}
 			if ( myRedirectStrategy.getLocation() == null ) {
 				logger.warning("Search SlipOpinionDetails failed: " + slipOpinion.getFileName());
@@ -159,7 +159,7 @@ public class CACaseScraper implements OpinionScraperInterface {
 	        	} else {
 	        		is = response.getEntity().getContent();
 	        	}
-	        	slipOpinion.setDisposition( parseDispositionDetail(is) ); 
+	        	parseDispositionDetail(is, slipOpinion); 
 				response.close();
 			} catch (IOException ex) {
 				logger.log(Level.SEVERE, null, ex);
@@ -176,7 +176,7 @@ public class CACaseScraper implements OpinionScraperInterface {
 	        	} else {
 	        		is = response.getEntity().getContent();
 	        	}
-				slipOpinion.setPartiesAndAttornies( parsePartiesAndAttorneysDetail(is) ); 
+				parsePartiesAndAttorneysDetail(is, slipOpinion); 
 				response.close();
 			} catch (IOException ex) {
 				logger.log(Level.SEVERE, null, ex);
@@ -192,7 +192,7 @@ public class CACaseScraper implements OpinionScraperInterface {
 	        	} else {
 	        		is = response.getEntity().getContent();
 	        	}
-	        	slipOpinion.setTrialCourt( parseTrialCourtDetail(is) );
+	        	parseTrialCourtDetail(is, slipOpinion);
 				response.close();
 			} catch (IOException ex) {
 				logger.log(Level.SEVERE, null, ex);
@@ -205,8 +205,7 @@ public class CACaseScraper implements OpinionScraperInterface {
 		
 	}
 
-	protected TrialCourt parseTrialCourtDetail(InputStream is) {
-		TrialCourt trialCourt = new TrialCourt();
+	protected void parseTrialCourtDetail(InputStream is, SlipOpinion slipOpinion) {
 		try {
 			Document d = Jsoup.parse(is, StandardCharsets.UTF_8.name(), baseUrl);
 			Elements rows = d.select("h2.bold~div.row");
@@ -216,16 +215,16 @@ public class CACaseScraper implements OpinionScraperInterface {
 					String nodeName = ((Element)rowData.get(1)).text().replace(" ", "").replace(":","").trim();
 					String nodeValue = ((Element)rowData.get(3)).text().trim();
 					if ( nodeName.equalsIgnoreCase("TrialCourtName") ) {
-						trialCourt.setTrialCourtName(nodeValue);
+						slipOpinion.getSlipProperties().setTrialCourtName(nodeValue);
 					} else if ( nodeName.equalsIgnoreCase("County") ) {
-						trialCourt.setCounty(nodeValue);
+						slipOpinion.getSlipProperties().setCounty(nodeValue);
 					} else if ( nodeName.equalsIgnoreCase("trialCourtCaseNumber") ) {
-						trialCourt.setTrialCourtCaseNumber(nodeValue);
+						slipOpinion.getSlipProperties().setTrialCourtCaseNumber(nodeValue);
 					} else if ( nodeName.equalsIgnoreCase("trialCourtJudge") ) {
-						trialCourt.setTrialCourtJudge(nodeValue);
+						slipOpinion.getSlipProperties().setTrialCourtJudge(nodeValue);
 					} else if ( nodeName.equalsIgnoreCase("trialCourtJudgmentDate") ) {
 						try {
-							trialCourt.setTrialCourtJudgmentDate(dateFormat.parse(nodeValue));
+							slipOpinion.getSlipProperties().setTrialCourtJudgmentDate(dateFormat.parse(nodeValue));
 						} catch (Exception ignored) {}						
 					}
 				}
@@ -233,11 +232,9 @@ public class CACaseScraper implements OpinionScraperInterface {
 		} catch (IOException e) {
 			logger.info(e.getMessage());
 		}
-		return trialCourt;
 	}
 
-	protected PartiesAndAttornies parsePartiesAndAttorneysDetail(InputStream is) {
-		PartiesAndAttornies partiesAndAttornies = new PartiesAndAttornies();
+	protected void parsePartiesAndAttorneysDetail(InputStream is, SlipOpinion slipOpinion) {
 		try {
 			Document d = Jsoup.parse(is, StandardCharsets.UTF_8.name(), baseUrl);
 			Elements rows = d.select("div#PartyList>table>tbody>tr");
@@ -249,21 +246,19 @@ public class CACaseScraper implements OpinionScraperInterface {
 					if ( tds.size() == 2) {
 						String party = tds.get(0).text();
 						String attorney = tds.get(1).text();
-						partyAttorneyPairs.add(new PartyAttorneyPair(partiesAndAttornies, party, attorney));
+						partyAttorneyPairs.add(new PartyAttorneyPair(slipOpinion.getSlipProperties(), party, attorney));
 					}
 				}
 				if ( partyAttorneyPairs.size() > 0 ) {
-					partiesAndAttornies.setPartyAttorneyPairs(partyAttorneyPairs);
+					slipOpinion.getSlipProperties().setPartyAttorneyPairs(partyAttorneyPairs);
 				}
 			}
 		} catch (IOException e) {
 			logger.info(e.getMessage());
 		}
-		return partiesAndAttornies; 
 	}
 
-	protected Disposition parseDispositionDetail(InputStream is) {
-		Disposition disposition = new Disposition();
+	protected void parseDispositionDetail(InputStream is, SlipOpinion slipOpinion) {
 		try {
 			Document d = Jsoup.parse(is, StandardCharsets.UTF_8.name(), baseUrl);
 			Elements rows = d.select("div#DispositionList div.row.flex-container");
@@ -273,32 +268,31 @@ public class CACaseScraper implements OpinionScraperInterface {
 					String nodeName = ((Element)rowData.get(1)).text().replace(" ", "").replace(":","").trim();
 					String nodeValue = ((Element)rowData.get(3)).text().trim();
 					if ( nodeName.equalsIgnoreCase("description") ) {
-						disposition.setDescription(nodeValue);
+						slipOpinion.getSlipProperties().setDisposition(nodeValue);
 					} else if ( nodeName.equalsIgnoreCase("date") ) {
 						try {
-							disposition.setDate(dateFormat.parse(nodeValue));
+							slipOpinion.getSlipProperties().setDate(dateFormat.parse(nodeValue));
 						} catch (Exception ignored) {}
 					} else if ( nodeName.equalsIgnoreCase("dispositionType") ) {
-						disposition.setDispositionType(nodeValue);
+						slipOpinion.getSlipProperties().setDispositionDescription(nodeValue);
 					} else if ( nodeName.equalsIgnoreCase("publicationStatus") ) {
-						disposition.setPublicationStatus(nodeValue);
+						slipOpinion.getSlipProperties().setPublicationStatus(nodeValue);
 					} else if ( nodeName.equalsIgnoreCase("author") ) {
-						disposition.setAuthor(nodeValue);
+						slipOpinion.getSlipProperties().setAuthor(nodeValue);
 					} else if ( nodeName.equalsIgnoreCase("participants") ) {
-						disposition.setParticipants(nodeValue);
+						slipOpinion.getSlipProperties().setParticipants(nodeValue);
 					} else if ( nodeName.equalsIgnoreCase("caseCitation") ) {
-						disposition.setCaseCitation(nodeValue);
+						slipOpinion.getSlipProperties().setCaseCitation(nodeValue);
 					}
 				}
 			}
 		} catch (IOException e) {
 			logger.info(e.getMessage());
 		}
-		return disposition; 
 	}
 
-	protected Summary parseMainCaseScreenDetail(InputStream is) {
-		Summary summary = new Summary();
+	protected boolean parseMainCaseScreenDetail(InputStream is, SlipOpinion slipOpinion) {
+		boolean goodtogo = false;
 		try {
 			Document d = Jsoup.parse(is, StandardCharsets.UTF_8.name(), baseUrl);
 			Elements rows = d.select("h2.bold~div.row");
@@ -308,28 +302,30 @@ public class CACaseScraper implements OpinionScraperInterface {
 					String nodeName = ((Element)rowData.get(1)).text().replace(" ", "").replace(":","").trim();
 					String nodeValue = ((Element)rowData.get(3)).text().trim();
 					if ( nodeName.equalsIgnoreCase("trialCourtCase") ) {
-						summary.setTrialCourtCase(nodeValue);
+						slipOpinion.getSlipProperties().setTrialCourtCase(nodeValue);
 					} else if ( nodeName.equalsIgnoreCase("caseCaption") ) {
-						summary.setCaseCaption(nodeValue);
+						slipOpinion.getSlipProperties().setCaseCaption(nodeValue);
+						goodtogo = true;
 					} else if ( nodeName.equalsIgnoreCase("division") ) {
-						summary.setDivision(nodeValue);
+						slipOpinion.getSlipProperties().setDivision(nodeValue);
 					} else if ( nodeName.equalsIgnoreCase("caseType") ) {
-						summary.setCaseType(nodeValue);
+						slipOpinion.getSlipProperties().setCaseType(nodeValue);
 					} else if ( nodeName.equalsIgnoreCase("filingDate") ) {
 						try {
-							summary.setFilingDate(dateFormat.parse(nodeValue));
+							slipOpinion.getSlipProperties().setFilingDate(dateFormat.parse(nodeValue));
 						} catch (Exception ignored) {}
 					} else if ( nodeName.equalsIgnoreCase("completionDate") ) {
 						try {
-							summary.setCompletionDate(dateFormat.parse(nodeValue));
+							slipOpinion.getSlipProperties().setCompletionDate(dateFormat.parse(nodeValue));
 						} catch (Exception ignored) {}
 					}
 				}
 			}
 		} catch (IOException e) {
 			logger.info(e.getMessage());
+			goodtogo = false;
 		}
-		return summary; 
+		return goodtogo;
 	}
 
 	public static ByteArrayInputStream convertInputStream(InputStream inputStream) {
@@ -365,113 +361,85 @@ public class CACaseScraper implements OpinionScraperInterface {
 
 	protected List<SlipOpinion> parseCaseList(InputStream inputStream) {
 		ArrayList<SlipOpinion> cases = new ArrayList<SlipOpinion>();
+		DateFormat dfs = DateFormat.getDateInstance(DateFormat.SHORT);
 		Date sopDate;
 		Date opDate = null;
-		
-		try ( BufferedReader reader = new BufferedReader( new InputStreamReader(inputStream, "UTF-8" )) ) {
-		
-			List<String> lines = new ArrayList<String>();
-			String tmpString;
-
-			while ((tmpString = reader.readLine()) != null) {
-				lines.add(tmpString);
-			}
-			reader.close();
-			Iterator<String> si = lines.iterator();
-	
-			DateFormat dfs = DateFormat.getDateInstance(DateFormat.SHORT);
-			
-			while (si.hasNext()) {
-				String line = si.next();
-				// System.out.println(line);
-				if (line.contains("/opinions/documents/")) {
-					String fileExtension = ".DOCX"; 
-					int loc = line.indexOf(fileExtension);
-					if ( loc == -1) {
-						fileExtension = ".DOC";
-						loc = line.indexOf(fileExtension);
-					}
-					String fileName = line.substring(loc - 8, loc + 4);
-					if (fileName.charAt(0) == '/') fileName = fileName.substring(1);
-					loc = line.indexOf("<td valign=\"top\">");
-					// String publishDate = line.substring(loc+17, loc+23 ) + "," +
-					// line.substring(loc+23, loc+28 );
-					// System.out.println( name + ":" + date);
-	
-					// find some useful information at the end of the string
-					loc = line.indexOf("<br/><br/></td><td valign=\"top\">");
-					String temp = line.substring(loc + 32, line.length());
-					// System.out.println(temp);
-					// such as date of opinion .. found by regex
-					// also the title of the case .. now stored in tempa[0]
-//					String[] tempa = temp.split("\\b\\d{1,2}[/]\\d{1,2}[/]\\d{2}");
-					String[] tempa = temp.split("\\b.{1,2}[/].{1,2}[/].{2}");
-					String opinionDate = null;
-					String court = null;
-					if (tempa.length == 2) {
-						// get out the date of
-						opinionDate = temp.substring(tempa[0].length(),temp.length() - tempa[1].length());
-						// and the court designation
-						court = tempa[1].trim();
-						if ( court.toLowerCase().contains("&nbsp;") ) {
-							court = court.substring(0, court.toLowerCase().indexOf("&nbsp;")).trim();
-						}
-						if ( court.toLowerCase().contains("</td>") ) {
-							court = court.substring(0, court.toLowerCase().indexOf("</td>")).trim();
-						}
-					} else {
-						// sometimes no court designation
-						opinionDate = temp.substring(tempa[0].length());
-					}
-					// store all this in a class
-					fileName = fileName.replace(".DOC", "");
-					sopDate = opDate;
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(new Date());
-			        try {
-			        	opDate = dfs.parse(opinionDate);
-			        } catch (ParseException e ) {
-			        	if ( sopDate == null ) {
-				        	// Default to current date.
-				        	// not very good, but best that can be done, I suppose.
-							cal.set(Calendar.HOUR_OF_DAY, 0);
-							cal.set(Calendar.MINUTE, 0);
-							cal.set(Calendar.SECOND, 0);
-							cal.set(Calendar.MILLISECOND, 0);
-							opDate = cal.getTime();
-			        	} else {
-			        		opDate = sopDate;
-			        	}
-			        }
-	        		Calendar parsedDate = Calendar.getInstance();
-	        		parsedDate.setTime(opDate);
-	        		// test to see if year out of whack.
-	        		if ( parsedDate.get(Calendar.YEAR) > cal.get(Calendar.YEAR) ) {
-	        			parsedDate.set(Calendar.YEAR, cal.get(Calendar.YEAR));
-	        			opDate = parsedDate.getTime();
-	        		}
-	        		// get searchUrl
-					loc = line.indexOf("http://appellatecases.courtinfo.ca.gov/search/");
-					int loce = line.indexOf("\" target=\"_blank\">Case Details");
-					String searchUrl = null;
-					try {
-						searchUrl = line.substring(loc, loce);
-					} catch (Exception ex ) {
-				    	logger.warning("No Case Details: " + fileName);
-					}
-	        		
-					SlipOpinion slipOpinion = new SlipOpinion(fileName, fileExtension, tempa[0].trim(),opDate, court, searchUrl);
-					// test for duplicates
-					if ( cases.contains(slipOpinion)) {
-				    	logger.warning("Duplicate Detected:" + slipOpinion);
-					} else {
-						cases.add(slipOpinion);
-					}
-					//
+		try {
+			Document doc = Jsoup.parse(inputStream, StandardCharsets.UTF_8.name(), "http://www.courts.ca.gov/");
+			Elements trs = doc.select("table>tbody>tr");
+			for ( Element row: trs) {
+				Elements tds = row.getElementsByTag("td");
+				if ( tds.size() != 3 )
+					continue;
+				
+				String temp = tds.get(2).text().replace("Case Details", "").replace("\u00a0", "").trim();
+				String[] tempa = temp.split("\\b.{1,2}[/].{1,2}[/].{2}");
+				String opinionDate = null;
+				String court = null;
+				if (tempa.length == 2) {
+					// get out the date of
+					opinionDate = temp.substring(tempa[0].length(),temp.length() - tempa[1].length());
+					// and the court designation
+					court = tempa[1].trim();
+				} else {
+					// sometimes no court designation
+					opinionDate = temp.substring(tempa[0].length());
 				}
+				// store all this in a class
+				sopDate = opDate;
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(new Date());
+		        try {
+		        	opDate = dfs.parse(opinionDate);
+		        } catch (ParseException e ) {
+		        	if ( sopDate == null ) {
+			        	// Default to current date.
+			        	// not very good, but best that can be done, I suppose.
+						cal.set(Calendar.HOUR_OF_DAY, 0);
+						cal.set(Calendar.MINUTE, 0);
+						cal.set(Calendar.SECOND, 0);
+						cal.set(Calendar.MILLISECOND, 0);
+						opDate = cal.getTime();
+		        	} else {
+		        		opDate = sopDate;
+		        	}
+		        }
+	    		Calendar parsedDate = Calendar.getInstance();
+	    		parsedDate.setTime(opDate);
+	    		// test to see if year out of whack.
+	    		if ( parsedDate.get(Calendar.YEAR) > cal.get(Calendar.YEAR) ) {
+	    			parsedDate.set(Calendar.YEAR, cal.get(Calendar.YEAR));
+	    			opDate = parsedDate.getTime();
+	    		}
+				
+				String fileName = tds.get(1).text().replace("[PDF]", "").replace("[DOC]", "").trim();
+				String fileExtension = ".DOCX"; 
+				Element td1 = tds.get(1);
+				Elements as = td1.getElementsByTag("a");
+				for ( Element a: as) {
+					if (a.attr("href").toUpperCase().contains(".DOC")) {
+						String line = a.attr("href").toUpperCase();
+						int loc = line.indexOf(fileExtension);
+						if ( loc == -1) {
+							fileExtension = ".DOC";
+						}
+						break;
+					}
+				}
+				as = tds.get(2).getElementsByTag("a");
+				String searchUrl = null;
+				for ( Element a: as) {
+					if ( a.text().equalsIgnoreCase("case details" )) {
+						searchUrl = a.attr("href");
+					}
+				}
+				// fill out the title, date, and court with details later
+				SlipOpinion slipOpinion = new SlipOpinion(fileName, fileExtension, tempa[0].trim(), opDate, court, searchUrl);
+				cases.add(slipOpinion);
 			}
-		} catch (IOException ex) {
-			logger.log(Level.SEVERE, null, ex);
+			
+		} catch (IOException e) {
+	    	logger.log(Level.SEVERE, null, e);
 		}
 		return cases;
 	}
@@ -497,3 +465,111 @@ public class CACaseScraper implements OpinionScraperInterface {
 	}
 	
 }
+
+/*			
+try ( BufferedReader reader = new BufferedReader( new InputStreamReader(inputStream, "UTF-8" )) ) {
+
+	List<String> lines = new ArrayList<String>();
+	String tmpString;
+
+	while ((tmpString = reader.readLine()) != null) {
+		lines.add(tmpString);
+	}
+	reader.close();
+	Iterator<String> si = lines.iterator();
+
+	DateFormat dfs = DateFormat.getDateInstance(DateFormat.SHORT);
+	
+	while (si.hasNext()) {
+		String line = si.next();
+		// System.out.println(line);
+		if (line.contains("/opinions/documents/")) {
+			String fileExtension = ".DOCX"; 
+			int loc = line.indexOf(fileExtension);
+			if ( loc == -1) {
+				fileExtension = ".DOC";
+				loc = line.indexOf(fileExtension);
+			}
+			String fileName = line.substring(loc - 8, loc + 4);
+			if (fileName.charAt(0) == '/') fileName = fileName.substring(1);
+			loc = line.indexOf("<td valign=\"top\">");
+			// String publishDate = line.substring(loc+17, loc+23 ) + "," +
+			// line.substring(loc+23, loc+28 );
+			// System.out.println( name + ":" + date);
+
+			// find some useful information at the end of the string
+			loc = line.indexOf("<br/><br/></td><td valign=\"top\">");
+			String temp = line.substring(loc + 32, line.length());
+			// System.out.println(temp);
+			// such as date of opinion .. found by regex
+			// also the title of the case .. now stored in tempa[0]
+//			String[] tempa = temp.split("\\b\\d{1,2}[/]\\d{1,2}[/]\\d{2}");
+			String[] tempa = temp.split("\\b.{1,2}[/].{1,2}[/].{2}");
+			String opinionDate = null;
+			String court = null;
+			if (tempa.length == 2) {
+				// get out the date of
+				opinionDate = temp.substring(tempa[0].length(),temp.length() - tempa[1].length());
+				// and the court designation
+				court = tempa[1].trim();
+				if ( court.toLowerCase().contains("&nbsp;") ) {
+					court = court.substring(0, court.toLowerCase().indexOf("&nbsp;")).trim();
+				}
+				if ( court.toLowerCase().contains("</td>") ) {
+					court = court.substring(0, court.toLowerCase().indexOf("</td>")).trim();
+				}
+			} else {
+				// sometimes no court designation
+				opinionDate = temp.substring(tempa[0].length());
+			}
+			// store all this in a class
+			fileName = fileName.replace(".DOC", "");
+			sopDate = opDate;
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+	        try {
+	        	opDate = dfs.parse(opinionDate);
+	        } catch (ParseException e ) {
+	        	if ( sopDate == null ) {
+		        	// Default to current date.
+		        	// not very good, but best that can be done, I suppose.
+					cal.set(Calendar.HOUR_OF_DAY, 0);
+					cal.set(Calendar.MINUTE, 0);
+					cal.set(Calendar.SECOND, 0);
+					cal.set(Calendar.MILLISECOND, 0);
+					opDate = cal.getTime();
+	        	} else {
+	        		opDate = sopDate;
+	        	}
+	        }
+    		Calendar parsedDate = Calendar.getInstance();
+    		parsedDate.setTime(opDate);
+    		// test to see if year out of whack.
+    		if ( parsedDate.get(Calendar.YEAR) > cal.get(Calendar.YEAR) ) {
+    			parsedDate.set(Calendar.YEAR, cal.get(Calendar.YEAR));
+    			opDate = parsedDate.getTime();
+    		}
+    		// get searchUrl
+			loc = line.indexOf("http://appellatecases.courtinfo.ca.gov/search/");
+			int loce = line.indexOf("\" target=\"_blank\">Case Details");
+			String searchUrl = null;
+			try {
+				searchUrl = line.substring(loc, loce);
+			} catch (Exception ex ) {
+		    	logger.warning("No Case Details: " + fileName);
+			}
+    		
+			SlipOpinion slipOpinion = new SlipOpinion(fileName, fileExtension, tempa[0].trim(),opDate, court, searchUrl);
+			// test for duplicates
+			if ( cases.contains(slipOpinion)) {
+		    	logger.warning("Duplicate Detected:" + slipOpinion);
+			} else {
+				cases.add(slipOpinion);
+			}
+			//
+		}
+	}
+} catch (IOException ex) {
+	logger.log(Level.SEVERE, null, ex);
+}
+*/		

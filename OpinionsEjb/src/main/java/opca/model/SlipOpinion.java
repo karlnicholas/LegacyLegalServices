@@ -33,14 +33,6 @@ public class SlipOpinion extends OpinionBase {
 	@Transient
 	private SlipProperties slipProperties;
 	@Transient
-	private Summary summary;
-	@Transient
-	private Disposition disposition;
-	@Transient
-	private PartiesAndAttornies partiesAndAttornies;
-	@Transient
-	private TrialCourt trialCourt;
-	@Transient
 	private String searchUrl;
 
 	public SlipOpinion() {
@@ -122,30 +114,6 @@ public class SlipOpinion extends OpinionBase {
 	}
 	public void setCourt(String court) {
     	slipProperties.setCourt(court);
-	}
-	public Summary getSummary() {
-		return summary;
-	}
-	public void setSummary(Summary summary) {
-		this.summary = summary;
-	}
-	public Disposition getDisposition() {
-		return disposition;
-	}
-	public void setDisposition(Disposition disposition) {
-		this.disposition = disposition;
-	}
-	public PartiesAndAttornies getPartiesAndAttornies() {
-		return partiesAndAttornies;
-	}
-	public void setPartiesAndAttornies(PartiesAndAttornies partiesAndAttornies) {
-		this.partiesAndAttornies = partiesAndAttornies;
-	}
-	public TrialCourt getTrialCourt() {
-		return trialCourt;
-	}
-	public void setTrialCourt(TrialCourt trialCourt) {
-		this.trialCourt = trialCourt;
 	}
 	@Override
 	public String toString() {

@@ -49,6 +49,8 @@ public class OpinionViewSingleton {
 			SimpleDateFormat lform = new SimpleDateFormat("yyyy-MM-dd");
 			SimpleDateFormat sform = new SimpleDateFormat("MMM dd");
 			List<Date[]> reportDates = getReportDates();
+			if ( reportDates == null )
+				return;
 			for ( Date[] dates: reportDates ) {
 				//TODO fix this dates having null in the dates list
 				if ( dates[0] == null || dates[1] == null ) continue;  

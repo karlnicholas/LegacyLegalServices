@@ -1,5 +1,9 @@
 package opca.scraper;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolException;
@@ -12,7 +16,12 @@ public class MyRedirectStrategy extends LaxRedirectStrategy {
 
 	@Override
 	public HttpUriRequest getRedirect(HttpRequest arg0, HttpResponse arg1, HttpContext arg2) throws ProtocolException {
-		location = arg1.getHeaders("Location")[0].getValue();
+//		location = arg1.getHeaders("Location")[0].getValue();
+		try {
+			location = URLDecoder.decode( arg1.getHeaders("Location")[0].getValue(), StandardCharsets.UTF_8.name() );
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
 		return super.getRedirect(arg0, arg1, arg2);
 	}
 

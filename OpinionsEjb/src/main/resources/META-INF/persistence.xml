@@ -14,11 +14,7 @@
     <class>opca.model.OpinionStatuteCitation</class>
     <class>opca.model.OpinionStatuteCitationId</class>
     <class>opca.model.StatuteKey</class>
-    <class>opca.model.Summary</class>
-    <class>opca.model.TrialCourt</class>
-    <class>opca.model.Disposition</class>
     <class>opca.model.PartyAttorneyPair</class>
-    <class>opca.model.PartiesAndAttornies</class>
     <properties>
       <!-- <property name="javax.persistence.schema-generation.create-source" value="metadata" /> -->
       <!-- <property name="javax.persistence.schema-generation.drop-source" value="metadata" /> -->

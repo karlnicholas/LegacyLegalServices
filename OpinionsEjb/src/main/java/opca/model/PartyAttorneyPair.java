@@ -13,7 +13,7 @@ public class PartyAttorneyPair {
 	private Integer id;
 
 	@ManyToOne
-	private PartiesAndAttornies partiesAndAttornies;	
+	private SlipProperties slipProperties;	
     @Column(columnDefinition="varchar(1023)")
 	private String party;
     @Column(columnDefinition="varchar(3071)")
@@ -21,19 +21,19 @@ public class PartyAttorneyPair {
     
 	public PartyAttorneyPair() {}
 
-	public PartyAttorneyPair(PartiesAndAttornies partiesAndAttornies, String party, String attorney) {
-		this.partiesAndAttornies = partiesAndAttornies;
+	public PartyAttorneyPair(SlipProperties slipProperties, String party, String attorney) {
+		this.slipProperties = slipProperties;
 		this.party = party;
 		this.attorney = attorney;
 	}
 	public Integer getId() {
 		return id;
 	}
-	public PartiesAndAttornies getPartiesAndAttornies() {
-		return partiesAndAttornies;
+	public SlipProperties getSlipProperties() {
+		return slipProperties;
 	}
-	public void setPartiesAndAttornies(PartiesAndAttornies partiesAndAttornies) {
-		this.partiesAndAttornies = partiesAndAttornies;
+	public void setSlipProperties(SlipProperties slipProperties) {
+		this.slipProperties = slipProperties;
 	}
 	public String getParty() {
 		return party;
