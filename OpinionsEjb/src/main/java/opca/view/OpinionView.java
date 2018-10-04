@@ -40,7 +40,7 @@ public class OpinionView {
 		this.title = slipOpinion.getTitle();
 		this.fileName = slipOpinion.getFileName();
 		this.opinionDate = slipOpinion.getOpinionDate();
-		this.disposition = "working"; //slipOpinion.getDisposition().getDispositionType();
+		this.disposition = slipOpinion.getSlipProperties().getDisposition();
 		this.opinionKey = slipOpinion.getOpinionKey();		
 		this.statutes = statutes;
 		this.cases = cases;

@@ -373,6 +373,80 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
 		}
     }
 
+    public void parseSlipOpinionDetails(
+        	SlipOpinion slipOpinion, 
+        	ScrapedOpinionDocument parserDocument
+    	) {
+        
+        SentenceParser sentenceParser = new SentenceParser();
+        Iterator<String> pit = parserDocument.getParagraphs().iterator();
+        
+        while ( pit.hasNext() ) {
+
+        	String paragraph = pit.next();
+        	ArrayList<String> sentences = sentenceParser.stripSentences(paragraph);
+
+        	// look for details
+        	// after a summaryParagraph is found, don't check any further .. (might have to change) 
+        	if ( slipOpinion.getSlipProperties().getDisposition() == null ) {
+        		checkDetails( slipOpinion, paragraph, sentences );
+        	}
+        }
+    }
+
+    private void checkDetails(
+    	SlipOpinion slipOpinion, 
+    	String paragraph, 
+    	ArrayList<String> sentences 
+    ) {
+    	String trimmed = paragraph.trim();
+    	String lower = trimmed.toLowerCase();
+		if ( (lower.contains("affirm") || lower.contains("reverse") ) 
+				&& !(paragraph.trim().startsWith("appeal from") || paragraph.trim().startsWith("appeals from")) 
+		) {
+			Iterator<String> sit = sentences.iterator();
+			while (sit.hasNext()) {
+				String sentence = sit.next().trim().toLowerCase();
+				
+				if ( (sentence.contains("affirm") || sentence.contains("reverse") ) 
+					&& ( sentence.contains("we ")) 
+				) {
+/*					
+					// get five sentences ... 
+					slipOpinion.setSummary( paragraph
+							.replace('\n', ' ')
+							.replace('\r', ' ')
+							.replace('\u0002', ' ')
+			                .replace('\u201D', '"')
+			                .replace('\u201C', '"')
+			                .replace('\u2018', '\'')
+			                .replace('\u2019', '\'')
+			                .replace('\u001E', '-')
+							.replace('\u00A0', ' ')
+							.replace('\u000B',  ' ')
+						);
+*/						
+					StringTokenizer tok = new StringTokenizer(sentence);
+					while (tok.hasMoreTokens()) {
+						String token = tok.nextToken();
+						token = token.replace(",", "").replace(".", "");
+						if ( token.contains("affirm") || token.contains("reverse") ) {
+//							if ( token.contains("ed") ) {
+//								slipOpinion.setSummary(null);
+//							} else {
+							if ( !token.contains("ed") ) {
+								StringBuffer disposition = new StringBuffer(token.trim().replace(",", "").replace(".", "").toLowerCase());
+								disposition.setCharAt(0, disposition.substring(0, 1).toUpperCase().charAt(0));
+								slipOpinion.getSlipProperties().setDisposition( disposition.toString() );
+							}
+							break;
+						}	
+					}
+				}
+			}
+		}
+    }
+
     private void addCaseCitation( OpinionBase opinion, TreeSet<OpinionBase> caseCitationTree ) {
         if ( !caseCitationTree.contains(opinion) ) {
         	caseCitationTree.add(opinion);

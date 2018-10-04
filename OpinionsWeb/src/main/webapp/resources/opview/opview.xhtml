@@ -53,7 +53,10 @@ xmlns:composite="http://xmlns.jcp.org/jsf/composite">
         <ui:fragment rendered="#{cc.attrs.view.cases.size() > 10}"><div class="opencase casehead"><span class="opencase case">[<h:outputText value="#{cc.attrs.view.cases.size() - 10}"/> more cases cited.]</span></div></ui:fragment>
       </div>
      </ui:fragment>
-     <ui:fragment rendered="#{cc.attrs.view.disposition != null}" ><div class="summary wrap"><div class="summary outer"><div class="summary inner"><b><h:outputText value="#{cc.attrs.view.disposition}: "/></b><h:outputText value="Summary Placeholder" /></div></div></div></ui:fragment>
+     <div class="summary wrap"><div class="summary outer"><div class="summary inner">
+     <b><ui:fragment rendered="#{cc.attrs.view.disposition != null}" ><h:outputText value="#{cc.attrs.view.disposition}: "/></ui:fragment>
+     <ui:fragment rendered="#{cc.attrs.view.disposition == null}" ><h:outputText value="Disposition unknown "/></ui:fragment></b>
+     </div></div></div>
     <div class="opinion tail" />
     </h:form>
   </div>
