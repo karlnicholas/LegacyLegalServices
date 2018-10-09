@@ -48,7 +48,7 @@ public class OpinionViewLoad {
 			opinionViewData.setReady( true );
 			logger.info("load finish: " + opinionViewData.getOpinionViews().size());
 		} catch ( Exception ex ) {
-			logger.info("load failed: " + ex.getLocalizedMessage());
+			logger.info("load failed: " + ex.getCause().getMessage());
 		}
 	}
 
@@ -63,12 +63,13 @@ public class OpinionViewLoad {
 
 	private void initReportDates(OpinionViewData opinionViewData, List<Date> dates) {
 		List<Date[]> reportDates = new ArrayList<Date[]>();
-		if ( dates.size() == 0 ) return;
 		// do the work.
 		Calendar firstDay = Calendar.getInstance();
-		firstDay.setTime(dates.get(0));
 		Calendar lastDay = Calendar.getInstance();
-		lastDay.setTime(dates.get(0));
+		if ( dates.size() > 0 ) {
+			firstDay.setTime(dates.get(0));
+			lastDay.setTime(dates.get(0));
+		}
 		bracketWeek( firstDay, lastDay );
 		Date[] currentDates = new Date[2];
 		for (Date date: dates) {

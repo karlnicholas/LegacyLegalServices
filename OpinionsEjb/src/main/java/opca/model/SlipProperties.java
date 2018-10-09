@@ -1,6 +1,9 @@
 package opca.model;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
+
 import javax.persistence.*;
 
 @NamedQueries({
@@ -21,22 +24,59 @@ public class SlipProperties implements Serializable {
     private String fileName;
 	@Column(columnDefinition = "varchar(7)")
 	private String fileExtension;
-	@Column(columnDefinition = "varchar(31)")
-    private String disposition;
-	@Column(columnDefinition = "varchar(4007)")
+    @Column(columnDefinition="varchar(63)")
+    private String trialCourtCase;
+    @Column(columnDefinition="varchar(255)")
+    private String caseCaption;    
+    @Column(columnDefinition="varchar(31)")
+    private String division;
+    @Column(columnDefinition="varchar(15)")
+    private String caseType;
+    private Date filingDate;
+    private Date completionDate;
+    @Column(columnDefinition="varchar(127)")
+	private String disposition; 
+	private Date date; 
+    @Column(columnDefinition="varchar(255)")
+	private String dispositionDescription; 
+    @Column(columnDefinition="varchar(31)")
+	private String publicationStatus; 
+    @Column(columnDefinition="varchar(63)")
+	private String author; 
+    @Column(columnDefinition="varchar(255)")
+	private String participants; 
+    @Column(columnDefinition="varchar(255)")
+	private String caseCitation;
+    @Column(columnDefinition="varchar(127)")
+    private String trialCourtName; 
+    @Column(columnDefinition="varchar(127)")
+    private String county; 
+    @Column(columnDefinition="varchar(63)")
+    private String trialCourtCaseNumber; 
+    @Column(columnDefinition="varchar(127)")
+    private String trialCourtJudge; 
+    private Date trialCourtJudgmentDate;
+    @OneToMany(mappedBy="slipProperties")
+    private Set<PartyAttorneyPair> partyAttorneyPairs;
+    @Column(columnDefinition="varchar(4094)")	// length of 2 bytes for lengths greater than 255
     private String summary;
 
+	public String getSummary() {
+		return summary;
+	}
+	public void setSummary(String summary) {
+		if ( summary != null && summary.length() > 4094 ) summary = summary.substring(0, 4094);
+		this.summary = summary;
+	}
 	public SlipProperties() {}
 	public SlipProperties(SlipOpinion slipOpinion) {
 		this.slipOpinion = slipOpinion;
 	}
-	public SlipProperties(SlipOpinion slipOpinion, String fileName, String fileExtension, String court, String disposition, String summary) {
+	public SlipProperties(SlipOpinion slipOpinion, String fileName, String fileExtension, String court) {
 		this.slipOpinion = slipOpinion;
     	setFileName(fileName);
     	setFileExtension(fileExtension);
 		setCourt(court);
-    	setDisposition(disposition);
-    	setSummary(summary);
     }
 
 	public SlipProperties(SlipOpinion slipOpinion, SlipOpinion slipCopy) {
@@ -44,8 +84,6 @@ public class SlipProperties implements Serializable {
     	setFileName(slipCopy.getFileName());
     	setFileExtension(slipCopy.getFileExtension());
 		setCourt(slipCopy.getCourt());
-    	setDisposition(slipCopy.getDisposition());
-    	setSummary(slipCopy.getSummary());
 	}
     public Integer getOpinionKey() {
 		return opinionId;
@@ -77,23 +115,140 @@ public class SlipProperties implements Serializable {
 		return court;
 	}
 	public void setCourt(String court) {
-		if ( court != null && court.length() > 31 ) court = court.substring(0, 31);
+		if ( court != null && court.length() > 15 ) court = court.substring(0, 15);
 		this.court = court;
+	}
+	public String getTrialCourtCase() {
+		return trialCourtCase;
+	}
+	public void setTrialCourtCase(String trialCourtCase) {
+		if ( trialCourtCase != null && trialCourtCase.length() > 63 ) trialCourtCase = trialCourtCase.substring(0, 63);
+		this.trialCourtCase = trialCourtCase;
+	}
+	public String getCaseCaption() {
+		return caseCaption;
+	}
+	public void setCaseCaption(String caseCaption) {
+		if ( caseCaption != null && caseCaption.length() > 255 ) caseCaption = caseCaption.substring(0, 255);
+		this.caseCaption = caseCaption;
+	}
+	public String getDivision() {
+		return division;
+	}
+	public void setDivision(String division) {
+		if ( division != null && division.length() > 31 ) division = division.substring(0, 31);
+		this.division = division;
+	}
+	public String getCaseType() {
+		return caseType;
+	}
+	public void setCaseType(String caseType) {
+		if ( caseType != null && caseType.length() > 15 ) caseType = caseType.substring(0, 15);
+		this.caseType = caseType;
+	}
+	public Date getFilingDate() {
+		return filingDate;
+	}
+	public void setFilingDate(Date filingDate) {
+		this.filingDate = filingDate;
+	}
+	public Date getCompletionDate() {
+		return completionDate;
+	}
+	public void setCompletionDate(Date completionDate) {
+		this.completionDate = completionDate;
 	}
 	public String getDisposition() {
 		return disposition;
 	}
 	public void setDisposition(String disposition) {
-		if ( disposition != null && disposition.length() > 31 ) disposition = disposition.substring(0, 31);
+		if ( disposition != null && disposition.length() > 127 ) disposition = disposition.substring(0, 127);
 		this.disposition = disposition;
 	}
-	public String getSummary() {
-		return summary;
+	public Date getDate() {
+		return date;
 	}
-	public void setSummary(String summary) {
-		if ( summary != null && summary.length() > 4007 ) summary = "..." + summary.substring(summary.length()-4004);
-		this.summary = summary;
+	public void setDate(Date date) {
+		this.date = date;
 	}
+	public String getDispositionDescription() {
+		return dispositionDescription;
+	}
+	public void setDispositionDescription(String dispositionDescription) {
+		if ( dispositionDescription != null && dispositionDescription.length() > 255 ) dispositionDescription = dispositionDescription.substring(0, 255);
+		this.dispositionDescription = dispositionDescription;
+	}
+	public String getPublicationStatus() {
+		return publicationStatus;
+	}
+	public void setPublicationStatus(String publicationStatus) {
+		if ( publicationStatus != null && publicationStatus.length() > 31 ) publicationStatus = publicationStatus.substring(0, 31);
+		this.publicationStatus = publicationStatus;
+	}
+	public String getAuthor() {
+		return author;
+	}
+	public void setAuthor(String author) {
+		if ( author != null && author.length() > 63 ) author = author.substring(0, 63);
+		this.author = author;
+	}
+	public String getParticipants() {
+		return participants;
+	}
+	public void setParticipants(String participants) {
+		if ( participants != null && participants.length() > 255 ) participants = participants.substring(0, 255);
+		this.participants = participants;
+	}
+	public String getCaseCitation() {
+		return caseCitation;
+	}
+	public void setCaseCitation(String caseCitation) {
+		if ( caseCitation != null && caseCitation.length() > 255 ) caseCitation = caseCitation.substring(0, 255);
+		this.caseCitation = caseCitation;
+	}
+	public String getTrialCourtName() {
+		return trialCourtName;
+	}
+	public void setTrialCourtName(String trialCourtName) {
+		if ( trialCourtName != null && trialCourtName.length() > 127 ) trialCourtName = trialCourtName.substring(0, 127);
+		this.trialCourtName = trialCourtName;
+	}
+	public String getCounty() {
+		return county;
+	}
+	public void setCounty(String county) {
+		if ( trialCourtName != null && trialCourtName.length() > 63 ) trialCourtName = trialCourtName.substring(0, 63);
+		this.county = county;
+	}
+	public String getTrialCourtCaseNumber() {
+		return trialCourtCaseNumber;
+	}
+	public void setTrialCourtCaseNumber(String trialCourtCaseNumber) {
+		if ( trialCourtName != null && trialCourtName.length() > 127 ) trialCourtName = trialCourtName.substring(0, 127);
+		this.trialCourtCaseNumber = trialCourtCaseNumber;
+	}
+	public String getTrialCourtJudge() {
+		return trialCourtJudge;
+	}
+	public void setTrialCourtJudge(String trialCourtJudge) {
+		if ( trialCourtName != null && trialCourtName.length() > 127 ) trialCourtName = trialCourtName.substring(0, 127);
+		this.trialCourtJudge = trialCourtJudge;
+	}
+	public Date getTrialCourtJudgmentDate() {
+		return trialCourtJudgmentDate;
+	}
+	public void setTrialCourtJudgmentDate(Date trialCourtJudgmentDate) {
+		this.trialCourtJudgmentDate = trialCourtJudgmentDate;
+	} 
+	public Set<PartyAttorneyPair> getPartyAttorneyPairs() {
+		return partyAttorneyPairs;
+	}
+	public void setPartyAttorneyPairs(Set<PartyAttorneyPair> partyAttorneyPairs) {
+		this.partyAttorneyPairs = partyAttorneyPairs;
+	}
+	
+	
+	
 	@Override
 	public String toString() {
         return getFileName();

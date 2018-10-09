@@ -8,12 +8,6 @@ import javax.persistence.*;
 @NamedQueries({
 	@NamedQuery(name="SlipOpinion.findAll", 
 		query="select s from SlipOpinion s"),
-/*	
-	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoins", 
-		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation"),
-	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoinsForKeys", 
-		query="select distinct o from SlipOpinion o left join fetch o.statuteCitations sc left join fetch sc.statuteCitation where o.opinionKey in :opinionKeys"),
-*/
 	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoins", 
 		query="select distinct o from SlipOpinion o"),
 	@NamedQuery(name="SlipOpinion.loadOpinionsWithJoinsForKeys", 
@@ -38,18 +32,21 @@ public class SlipOpinion extends OpinionBase {
 
 	@Transient
 	private SlipProperties slipProperties;
+	@Transient
+	private String searchUrl;
 
-    public SlipOpinion() {
+	public SlipOpinion() {
     	super();
     }
 	public SlipOpinion(SlipOpinion slipOpinion) {
 		super(slipOpinion);
 		this.slipProperties = new SlipProperties(this, slipOpinion);
     }
-	public SlipOpinion(String fileName, String fileExtension, String title, Date opinionDate, String court) {
+	public SlipOpinion(String fileName, String fileExtension, String title, Date opinionDate, String court, String searchUrl) {
 		super(null, title, opinionDate, court);
 		setOpinionKey(new OpinionKey("1 Slip.Op " + generateOpinionKey(fileName)));
-		slipProperties = new SlipProperties(this, fileName, fileExtension, court, null, null);
+		slipProperties = new SlipProperties(this, fileName, fileExtension, court);
+		this.searchUrl = searchUrl;
     }
 
 //	public Long getId() {
@@ -118,18 +115,6 @@ public class SlipOpinion extends OpinionBase {
 	public void setCourt(String court) {
     	slipProperties.setCourt(court);
 	}
-	public String getDisposition() {
-		return slipProperties.getDisposition();
-	}
-	public void setDisposition(String disposition) {
-    	slipProperties.setDisposition(disposition);
-	}
-	public String getSummary() {
-		return slipProperties.getSummary();
-	}
-	public void setSummary(String summary) {
-    	slipProperties.setSummary(summary);
-	}
 	@Override
 	public String toString() {
 		if ( slipProperties != null )
@@ -142,5 +127,8 @@ public class SlipOpinion extends OpinionBase {
 	}
 	public void setSlipProperties(SlipProperties slipProperties) {
 		this.slipProperties = slipProperties;
+	}
+    public String getSearchUrl() {
+		return searchUrl;
 	}
 }

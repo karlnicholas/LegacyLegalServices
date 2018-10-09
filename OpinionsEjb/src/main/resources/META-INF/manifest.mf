@@ -2,4 +2,4 @@ Manifest-Version: 1.0
 Built-By: karl
 Build-Jdk: 1.8.0_161
 Created-By: Maven Integration for Eclipse
-Dependencies: org.apache.httpcomponents
+Dependencies: org.apache.httpcomponents, org.jsoup

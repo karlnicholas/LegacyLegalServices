@@ -53,7 +53,16 @@ xmlns:composite="http://xmlns.jcp.org/jsf/composite">
         <ui:fragment rendered="#{cc.attrs.view.cases.size() > 10}"><div class="opencase casehead"><span class="opencase case">[<h:outputText value="#{cc.attrs.view.cases.size() - 10}"/> more cases cited.]</span></div></ui:fragment>
       </div>
      </ui:fragment>
-     <ui:fragment rendered="#{cc.attrs.view.disposition != null}" ><div class="summary wrap"><div class="summary outer"><div class="summary inner"><b><h:outputText value="#{cc.attrs.view.disposition}: "/></b><h:outputText value="#{cc.attrs.view.summary}" /></div></div></div></ui:fragment>
+     <div class="summary wrap"><div class="summary outer"><div class="summary inner"><span>
+     <b>
+     <ui:fragment rendered="#{cc.attrs.view.disposition != null}" ><h:outputText value="#{cc.attrs.view.disposition}"/></ui:fragment>
+     <ui:fragment rendered="#{cc.attrs.view.disposition == null}"><h:outputText value="Disposition Unknown"/></ui:fragment>
+     </b>
+     </span>
+     <ui:fragment rendered="#{cc.attrs.view.summary != null}" >&nbsp;<h:outputText value="#{cc.attrs.view.summary}"/></ui:fragment>
+     <ui:fragment rendered="#{cc.attrs.view.summary == null and cc.attrs.view.publicationStatus != null}"><h:outputText value="#{cc.attrs.view.publicationStatus}"/></ui:fragment>
+     </div>
+     </div></div>
     <div class="opinion tail" />
     </h:form>
   </div>

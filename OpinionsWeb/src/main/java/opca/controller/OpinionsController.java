@@ -65,6 +65,9 @@ public class OpinionsController {
 
     public List<OpinionView> getOpinionViewList() {
 		// done this way so that this information is not serialized in the viewScope
+    	if ( opinionViewSingleton.getReportDates().size() == 0 ) {
+    		return null;
+    	}
     	Date[] dates = opinionViewSingleton.getReportDates().get(currentIndex);
 		ViewParameters viewInfo = new ViewParameters(dates[0],dates[1]);
 		return opinionViewSingleton.getOpinionCasesForAccount(viewInfo);
