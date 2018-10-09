@@ -158,7 +158,6 @@ public class CAOnlineUpdates {
 
 		processOpinions(citationStore, mergeOpinions, persistOpinions);
 	  	processStatutes(citationStore, mergeStatutes, persistStatutes);
-		int cSlip = 0;
 				
 		List<OpinionStatuteCitation> persistOpinionStatuteCitations = new ArrayList<>();
 		for( SlipOpinion slipOpinion: slipOpinions ) {
@@ -172,9 +171,7 @@ public class CAOnlineUpdates {
 				System.out.println("SlipProperties == null " );
 			}
 			em.persist(slipOpinion.getSlipProperties());
-			cSlip++;
 		}
-		System.out.println("cSlip = " + cSlip);
 		Date startTime = new Date();
     	for(OpinionBase opinion: persistOpinions ) {
 			em.persist(opinion);

@@ -49,7 +49,7 @@ public class ScheduledService {
         StatutesService statutesService = StatutesServiceFactory.getStatutesServiceClient();
         try {
 			userTransaction.begin();
-	        opinionKeys = caOnlineUpdates.updateDatabase(new TestCAParseSlipDetails(false), statutesService);
+	        opinionKeys = caOnlineUpdates.updateDatabase(new CACaseScraper(false), statutesService);
 			userTransaction.commit();
 		} catch (Exception e) {
 			try {

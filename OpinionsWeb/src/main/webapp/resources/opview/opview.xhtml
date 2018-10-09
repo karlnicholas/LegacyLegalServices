@@ -54,12 +54,13 @@ xmlns:composite="http://xmlns.jcp.org/jsf/composite">
       </div>
      </ui:fragment>
      <div class="summary wrap"><div class="summary outer"><div class="summary inner"><span>
-     <b><ui:fragment rendered="#{cc.attrs.view.disposition != null}" ><h:outputText value="#{cc.attrs.view.disposition}"/></ui:fragment></b>
+     <b>
+     <ui:fragment rendered="#{cc.attrs.view.disposition != null}" ><h:outputText value="#{cc.attrs.view.disposition}"/></ui:fragment>
+     <ui:fragment rendered="#{cc.attrs.view.disposition == null}"><h:outputText value="Disposition Unknown"/></ui:fragment>
+     </b>
+     </span>
      <ui:fragment rendered="#{cc.attrs.view.summary != null}" >&nbsp;<h:outputText value="#{cc.attrs.view.summary}"/></ui:fragment>
-     <ui:fragment rendered="#{cc.attrs.view.disposition == null}" ><h:outputText value="Disposition Unknown"/></ui:fragment></span>
-     <ui:fragment rendered="#{cc.attrs.view.summary == null}">
-     <span class="summary right"><b><ui:fragment rendered="#{cc.attrs.view.publicationStatus != null}"><h:outputText value="#{cc.attrs.view.publicationStatus}"/></ui:fragment></b></span>
-     </ui:fragment>
+     <ui:fragment rendered="#{cc.attrs.view.summary == null and cc.attrs.view.publicationStatus != null}"><h:outputText value="#{cc.attrs.view.publicationStatus}"/></ui:fragment>
      </div>
      </div></div>
     <div class="opinion tail" />
