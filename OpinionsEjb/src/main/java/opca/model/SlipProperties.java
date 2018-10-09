@@ -58,7 +58,16 @@ public class SlipProperties implements Serializable {
     private Date trialCourtJudgmentDate;
     @OneToMany(mappedBy="slipProperties")
     private Set<PartyAttorneyPair> partyAttorneyPairs;
+    @Column(columnDefinition="varchar(4094)")	// length of 2 bytes for lengths greater than 255
+    private String summary;
 
+	public String getSummary() {
+		return summary;
+	}
+	public void setSummary(String summary) {
+		if ( summary != null && summary.length() > 4094 ) summary = summary.substring(0, 4094);
+		this.summary = summary;
+	}
 	public SlipProperties() {}
 	public SlipProperties(SlipOpinion slipOpinion) {
 		this.slipOpinion = slipOpinion;

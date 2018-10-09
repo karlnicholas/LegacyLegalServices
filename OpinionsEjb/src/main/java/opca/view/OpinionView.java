@@ -25,25 +25,29 @@ public class OpinionView {
 	private Date opinionDate;
 	private String fileName;
 	private String disposition;
+	private String summary;
 	private OpinionKey opinionKey;
+	private String publicationStatus;
 	
 	public OpinionView() {
 		super();
 	}
 	public OpinionView(
 		SlipOpinion slipOpinion, 
-		String name, 
+		String name,
 		List<StatuteView> statutes, 
 		List<CaseView> cases
 	) {
 		this.name = name;
 		this.title = slipOpinion.getTitle();
 		this.fileName = slipOpinion.getFileName();
+		this.publicationStatus = slipOpinion.getSlipProperties().getPublicationStatus();
 		this.opinionDate = slipOpinion.getOpinionDate();
 		this.disposition = slipOpinion.getSlipProperties().getDisposition();
 		this.opinionKey = slipOpinion.getOpinionKey();		
 		this.statutes = statutes;
 		this.cases = cases;
+		this.setSummary(slipOpinion.getSlipProperties().getSummary());
 	}
 	
     @XmlElement
@@ -142,7 +146,6 @@ public class OpinionView {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-    @XmlTransient
 	public String getDisposition() {
 		return disposition;
 	}
@@ -155,6 +158,20 @@ public class OpinionView {
 	}
 	public void setOpinionKey(OpinionKey opinionKey) {
 		this.opinionKey = opinionKey;
+	}
+    @XmlTransient
+	public String getPublicationStatus() {
+		return publicationStatus;
+	}
+	public void setPublicationStatus(String publicationStatus) {
+		this.publicationStatus = publicationStatus;
+	}
+    @XmlTransient
+	public String getSummary() {
+		return summary;
+	}
+	public void setSummary(String summary) {
+		this.summary = summary;
 	}
 }
 

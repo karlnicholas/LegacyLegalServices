@@ -14,9 +14,9 @@ public class PartyAttorneyPair {
 
 	@ManyToOne
 	private SlipProperties slipProperties;	
-    @Column(columnDefinition="varchar(1023)")
+    @Column(columnDefinition="varchar(1022)")
 	private String party;
-    @Column(columnDefinition="varchar(3071)")
+    @Column(columnDefinition="varchar(3070)")
 	private String attorney;
     
 	public PartyAttorneyPair() {}
@@ -39,14 +39,14 @@ public class PartyAttorneyPair {
 		return party;
 	}
 	public void setParty(String party) {
-		if ( party != null && party.length() > 1023 ) party = party.substring(0, 1023);
+		if ( party != null && party.length() > 1022 ) party = party.substring(0, 1022);
 		this.party = party;
 	}
 	public String getAttorney() {
 		return attorney;
 	}
 	public void setAttorney(String attorney) {
-		if ( attorney != null && attorney.length() > 3071 ) attorney = attorney.substring(0, 3071);
+		if ( attorney != null && attorney.length() > 3070 ) attorney = attorney.substring(0, 3070);
 		this.attorney = attorney;
 	}	
 }

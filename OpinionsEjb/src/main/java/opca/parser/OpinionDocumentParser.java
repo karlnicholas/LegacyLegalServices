@@ -410,10 +410,9 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
 				
 				if ( (sentence.contains("affirm") || sentence.contains("reverse") ) 
 					&& ( sentence.contains("we ")) 
-				) {
-/*					
+				) {					
 					// get five sentences ... 
-					slipOpinion.setSummary( paragraph
+					slipOpinion.getSlipProperties().setSummary( paragraph
 							.replace('\n', ' ')
 							.replace('\r', ' ')
 							.replace('\u0002', ' ')
@@ -425,16 +424,15 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
 							.replace('\u00A0', ' ')
 							.replace('\u000B',  ' ')
 						);
-*/						
+						
 					StringTokenizer tok = new StringTokenizer(sentence);
 					while (tok.hasMoreTokens()) {
 						String token = tok.nextToken();
 						token = token.replace(",", "").replace(".", "");
 						if ( token.contains("affirm") || token.contains("reverse") ) {
-//							if ( token.contains("ed") ) {
-//								slipOpinion.setSummary(null);
-//							} else {
-							if ( !token.contains("ed") ) {
+							if ( token.contains("ed") ) {
+								slipOpinion.getSlipProperties().setSummary(null);
+							} else {
 								StringBuffer disposition = new StringBuffer(token.trim().replace(",", "").replace(".", "").toLowerCase());
 								disposition.setCharAt(0, disposition.substring(0, 1).toUpperCase().charAt(0));
 								slipOpinion.getSlipProperties().setDisposition( disposition.toString() );
