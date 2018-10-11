@@ -7,9 +7,9 @@
 <body>
   <p><xsl:value-of select="email" /></p>
   <p>Please click on the following link to verify your email address at <xsl:element name="a">
-    <xsl:attribute name="href">http://<xsl:value-of select="verifyHost"/>/opinions</xsl:attribute>Court Opinions</xsl:element>.</p>
+    <xsl:attribute name="href"><xsl:value-of select="opRoute"/></xsl:attribute>Court Opinions</xsl:element>.</p>
   <h4><xsl:element name="a">
-    <xsl:attribute name="href">http://<xsl:value-of select="verifyHost"/>/opinions/views/verify.xhtml?email=<xsl:value-of select="email"/>&amp;verifyKey=<xsl:value-of select="verifyKey"/></xsl:attribute>
+    <xsl:attribute name="href"><xsl:value-of select="opRoute"/>/views/verify.xhtml?email=<xsl:value-of select="email"/>&amp;verifyKey=<xsl:value-of select="verifyKey"/></xsl:attribute>
     <span>Verify Me!</span>
     </xsl:element>
   </h4>

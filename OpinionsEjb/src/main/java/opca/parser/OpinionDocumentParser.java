@@ -380,6 +380,7 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
         
         SentenceParser sentenceParser = new SentenceParser();
         Iterator<String> pit = parserDocument.getParagraphs().iterator();
+        boolean summaryFound = false;
         
         while ( pit.hasNext() ) {
 
@@ -388,22 +389,24 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
 
         	// look for details
         	// after a summaryParagraph is found, don't check any further .. (might have to change) 
-        	if ( slipOpinion.getSlipProperties().getDisposition() == null ) {
-        		checkDetails( slipOpinion, paragraph, sentences );
+        	if ( !summaryFound ) {
+        		summaryFound = checkDetails( slipOpinion, paragraph, sentences );
         	}
         }
     }
 
-    private void checkDetails(
+    private boolean checkDetails(
     	SlipOpinion slipOpinion, 
     	String paragraph, 
     	ArrayList<String> sentences 
     ) {
     	String trimmed = paragraph.trim();
     	String lower = trimmed.toLowerCase();
+    	boolean processed = false;
 		if ( (lower.contains("affirm") || lower.contains("reverse") ) 
 				&& !(paragraph.trim().startsWith("appeal from") || paragraph.trim().startsWith("appeals from")) 
 		) {
+			processed = true;
 			Iterator<String> sit = sentences.iterator();
 			while (sit.hasNext()) {
 				String sentence = sit.next().trim().toLowerCase();
@@ -435,7 +438,9 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
 							} else {
 								StringBuffer disposition = new StringBuffer(token.trim().replace(",", "").replace(".", "").toLowerCase());
 								disposition.setCharAt(0, disposition.substring(0, 1).toUpperCase().charAt(0));
-								slipOpinion.getSlipProperties().setDisposition( disposition.toString() );
+								if ( slipOpinion.getSlipProperties().getDisposition() == null ) {
+									slipOpinion.getSlipProperties().setDisposition( disposition.toString() );
+								}
 							}
 							break;
 						}	
@@ -443,6 +448,7 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
 				}
 			}
 		}
+		return processed;
     }
 
     private void addCaseCitation( OpinionBase opinion, TreeSet<OpinionBase> caseCitationTree ) {

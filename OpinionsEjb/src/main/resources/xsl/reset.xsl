@@ -9,7 +9,7 @@
   <p>Hello, <xsl:value-of select="email" /></p>
   <p>Please click on the following link to verify your email address. If you did not request a reset, please ignore this email or contact Court Opinions through our website.</p>
   <h4><xsl:element name="a">
-    <xsl:attribute name="href">http://op-cacode.rhcloud.com/reset?email=<xsl:value-of select="email"/>&quot;key=<xsl:value-of select="verifyKey"/></xsl:attribute>
+    <xsl:attribute name="href"><xsl:value-of select="opRoute"/>reset?email=<xsl:value-of select="email"/>&quot;key=<xsl:value-of select="verifyKey"/></xsl:attribute>
     <span>Reset Email</span>
     </xsl:element>
   </h4>

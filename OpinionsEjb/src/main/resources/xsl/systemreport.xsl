@@ -5,7 +5,7 @@
 <head/>
 <body>
 <p><xsl:value-of select="email" /></p>
-<p>New Opinions at Court Reports</p>
+<p>New Opinions at <xsl:element name="a"><xsl:attribute name="href"><xsl:value-of select="opRoute"/>Court Opinions</xsl:attribute></xsl:element></p>
 <table>
   <tr bgcolor="#9acd32"><th>Measurement</th><th>Value</th></tr>
   <xsl:for-each select="memoryMap/entry">

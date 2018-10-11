@@ -21,7 +21,7 @@ public class EmailInformation implements Serializable {
 	private String email;
 	private String verifyKey;
 	private int verifyCount;
-	private String verifyHost;
+	private String opRoute;
 	private String comment;
 	private Locale locale;
 	private List<OpinionView> opinionCases;
@@ -46,7 +46,13 @@ public class EmailInformation implements Serializable {
 		this.opinionCases = opinionCases;
 	}
 	public EmailInformation() {
-		this.verifyHost = "localhost:8080";
+		String vHost = System.getenv("oproute");
+		if ( vHost != null ) {
+			this.opRoute = vHost;
+		} else {
+			this.opRoute = "http://localhost:8080";
+			
+		}
 	}
 	public EmailInformation(User user, Map<String, Long> memoryMap) {
 		this();
@@ -59,11 +65,17 @@ public class EmailInformation implements Serializable {
 	public String getVerifyKey() {
 		return verifyKey;
 	}
-	public String getVerifyHost() {
-		return verifyHost;
-	}
 	public int getVerifyCount() {
 		return verifyCount;
+	}
+	public void setVerifyCount(int verifyCount) {
+		this.verifyCount = verifyCount;
+	}
+	public String getOpRoute() {
+		return opRoute;
+	}
+	public void setOpRoute(String opRoute) {
+		this.opRoute = opRoute;
 	}
 	public String getComment() {
 		return comment;
