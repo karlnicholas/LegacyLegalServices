@@ -42,23 +42,34 @@ public class OpinionViewLoad {
 		// prevent all exceptions from leaving @Asynchronous block
 		try {
 			logger.info("load start");
+			opinionViewData.setLoaded( true );
 			opinionViewData.setReady( false );
 			buildOpinionViews(opinionViewData, statutesService);
 			opinionViewData.setStringDateList();
 			opinionViewData.setReady( true );
+			opinionViewData.setLoaded( false );
 			logger.info("load finish: " + opinionViewData.getOpinionViews().size());
 		} catch ( Exception ex ) {
+			opinionViewData.setLoaded( false );
 			logger.info("load failed: " + ex.getCause().getMessage());
 		}
 	}
 
 	public void loadNewOpinions(OpinionViewData opinionViewData, List<OpinionKey> opinionKeys, StatutesService statutesService) {
-		logger.info("loadNewOpinions start: " + opinionKeys.size());
-		opinionViewData.setReady( false );
-		buildNewOpinionViews(opinionViewData, opinionKeys, statutesService);
-		opinionViewData.setStringDateList();
-		opinionViewData.setReady( true );
-		logger.info("loadNewOpinions finish: " + opinionViewData.getOpinionViews().size());
+		try {
+			logger.info("loadNewOpinions start: " + opinionKeys.size());
+			opinionViewData.setLoaded( true );
+			opinionViewData.setReady( false );
+			buildNewOpinionViews(opinionViewData, opinionKeys, statutesService);
+			opinionViewData.setStringDateList();
+			opinionViewData.setReady( true );
+			opinionViewData.setLoaded( true );
+			logger.info("loadNewOpinions finish: " + opinionViewData.getOpinionViews().size());
+		} catch ( Exception ex ) {
+			opinionViewData.setLoaded( false );
+			logger.info("loadNewOpinions fail: " + ex.getMessage());
+			
+		}
 	}
 
 	private void initReportDates(OpinionViewData opinionViewData, List<Date> dates) {

@@ -32,6 +32,7 @@ public class OpinionsController {
     @PostConstruct
     public void postConstruct() {
     	openOpinion = null;
+    	opinionViewSingleton.checkStatus();
     }
     
     public void checkStartDate() {
@@ -70,7 +71,7 @@ public class OpinionsController {
     	}
     	Date[] dates = opinionViewSingleton.getReportDates().get(currentIndex);
 		ViewParameters viewInfo = new ViewParameters(dates[0],dates[1]);
-		return opinionViewSingleton.getOpinionCasesForAccount(viewInfo);
+		return opinionViewSingleton.getOpinionCases(viewInfo);
 	}
 	public String getStartDate() {
 		return startDate;

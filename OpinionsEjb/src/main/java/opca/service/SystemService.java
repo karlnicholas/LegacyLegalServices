@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import opca.mailer.SendGridMailer;
 import opca.model.User;
+import opca.view.OpinionView;
 
 @Stateless
 public class SystemService {
@@ -112,10 +113,16 @@ public class SystemService {
 
         List<User> users = userService.findAll();
         for ( User user: users ) {
-        	if ( !user.isOptout() ) {
+        	if ( !user.isOptout() || user.isAdmin() ) {
 	            // Prepare the evaluation context
         		ViewParameters viewInfo= new ViewParameters(calLastWeek.getTime(), calNow.getTime());
-        		sendGridMailer.sendOpinionReport(user, opinionViewSingleton.getOpinionCasesForAccount(viewInfo));
+        		List<OpinionView> opinionViews;
+        		if ( user.isAdmin() ) {
+            		opinionViews = opinionViewSingleton.getOpinionCases(viewInfo);
+        		} else {
+            		opinionViews = opinionViewSingleton.getOpinionCasesForAccount(viewInfo, user);
+        		}
+        		sendGridMailer.sendOpinionReport(user, opinionViews);
 	            logger.info("Case Report sent: " + user.getEmail());
 	            //            System.out.println("Resend = " + account.getEmail());
         	}

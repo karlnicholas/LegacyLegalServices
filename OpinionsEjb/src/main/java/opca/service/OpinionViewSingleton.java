@@ -4,16 +4,20 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 
 import opca.ejb.util.StatutesServiceFactory;
 import opca.model.OpinionKey;
+import opca.model.User;
 import opca.view.OpinionView;
+import opca.view.SectionView;
 import statutes.service.StatutesService;
 
 @Singleton
@@ -25,6 +29,7 @@ public class OpinionViewSingleton {
 	    private List<OpinionView> opinionViews;    
 		private List<String[]> stringDateList = new ArrayList<>();
 		private boolean ready = false;
+		private boolean loaded = false;
 		
 		public synchronized List<Date[]> getReportDates() {
 			return reportDates;
@@ -43,6 +48,12 @@ public class OpinionViewSingleton {
 		}
 		public synchronized void setReady(boolean ready) {
 			this.ready = ready;
+		}
+		public synchronized boolean isLoaded() {
+			return loaded;
+		}
+		public synchronized void setLoaded(boolean loaded) {
+			this.loaded = loaded;
 		}
 		public void setStringDateList() {
 			stringDateList.clear();
@@ -63,7 +74,17 @@ public class OpinionViewSingleton {
 			}
 		}
 	}
-	
+	public boolean checkStatus() {
+		boolean ready = false;
+		if ( !opinionViewData.isReady() ) {
+			if ( !opinionViewData.isLoaded() ) {
+				opinionViewLoad.load(opinionViewData, StatutesServiceFactory.getStatutesServiceClient());
+			}		
+		} else {
+			ready = true;
+		}
+		return ready;
+	}
 	public OpinionViewSingleton() {
 		opinionViewData = new OpinionViewData();
 	}
@@ -72,22 +93,41 @@ public class OpinionViewSingleton {
 		opinionViewLoad = new OpinionViewLoad(em);
 	}
 	
-	@PostConstruct
-	public void postConstruct() {
-		StatutesService statutesService = StatutesServiceFactory.getStatutesServiceClient();
-		opinionViewLoad.load(opinionViewData, statutesService);
-	}
-
 	/*
 	 * Dynamic method (for now?)
 	 */
-	public List<OpinionView> getOpinionCasesForAccount(ViewParameters viewInfo) {
+	public List<OpinionView> getOpinionCases(ViewParameters viewInfo) {
 		List<OpinionView> opinionViewList = copyCasesForViewinfo(viewInfo);
 		viewInfo.totalCaseCount = opinionViewList.size();
 		viewInfo.accountCaseCount = opinionViewList.size();
 		return opinionViewList;
 	}
 	
+	/*
+	 * Dynamic method 
+	 */
+	public List<OpinionView> getOpinionCasesForAccount(ViewParameters viewInfo, User user) {
+		List<OpinionView> opinionViewList = copyCasesForViewinfo(viewInfo);
+		viewInfo.totalCaseCount = opinionViewList.size();
+		viewInfo.accountCaseCount = opinionViewList.size();
+	    Set<String> userTitles = new HashSet<>();
+
+    	for ( String c: user.getTitles()) {
+    		userTitles.add(c);	
+        }
+
+    	Iterator<OpinionView> ovIt = opinionViewList.iterator();
+    	while ( ovIt.hasNext() ) {
+			OpinionView opinionView = ovIt.next();
+			for ( SectionView sectionView: opinionView.getSectionViews() ) {
+				if ( !userTitles.contains( sectionView.getParent().getTitle()) ) {
+					ovIt.remove();
+				}
+			}
+    	}
+		return opinionViewList;
+	}
+
 	private List<OpinionView> copyCasesForViewinfo(ViewParameters viewInfo) {
 		List<OpinionView> opinionViewCopy = new ArrayList<OpinionView>();
 		for (OpinionView opinionCase: opinionViewData.getOpinionViews() ) {
