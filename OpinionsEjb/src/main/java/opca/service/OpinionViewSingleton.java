@@ -18,6 +18,7 @@ import opca.model.OpinionKey;
 import opca.model.User;
 import opca.view.OpinionView;
 import opca.view.SectionView;
+import opca.view.ViewReference;
 import statutes.service.StatutesService;
 
 @Singleton
@@ -119,10 +120,24 @@ public class OpinionViewSingleton {
     	Iterator<OpinionView> ovIt = opinionViewList.iterator();
     	while ( ovIt.hasNext() ) {
 			OpinionView opinionView = ovIt.next();
+			boolean foundOne = false;
 			for ( SectionView sectionView: opinionView.getSectionViews() ) {
-				if ( !userTitles.contains( sectionView.getParent().getTitle()) ) {
-					ovIt.remove();
+				ViewReference parent = sectionView.getParent();
+				while ( parent.getParent() != null ) {
+					parent = parent.getParent();
 				}
+				for ( String title: userTitles) {
+					if ( parent.getShortTitle().equals( title ) ) {
+						foundOne = true;
+						break;
+					}
+				}
+				if ( foundOne ) {
+					break;
+				}
+			}
+			if ( !foundOne ) {
+				ovIt.remove();
 			}
     	}
 		return opinionViewList;

@@ -25,6 +25,7 @@ public class EmailInformation implements Serializable {
 	private String comment;
 	private Locale locale;
 	private List<OpinionView> opinionCases;
+	private String[] titles;
 	private Map<String, Long> memoryMap;
 	public EmailInformation(User user) {
 		this();
@@ -33,6 +34,7 @@ public class EmailInformation implements Serializable {
 		this.email = user.getEmail();
 		this.verifyKey = user.getVerifyKey();
 		this.verifyCount = user.getVerifyCount();
+		this.titles = user.getTitles();
 	}
 	public EmailInformation(String email, String comment, Locale locale) {
 		this();
@@ -43,6 +45,7 @@ public class EmailInformation implements Serializable {
 	public EmailInformation(User user, List<OpinionView> opinionCases) {
 		this();
 		this.email = user.getEmail();
+		this.titles = user.getTitles();
 		this.opinionCases = opinionCases;
 	}
 	public EmailInformation() {
@@ -56,6 +59,7 @@ public class EmailInformation implements Serializable {
 	}
 	public EmailInformation(User user, Map<String, Long> memoryMap) {
 		this();
+		this.titles = user.getTitles();
 		this.email = user.getEmail();
 		this.memoryMap = memoryMap;
 	}
@@ -94,5 +98,8 @@ public class EmailInformation implements Serializable {
 	}
 	public Map<String, Long> getMemoryMap() {
 		return memoryMap;
+	}
+	public String[] getTitles() {
+		return titles;
 	}
 }

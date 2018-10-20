@@ -122,8 +122,10 @@ public class SystemService {
         		} else {
             		opinionViews = opinionViewSingleton.getOpinionCasesForAccount(viewInfo, user);
         		}
-        		sendGridMailer.sendOpinionReport(user, opinionViews);
-	            logger.info("Case Report sent: " + user.getEmail());
+        		if ( opinionViews.size() > 0 ) {
+	        		sendGridMailer.sendOpinionReport(user, opinionViews);
+		            logger.info("Case Report sent: " + user.getEmail());
+        		}
 	            //            System.out.println("Resend = " + account.getEmail());
         	}
         }
