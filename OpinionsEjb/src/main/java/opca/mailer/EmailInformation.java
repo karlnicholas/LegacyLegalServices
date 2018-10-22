@@ -1,6 +1,7 @@
 package opca.mailer;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class EmailInformation implements Serializable {
 	private String comment;
 	private Locale locale;
 	private List<OpinionView> opinionCases;
-	private String[] titles;
+	private String titles;
 	private Map<String, Long> memoryMap;
 	public EmailInformation(User user) {
 		this();
@@ -34,7 +35,7 @@ public class EmailInformation implements Serializable {
 		this.email = user.getEmail();
 		this.verifyKey = user.getVerifyKey();
 		this.verifyCount = user.getVerifyCount();
-		this.titles = user.getTitles();
+		this.titles = Arrays.toString(user.getTitles());
 	}
 	public EmailInformation(String email, String comment, Locale locale) {
 		this();
@@ -45,7 +46,7 @@ public class EmailInformation implements Serializable {
 	public EmailInformation(User user, List<OpinionView> opinionCases) {
 		this();
 		this.email = user.getEmail();
-		this.titles = user.getTitles();
+		this.titles = user.getTitles() != null && user.getTitles().length > 0 ? Arrays.toString(user.getTitles()) : "[All]";
 		this.opinionCases = opinionCases;
 	}
 	public EmailInformation() {
@@ -59,7 +60,7 @@ public class EmailInformation implements Serializable {
 	}
 	public EmailInformation(User user, Map<String, Long> memoryMap) {
 		this();
-		this.titles = user.getTitles();
+		this.titles = user.getTitles() != null && user.getTitles().length > 0 ? Arrays.toString(user.getTitles()) : "[All]";
 		this.email = user.getEmail();
 		this.memoryMap = memoryMap;
 	}
@@ -99,7 +100,7 @@ public class EmailInformation implements Serializable {
 	public Map<String, Long> getMemoryMap() {
 		return memoryMap;
 	}
-	public String[] getTitles() {
+	public String getTitles() {
 		return titles;
 	}
 }

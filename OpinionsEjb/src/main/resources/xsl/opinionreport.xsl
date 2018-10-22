@@ -8,7 +8,7 @@
 <p>New Opinions at <xsl:element name="a"><xsl:attribute name="href"><xsl:value-of select="opRoute"/></xsl:attribute>
 <span>Court Opinions</span>
 </xsl:element></p>
-<p>Your title preferences are: <xsl:for-each select="titles"><xsl:value-of select="current()"/>, </xsl:for-each></p>
+<p>For titles: <xsl:value-of select="titles"/></p>
 <table>
   <tr bgcolor="#9acd32"><th>Date</th><th>Title</th></tr>
   <xsl:for-each select="opinionCases">
