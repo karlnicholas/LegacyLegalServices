@@ -35,7 +35,7 @@ public class ScheduledService {
     @EJB private OpinionViewSingleton opinionViewSingleton;
     @Resource private EJBContext context;
 
-    @Schedule(second="0", minute="00", hour="01", dayOfWeek="Mon-Fri", persistent=false)        // 03:30 am (12:30 am AZ ) every day
+    @Schedule(second="0", minute="00", hour="18", dayOfWeek="Mon-Fri", persistent=false)        // 03:30 am (12:30 am AZ ) every day
     // timeout issue.
     // @TransactionTimeout(value=1, unit = TimeUnit.HOURS)
     // this is handled in wildfly standalone.xml configuration file
@@ -66,12 +66,12 @@ public class ScheduledService {
         logger.info("DONE updateSlipOpinions");
     }
 
-    @Schedule(second="0", minute="10", hour="01", dayOfWeek="Mon-Fri", persistent=false)        // 12:00 am every day
+    @Schedule(second="0", minute="10", hour="18", dayOfWeek="Mon-Fri", persistent=false)        // 12:00 am every day
     public void opinionReport() {
     	systemService.sendOpinionReports();
     }
 
-    @Schedule(second="0", minute="15", hour="01", dayOfWeek="Mon-Fri", persistent=false)        // 12:00 am every day
+    @Schedule(second="0", minute="15", hour="18", dayOfWeek="Mon-Fri", persistent=false)        // 12:00 am every day
     public void systemReport() {
         Map<String, Long> memoryMap = new TreeMap<>();
         OperatingSystemMXBean osMxBean = ManagementFactory.getOperatingSystemMXBean();
@@ -95,7 +95,7 @@ public class ScheduledService {
     	systemService.sendSystemReport(memoryMap);
     }
     
-    @Schedule(second="0", minute="20", hour="01", persistent=false)        // 04:00 am every day
+    @Schedule(second="0", minute="20", hour="18", persistent=false)        // 04:00 am every day
     public void welcomingService() {
         logger.info("STARTING welcomingService");
         UserTransaction userTransaction = context.getUserTransaction();
