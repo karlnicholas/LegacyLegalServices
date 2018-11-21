@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>legalservices</groupId>
   <artifactId>legalservices</artifactId>
-  <version>0.3.0</version>
+  <version>0.4.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <url>http://gs-opca.b9ad.pro-us-east-1.openshiftapps.com/</url>
   <description>Legal Services Parent Project</description>
@@ -48,15 +48,9 @@
   </properties>
   <repositories>
     <repository>
-      <id>jboss-eap</id>
-      <url>https://maven.repository.redhat.com/ga</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
+      <id>jboss-developer-repository</id>
+      <url>https://maven.repository.redhat.com/nexus/content/repositories/developer</url>
+	</repository>
   </repositories>
   <dependencyManagement>
     <dependencies>
