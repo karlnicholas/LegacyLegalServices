@@ -5,6 +5,9 @@
                                  http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
     <persistence-unit name="mnf-pu-test" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>opinions.board.model.BoardComment</class>
+        <class>opinions.board.model.BoardPost</class>
+        <class>opinions.board.model.BoardReply</class>
 
         <properties>
             <!-- Configuring JDBC properties -->

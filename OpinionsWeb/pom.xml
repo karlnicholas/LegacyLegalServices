@@ -28,26 +28,9 @@
     </repository>
   </repositories>
   <dependencies>
-
-    <!-- Import the JSF API, we use provided scope as the API is included in JBoss WildFly -->
-    <dependency>
-      <groupId>org.jboss.spec.javax.faces</groupId>
-      <artifactId>jboss-jsf-api_2.2_spec</artifactId>
-    </dependency>
-
-    <!-- JSR-303 (Bean Validation) Implementation -->
-    <!-- Provides portable constraints such as @Email -->
-    <!-- Hibernate Validator is shipped in JBoss WildFly -->
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
-        </exclusion>
-      </exclusions>
+	<dependency>
+		<groupId>org.jboss.spec.javax.faces</groupId>
+		<artifactId>jboss-jsf-api_2.3_spec</artifactId>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
@@ -55,26 +38,9 @@
       <version>1.12.4</version>
     </dependency>
     <dependency>
-      <groupId>org.jboss.spec.javax.servlet</groupId>
-      <artifactId>jboss-servlet-api_3.1_spec</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>bootstrap</artifactId>
       <version>3.3.7</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.spec.javax.el</groupId>
-      <artifactId>jboss-el-api_3.0_spec</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.undertow</groupId>
-      <artifactId>undertow-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.undertow</groupId>
-      <artifactId>undertow-servlet</artifactId>
     </dependency>
     <!-- Import the CDI API, we use provided scope as the API is included in JBoss WildFly -->
     <dependency>

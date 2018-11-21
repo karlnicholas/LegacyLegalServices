@@ -33,8 +33,8 @@
     <!-- JBoss dependency versions -->
     <version.wildfly.maven.plugin>1.2.2.Final</version.wildfly.maven.plugin>
     <!-- Define the version of the JBoss BOMs we want to import to specify tested stacks. -->
-    <version.wildfly.bom>11.0.0.Final</version.wildfly.bom>
-    <version.wildfly>11.0.0.Final</version.wildfly>
+    <version.wildfly.bom>14.0.1.Final</version.wildfly.bom>
+    <version.wildfly>14.0.1.Final</version.wildfly>
     <version.wildfly.thorntail>2.2.0.Final</version.wildfly.thorntail>
     <!-- other plugin versions -->
     <version.compiler.plugin>3.8.0</version.compiler.plugin>
@@ -46,6 +46,18 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
   </properties>
+  <repositories>
+    <repository>
+      <id>jboss-eap</id>
+      <url>https://maven.repository.redhat.com/ga</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
   <dependencyManagement>
     <dependencies>
       <!-- Define the version of the WAR so that we don't need to repeat ourselves in every module -->
@@ -100,7 +112,7 @@
       </dependency>
       <dependency>
         <groupId>org.wildfly.bom</groupId>
-        <artifactId>wildfly-javaee7-with-tools</artifactId>
+        <artifactId>wildfly-javaee8-with-tools</artifactId>
         <version>${version.wildfly.bom}</version>
         <type>pom</type>
         <scope>import</scope>
