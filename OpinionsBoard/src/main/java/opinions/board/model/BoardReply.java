@@ -1,5 +1,7 @@
 package opinions.board.model;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,6 +13,8 @@ public class BoardReply {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	private LocalDateTime dateTime;
+
 	@ManyToOne
 	private BoardComment boardComment;
 }
