@@ -58,6 +58,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.197</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery</artifactId>
 			<version>1.12.4</version>
@@ -66,6 +72,15 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
 			<version>3.3.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
@@ -77,8 +92,8 @@
 			<build>
 				<plugins>
 					<plugin>
-					  <groupId>io.thorntail</groupId>
-					  <artifactId>thorntail-maven-plugin</artifactId>
+						<groupId>io.thorntail</groupId>
+						<artifactId>thorntail-maven-plugin</artifactId>
 						<version>${version.wildfly.thorntail}</version>
 						<executions>
 							<execution>

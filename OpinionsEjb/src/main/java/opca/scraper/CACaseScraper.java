@@ -37,6 +37,7 @@ public class CACaseScraper implements OpinionScraperInterface {
 	private static final Logger logger = Logger.getLogger(CACaseScraper.class.getName());
 	
 	public final static String casesDir = "c:/users/karln/opca/opjpa/cases/";
+	public static String filesLoc = null;
 	protected final static String caseListFile = "60days.html";
 	protected final static String caseListDir = "c:/users/karln/opca/opjpa/html";
 	private final static String downloadURL = "http://www.courts.ca.gov/opinions/documents/";
@@ -50,6 +51,11 @@ public class CACaseScraper implements OpinionScraperInterface {
 		
 	public CACaseScraper(boolean debugFiles) {
 		this.debugFiles = debugFiles;
+		String filesLoc = System.getenv("filesLoc");
+		if ( filesLoc != null  ) {
+			this.filesLoc = filesLoc; 
+		}
+			
 		logger.info("CACaseScraper");
 	}
 
@@ -127,9 +133,13 @@ public class CACaseScraper implements OpinionScraperInterface {
 			HttpGet httpGet = new HttpGet(slipOpinion.getSearchUrl());
 			try ( CloseableHttpResponse response = httpClient.execute(httpGet) ) {
 				InputStream is;
-	        	if ( debugFiles ) {
+	        	if ( debugFiles || filesLoc != null ) {
 					ByteArrayInputStream bais = CACaseScraper.convertInputStream(response.getEntity().getContent());
-	        		saveCopyOfCaseDetail(CACaseScraper.casesDir, slipPropertyFilename(slipOpinion.getFileName(), mainCaseScreen), new BufferedInputStream(bais));
+					if ( filesLoc != null ) {
+						saveCopyOfCaseDetail(filesLoc, slipPropertyFilename(slipOpinion.getFileName(), mainCaseScreen), new BufferedInputStream(bais));
+					} else {
+						saveCopyOfCaseDetail(CACaseScraper.casesDir, slipPropertyFilename(slipOpinion.getFileName(), mainCaseScreen), new BufferedInputStream(bais));
+					}
 	        		bais.reset();
 	        		is = bais;
 	        	} else {

@@ -11,7 +11,7 @@ Question: Strictly lawyers.
 Question: WHat search capabilities for posts should there be?
 Question: What is MVP? 
 
-Functional Section:
+Functional Section: Use Cases, Use Case Descriptions, (Activity Diagrams) 
 
 Use Cases:
 
@@ -31,9 +31,13 @@ Use Case Descriptions:
  * **Open Post**: : Clicking on a post opens a page. The post is shown in full.
  * **Create New Post**: A create new post is in the top of the navigation bar. Clicking opens the create post page. The allows for input of comments (and links?). Possible category selection.  
  * **Browse Comments for Post**: A limited list of Comments is presented with a "Show More" button at the bottom. Each comment is attributed to an author (?) and a show replies button is associated with comments that have replies. If a comment is long then only the first three lines are displayed with a read more indicator displayed. Clicking on "read more" show the full comment.
- * **Create new comment for POst**: A "Add New Comment" input area is always at the top of the Browse Comments Page with the prompt "add comment" is displayed. Any logged in user can add a comment. If the user is not logged in then user the input is grayed out and a notice that user must login first is displayed. A new comment is displayed at the top of the list.
- * **Reply to Comment in Post**: Each comment has a reply button. Replying to a comment brings up a reply input area. A user's reply goes to the bottom of the replies list. 
+ * **Create new comment for Post**: A "Add New Comment" input area is always at the top of the Browse Comments Page with the prompt "add comment" is displayed. Any logged in user can add a comment. If the user is not logged in then user the input is grayed out and a notice that user must login first is displayed. A new comment is displayed at the top of the list.
+ * **Reply to Comment in Post**: Each comment has a reply button. Replying to a comment brings up a reply input area. A user's reply goes to the bottom of the replies list.
+ 
+  
          
+Behavioral Section: CRC Cards, SD, 
+
 CRC Cards:
 
     Post Class:
@@ -46,7 +50,7 @@ CRC Cards:
         Collaborators: Post. 
         Attributes: Page.
         
-    CreateNewPostController class:
+    NewPostController class:
         Responsibilities: Present and validate a form for creating a new post.
         Collaborators:  
         
@@ -60,13 +64,13 @@ CRC Cards:
         Collaborators: User, Reply
         Attributes: Comment, User, List<Reply>, Date.
         
-    CommentController class: 
+    CommentController class:
+        Responsibilities: Display Comments, New Comments, Comment Edits and Deletes, Display Replies, New Replies, Reply Edit and Deletes 
    
     Reply Class:
         Responsibilities: Hold User and Reply to Comment.
         Collaborators: User, Comment
         Attributes: Reply, User, Date, Comment
         
-Behavioral Section:
-
-
+    CommentController class: 
+        
