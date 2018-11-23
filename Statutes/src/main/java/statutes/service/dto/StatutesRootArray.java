@@ -54,4 +54,8 @@ public class StatutesRootArray {
         return this.item;
     }
 
+	public void setItem(List<StatutesRoot> item) {
+		this.item = item;
+	}
+
 }

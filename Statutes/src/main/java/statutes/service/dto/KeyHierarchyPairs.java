@@ -73,4 +73,8 @@ public class KeyHierarchyPairs {
         return this.item;
     }
 
+	public void setItem(List<KeyHierarchyPair> item) {
+		this.item = item;
+	}
+
 }

@@ -15,9 +15,8 @@
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
 			<property name="hibernate.connection.username" value="sa" />
 			<property name="hibernate.connection.password" value="" />
-            
-
             <!-- Hibernate properties -->
+            <property name="hibernate.physical_naming_strategy" value="opinions.board.util.ImprovedNamingStrategy" />
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
             <property name="hibernate.format_sql" value="false"/>

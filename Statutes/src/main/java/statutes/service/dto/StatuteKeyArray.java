@@ -73,4 +73,8 @@ public class StatuteKeyArray {
         return this.item;
     }
 
+	public void setItem(List<StatuteKey> item) {
+		this.item = item;
+	}
+
 }

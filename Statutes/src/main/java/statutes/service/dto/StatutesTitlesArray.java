@@ -53,4 +53,8 @@ public class StatutesTitlesArray {
         return this.item;
     }
 
+	public void setItem(List<StatutesTitles> item) {
+		this.item = item;
+	}
+
 }
