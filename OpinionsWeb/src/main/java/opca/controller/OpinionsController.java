@@ -8,16 +8,18 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
 import opca.service.OpinionViewSingleton;
 import opca.service.ViewParameters;
 import opca.view.OpinionView;
+import java.io.Serializable;
 
-@ManagedBean
+@SuppressWarnings("serial")
 @ViewScoped
-public class OpinionsController {
+@Named
+public class OpinionsController implements Serializable {
 	@EJB private OpinionViewSingleton opinionViewSingleton;
 
     private int currentIndex;

@@ -76,12 +76,4 @@ public class ObjectFactory {
         return new StatutesTitlesArray();
     }
 
-    /**
-     * Create an instance of {@link StatutesRootArray }
-     * 
-     */
-    public StatutesRootArray createStatutesRootArray() {
-        return new StatutesRootArray();
-    }
-
 }

@@ -3,13 +3,13 @@ package opca.controller;
 import java.util.logging.Logger;
 
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
 import javax.faces.event.PhaseEvent;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import opca.service.ScheduledService;
 
-@ManagedBean
+@Named
 public class IndexController {
     private String userCountMessage;
 	@Inject Logger logger;

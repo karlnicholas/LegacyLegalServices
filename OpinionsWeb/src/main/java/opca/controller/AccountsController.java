@@ -9,12 +9,12 @@ import java.util.Map.Entry;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -24,7 +24,7 @@ import opca.service.SystemService;
 import opca.service.UserService;
 import opca.web.util.WebResources;
 
-@ManagedBean
+@Named
 public class AccountsController {
     @Inject protected FacesContext facesContext;
     @EJB protected UserService userService;

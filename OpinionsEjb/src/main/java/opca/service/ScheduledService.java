@@ -23,7 +23,6 @@ import javax.transaction.UserTransaction;
 import opca.ejb.util.StatutesServiceFactory;
 import opca.model.OpinionKey;
 import opca.scraper.CACaseScraper;
-import opca.scraper.TestCAParseSlipDetails;
 import statutes.service.StatutesService;
 
 @TransactionManagement(TransactionManagementType.BEAN)

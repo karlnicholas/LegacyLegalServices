@@ -18,7 +18,7 @@ public class TestCACaseScraper extends CACaseScraper {
 	@Override
 	public List<SlipOpinion> getCaseList() {
 		try {
-			return parseCaseList(new FileInputStream( CACaseScraper.caseListFile  + "/" + CACaseScraper.caseListDir ));
+			return parseCaseList(new FileInputStream( CACaseScraper.caseListDir  + "/" + CACaseScraper.caseListFile ));
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

@@ -6,8 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 
 import opca.ejb.util.StatutesServiceFactory;
 import statutes.StatutesTitles;
@@ -20,7 +20,8 @@ import statutes.service.StatutesService;
  * @version 2017-01-27
  *
  */
-@ManagedBean
+
+@Named
 @ApplicationScoped
 public class UserCodesBean {
     private List<List<StatutesTitles>> titleMatrix;
