@@ -37,7 +37,7 @@ public class CACaseScraper implements OpinionScraperInterface {
 	private static final Logger logger = Logger.getLogger(CACaseScraper.class.getName());
 	
 	public final static String casesDir = "c:/users/karln/opca/opjpa/cases/";
-	public static String filesLoc = null;
+	public String filesLoc = null;
 	protected final static String caseListFile = "60days.html";
 	protected final static String caseListDir = "c:/users/karln/opca/opjpa/html";
 	private final static String downloadURL = "http://www.courts.ca.gov/opinions/documents/";
@@ -124,7 +124,9 @@ public class CACaseScraper implements OpinionScraperInterface {
 	}
 	
 	public void parseOpinionDetails(SlipOpinion slipOpinion) {
+    	logger.warning("parseOpinionDetails(SlipOpinion slipOpinion)");
 		if ( slipOpinion.getSearchUrl() == null ) { 
+	    	logger.warning("slipOpinion.getSearchUrl() is null");
 			return;
 		}
 		boolean goodtogo = true;
@@ -146,6 +148,7 @@ public class CACaseScraper implements OpinionScraperInterface {
 	        		is = response.getEntity().getContent();
 	        	}
 	        	goodtogo = parseMainCaseScreenDetail(is, slipOpinion); 
+	        	logger.warning("goodtogo = parseMainCaseScreenDetail(is, slipOpinion); = " + goodtogo);
 				response.close();
 			} catch (IOException ex) {
 				logger.log(Level.SEVERE, null, ex);
@@ -161,9 +164,13 @@ public class CACaseScraper implements OpinionScraperInterface {
 			httpGet = new HttpGet(baseUrl+myRedirectStrategy.getLocation().replace(mainCaseScreen, disposition));
 			try ( CloseableHttpResponse response = httpClient.execute(httpGet) ) {
 				InputStream is;
-	        	if ( debugFiles ) {
+	        	if ( debugFiles || filesLoc != null ) {
 					ByteArrayInputStream bais = CACaseScraper.convertInputStream(response.getEntity().getContent());
-	        		saveCopyOfCaseDetail(CACaseScraper.casesDir, slipPropertyFilename(slipOpinion.getFileName(), disposition), new BufferedInputStream(bais));
+					if ( filesLoc != null ) {
+						saveCopyOfCaseDetail(filesLoc, slipPropertyFilename(slipOpinion.getFileName(), disposition), new BufferedInputStream(bais));
+					} else {
+						saveCopyOfCaseDetail(CACaseScraper.casesDir, slipPropertyFilename(slipOpinion.getFileName(), disposition), new BufferedInputStream(bais));
+					}
 	        		bais.reset();
 	        		is = bais;
 	        	} else {
@@ -180,7 +187,11 @@ public class CACaseScraper implements OpinionScraperInterface {
 				InputStream is;
 	        	if ( debugFiles ) {
 					ByteArrayInputStream bais = CACaseScraper.convertInputStream(response.getEntity().getContent());
-	        		saveCopyOfCaseDetail(CACaseScraper.casesDir, slipPropertyFilename(slipOpinion.getFileName(), partiesAndAttorneys), new BufferedInputStream(bais));
+					if ( filesLoc != null ) {
+		        		saveCopyOfCaseDetail(filesLoc, slipPropertyFilename(slipOpinion.getFileName(), partiesAndAttorneys), new BufferedInputStream(bais));
+					} else {
+		        		saveCopyOfCaseDetail(CACaseScraper.casesDir, slipPropertyFilename(slipOpinion.getFileName(), partiesAndAttorneys), new BufferedInputStream(bais));
+					}
 	        		bais.reset();
 	        		is = bais;
 	        	} else {
@@ -194,9 +205,13 @@ public class CACaseScraper implements OpinionScraperInterface {
 			httpGet = new HttpGet(baseUrl+myRedirectStrategy.getLocation().replace("mainCaseScreen", trialCourt));
 			try ( CloseableHttpResponse response = httpClient.execute(httpGet) ) {
 				InputStream is;
-	        	if ( debugFiles ) {
+	        	if ( debugFiles || filesLoc != null ) {
 					ByteArrayInputStream bais = CACaseScraper.convertInputStream(response.getEntity().getContent());
-	        		saveCopyOfCaseDetail(CACaseScraper.casesDir, slipPropertyFilename(slipOpinion.getFileName(), trialCourt), new BufferedInputStream(bais));
+					if ( filesLoc != null ) {
+		        		saveCopyOfCaseDetail(filesLoc, slipPropertyFilename(slipOpinion.getFileName(), trialCourt), new BufferedInputStream(bais));
+					} else {
+		        		saveCopyOfCaseDetail(CACaseScraper.casesDir, slipPropertyFilename(slipOpinion.getFileName(), trialCourt), new BufferedInputStream(bais));
+					}
 	        		bais.reset();
 	        		is = bais;
 	        	} else {
