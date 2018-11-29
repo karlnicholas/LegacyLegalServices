@@ -19,9 +19,13 @@ import java.util.logging.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -106,9 +110,13 @@ public class CACaseScraper implements OpinionScraperInterface {
 		        		is = response.getEntity().getContent();
 		        	}
 		        	ScrapedOpinionDocument parsedDoc = parseScrapedDocument.parseScrapedDocument(slipOpinion, is);
-					documents.add( parsedDoc ); 
+		        	if ( parsedDoc.isScrapedSuccess() ) {
+		        		documents.add( parsedDoc );
+						parseOpinionDetails(slipOpinion);
+					} else {
+						logger.warning("Opinion not parsed: " + slipOpinion.getFileName() + " " + slipOpinion.getFileExtension());
+					}
 					response.close();
-					parseOpinionDetails(slipOpinion);
 				} catch (IOException ex) {
 					logger.log(Level.SEVERE, null, ex);
 					logger.log(Level.SEVERE, "Problem with file " + slipOpinion.getFileName()+slipOpinion.getFileExtension());
@@ -124,16 +132,24 @@ public class CACaseScraper implements OpinionScraperInterface {
 	}
 	
 	public void parseOpinionDetails(SlipOpinion slipOpinion) {
-    	logger.warning("parseOpinionDetails(SlipOpinion slipOpinion)");
 		if ( slipOpinion.getSearchUrl() == null ) { 
 	    	logger.warning("slipOpinion.getSearchUrl() is null");
 			return;
 		}
 		boolean goodtogo = true;
-		MyRedirectStrategy myRedirectStrategy = new MyRedirectStrategy();
-		try ( CloseableHttpClient httpClient = HttpClientBuilder.create().setRedirectStrategy(myRedirectStrategy).build() ) {
-			HttpGet httpGet = new HttpGet(slipOpinion.getSearchUrl());
-			try ( CloseableHttpResponse response = httpClient.execute(httpGet) ) {
+		MyRedirectStrategy redirectStrategy = new MyRedirectStrategy();
+		BasicCookieStore cookieStore = new BasicCookieStore();
+	    HttpContext localContext = new BasicHttpContext();
+	    localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+		try ( CloseableHttpClient httpClient = HttpClientBuilder.create()
+				.setRedirectStrategy(redirectStrategy)
+				.setDefaultCookieStore(cookieStore)
+				.build() 
+		) {
+
+		    HttpGet httpGet = new HttpGet(slipOpinion.getSearchUrl());
+		    httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134");
+			try ( CloseableHttpResponse response = httpClient.execute(httpGet, localContext) ) {
 				InputStream is;
 	        	if ( debugFiles || filesLoc != null ) {
 					ByteArrayInputStream bais = CACaseScraper.convertInputStream(response.getEntity().getContent());
@@ -148,21 +164,36 @@ public class CACaseScraper implements OpinionScraperInterface {
 	        		is = response.getEntity().getContent();
 	        	}
 	        	goodtogo = parseMainCaseScreenDetail(is, slipOpinion); 
-	        	logger.warning("goodtogo = parseMainCaseScreenDetail(is, slipOpinion); = " + goodtogo);
 				response.close();
 			} catch (IOException ex) {
-				logger.log(Level.SEVERE, null, ex);
+				logger.severe(ex.getLocalizedMessage());
 				goodtogo = false;
 			}
 			if ( !goodtogo ) {
 				return;
 			}
-			if ( myRedirectStrategy.getLocation() == null ) {
+			if ( redirectStrategy.getLocation() == null ) {
 				logger.warning("Search SlipOpinionDetails failed: " + slipOpinion.getFileName());
 				return;
 			}
-			httpGet = new HttpGet(baseUrl+myRedirectStrategy.getLocation().replace(mainCaseScreen, disposition));
-			try ( CloseableHttpResponse response = httpClient.execute(httpGet) ) {
+			httpClient.close();
+		} catch (IOException ex) {
+	    	logger.log(Level.SEVERE, null, ex);
+		}
+		try ( CloseableHttpClient httpClient = HttpClientBuilder.create()
+				.setRedirectStrategy(redirectStrategy)
+				.setDefaultCookieStore(cookieStore)
+				.build() 
+		) {
+		
+			try {
+				Thread.sleep(1000L + (long)(Math.random() * 2000.0));
+			} catch (InterruptedException e) {
+				logger.severe(e.getLocalizedMessage());
+			}
+			HttpGet httpGet = new HttpGet(baseUrl+redirectStrategy.getLocation().replace(mainCaseScreen, disposition));
+		    httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134");
+			try ( CloseableHttpResponse response = httpClient.execute(httpGet, localContext) ) {
 				InputStream is;
 	        	if ( debugFiles || filesLoc != null ) {
 					ByteArrayInputStream bais = CACaseScraper.convertInputStream(response.getEntity().getContent());
@@ -182,10 +213,26 @@ public class CACaseScraper implements OpinionScraperInterface {
 				logger.log(Level.SEVERE, null, ex);
 				// retry three times
 			}
-			httpGet = new HttpGet(baseUrl+myRedirectStrategy.getLocation().replace(mainCaseScreen, partiesAndAttorneys));
-			try ( CloseableHttpResponse response = httpClient.execute(httpGet) ) {
+			httpClient.close();
+		} catch (IOException ex) {
+	    	logger.log(Level.SEVERE, null, ex);
+		}
+		try ( CloseableHttpClient httpClient = HttpClientBuilder.create()
+				.setRedirectStrategy(redirectStrategy)
+				.setDefaultCookieStore(cookieStore)
+				.build() 
+		) {
+		
+			try {
+				Thread.sleep(1000L + (long)(Math.random() * 2000.0));
+			} catch (InterruptedException e) {
+				logger.severe(e.getLocalizedMessage());
+			}
+			HttpGet httpGet = new HttpGet(baseUrl+redirectStrategy.getLocation().replace(mainCaseScreen, partiesAndAttorneys));
+		    httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134");
+			try ( CloseableHttpResponse response = httpClient.execute(httpGet, localContext) ) {
 				InputStream is;
-	        	if ( debugFiles ) {
+	        	if ( debugFiles || filesLoc != null ) {
 					ByteArrayInputStream bais = CACaseScraper.convertInputStream(response.getEntity().getContent());
 					if ( filesLoc != null ) {
 		        		saveCopyOfCaseDetail(filesLoc, slipPropertyFilename(slipOpinion.getFileName(), partiesAndAttorneys), new BufferedInputStream(bais));
@@ -202,8 +249,23 @@ public class CACaseScraper implements OpinionScraperInterface {
 			} catch (IOException ex) {
 				logger.log(Level.SEVERE, null, ex);
 			}
-			httpGet = new HttpGet(baseUrl+myRedirectStrategy.getLocation().replace("mainCaseScreen", trialCourt));
-			try ( CloseableHttpResponse response = httpClient.execute(httpGet) ) {
+			httpClient.close();
+		} catch (IOException ex) {
+	    	logger.log(Level.SEVERE, null, ex);
+		}
+		try ( CloseableHttpClient httpClient = HttpClientBuilder.create()
+				.setRedirectStrategy(redirectStrategy)
+				.setDefaultCookieStore(cookieStore)
+				.build() 
+		) {
+			try {
+				Thread.sleep(1000L + (long)(Math.random() * 2000.0));
+			} catch (InterruptedException e) {
+				logger.severe(e.getLocalizedMessage());
+			}
+			HttpGet httpGet = new HttpGet(baseUrl+redirectStrategy.getLocation().replace("mainCaseScreen", trialCourt));
+		    httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134");
+			try ( CloseableHttpResponse response = httpClient.execute(httpGet, localContext) ) {
 				InputStream is;
 	        	if ( debugFiles || filesLoc != null ) {
 					ByteArrayInputStream bais = CACaseScraper.convertInputStream(response.getEntity().getContent());

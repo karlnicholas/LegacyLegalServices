@@ -6,6 +6,9 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.logging.Logger;
+
+import javax.inject.Inject;
 
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.extractor.WordExtractor;
@@ -17,7 +20,7 @@ import opca.model.SlipOpinion;
 import opca.parser.ScrapedOpinionDocument;
 
 public class CAParseScrapedDocument {
-
+	@Inject private Logger logger;
 	public ScrapedOpinionDocument parseScrapedDocument(SlipOpinion slipOpinion, InputStream inputStream) throws IOException {
 		ScrapedOpinionDocument scrapedDocument = new ScrapedOpinionDocument(slipOpinion);
 		// read doc into memory
@@ -38,7 +41,8 @@ public class CAParseScrapedDocument {
 		}
 		inputStream.close();
 		ByteArrayInputStream bais = new ByteArrayInputStream(bb.array());
-		bais.mark(bb.position());		
+		bais.mark(bb.position());
+		
 		if ( slipOpinion.getFileExtension().equals(".DOC")) {
 			try {
 				parseHWPF(scrapedDocument, slipOpinion, bais);
@@ -50,7 +54,8 @@ public class CAParseScrapedDocument {
 			parseXWPF(scrapedDocument, slipOpinion, bais);
 		} else {
 			bais.close();
-			throw new IllegalArgumentException("Unknown File Type: " + slipOpinion);
+			scrapedDocument.setScrapedSuccess(false);		
+			logger.warning("Unknown File Extension For file" + slipOpinion.getFileName() + " " + slipOpinion.getFileExtension());
 		}
 		bais.close();
         return scrapedDocument;
@@ -61,7 +66,7 @@ public class CAParseScrapedDocument {
         scrapedDocument.getParagraphs().addAll(Arrays.asList(extractor.getParagraphText()) ); 
         scrapedDocument.getFootnotes().addAll(Arrays.asList(extractor.getFootnoteText()) );
         extractor.close();
-		
+		scrapedDocument.setScrapedSuccess(true);		
 	}
 	private void parseXWPF(ScrapedOpinionDocument scrapedDocument, SlipOpinion slipOpinion, InputStream inputStream) {	
 		try ( XWPFDocument document = new XWPFDocument(inputStream) ) {
@@ -76,8 +81,10 @@ public class CAParseScrapedDocument {
 				}
 			}
 			document.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+			scrapedDocument.setScrapedSuccess(true);
+		} catch (Exception e) {
+			scrapedDocument.setScrapedSuccess(false);
+			logger.warning("For file" + slipOpinion.getFileName() + " " + slipOpinion.getFileExtension() + " " + e.getLocalizedMessage());
 		}
 	}
 	

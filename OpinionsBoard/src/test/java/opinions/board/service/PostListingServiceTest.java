@@ -13,6 +13,7 @@ import javax.persistence.Persistence;
 
 import org.junit.*;
 
+import opinions.board.model.BoardComment;
 import opinions.board.model.BoardPost;
 
 public class PostListingServiceTest {
@@ -42,16 +43,17 @@ public class PostListingServiceTest {
 		assertEquals(listings.size(), 0);
 
 		BoardPost boardPost = new BoardPost();
-		BoardPost boardPostResponse = postListingService.createNewBoardPost(boardPost);
-		// but really need to do fields
-		assertEquals("Comparing response from CreateNewPost", boardPost, boardPostResponse);
+		postListingService.createNewBoardPost(boardPost);
 
 		listings = postListingService.getBoardPosts(3);
 		assertNotNull("Board Listings NULL", listings);
-		assertEquals(listings.size(), 1);
+		assertEquals("Listings size should equal 1", listings.size(), 1);
 
 		// check against LAZY Fetching
 		boardPost = listings.get(0);
+		List<BoardComment> comments = boardPost.getBoardComments();
+		assertEquals("Comments size should equal 0", comments.size(), 0);
+		
 		
 		
 	}

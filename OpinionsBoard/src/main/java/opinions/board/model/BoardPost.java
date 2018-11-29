@@ -18,4 +18,20 @@ public class BoardPost {
 
 	@OneToMany(mappedBy="boardPost")
 	private List<BoardComment> boardComments;
+
+	public LocalDateTime getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDateTime date) {
+		this.date = date;
+	}
+
+	public List<BoardComment> getBoardComments() {
+		return boardComments;
+	}
+
+	public void setBoardComments(List<BoardComment> boardComments) {
+		this.boardComments = boardComments;
+	}
 }

@@ -33,8 +33,13 @@ public class TestCAParseSlipDetails extends CACaseScraper {
 		CAParseScrapedDocument parseScrapedDocument = new CAParseScrapedDocument();
 		for (SlipOpinion slipOpinion: opinions ) {			
 			try ( InputStream inputStream = Files.newInputStream( Paths.get(casesDir + slipOpinion.getFileName() + slipOpinion.getFileExtension())) ) {
-				ScrapedOpinionDocument scrapedDocument = parseScrapedDocument.parseScrapedDocument(slipOpinion, inputStream);
-				documents.add(  scrapedDocument );
+				ScrapedOpinionDocument parsedDoc = parseScrapedDocument.parseScrapedDocument(slipOpinion, inputStream);
+	        	if ( parsedDoc.isScrapedSuccess() ) {
+	        		documents.add( parsedDoc );
+					parseOpinionDetails(slipOpinion);
+				} else {
+					logger.warning("Opinion not parsed: " + slipOpinion.getFileName() + " " + slipOpinion.getFileExtension());
+				}
 				inputStream.close();
 			} catch (IOException e) {
 				logger.severe("Parse Scraped Document: " + e.getMessage());

@@ -6,12 +6,14 @@ import java.util.List;
 import opca.model.OpinionBase;
 
 public class ScrapedOpinionDocument {
+	private boolean scrapedSuccess;
 	private List<String> paragraphs; 
 	private List<String> footnotes;
 	private final OpinionBase opinionBase;
 	
 	public ScrapedOpinionDocument(OpinionBase opinionBase) {
 		this.opinionBase = opinionBase;
+		setScrapedSuccess(false);
 		paragraphs = new ArrayList<String>(); 
 		footnotes = new ArrayList<String>();
 	}
@@ -34,6 +36,14 @@ public class ScrapedOpinionDocument {
 
 	public OpinionBase getOpinionBase() {
 		return opinionBase;
+	}
+
+	public boolean isScrapedSuccess() {
+		return scrapedSuccess;
+	}
+
+	public void setScrapedSuccess(boolean scrapedSuccess) {
+		this.scrapedSuccess = scrapedSuccess;
 	}
 	
 }

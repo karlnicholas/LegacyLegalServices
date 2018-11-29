@@ -73,6 +73,24 @@ public class CAOnlineUpdates {
 //		onlineOpinions.remove(0);
 //		onlineOpinions = onlineOpinions.subList(0, 340);
 //		onlineOpinions = onlineOpinions.subList(0, 0);
+/*
+		Iterator<SlipOpinion> oit = onlineOpinions.iterator();
+		while ( oit.hasNext() ) {
+			SlipOpinion opinion = oit.next();
+			if ( 
+				opinion.getFileName().equalsIgnoreCase("A153390M")
+				|| opinion.getFileName().equalsIgnoreCase("C080488")
+				|| opinion.getFileName().equalsIgnoreCase("E070545M")
+				|| opinion.getFileName().equalsIgnoreCase("C082144")
+				|| opinion.getFileName().equalsIgnoreCase("C080023")
+				|| opinion.getFileName().equalsIgnoreCase("B286043")
+				|| opinion.getFileName().equalsIgnoreCase("S087773")
+				|| opinion.getFileName().equalsIgnoreCase("JAD18-11")
+			) {
+				oit.remove();
+			}
+		}
+*/		
 		//
 		List<SlipOpinion> currentOpinions = em.createNamedQuery("SlipOpinion.findAll", SlipOpinion.class).getResultList();
 		List<SlipOpinion> currentCopy = new ArrayList<SlipOpinion>(currentOpinions);
