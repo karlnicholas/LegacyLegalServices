@@ -35,7 +35,7 @@
     <!-- Define the version of the JBoss BOMs we want to import to specify tested stacks. -->
     <version.wildfly.bom>14.0.1.Final</version.wildfly.bom>
     <version.wildfly>14.0.1.Final</version.wildfly>
-    <version.wildfly.thorntail>2.2.0.Final</version.wildfly.thorntail>
+    <version.wildfly.thorntail>2.2.1.Final</version.wildfly.thorntail>
     <!-- other plugin versions -->
     <version.compiler.plugin>3.8.0</version.compiler.plugin>
     <version.ear.plugin>3.0.1</version.ear.plugin>
