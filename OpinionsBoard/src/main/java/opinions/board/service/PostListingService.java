@@ -1,5 +1,6 @@
 package opinions.board.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,10 @@ public class PostListingService {
 		return listings;
 	}
 	public void createNewBoardPost(BoardPost boardPost) {
+		// persist first ... hopefully equals on id.
+		if ( boardPost.getDate() == null ) {
+			boardPost.setDate(LocalDateTime.now());
+		}
 		em.persist(boardPost);
 	}
 	
@@ -31,8 +36,8 @@ public class PostListingService {
 	}
 	
 	public void deleteBoardPost(BoardPost boardPost) {
-		PostDetailService postDetailService = new PostDetailService(em);
-		postDetailService.deletePostDependents(getBoardPostDetail(boardPost));
-		em.remove(boardPost);
+//		PostDetailService postDetailService = new PostDetailService(em);
+//		postDetailService.deletePostDependents(getBoardPostDetail(boardPost));
+		em.remove(em.find(BoardPost.class, boardPost.getId()));
 	}
 }

@@ -17,4 +17,21 @@ public class BoardReply {
 
 	@ManyToOne
 	private BoardComment boardComment;
+
+	public Long getId() {
+		return id;
+	}
+	public LocalDateTime getDate() {
+		return date;
+	}
+	public void setDate(LocalDateTime date) {
+		this.date = date;
+	}
+	public BoardComment getBoardComment() {
+		return boardComment;
+	}
+	public void setBoardComment(BoardComment boardComment) {
+		this.boardComment = boardComment;
+	}
+
 }

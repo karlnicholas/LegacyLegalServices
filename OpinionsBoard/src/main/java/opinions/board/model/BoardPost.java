@@ -19,6 +19,10 @@ public class BoardPost {
 	@OneToMany(mappedBy="boardPost")
 	private List<BoardComment> boardComments;
 
+	public Long getId() {
+		return id;
+	}
+
 	public LocalDateTime getDate() {
 		return date;
 	}

@@ -1,5 +1,7 @@
 package opinions.board.service;
 
+import java.time.LocalDateTime;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -17,16 +19,19 @@ public class PostDetailService {
 		this.em = em;
 	}
 	
-	public BoardPost getBoardPostDetails(BoardPost boardPost) {
-		BoardPost bp = em.createQuery("select distinct bp from BoardPost bp left outer join fetch bp.boardComments where bp = :boardPost", BoardPost.class)
+	public void getBoardPostDetails(BoardPost boardPost) {
+		boardPost.setBoardComments( em.createQuery("select bc from BoardComment bc where bc.boardPost = :boardPost order by bc.date", BoardComment.class)
 			.setParameter("boardPost", boardPost)
-			.getSingleResult();
-		return bp;
+			.getResultList());
 	}
 	public BoardComment updateBoardPost(BoardPost boardPost) {
 		return null;
 	}
 	public void createNewBoardComment(BoardComment boardComment) {
+		// persist first ... hopefully equals on id.
+		if ( boardComment.getDate() == null ) {
+			boardComment.setDate(LocalDateTime.now());
+		}
 		em.persist(boardComment);
 	}
 	public BoardComment getBoardCommentDetail(BoardComment boardComment ) {

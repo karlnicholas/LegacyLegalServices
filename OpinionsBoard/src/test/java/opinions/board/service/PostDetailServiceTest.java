@@ -6,10 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import java.util.List;
 
 import javax.ejb.EJB;
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -23,33 +19,19 @@ import org.junit.runner.RunWith;
 import opinions.board.model.BoardComment;
 import opinions.board.model.BoardPost;
 import opinions.board.model.BoardReply;
+import opinions.board.util.ImprovedNamingStrategy;
+import opinions.board.util.Resources;
 
 @RunWith(Arquillian.class)
 public class PostDetailServiceTest {
-	private static EntityManagerFactory emf;
-	private static EntityManager em;
 	
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, "test.war")
-    		.addClasses(BoardPost.class, BoardComment.class, BoardReply.class, PostListingService.class, PostDetailService.class)
+    		.addClasses(BoardPost.class, BoardComment.class, BoardReply.class, PostListingService.class, PostDetailService.class, ImprovedNamingStrategy.class, Resources.class)
             .addAsResource("META-INF/persistence.xml")
-            .addAsWebInfResource("jbossas-ds.xml")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
-    
-    @Produces
-    EntityManager getEm() {
-    	if ( emf == null )
-    		emf = Persistence.createEntityManagerFactory("test");
-    	if ( em == null )
-    		em = emf.createEntityManager();
-    	else 
-    		// detach entities between transactions to emulate container
-    		em.clear();
-    	return em;
-    }
-    // tests go here
     
     @EJB
     private PostListingService postListingService;
@@ -74,7 +56,7 @@ public class PostDetailServiceTest {
 		postDetailService.createNewBoardComment(boardComment);
 		
 		// 
-		boardPost = postDetailService.getBoardPostDetails(boardPost);
+		postDetailService.getBoardPostDetails(boardPost);
 		assertNotNull("Board Listings NULL", boardPost);
 		assertEquals("BoardComments size should equal 1", 1, boardPost.getBoardComments().size());
 	}
