@@ -18,4 +18,20 @@ public class BoardComment {
 	@ManyToOne
 	private BoardPost boardPost;
 
+	public LocalDateTime getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDateTime date) {
+		this.date = date;
+	}
+
+	public BoardPost getBoardPost() {
+		return boardPost;
+	}
+
+	public void setBoardPost(BoardPost boardPost) {
+		this.boardPost = boardPost;
+	}
+
 }

@@ -24,8 +24,15 @@ public class PostListingService {
 		em.persist(boardPost);
 	}
 	
-	public BoardPost deleteBoardPost(BoardPost boardPost) {
-		return null;
+	public BoardPost getBoardPostDetail(BoardPost boardPost) {
+		return em.createQuery("select b from BoardPost b left outer join fetch b.boardComments where b = :boardPost", BoardPost.class)
+				.setParameter("boardPost", boardPost)
+				.getSingleResult();
 	}
 	
+	public void deleteBoardPost(BoardPost boardPost) {
+		PostDetailService postDetailService = new PostDetailService(em);
+		postDetailService.deletePostDependents(getBoardPostDetail(boardPost));
+		em.remove(boardPost);
+	}
 }

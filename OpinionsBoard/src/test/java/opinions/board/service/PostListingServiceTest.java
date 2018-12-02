@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -22,13 +23,17 @@ import org.junit.runner.RunWith;
 
 import opinions.board.model.BoardComment;
 import opinions.board.model.BoardPost;
+import opinions.board.model.BoardReply;
 
 @RunWith(Arquillian.class)
 public class PostListingServiceTest {
-    @Deployment
+	private static EntityManagerFactory emf;
+	private static EntityManager em;
+
+	@Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, "test.war")
-    		.addClasses(BoardPost.class, BoardComment.class, PostListingService.class)
+    		.addClasses(BoardPost.class, BoardComment.class, BoardReply.class, PostListingService.class, PostDetailService.class)
             .addAsResource("META-INF/persistence.xml")
             .addAsWebInfResource("jbossas-ds.xml")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
@@ -36,8 +41,14 @@ public class PostListingServiceTest {
     
     @Produces
     EntityManager getEm() {
-    	return Persistence.createEntityManagerFactory("test").createEntityManager();
-
+    	if ( emf == null )
+    		emf = Persistence.createEntityManagerFactory("test");
+    	if ( em == null )
+    		em = emf.createEntityManager();
+    	else 
+    		// detach entities between transactions to emulate container
+    		em.clear();
+    	return em;
     }
     // tests go here
     
@@ -85,6 +96,12 @@ public class PostListingServiceTest {
 		listings = postListingService.getBoardPosts(6);
 		assertNotNull("Board Listings NULL", listings);
 		assertEquals("Listings size should equal 4", 4 ,listings.size());
+
+		// delete the last post
+		postListingService.deleteBoardPost(listings.get(3));
+		listings = postListingService.getBoardPosts(3);
+		assertNotNull("Board Listings NULL", listings);
+		assertEquals("Listings size should equal 3", 3 ,listings.size());
 
 	}
 
