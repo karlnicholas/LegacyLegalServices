@@ -28,9 +28,20 @@ public class PostListingService {
 		em.persist(boardPost);
 	}
 	
+	public BoardPost updateBoardPost(BoardPost boardPost) {
+		return em.merge(boardPost);
+	}
+
 	public void deleteBoardPost(BoardPost boardPost) {
-//		PostDetailService postDetailService = new PostDetailService(em);
-//		postDetailService.deletePostDependents(getBoardPostDetail(boardPost));
-		em.remove(em.find(BoardPost.class, boardPost.getId()));
+		List<BoardComment> comments = em.createQuery("select bc from BoardComment bc where bc.boardPost = :boardPost order by bc.date desc", BoardComment.class)
+				.setParameter("boardPost", boardPost)
+				.getResultList();
+		if ( comments != null && comments.size() > 0 ) {
+			for ( BoardComment boardComment: comments) {
+				em.createQuery("delete from BoardReply br where br.boardComment = :boardComment").setParameter("boardComment", boardComment).executeUpdate();
+				em.createQuery("delete from BoardComment bc where bc = :boardComment").setParameter("boardComment", boardComment).executeUpdate();
+			}
+		}
+		em.createQuery("delete from BoardPost bp where bp = :boardPost").setParameter("boardPost", boardPost).executeUpdate();
 	}
 }

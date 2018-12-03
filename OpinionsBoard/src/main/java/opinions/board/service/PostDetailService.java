@@ -1,11 +1,11 @@
 package opinions.board.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 import opinions.board.model.BoardComment;
 import opinions.board.model.BoardPost;
@@ -19,13 +19,11 @@ public class PostDetailService {
 		this.em = em;
 	}
 	
-	public void getBoardPostDetail(BoardPost boardPost) {
-		boardPost.setBoardComments( em.createQuery("select bc from BoardComment bc where bc.boardPost = :boardPost order by bc.date desc", BoardComment.class)
+	public List<BoardComment> getBoardComments(BoardPost boardPost, int maxResult) {
+		return em.createQuery("select bc from BoardComment bc where bc.boardPost = :boardPost order by bc.date desc", BoardComment.class)
 			.setParameter("boardPost", boardPost)
-			.getResultList());
-	}
-	public BoardComment updateBoardPost(BoardPost boardPost) {
-		return null;
+			.setMaxResults(maxResult)
+			.getResultList();
 	}
 	public void createNewBoardComment(BoardComment boardComment) {
 		// persist first ... hopefully equals on id.
@@ -34,33 +32,33 @@ public class PostDetailService {
 		}
 		em.persist(boardComment);
 	}
-	public BoardComment getBoardCommentDetail(BoardComment boardComment ) {
-		return null;
+	public List<BoardReply> getBoardReplies(BoardComment boardComment, int maxResult) {
+		return em.createQuery("select br from BoardReply br where br.boardComment = :boardComment order by br.date desc", BoardReply.class)
+				.setParameter("boardComment", boardComment)
+				.setMaxResults(maxResult)
+				.getResultList();
 	}
-	public BoardComment deleteBoardComment(BoardComment boardComment) {
-		return null;
+	public void deleteBoardComment(BoardComment boardComment) {
+		em.createQuery("delete from BoardComment bc where bc = :boardComment")
+		.setParameter("boardComment", boardComment)
+		.executeUpdate();
 	}
 	public BoardComment updateBoardComment(BoardComment boardComment) {
-		return null;
+		return em.merge(boardComment);
 	}
-	public BoardReply createNewBoardReply(BoardReply boardReply) {
-		return null;
+	public void createNewBoardReply(BoardReply boardReply) {
+		if ( boardReply.getDate() == null ) {
+			boardReply.setDate(LocalDateTime.now());
+		}
+		em.persist(boardReply);
 	}
 	public BoardReply updateBoardReply(BoardReply boardReply) {
-		return null;
+		return em.merge(boardReply);
 	}
-	public BoardReply deleteBoardReply(BoardReply boardReply) {
-		return null;
+	public void deleteBoardReply(BoardReply boardReply) {
+		em.createQuery("delete from BoardReply br where br = : boardReply")
+		.setParameter("boardReply", boardReply)
+		.executeUpdate();
 	}
 
-	public void deletePostDependents(BoardPost boardPost) {
-		// see if any work to do
-		if ( boardPost == null || boardPost.getBoardComments() == null )
-			return;
-		Query dq = em.createQuery("delete from BoardReply br where br.boardComment = :boardComment");
-		for ( BoardComment boardComment: boardPost.getBoardComments() ) {
-			dq.setParameter("boardComment", boardComment).executeUpdate();
-			em.remove(boardComment);
-		}
-	}
 }

@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 
+import org.hibernate.LazyInitializationException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -34,11 +35,20 @@ public class PostListingServiceTest {
     @EJB
     private PostListingService postListingService;
 
+    @Before
+    public void cleanup() {
+		// cleanup before test
+		List<BoardPost> listings = postListingService.getBoardPosts(10);
+		for ( BoardPost boardPost: listings ) {
+			postListingService.deleteBoardPost(boardPost);
+		}
+    }
+    
     @Test
 	public void testListingService() {
 		List<BoardPost> listings = postListingService.getBoardPosts(3);
 		assertNotNull("Board Listings NULL", listings);
-		assertEquals(listings.size(), 0);
+		assertEquals("Empty Database", 0, listings.size() );
 
 		BoardPost boardPost = new BoardPost();
 		postListingService.createNewBoardPost(boardPost);
@@ -71,12 +81,34 @@ public class PostListingServiceTest {
 		assertNotNull("Board Listings NULL", listings);
 		assertEquals("Listings size should equal 4", 4 ,listings.size());
 
-		// delete the last post
-		postListingService.deleteBoardPost(listings.get(3));
-		listings = postListingService.getBoardPosts(3);
+		// update post
+		boardPost = listings.get(0);
+		boardPost = postListingService.updateBoardPost(boardPost);
+		assertNotNull("Board Listings NULL", listings);
+		// make sure it wasn't inserted
+		listings = postListingService.getBoardPosts(6);
+		assertNotNull("Board Listings NULL", listings);
+		assertEquals("Listings size should equal 4", 4 ,listings.size());
+
+		// delete the previous post
+		postListingService.deleteBoardPost(listings.get(0));
+		listings = postListingService.getBoardPosts(6);
 		assertNotNull("Board Listings NULL", listings);
 		assertEquals("Listings size should equal 3", 3 ,listings.size());
 
 	}
 
+    @Test(expected=LazyInitializationException.class)
+    public void testLazyFetch() {
+
+		BoardPost boardPost = new BoardPost();
+		postListingService.createNewBoardPost(boardPost);
+
+		List<BoardPost> listings = postListingService.getBoardPosts(3);
+		assertNotNull("Board Listings NULL", listings);
+		assertEquals("Listings size should equal 1", 1, listings.size());
+
+		// check for LAZY Fetching
+		listings.get(0).getBoardComments().get(0);
+	}
 }
