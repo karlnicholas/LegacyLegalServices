@@ -105,7 +105,7 @@ public class PostDetailServiceTest {
 		comments = postDetailService.getBoardComments(boardPost, 6);
 		assertNotNull("Board Comments NULL", comments);
 		assertEquals("BoardComments size should equal 3", 3, comments.size());
-
+		
 		// test BoardReplies
 		boardComment = comments.get(1);
 		BoardReply boardReply = new BoardReply();
@@ -117,7 +117,8 @@ public class PostDetailServiceTest {
 		assertNotNull("Board Replies not NULL", replies);
 		assertEquals("BoardComments size should equal 1", 1, replies.size());
 		
-		postDetailService.deleteBoardReply(replies.get(0));
+		boardReply = replies.get(0);
+		postDetailService.deleteBoardReply(boardReply);
 		// get a reply
 		replies = postDetailService.getBoardReplies(boardComment, 3);
 		assertNotNull("Board Comments NULL", replies);
@@ -148,6 +149,20 @@ public class PostDetailServiceTest {
 		boardReply = replies.get(0);
 		boardReply = postDetailService.updateBoardReply(boardReply);
 		assertNotNull("Board Reply not null", boardReply);
+		
+		// test against constraint and orphaned boardReplies
+		postDetailService.deleteBoardComment(boardComment);
+		// test limits
+		replies = postDetailService.getBoardReplies(boardComment, 3);
+		assertNotNull("Board Comments NULL", replies);
+		assertEquals("BoardComments size should equal 0", 0, replies.size());
+		
+		// delete board Post
+		postListingService.deleteBoardPost(boardPost);
+		// check against constraint and orphaned children
+		comments = postDetailService.getBoardComments(boardPost, 6);
+		assertNotNull("Board Comments NULL", comments);
+		assertEquals("BoardComments size should equal 0", 0, comments.size());
    }
 
     @Test(expected=LazyInitializationException.class)

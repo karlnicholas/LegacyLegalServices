@@ -39,6 +39,9 @@ public class PostDetailService {
 				.getResultList();
 	}
 	public void deleteBoardComment(BoardComment boardComment) {
+		em.createQuery("delete from BoardReply br where br.boardComment = :boardComment")
+		.setParameter("boardComment", boardComment)
+		.executeUpdate();
 		em.createQuery("delete from BoardComment bc where bc = :boardComment")
 		.setParameter("boardComment", boardComment)
 		.executeUpdate();
