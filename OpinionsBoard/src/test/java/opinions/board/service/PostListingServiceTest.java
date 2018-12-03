@@ -3,6 +3,7 @@ package opinions.board.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.File;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -11,26 +12,23 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.*;
 import org.junit.runner.RunWith;
 
-import opinions.board.model.BoardComment;
 import opinions.board.model.BoardPost;
-import opinions.board.model.BoardReply;
-import opinions.board.util.ImprovedNamingStrategy;
-import opinions.board.util.Resources;
 
 @RunWith(Arquillian.class)
 public class PostListingServiceTest {
 	
-	@Deployment
+	private static final String WEBAPP_SRC = "src/main/webapp";
+
+    @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, "test.war")
-        		.addClasses(BoardPost.class, BoardComment.class, BoardReply.class, PostListingService.class, PostDetailService.class, ImprovedNamingStrategy.class, Resources.class)
+    		.addPackages(true, "opinions.board")
             .addAsResource("META-INF/persistence.xml")
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addAsWebInfResource(new File(WEBAPP_SRC, "/WEB-INF/beans.xml"));
     }
     
     @EJB

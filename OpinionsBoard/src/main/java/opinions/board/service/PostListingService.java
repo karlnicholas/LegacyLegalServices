@@ -15,24 +15,17 @@ public class PostListingService {
 	@Inject private EntityManager em;
 	
 	public List<BoardPost> getBoardPosts(int count) {
-		List<BoardPost> listings = em.createQuery("select p from BoardPost p", BoardPost.class).setMaxResults(count).getResultList();
+		List<BoardPost> listings = em.createQuery("select bp from BoardPost bp order by bp.date desc", BoardPost.class).setMaxResults(count).getResultList();
 		if ( listings == null ) {
 			return new ArrayList<>();
 		}
 		return listings;
 	}
 	public void createNewBoardPost(BoardPost boardPost) {
-		// persist first ... hopefully equals on id.
 		if ( boardPost.getDate() == null ) {
 			boardPost.setDate(LocalDateTime.now());
 		}
 		em.persist(boardPost);
-	}
-	
-	public BoardPost getBoardPostDetail(BoardPost boardPost) {
-		return em.createQuery("select b from BoardPost b left outer join fetch b.boardComments where b = :boardPost", BoardPost.class)
-				.setParameter("boardPost", boardPost)
-				.getSingleResult();
 	}
 	
 	public void deleteBoardPost(BoardPost boardPost) {

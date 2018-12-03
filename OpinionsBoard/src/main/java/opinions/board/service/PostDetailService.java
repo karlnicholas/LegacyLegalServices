@@ -19,8 +19,8 @@ public class PostDetailService {
 		this.em = em;
 	}
 	
-	public void getBoardPostDetails(BoardPost boardPost) {
-		boardPost.setBoardComments( em.createQuery("select bc from BoardComment bc where bc.boardPost = :boardPost order by bc.date", BoardComment.class)
+	public void getBoardPostDetail(BoardPost boardPost) {
+		boardPost.setBoardComments( em.createQuery("select bc from BoardComment bc where bc.boardPost = :boardPost order by bc.date desc", BoardComment.class)
 			.setParameter("boardPost", boardPost)
 			.getResultList());
 	}
