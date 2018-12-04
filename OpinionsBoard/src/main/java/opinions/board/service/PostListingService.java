@@ -3,6 +3,7 @@ package opinions.board.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -43,5 +44,8 @@ public class PostListingService {
 			}
 		}
 		em.createQuery("delete from BoardPost bp where bp = :boardPost").setParameter("boardPost", boardPost).executeUpdate();
+	}
+	public BoardPost getBoardPost(Long primaryKey) {
+		return em.find(BoardPost.class, primaryKey);
 	}
 }

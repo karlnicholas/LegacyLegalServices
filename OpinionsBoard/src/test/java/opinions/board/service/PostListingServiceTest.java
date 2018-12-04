@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.ejb.EJB;
 
-import org.hibernate.LazyInitializationException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -98,17 +97,4 @@ public class PostListingServiceTest {
 
 	}
 
-    @Test(expected=LazyInitializationException.class)
-    public void testLazyFetch() {
-
-		BoardPost boardPost = new BoardPost();
-		postListingService.createNewBoardPost(boardPost);
-
-		List<BoardPost> listings = postListingService.getBoardPosts(3);
-		assertNotNull("Board Listings NULL", listings);
-		assertEquals("Listings size should equal 1", 1, listings.size());
-
-		// check for LAZY Fetching
-		listings.get(0).getBoardComments().get(0);
-	}
 }

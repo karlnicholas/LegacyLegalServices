@@ -22,11 +22,16 @@
     <jsp:include page="/WEB-INF/template/navigation.jsp" />
     <form method="post">
       <textarea class="form-control focus" rows="3" name="newPostText" autofocus="autofocus"></textarea>
-      <button type="submit" class="btn btn-default">Create New Post</button>
+      <button type="submit" class="btn btn-default">Create New Comment</button>
     </form>
     <div class="list-group">
-      <c:forEach var="post" items="${posts}">
-        <a class="list-group-item" href="/board/post?postId=${post.id}" >${post.postText}</a>
+      <c:forEach var="comment" items="${comments}">
+        <a class="list-group-item" href="/board/post?postId=${boardPost.id}&commentDetail=${comment.id}">${comment.commentText}</a>
+        <c:if test="${commentDetail && commentDetail == comment.id}">
+          <c:forEach var="reply" items="${replies}">
+            <div class="list-group-item">${reply.replyText}</div>
+          </c:forEach>
+        </c:if>
       </c:forEach>
     </div>
   </div>

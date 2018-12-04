@@ -11,13 +11,19 @@ import javax.persistence.OrderBy;
 
 @Entity
 public class BoardReply {
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	private static final int maxTextLength = 10000;
+	@Id 
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@OrderBy	// probably redundant since I do order by in queries
 	private LocalDateTime date;
 	@ManyToOne
 	private BoardComment boardComment;
+	private String replyText;
 
+	public Long getId() {
+		return id;
+	}
 	public LocalDateTime getDate() {
 		return date;
 	}
@@ -29,5 +35,15 @@ public class BoardReply {
 	}
 	public void setBoardComment(BoardComment boardComment) {
 		this.boardComment = boardComment;
+	}
+	public String getReplyText() {
+		return replyText;
+	}
+	public void setReplyText(String replyText) {
+		if ( replyText != null && replyText.length() > maxTextLength ) {
+			this.replyText = replyText.substring(0, maxTextLength);
+		} else {
+			this.replyText = replyText;
+		}
 	}
 }

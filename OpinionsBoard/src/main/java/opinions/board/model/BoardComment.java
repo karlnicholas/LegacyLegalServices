@@ -1,27 +1,31 @@
 package opinions.board.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
 @Entity
 public class BoardComment {
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	private static final int maxTextLength = 10000;
+	@Id 
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@OrderBy	// probably redundant since I do order by in queries
 	private LocalDateTime date;
 	@ManyToOne
 	private BoardPost boardPost;
-	@OneToMany(mappedBy="boardComment")
-	private List<BoardReply> boardReplies;
+	@Column(length=maxTextLength)
+	private String commentText;
 	
+	public Long getId() {
+		return id;
+	}
 	public LocalDateTime getDate() {
 		return date;
 	}
@@ -34,10 +38,14 @@ public class BoardComment {
 	public void setBoardPost(BoardPost boardPost) {
 		this.boardPost = boardPost;
 	}
-	public List<BoardReply> getBoardReplies() {
-		return boardReplies;
+	public String getCommentText() {
+		return commentText;
 	}
-	public void setBoardReplies(List<BoardReply> boardReplies) {
-		this.boardReplies = boardReplies;
+	public void setCommentText(String commentText) {
+		if ( commentText != null && commentText.length() > maxTextLength ) {
+			this.commentText = commentText.substring(0, maxTextLength);
+		} else {
+			this.commentText = commentText;
+		}
 	}
 }
