@@ -1,16 +1,20 @@
 package opca.controller;
 
+import java.io.Serializable;
 import java.util.logging.Logger;
 
 import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.event.PhaseEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import opca.service.ScheduledService;
 
+@SuppressWarnings("serial")
 @Named
-public class IndexController {
+@RequestScoped
+public class IndexController implements Serializable {
     private String userCountMessage;
 	@Inject Logger logger;
 	@EJB private ScheduledService scheduledService;

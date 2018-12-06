@@ -1,5 +1,6 @@
 package opca.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -24,8 +26,10 @@ import opca.service.SystemService;
 import opca.service.UserService;
 import opca.web.util.WebResources;
 
+@SuppressWarnings("serial")
 @Named
-public class AccountsController {
+@RequestScoped
+public class AccountsController implements Serializable {
     @Inject protected FacesContext facesContext;
     @EJB protected UserService userService;
     @EJB protected SystemService systemService;

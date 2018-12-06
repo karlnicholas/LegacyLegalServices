@@ -1,5 +1,6 @@
 package opca.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,9 +22,10 @@ import statutes.service.StatutesService;
  *
  */
 
+@SuppressWarnings("serial")
 @Named
 @ApplicationScoped
-public class UserCodesBean {
+public class UserCodesBean implements Serializable {
     private List<List<StatutesTitles>> titleMatrix;
     private String[] titleArray;
 	

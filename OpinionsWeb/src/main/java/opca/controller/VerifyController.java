@@ -1,9 +1,11 @@
 package opca.controller;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.security.Principal;
 
 import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -15,8 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import opca.model.User;
 import opca.service.UserService;
 
+@SuppressWarnings("serial")
 @Named
-public class VerifyController {
+@RequestScoped
+public class VerifyController implements Serializable {
 	@EJB private UserService userService;
 	@Inject private FacesContext facesContext;
 

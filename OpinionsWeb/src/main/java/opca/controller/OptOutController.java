@@ -1,7 +1,10 @@
 package opca.controller;
 
+import java.io.Serializable;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -9,8 +12,10 @@ import javax.inject.Named;
 import opca.service.SystemService;
 import opca.web.form.AboutForm;
 
+@SuppressWarnings("serial")
 @Named
-public class OptOutController {
+@RequestScoped
+public class OptOutController implements Serializable {
 	@Inject private FacesContext facesContext;
 	@EJB private SystemService systemService;
 	private AboutForm aboutForm;
