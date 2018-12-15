@@ -35,7 +35,7 @@
       </c:forEach>
     </div>
   </div>
-  <script src="webjars/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>
+  <script src="webjars/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
   <script src="webjars/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
 </body>
 </html>

@@ -20,17 +20,18 @@
 <body>
   <div class="container">
     <jsp:include page="/WEB-INF/template/navigation.jsp" />
-    <form method="post">
-      <textarea class="form-control focus" rows="3" name="newPostText" autofocus="autofocus"></textarea>
-      <button type="submit" class="btn btn-default">Create New Post</button>
-    </form>
-    <div class="list-group">
+    <div id="inputForm">
+      <form method="post" class="md-form">
+        <input type="text" class="md-textarea form-control" name="newPostText" placeholder="Create new comment ..." />
+      </form>
+    </div>
+    <div class="list-group"`>
       <c:forEach var="post" items="${posts}">
         <a class="list-group-item" href="/board/post?postId=${post.id}" >${post.postText}</a>
       </c:forEach>
     </div>
   </div>
-  <script src="webjars/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>
+  <script src="webjars/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
   <script src="webjars/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
 </body>
 </html>

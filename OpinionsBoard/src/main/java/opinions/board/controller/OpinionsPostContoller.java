@@ -28,17 +28,17 @@ public class OpinionsPostContoller extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String postId = request.getParameter("postId").trim();		
-		String commentDetail = request.getParameter("commentDetail").trim();		
+		String postId = request.getParameter("postId");		
+		String commentDetail = request.getParameter("commentDetail");		
 		logger.fine(()-> "Post Id: " + postId + " commentDetail: " + commentDetail);
-		if ( !postId.isEmpty() ) {
-			Long id = Long.decode( postId );
+		if ( postId != null && !postId.isEmpty() ) {
+			Long id = Long.decode( postId.trim() );
 			BoardPost boardPost = postListingService.getBoardPost(id);
 			request.setAttribute("boardPost", boardPost);
 			List<BoardComment> comments = postDetailService.getBoardComments(boardPost, defaultListingMaxResults);
 			request.setAttribute("comments",  comments);
-			if ( commentDetail != null ) {
-				Long commentId = Long.decode( commentDetail );
+			if ( commentDetail != null && !commentDetail.isEmpty() ) {
+				Long commentId = Long.decode( commentDetail.trim() );
 				request.setAttribute("commentDetail", commentDetail);
 				for ( BoardComment comment: comments) {
 					if ( comment.getId() == commentId ) {
@@ -54,11 +54,15 @@ public class OpinionsPostContoller extends HttpServlet {
     
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String newPostText = request.getParameter("newPostText").trim();
-		String postId = request.getParameter("postId").trim();
+		String newPostText = request.getParameter("newPostText");
+		String postId = request.getParameter("postId");
 		logger.fine(()-> "Post Id: " + postId + " Post Text: " + newPostText);
-		if ( !newPostText.isEmpty() && !postId.isEmpty() ) {
-			BoardPost boardPost = postListingService.getBoardPost(Long.decode( postId ));
+		if ( newPostText != null 
+			&& !newPostText.isEmpty()
+			&& postId != null 
+			&& !postId.isEmpty() 
+		) {
+			BoardPost boardPost = postListingService.getBoardPost(Long.decode( postId.trim() ));
 			BoardComment boardComment = new BoardComment();
 			boardComment.setBoardPost(boardPost);
 			boardComment.setCommentText(newPostText);
