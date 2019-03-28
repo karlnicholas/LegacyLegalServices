@@ -63,7 +63,7 @@ public class FacetUtils {
 	public static String findFullTitleFromFacet( StatutesTitles[] statutesTitles, String fullPath ) {
 		String mapValue = fullPath.substring(0, fullPath.indexOf('-')).toLowerCase();
 		for ( StatutesTitles statuteTitle: statutesTitles ) {
-			if ( statuteTitle.getFacetHead().equals( mapValue ) ) {
+			if ( statuteTitle.getLawCode().equals( mapValue ) ) {
 				return statuteTitle.getFullTitle();
 			}
 		}

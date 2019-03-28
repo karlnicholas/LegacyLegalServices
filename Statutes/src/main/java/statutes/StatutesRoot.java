@@ -15,11 +15,13 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName("statutesRoot")
 @JsonPropertyOrder({
 		"depth", "part", "partNumber", "statuteRange", 
-		"title", "shortTitle", "fullFacet"
+		"lawCode", "title", "shortTitle", "fullFacet"
 	})
 @SuppressWarnings("serial")
 public class StatutesRoot implements StatutesBaseClass, Serializable, Comparable<StatutesRoot> {
 	//	private static final Logger logger = Logger.getLogger(Code.class.getName());
+	// lawCode = primary identifier
+	private String lawCode;
     private String title;
     private String shortTitle;
     private String fullFacet;
@@ -34,12 +36,13 @@ public class StatutesRoot implements StatutesBaseClass, Serializable, Comparable
     	references = new ArrayList<StatutesBaseClass>();
     }
     
-    public StatutesRoot(String title, String shortTitle, String fullFacet) {
-    	this(title, shortTitle, fullFacet, new StatuteRange());
+    public StatutesRoot(String lawCode, String title, String shortTitle, String fullFacet) {
+    	this(lawCode, title, shortTitle, fullFacet, new StatuteRange());
     }
 
-    public StatutesRoot(String title, String shortTitle, String fullFacet, StatuteRange codeRange) {
+    public StatutesRoot(String lawCode, String title, String shortTitle, String fullFacet, StatuteRange codeRange) {
     	references = new ArrayList<StatutesBaseClass>();
+    	this.lawCode = lawCode;
     	this.codeRange = codeRange;
         this.title = title;
         this.shortTitle = shortTitle;
@@ -207,6 +210,17 @@ public class StatutesRoot implements StatutesBaseClass, Serializable, Comparable
 		} else if (!shortTitle.equals(other.shortTitle))
 			return false;
 		return true;
+	}
+
+	@JsonInclude
+	@Override
+	public String getLawCode() {
+		return lawCode;
+	}
+
+	@Override
+	public void setLawCode(String lawCode) {
+		this.lawCode = lawCode;
 	}
 
 }

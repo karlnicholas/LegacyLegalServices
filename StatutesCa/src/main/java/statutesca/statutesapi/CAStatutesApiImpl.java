@@ -33,290 +33,238 @@ public class CAStatutesApiImpl implements IStatutesApi {
 		mapStatutesToTitles = new HashMap<String, StatutesTitles> ();
 
 		StatutesTitles statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("bpc");
+		statutesTitles.setLawCode("BPC");
 		statutesTitles.setShortTitle("Bus. & Professions");
 		statutesTitles.setCommonTitle("business and professions code");
 		statutesTitles.setFullTitle("california business and professions code");
 		statutesTitles.setAbvrTitles( new String[]{"bus. & prof. code"} ); 		
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("ccp");
+		statutesTitles.setLawCode("CCP");
 		statutesTitles.setShortTitle("Civ. Procedure");
 		statutesTitles.setCommonTitle("code of civil procedure");
 		statutesTitles.setFullTitle("california code of civil procedure");
 		statutesTitles.setAbvrTitles( new String[]{"code civ. proc.", "code of civ. pro."} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 		
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("civ");
+		statutesTitles.setLawCode("CIV");
 		statutesTitles.setShortTitle("Civil");
 		statutesTitles.setCommonTitle("civil code");
 		statutesTitles.setFullTitle("california civil code");
 		statutesTitles.setAbvrTitles( new String[]{"civ. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 		
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("com");
+		statutesTitles.setLawCode("COM");
 		statutesTitles.setShortTitle("Commercial");
 		statutesTitles.setCommonTitle("commercial code");
 		statutesTitles.setFullTitle("california commercial code");
 		statutesTitles.setAbvrTitles( new String[]{"com. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 		
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("corp");
+		statutesTitles.setLawCode("CORP");
 		statutesTitles.setShortTitle("Corporations");
 		statutesTitles.setCommonTitle("corporations code");
 		statutesTitles.setFullTitle("california corporations code");
 		statutesTitles.setAbvrTitles( new String[]{"corp. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("edc");
+		statutesTitles.setLawCode("EDC");
 		statutesTitles.setShortTitle("Education");
 		statutesTitles.setCommonTitle("education code");
 		statutesTitles.setFullTitle("california education code");
 		statutesTitles.setAbvrTitles( new String[]{"ed. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 		
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("elec");
+		statutesTitles.setLawCode("ELEC");
 		statutesTitles.setShortTitle("Elections");
 		statutesTitles.setCommonTitle("elections code");
 		statutesTitles.setFullTitle("california elections code");
 		statutesTitles.setAbvrTitles( new String[]{"elec. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("evid");
+		statutesTitles.setLawCode("EVID");
 		statutesTitles.setShortTitle("Evidence");
 		statutesTitles.setCommonTitle("evidence code");
 		statutesTitles.setFullTitle("california evidence code");
 		statutesTitles.setAbvrTitles( new String[]{"evid. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 		
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("fac");
+		statutesTitles.setLawCode("FAC");
 		statutesTitles.setShortTitle("Agriculture");
 		statutesTitles.setCommonTitle("food and agricultural code");
 		statutesTitles.setFullTitle("california food and agricultural code");
 		statutesTitles.setAbvrTitles( new String[]{"food & agr. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("fam");
+		statutesTitles.setLawCode("FAM");
 		statutesTitles.setShortTitle("Family");
 		statutesTitles.setCommonTitle("family code");
 		statutesTitles.setFullTitle("california family code");
 		statutesTitles.setAbvrTitles( new String[]{"fam. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 		
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("fgc");
+		statutesTitles.setLawCode("FGC");
 		statutesTitles.setShortTitle("Fish & Game");
 		statutesTitles.setCommonTitle("fish and game code");
 		statutesTitles.setFullTitle("california fish and game code");
 		statutesTitles.setAbvrTitles( new String[]{"fish & game code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("fin");
+		statutesTitles.setLawCode("FIN");
 		statutesTitles.setShortTitle("Financial");
 		statutesTitles.setCommonTitle("financial code");
 		statutesTitles.setFullTitle("california financial code");
 		statutesTitles.setAbvrTitles( new String[]{"fin. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("gov");
+		statutesTitles.setLawCode("GOV");
 		statutesTitles.setShortTitle("Government");
 		statutesTitles.setCommonTitle("government code");
 		statutesTitles.setFullTitle("california government code");
 		statutesTitles.setAbvrTitles( new String[]{"gov. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("hnc");
+		statutesTitles.setLawCode("HNC");
 		statutesTitles.setShortTitle("Harbors & Nav.");
 		statutesTitles.setCommonTitle("harbors and navigation code");
 		statutesTitles.setFullTitle("california harbors and navigation code");
 		statutesTitles.setAbvrTitles( new String[]{"har. & nav. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("hsc");
+		statutesTitles.setLawCode("HSC");
 		statutesTitles.setShortTitle("Health");
 		statutesTitles.setCommonTitle("health and safety code");
 		statutesTitles.setFullTitle("california health and safety code");
 		statutesTitles.setAbvrTitles( new String[]{"health & saf. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 		
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("ins");
+		statutesTitles.setLawCode("INS");
 		statutesTitles.setShortTitle("Insurance");
 		statutesTitles.setCommonTitle("insurance code");
 		statutesTitles.setFullTitle("california insurance code");
 		statutesTitles.setAbvrTitles( new String[]{"ins. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("lab");
+		statutesTitles.setLawCode("LAB");
 		statutesTitles.setShortTitle("Labor");
 		statutesTitles.setCommonTitle("labor code");
 		statutesTitles.setFullTitle("california labor code");
 		statutesTitles.setAbvrTitles( new String[]{"lab. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("mvc");
+		statutesTitles.setLawCode("MVC");
 		statutesTitles.setShortTitle("Military & Vets.");
 		statutesTitles.setCommonTitle("military and veterans code");
 		statutesTitles.setFullTitle("california military and veterans code");
 		statutesTitles.setAbvrTitles( new String[]{"mil. and vet. code", "mil. & vet. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 		
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("pcc");
+		statutesTitles.setLawCode("PCC");
 		statutesTitles.setShortTitle("Public Contact");
 		statutesTitles.setCommonTitle("public contract code");
 		statutesTitles.setFullTitle("california public contract code");
 		statutesTitles.setAbvrTitles( new String[]{"pub. con. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 		
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("pen");
+		statutesTitles.setLawCode("PEN");
 		statutesTitles.setShortTitle("Penal");
 		statutesTitles.setCommonTitle("penal code");
 		statutesTitles.setFullTitle("california penal code");
 		statutesTitles.setAbvrTitles( new String[]{"pen. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("prc");
+		statutesTitles.setLawCode("PRC");
 		statutesTitles.setShortTitle("Public Resources");
 		statutesTitles.setCommonTitle("public resources code");
 		statutesTitles.setFullTitle("california public resources code");
 		statutesTitles.setAbvrTitles( new String[]{"pub. res. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 		
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("prob");
+		statutesTitles.setLawCode("PROB");
 		statutesTitles.setShortTitle("Probate");
 		statutesTitles.setCommonTitle("probate code");
 		statutesTitles.setFullTitle("california probate code");
 		statutesTitles.setAbvrTitles( new String[]{"prob. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("puc");
+		statutesTitles.setLawCode("PUC");
 		statutesTitles.setShortTitle("Public Utilities");
 		statutesTitles.setCommonTitle("public utilities code");
 		statutesTitles.setFullTitle("california public utilities code");
 		statutesTitles.setAbvrTitles( new String[]{"pub. util. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 		
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("rtc");
+		statutesTitles.setLawCode("RTC");
 		statutesTitles.setShortTitle("Revenue & Tax.");
 		statutesTitles.setCommonTitle("revenue and taxation code");
 		statutesTitles.setFullTitle("california revenue and taxation code");
 		statutesTitles.setAbvrTitles( new String[]{"rev. & tax. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("shc");
+		statutesTitles.setLawCode("SHC");
 		statutesTitles.setShortTitle("Highways");
 		statutesTitles.setCommonTitle("streets and highways code");
 		statutesTitles.setFullTitle("california streets and highways code");
 		statutesTitles.setAbvrTitles( new String[]{"st. & high. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("uic");
+		statutesTitles.setLawCode("UIC");
 		statutesTitles.setShortTitle("Unemployment Ins.");
 		statutesTitles.setCommonTitle("unemployment insurance code");
 		statutesTitles.setFullTitle("california unemployment insurance code");
 		statutesTitles.setAbvrTitles( new String[]{"unemp. ins. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("veh");
+		statutesTitles.setLawCode("VEH");
 		statutesTitles.setShortTitle("Vehicle");
 		statutesTitles.setCommonTitle("vehicle code");
 		statutesTitles.setFullTitle("california vehicle code");
 		statutesTitles.setAbvrTitles( new String[]{"veh. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("wat");
+		statutesTitles.setLawCode("WAT");
 		statutesTitles.setShortTitle("Water");
 		statutesTitles.setCommonTitle("water code");
 		statutesTitles.setFullTitle("california water code");
 		statutesTitles.setAbvrTitles( new String[]{"wat. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setFacetHead("wic");
+		statutesTitles.setLawCode("WIC");
 		statutesTitles.setShortTitle("Welfare & Inst.");
 		statutesTitles.setCommonTitle("welfare and institutions code");
 		statutesTitles.setFullTitle("california welfare and institutions code");
 		statutesTitles.setAbvrTitles( new String[]{"welf. & inst. code"} );
-		mapStatutesToTitles.put( statutesTitles.getFullTitle(), statutesTitles );
+		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 		
 	}
-/*
-    public static String getShortTitle(String title) {
-        if ( title == null ) return title;
-        for (int i=0; i < patterns.length; ++i ) {
-            if ( title.toLowerCase().contains(patterns[i]) )
-                return patternsAbvr[i];
-        }
-        return title;
-    }
-*/    
-
-	/*
-	 * There is a problem here. When using this method, the section numbers in  
-	 * are not in consistent order. e.g.  Penal StatutesRoot 273a is before 273.1
-	 * but 270a is after 270.1 -- This makes is difficult, or impossible, to determine
-	 * what file a specific section number belongs to. I'm coding it so that
-	 * 270a is said to come before 270.1. This is needed because the files
-	 * 270-273.5 includes 273a. The file 273.8-273.88 does not include 273a.
-	 * I don't know if there are other situations where this is reversed ... 
-	 * I should write a utility to check everything. See ConvertToHybridXML in the
-	 * opca project.
-	 * ...
-	 * ok, there's more. The second numerical element of the section number is not ordered numberically, but lexically.
-	 * so .. 422.865 comes before 422.88
-	 */
-/*	
-	public void loadFromRawPath(Path path) throws IOException {
-		// ArrayList<File> files = new ArrayList<File>();
-
-		List<Path> files = new ArrayList<Path>();
-	    try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
-	        for (Path entry : stream) {
-	            if (Files.isDirectory(entry)) 
-	            	continue;
-				if (entry.getFileName().toString().contains("constitution")) 
-					continue;
-				if ( DEBUGFILE != null ) { 
-					if (!entry.getFileName().toString().contains(DEBUGFILE)) 
-						continue;
-				}
-            	files.add(entry);
-	        }
-	    }
-	    Charset encoding = StandardCharsets.ISO_8859_1;
-		for ( Path file: files ) {
-			logger.info("Processing " + file);
-			loadRawFile( encoding, file );
-		}
-
-		Collections.sort( statutes );
-	}
-*/
 	@Override
 	public boolean loadStatutes() {
 //		parser = new StatutesParser();
@@ -358,24 +306,24 @@ public class CAStatutesApiImpl implements IStatutesApi {
 		return true;
 	}		
 
-	public StatutesBaseClass findReference(String codeTitle, SectionNumber sectionNumber) {
-		return findStatuteRoot(codeTitle).findReference( sectionNumber );
+	public StatutesBaseClass findReference(String lawCode, SectionNumber sectionNumber) {
+		return findStatuteRoot(lawCode).findReference( sectionNumber );
 	}
 
-	public StatutesRoot findStatuteRoot(String codeTitle) {
+	public StatutesRoot findStatuteRoot(String lawCode) {
 		
-		String tempTitle = codeTitle.toLowerCase();
+		String tempTitle = lawCode.toLowerCase();
 		StatutesTitles statutesTitles = null;
 		for ( StatutesTitles t: mapStatutesToTitles.values() ) {
-			if ( t.getFacetHead().equals( codeTitle ) ) {
+			if ( t.getLawCode().equals( lawCode ) ) {
 				statutesTitles = t;
 				break;
 			}
 		}
 		if ( statutesTitles == null ) {
-			throw new RuntimeException("StatutesRoot not found:" + codeTitle);
+			throw new RuntimeException("StatutesRoot not found:" + lawCode);
 		}
-		tempTitle = statutesTitles.getFacetHead();
+		tempTitle = statutesTitles.getLawCode();
 		Iterator<StatutesRoot> ci = statutes.iterator();
 		while (ci.hasNext()) {
 			StatutesRoot code = ci.next();
@@ -388,7 +336,7 @@ public class CAStatutesApiImpl implements IStatutesApi {
 		}
 /*		
 		
-		String tempTitle = codeTitle.toLowerCase();
+		String tempTitle = lawCode.toLowerCase();
 		Iterator<StatutesRoot> ci = statutes.iterator();
 		while (ci.hasNext()) {
 			StatutesRoot code = ci.next();
@@ -400,17 +348,17 @@ public class CAStatutesApiImpl implements IStatutesApi {
 			}
 		}
 */		
-		throw new RuntimeException("StatutesRoot not found:" + codeTitle);
+		throw new RuntimeException("StatutesRoot not found:" + lawCode);
 	}
 
 	@Override
-	public String getShortTitle(String title) {
-		return mapStatutesToTitles.get(title.toLowerCase()).getShortTitle(); 
+	public String getShortTitle(String lawCode) {
+		return mapStatutesToTitles.get(lawCode).getShortTitle(); 
 	}
 
 	@Override
-	public String getFacetHead(String title) {
-		return mapStatutesToTitles.get(title.toLowerCase()).getFacetHead(); 
+	public String getFullTitle(String lawCode) {
+		return mapStatutesToTitles.get(lawCode).getFullTitle(); 
 	}
 
 	@Override
@@ -446,20 +394,21 @@ public class CAStatutesApiImpl implements IStatutesApi {
 	@Override
 	public StatuteHierarchy getStatutesHierarchy(String fullFacet) {
 		StatutesTitles[] statutesTitles = getStatutesTitles();
-		String fullTitle = FacetUtils.findFullTitleFromFacet(statutesTitles, fullFacet);
+		String lawCode = FacetUtils.findLawCodeFromFacet(statutesTitles, fullFacet);
 		
-		StatutesRoot statutesRoot = findReferenceByTitle(fullTitle);
+		StatutesRoot statutesRoot = findReferenceByLawCode(lawCode);
 
 		StatuteHierarchy rwr = new StatuteHierarchy();
 		
 		StatutesRoot returnStatutesRoot = new StatutesRoot(
+				statutesRoot.getLawCode(), 
 				statutesRoot.getTitle(), 
 				statutesRoot.getShortTitle(), 
 				statutesRoot.getFullFacet(),
 				statutesRoot.getStatuteRange()
 			); 
 		rwr.getStatutesPath().add(returnStatutesRoot);
-//		String facetHead = FacetUtils.getFacetHeadFromRoot(statutesTitles, statutesRoot);
+//		String lawCode = FacetUtils.getFacetHeadFromRoot(statutesTitles, statutesRoot);
 		
 		List<StatutesBaseClass> subPaths = statutesRoot.getReferences();
 
@@ -553,18 +502,70 @@ public class CAStatutesApiImpl implements IStatutesApi {
 	}
 
 	@Override
-	public StatutesRoot findReferenceByTitle(String title) {
-		String tempTitle = title.toLowerCase();
+	public StatutesRoot findReferenceByLawCode(String lawCode) {
 		Iterator<StatutesRoot> ci = statutes.iterator();
 		while (ci.hasNext()) {
 			StatutesRoot statutesRoot = ci.next();
-			if (statutesRoot.getTitle(false).toLowerCase().contains(tempTitle)) {
+			if (statutesRoot.getLawCode().contains(lawCode)) {
 				return statutesRoot;
 			}
-			if ( tempTitle.contains(statutesRoot.getTitle(false).toLowerCase())) {
+			if ( lawCode.contains(statutesRoot.getLawCode())) {
 				return statutesRoot;
 			}
 		}
-		throw new RuntimeException("StatutesRoot not found:" + title);
+		throw new RuntimeException("StatutesRoot not found: " + lawCode);
 	}
 }
+
+/*
+public static String getShortTitle(String title) {
+    if ( title == null ) return title;
+    for (int i=0; i < patterns.length; ++i ) {
+        if ( title.toLowerCase().contains(patterns[i]) )
+            return patternsAbvr[i];
+    }
+    return title;
+}
+*/    
+
+/*
+ * There is a problem here. When using this method, the section numbers in  
+ * are not in consistent order. e.g.  Penal StatutesRoot 273a is before 273.1
+ * but 270a is after 270.1 -- This makes is difficult, or impossible, to determine
+ * what file a specific section number belongs to. I'm coding it so that
+ * 270a is said to come before 270.1. This is needed because the files
+ * 270-273.5 includes 273a. The file 273.8-273.88 does not include 273a.
+ * I don't know if there are other situations where this is reversed ... 
+ * I should write a utility to check everything. See ConvertToHybridXML in the
+ * opca project.
+ * ...
+ * ok, there's more. The second numerical element of the section number is not ordered numberically, but lexically.
+ * so .. 422.865 comes before 422.88
+ */
+/*	
+public void loadFromRawPath(Path path) throws IOException {
+	// ArrayList<File> files = new ArrayList<File>();
+
+	List<Path> files = new ArrayList<Path>();
+    try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
+        for (Path entry : stream) {
+            if (Files.isDirectory(entry)) 
+            	continue;
+			if (entry.getFileName().toString().contains("constitution")) 
+				continue;
+			if ( DEBUGFILE != null ) { 
+				if (!entry.getFileName().toString().contains(DEBUGFILE)) 
+					continue;
+			}
+        	files.add(entry);
+        }
+    }
+    Charset encoding = StandardCharsets.ISO_8859_1;
+	for ( Path file: files ) {
+		logger.info("Processing " + file);
+		loadRawFile( encoding, file );
+	}
+
+	Collections.sort( statutes );
+}
+*/

@@ -12,7 +12,7 @@ public class StatutesTitlesTest {
 	public void test() {
 		StatutesTitles statutesTitles = new StatutesTitles();
 		assertNotNull("StatutesTitles not created", statutesTitles);
-		statutesTitles.setFacetHead("bpc");
+		statutesTitles.setLawCode("bpc");
 		statutesTitles.setShortTitle("Bus. & Professions");
 		statutesTitles.setCommonTitle("business and professions code");
 		statutesTitles.setFullTitle("california business and professions code");
@@ -26,7 +26,7 @@ public class StatutesTitlesTest {
 	}
 	
 	private void testTitle(StatutesTitles statutesTitles) {
-		assertEquals("bpc", statutesTitles.getFacetHead() );
+		assertEquals("bpc", statutesTitles.getLawCode() );
 		assertEquals("Bus. & Professions", statutesTitles.getShortTitle() );
 		assertEquals("business and professions code", statutesTitles.getCommonTitle() );
 		assertEquals("california business and professions code", statutesTitles.getFullTitle() );

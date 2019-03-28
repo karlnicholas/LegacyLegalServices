@@ -7,11 +7,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({
-	"facetHead", "shortTitle", "commonTitle", "fullTitle", "abvrTitles"
+	"lawCode", "shortTitle", "commonTitle", "fullTitle", "abvrTitles"
 	})
 @SuppressWarnings("serial")
 public class StatutesTitles implements Serializable {
-	private String facetHead;
+	private String lawCode;
 	private String shortTitle;
 	private String commonTitle;
 	private String fullTitle;
@@ -20,26 +20,26 @@ public class StatutesTitles implements Serializable {
 	public StatutesTitles() {}
 	public StatutesTitles(StatutesTitles codeTitles) {
 		// shallow copy
-		this.facetHead = codeTitles.facetHead;
+		this.lawCode = codeTitles.lawCode;
 		this.shortTitle = codeTitles.shortTitle;
 		this.commonTitle = codeTitles.commonTitle;
 		this.fullTitle = codeTitles.fullTitle;
 		this.abvrTitles = codeTitles.abvrTitles;
 	}
 	
-	public StatutesTitles(String facetHead, String shortTitle, String commonTitle, String fullTitle, String[] abvrTitles) {
-		this.facetHead = facetHead;
+	public StatutesTitles(String lawCode, String shortTitle, String commonTitle, String fullTitle, String[] abvrTitles) {
+		this.lawCode = lawCode;
 		this.shortTitle = shortTitle;
 		this.commonTitle = commonTitle;
 		this.fullTitle = fullTitle;
 		this.abvrTitles = abvrTitles;
 	}
 	@JsonInclude
-	public String getFacetHead() {
-		return facetHead;
+	public String getLawCode() {
+		return lawCode;
 	}
-	public void setFacetHead(String facetHead) {
-		this.facetHead = facetHead;
+	public void setLawCode(String lawCode) {
+		this.lawCode = lawCode;
 	}
 	@JsonInclude
 	public String getShortTitle() {

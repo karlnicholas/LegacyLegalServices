@@ -58,17 +58,26 @@ public class FacetUtils {
 		return sb.toString();
 	}
 
-
+	public static String findLawCodeFromFacet( StatutesTitles[] statutesTitles, String fullPath ) {
+		String mapValue = fullPath.substring(0, fullPath.indexOf('-')).toLowerCase();
+		for ( StatutesTitles statuteTitle: statutesTitles ) {
+			if ( statuteTitle.getLawCode().equalsIgnoreCase( mapValue ) ) {
+				return statuteTitle.getLawCode();
+			}
+		}
+		throw new RuntimeException("Statutes Not Found:" + fullPath);
+	}
+/*
 	public static String findFullTitleFromFacet( StatutesTitles[] statutesTitles, String fullPath ) {
 		String mapValue = fullPath.substring(0, fullPath.indexOf('-')).toLowerCase();
 		for ( StatutesTitles statuteTitle: statutesTitles ) {
-			if ( statuteTitle.getFacetHead().equals( mapValue ) ) {
+			if ( statuteTitle.getLawCode().equals( mapValue ) ) {
 				return statuteTitle.getFullTitle();
 			}
 		}
 		throw new RuntimeException("Statutes Not Found:" + fullPath);
 	}
-
+*/
 //	@Override
 /*	
 	public static String mapStatuteToFacetHead(String title) {

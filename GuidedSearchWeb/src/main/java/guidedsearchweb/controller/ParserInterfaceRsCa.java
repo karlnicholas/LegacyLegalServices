@@ -64,11 +64,6 @@ public class ParserInterfaceRsCa implements IStatutesApi {
 	}
 
 	@Override
-	public String getFacetHead(String title) {
-		return null;
-	}
-
-	@Override
 	public Map<String, StatutesTitles> getMapStatutesToTitles() {
 		return null;
 	}
@@ -79,13 +74,18 @@ public class ParserInterfaceRsCa implements IStatutesApi {
 	}
 
 	@Override
-	public StatutesRoot findReferenceByTitle(String title) {
+	public StatutesRoot findReferenceByLawCode(String lawCode) {
 		return null;
 	}
 
 	@Override
 	public StatuteHierarchy getStatutesHierarchy(String fullFacet) {
 		return statutesService.getStatuteHierarchy(fullFacet);
+	}
+
+	@Override
+	public String getFullTitle(String lawCode) {
+		return null;
 	}
 
 }

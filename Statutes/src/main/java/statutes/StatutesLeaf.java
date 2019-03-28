@@ -282,5 +282,15 @@ public class StatutesLeaf implements StatutesBaseClass, Serializable {
 			return false;
 		return true;
 	}
+	@Override
+	public String getLawCode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void setLawCode(String lawCode) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

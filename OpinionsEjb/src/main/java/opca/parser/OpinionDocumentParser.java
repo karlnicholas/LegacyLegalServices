@@ -253,13 +253,13 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
                 if ( sentence.contains(codeTitles[idx].getCommonTitle())) {
                     // found a hit ... lets see if it is in a good place ...
 //                    System.out.println("Found: " + searchString + ":" + StaticCodePatterns.patterns[idx] + ":" + sentence);
-                    return new String(codeTitles[idx].getFacetHead());
+                    return new String(codeTitles[idx].getLawCode());
                 }
                 for ( int aIdx = 0, aLen = codeTitles[idx].getAbvrTitles().length; aIdx < aLen; ++aIdx ) {
 	                if ( sentence.contains(codeTitles[idx].getAbvrTitle(aIdx))) {
 	                    // found a hit ... lets see if it is in a good place ...
 	//                    System.out.println("Found: " + searchString + ":" + StaticCodePatterns.patterns[idx] + ":" + sentence);
-	                    return new String(codeTitles[idx].getFacetHead());
+	                    return new String(codeTitles[idx].getLawCode());
 	                }
                 }
             }
@@ -708,11 +708,11 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
                 int close = offset - (iCode + lenCode);
                 // close = 1 makes a perfect hit ..
 //                System.out.println(close + ":" + nHit);
-                if ( 0 < close && close < 20 ) return codeTitles[idx].getFacetHead();
+                if ( 0 < close && close < 20 ) return codeTitles[idx].getLawCode();
                 // what about "of the"
                 close = iCode - (offset + term.length() + sectionNumber.length() + 7 );
 //                System.out.println(close);
-                if ( 0 < close && close < 20 ) return codeTitles[idx].getFacetHead();
+                if ( 0 < close && close < 20 ) return codeTitles[idx].getLawCode();
 
 //                return new String(patterns[idx]);
             } else {
@@ -738,11 +738,11 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
                         int close = offset - (iCode + lenCode);
                         // close = 1 makes a perfect hit ..
 //                        System.out.println(close + ":" + nHit);
-                        if ( 0 < close && close < 20 ) return codeTitles[idx].getFacetHead();
+                        if ( 0 < close && close < 20 ) return codeTitles[idx].getLawCode();
                         // what about "of the"
                         close = iCode - (offset + term.length() + sectionNumber.length() + 7 );
 //                        System.out.println(close);
-                        if ( 0 < close && close < 20 ) return codeTitles[idx].getFacetHead();
+                        if ( 0 < close && close < 20 ) return codeTitles[idx].getLawCode();
                     }
                 }
             	

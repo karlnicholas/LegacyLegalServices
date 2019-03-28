@@ -131,7 +131,7 @@ public class StatutesTest {
 			e.printStackTrace(System.out);
 		}
 
-		statutesRoot = new StatutesRoot( "title", "shortTitle", "fullFacet" );
+		statutesRoot = new StatutesRoot( "lawCode", "title", "shortTitle", "fullFacet" );
 		assertNotNull("StatutesTitles not created", statutesRoot);
 		assertEquals( 0, statutesRoot.getReferences().size() );
 		testRootBase(statutesRoot);

@@ -38,6 +38,8 @@ public interface StatutesBaseClass {
 	public void setParent(StatutesBaseClass parent);
 	public int getDepth();
 	public void setDepth(int depth);
+	public String getLawCode();
+	public void setLawCode(String lawCode);
 	public String getTitle();
 	public void setTitle(String title);
 	public String getShortTitle();
