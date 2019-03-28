@@ -182,6 +182,8 @@ public class CAProcessDb {
 				statutesBaseClass = statutesLeaf;
 						
 			}
+			statutesBaseClass.setTitle(statutesBaseClass.getTitle().replace(statutesBaseClass.getPart().toUpperCase() + " " + statutesBaseClass.getPartNumber(), "").trim());
+
 			parent.addReference(statutesBaseClass);
 		}
 		return statutesRoot;
