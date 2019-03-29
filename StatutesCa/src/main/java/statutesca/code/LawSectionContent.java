@@ -1,7 +1,6 @@
 package statutesca.code;
 
 import javax.xml.bind.annotation.XmlAnyElement;
-import javax.xml.bind.annotation.XmlMixed;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.w3c.dom.Element;

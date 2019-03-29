@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import java.util.function.BiConsumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.dbutils.BasicRowProcessor;
 import org.apache.commons.dbutils.BeanProcessor;
@@ -36,6 +38,18 @@ public class CAProcessDb {
 	protected final ResultSetHandler<List<LawForCodeSections>> lawForCodeHandler;
 	protected final ResultSetHandler<List<LawCode>> lawCodeHandler;
 	private List<LawSection> lawSections;
+	private static final String DIVISION = "DIVISION";
+	private static final int DIVISION_LEN = DIVISION.length();
+	private static final String PART = "PART";
+	private static final int PART_LEN = PART.length();
+	private static final String TITLE = "TITLE";
+	private static final int TITLE_LEN = TITLE.length();
+	private static final String CHAPTER = "CHAPTER";
+	private static final int CHAPTER_LEN = CHAPTER.length();
+	private static final String ARTICLE = "ARTICLE";
+	private static final int ARTICLE_LEN = ARTICLE.length();
+	private final Pattern pattern = Pattern.compile("\\[(.*?)\\]$");
+
 
 	public CAProcessDb() throws SQLException {
 		queryRunner = new QueryRunner();
@@ -49,14 +63,8 @@ public class CAProcessDb {
 			LawForCodeSections previous = null;
 			while ( rs.next() ) {
 				LawForCode lawForCode = bp.populateBean(rs, new LawForCode());
-				if ( !beanList.isEmpty() ) {
-					if ( previous.getNode_treepath() != null && previous.getNode_treepath().equals(lawForCode.getNode_treepath()) ) {
-						previous.getSections().add(new LawSection(lawForCode.getSection_num(), lawForCode.getContent_xml()));
-					} else {
-						LawForCodeSections codeSections = new LawForCodeSections(lawForCode);
-						beanList.add(codeSections);
-						previous = codeSections;
-					}
+				if ( !beanList.isEmpty() && previous.getNode_treepath() != null && previous.getNode_treepath().equals(lawForCode.getNode_treepath()) ) {
+					previous.getSections().add(new LawSection(lawForCode.getSection_num(), lawForCode.getContent_xml()));
 				} else {
 					LawForCodeSections codeSections = new LawForCodeSections(lawForCode);
 					beanList.add(codeSections);
@@ -66,11 +74,7 @@ public class CAProcessDb {
 			return beanList;
 		};
 	}
-/*
-	public List<LawCode> retrieveLawCodes() throws SQLException  {
-		return queryRunner.query(conn, "select * from codes_tbl", lawCodeHandler);
-	}
-*/
+
 	public List<LawCode> retrieveLawCodes() throws SQLException  {
 		return queryRunner.query(conn, "select * from codes_tbl", lawCodeHandler);
 	}
@@ -82,28 +86,10 @@ public class CAProcessDb {
 			"where l.law_code = ? and l.active_flg = 'Y'" + 
 			"order by l.node_sequence", lawForCodeHandler, lawCode);
 	}
-	/*
-	select l.*, s.* from law_toc_tbl l left outer join law_section_tbl s on s.id = 
-	(select id from law_toc_sections_tbl where law_code = l.law_code and node_treepath = l.node_treepath and section_order = (select max(section_order) from law_toc_sections_tbl where law_code = l.law_code and node_treepath = l.node_treepath))
-	where l.law_code = 'CCP' and l.active_flg = 'Y' 
-	order by l.node_sequence
-
-	select l.law_code,l.division,l.title,l.part,l.chapter,l.article,l.heading,l.active_flg,l.node_level,l.node_position,l.contains_law_sections,s.section_num,s.content_xml from law_toc_tbl l left outer join law_section_tbl s on s.id = 
-	(select id from law_toc_sections_tbl where law_code = l.law_code and node_treepath = l.node_treepath and section_order = (select max(section_order) from law_toc_sections_tbl where law_code = l.law_code and node_treepath = l.node_treepath))
-	where l.law_code = 'CCP' and l.active_flg = 'Y' 
-	order by l.node_sequence
-
-	select l.*,s.* from law_toc_tbl l left outer join law_section_tbl s on s.id in 
-	(select id from law_toc_sections_tbl where law_code = l.law_code and node_treepath = l.node_treepath)
-	where l.law_code = 'CCP' and l.active_flg = 'Y' 
-	order by l.node_sequence;
-
-
-	*/
 
 	
 	public StatutesRoot parseLawCode(String lawCode, BiConsumer<LawForCodeSections, StatutesLeaf> leafConsumer) throws SQLException {
-		List<LawForCodeSections> lawForCodes = retrieveLawForCode(lawCode);;
+		List<LawForCodeSections> lawForCodes = retrieveLawForCode(lawCode);
 		// purposely don't call loadStatutes because we are getting them from the raw
 		// files
 		IStatutesApi iStatutesApi = new CAStatutesApiImpl();
@@ -131,27 +117,33 @@ public class CAProcessDb {
 					secStack.pop();
 				}
 			}
-			String part = iStatutesApi.getShortTitle(lawCode);
+			String heading = lawForCode.getHeading().toUpperCase();
+			String part = "";
 			String partNumber = "";
-			if (lawForCode.getTitle() != null) {
-				part = "Title";
-				partNumber = lawForCode.getTitle(); 
-			}	
-			if (lawForCode.getPart() != null) {
-				part = "Part";
-				partNumber = lawForCode.getPart(); 
+			if (heading.substring(0, DIVISION_LEN).equals(DIVISION)) {
+				part = DIVISION;
+				partNumber = lawForCode.getDivision() == null ? "" : lawForCode.getDivision().toUpperCase();
+				heading = heading.replace(DIVISION + " " + partNumber, "").trim();
 			}
-			if (lawForCode.getDivision() != null) {
-				part = "Division";
-				partNumber = lawForCode.getDivision(); 
+			if (heading.substring(0, PART_LEN).equals(PART)) {
+				part = PART;
+				partNumber = lawForCode.getPart() == null ? "" : lawForCode.getPart().toUpperCase();
+				heading = heading.replace(PART + " " + partNumber, "").trim();
 			}
-			if (lawForCode.getChapter() != null) {
-				part = "Chapter";
-				partNumber = lawForCode.getChapter(); 
+			if (heading.substring(0, TITLE_LEN).equals(TITLE)) {
+				part = TITLE;
+				partNumber = lawForCode.getTitle() == null ? "" : lawForCode.getTitle().toUpperCase();
+				heading = heading.replace(TITLE + " " + partNumber, "").trim();
 			}
-			if (lawForCode.getArticle() != null) {
-				part = "Article";
-				partNumber = lawForCode.getArticle(); 
+			if (heading.substring(0, CHAPTER_LEN).equals(CHAPTER)) {
+				part = CHAPTER;
+				partNumber = lawForCode.getChapter() == null ? "" : lawForCode.getChapter().toUpperCase();
+				heading = heading.replace(CHAPTER + " " + partNumber, "").trim();
+			}
+			if (heading.substring(0, ARTICLE_LEN).equals(ARTICLE)) {
+				part = ARTICLE;
+				partNumber = lawForCode.getArticle() == null ? "" : lawForCode.getArticle().toUpperCase();
+				heading = heading.replace(ARTICLE + " " + partNumber, "").trim();
 			}
 			StatutesBaseClass parent = secStack.peek();
 			String fullFacet = parent.getFullFacet() + "/" + lawCode + "-" + lawForCode.getNode_level() + "-" + lawForCode.getNode_position();
@@ -162,7 +154,7 @@ public class CAProcessDb {
 						fullFacet, 
 						part, 
 						partNumber, 
-						lawForCode.getHeading(), 
+						heading, 
 						lawForCode.getNode_level()
 					);
 				if (secStack.size() < (lawForCode.getNode_level() + 1)) {
@@ -174,7 +166,7 @@ public class CAProcessDb {
 						fullFacet, 
 						part,  
 						partNumber, 
-						lawForCode.getHeading(), 
+						heading, 
 						lawForCode.getNode_level(), 
 						new StatuteRange()
 					);
@@ -182,11 +174,27 @@ public class CAProcessDb {
 				statutesBaseClass = statutesLeaf;
 						
 			}
-			statutesBaseClass.setTitle(statutesBaseClass.getTitle().replace(statutesBaseClass.getPart().toUpperCase() + " " + statutesBaseClass.getPartNumber(), "").trim());
 
 			parent.addReference(statutesBaseClass);
 		}
+		trimHeadings(statutesRoot);
 		return statutesRoot;
+	}
+
+	private void trimHeadings(StatutesRoot statutesRoot) {
+		Stack<StatutesBaseClass> stack = new Stack<>();
+		stack.push(statutesRoot);
+		// 
+		while (!stack.isEmpty()) {
+			// process this one then push its references
+			StatutesBaseClass currentPos = stack.pop();
+			currentPos.setTitle( pattern.matcher(currentPos.getTitle()).replaceAll("").trim() );
+			if ( currentPos.getReferences() != null  ) {
+				for ( StatutesBaseClass currentRef: currentPos.getReferences() ) {
+					stack.push(currentRef);
+				}
+			}
+		}
 	}
 
 	public List<LawSection> getLawSections() {

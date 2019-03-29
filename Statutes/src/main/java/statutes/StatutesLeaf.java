@@ -56,11 +56,14 @@ public class StatutesLeaf implements StatutesBaseClass, Serializable {
     	this.sectionNumbers = new ArrayList<>();
     	this.parent = parent;
     	this.fullFacet = fullFacet;
+/*    	
     	if ( part != null ) {
     		this.part = Character.toUpperCase(part.charAt(0)) + part.substring(1).toLowerCase();
     	} else {
     		part = null;
     	}
+*/    	
+    	this.part = part;
     	this.partNumber = partNumber;
     	this.title = title;
     	this.statuteRange = range;

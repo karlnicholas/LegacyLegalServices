@@ -44,9 +44,7 @@ public class CASaveStatutesFromDb extends CAProcessDb {
 				continue;
 			}
 			try {
-				StatutesRoot statutesRoot = parseLawCode(lawCode.getCode(), (lawForCodeSections, statutesLeaf) -> {
-					processStatutesLeaf(lawForCodeSections, statutesLeaf);
-				});
+				StatutesRoot statutesRoot = parseLawCode(lawCode.getCode(), this::processStatutesLeaf);
 				filePaths.add(processFile(statutesRoot));
 			} catch (Exception ex) {
 				System.out.println(lawCode.getCode());
@@ -81,6 +79,7 @@ public class CASaveStatutesFromDb extends CAProcessDb {
 				sectionNumbers.get(sectionNumbers.size()-1)
 			));
 		}
+		// TODO: PUT WHERE CAN HANDLE STATUTE NODES AS WELL
 		statutesLeaf.setTitle(statutesLeaf.getTitle().replace('[' + firstSectionNum + " - " + lastSectionNum + ']' , "").trim());
 	}
 
