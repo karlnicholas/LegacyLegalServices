@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import java.util.function.BiConsumer;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.dbutils.BasicRowProcessor;
@@ -49,12 +48,14 @@ public class CAProcessDb {
 	private static final String ARTICLE = "ARTICLE";
 	private static final int ARTICLE_LEN = ARTICLE.length();
 	private final Pattern pattern = Pattern.compile("\\[(.*?)\\]$");
+	protected int position;
 
 
 	public CAProcessDb() throws SQLException {
 		queryRunner = new QueryRunner();
 		DbUtils.loadDriver(driver);
 		conn = DriverManager.getConnection(url, usr, pwd);
+		position = 1;
 		lawCodeHandler = new BeanListHandler<LawCode>(LawCode.class, new BasicRowProcessor(new GenerousBeanProcessor()));
 //		lawForCodeHandler = new BeanListHandler<LawForCode>(LawForCode.class, new BasicRowProcessor(new GenerousBeanProcessor()));
 		lawForCodeHandler = rs-> {
@@ -176,6 +177,7 @@ public class CAProcessDb {
 			}
 
 			parent.addReference(statutesBaseClass);
+			position++;
 		}
 		trimHeadings(statutesRoot);
 		return statutesRoot;

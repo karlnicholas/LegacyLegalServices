@@ -62,12 +62,7 @@ public class CASaveStatutesFromDb extends CAProcessDb {
 
 	private void processStatutesLeaf(LawForCodeSections lawForCodeSections, StatutesLeaf statutesLeaf) {
 		ArrayList<SectionNumber> sectionNumbers = statutesLeaf.getSectionNumbers();
-		String firstSectionNum = null;
-		String lastSectionNum = null;
 		for (LawSection lawSection : lawForCodeSections.getSections()) {
-			if ( firstSectionNum == null )
-				firstSectionNum = lawSection.getSection_num();
-			lastSectionNum = lawSection.getSection_num();
 			if ( lawSection.getSection_num() != null ) {
 				sectionNumbers.add(new SectionNumber(position++, 
 					lawSection.getSection_num().substring(0, lawSection.getSection_num().length()-1)));
@@ -79,8 +74,6 @@ public class CASaveStatutesFromDb extends CAProcessDb {
 				sectionNumbers.get(sectionNumbers.size()-1)
 			));
 		}
-		// TODO: PUT WHERE CAN HANDLE STATUTE NODES AS WELL
-		statutesLeaf.setTitle(statutesLeaf.getTitle().replace('[' + firstSectionNum + " - " + lastSectionNum + ']' , "").trim());
 	}
 
 	Path processFile(StatutesRoot statutesRoot) throws Exception {
