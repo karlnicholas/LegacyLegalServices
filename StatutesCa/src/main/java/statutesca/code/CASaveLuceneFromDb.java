@@ -50,7 +50,7 @@ public class CASaveLuceneFromDb extends CAProcessDb {
 		// For gscalifornia
 		index = Paths.get("c:/users/karln/opcastorage/index/");
 		indextaxo = Paths.get("c:/users/karln/opcastorage/indextaxo/");
-		
+		position = 1;
 	}
 
 	/**
@@ -114,8 +114,8 @@ public class CASaveLuceneFromDb extends CAProcessDb {
 			String[] facetPath = FacetUtils.fromString(statutesLeaf.getFullFacet());
 			
 			doc.add(new StringField("path", statutesLeaf.getFullFacet(), Field.Store.YES));
-			doc.add(new StringField("sectionnumber", lawSection.getSection_num(), Field.Store.YES));
-			doc.add(new StringField("position", Integer.toString( position ), Field.Store.YES));
+			doc.add(new StringField("sectionnumber", lawSection.getSection_num().substring(0, lawSection.getSection_num().length()-1), Field.Store.YES));
+			doc.add(new StringField("position", Integer.toString( position++ ), Field.Store.YES));
 			doc.add(new TextField("sectiontext", lawSection.getContent_xml(), Field.Store.YES));
 			// invoke the category document builder for adding categories to the document and,
 			// as required, to the taxonomy index 

@@ -120,7 +120,7 @@ public class CAProcessDb {
 			}
 			String heading = lawForCode.getHeading().toUpperCase();
 			String part = "";
-			String partNumber = "";
+			String partNumber = ".";
 			if (heading.substring(0, DIVISION_LEN).equals(DIVISION)) {
 				part = DIVISION;
 				partNumber = lawForCode.getDivision() == null ? "" : lawForCode.getDivision().toUpperCase();
@@ -146,6 +146,8 @@ public class CAProcessDb {
 				partNumber = lawForCode.getArticle() == null ? "" : lawForCode.getArticle().toUpperCase();
 				heading = heading.replace(ARTICLE + " " + partNumber, "").trim();
 			}
+			if ( partNumber != null && partNumber.length() > 0 && partNumber.charAt(partNumber.length()-1) == '.')
+				partNumber = partNumber.substring(0, partNumber.length()-1);
 			StatutesBaseClass parent = secStack.peek();
 			String fullFacet = parent.getFullFacet() + "/" + lawCode + "-" + lawForCode.getNode_level() + "-" + lawForCode.getNode_position();
 			StatutesBaseClass statutesBaseClass;
