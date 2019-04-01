@@ -112,11 +112,13 @@ public class CASaveLuceneFromDb extends CAProcessDb {
 			org.apache.lucene.document.Document doc = new org.apache.lucene.document.Document();
 
 			String[] facetPath = FacetUtils.fromString(statutesLeaf.getFullFacet());
+			String content = "<b>" + lawSection.getSection_num() + "</b>" + lawSection.getContent_xml().replace("<caml:Content xmlns:caml=\"http://lc.ca.gov/legalservices/schemas/caml.1#\">", "").replace("</caml:Content>", "")
+					.replace("<span class=\"EmSpace\"/>", "&emsp;").replace("<span class=\"EnSpace\"/>", "&ensp;").replace("<span class=\"ThinSpace\"/>", "&thsp;").replace("<span class=\"NbSpace\"/>", "&nbsp;");
 			
 			doc.add(new StringField("path", statutesLeaf.getFullFacet(), Field.Store.YES));
 			doc.add(new StringField("sectionnumber", lawSection.getSection_num().substring(0, lawSection.getSection_num().length()-1), Field.Store.YES));
 			doc.add(new StringField("position", Integer.toString( position++ ), Field.Store.YES));
-			doc.add(new TextField("sectiontext", lawSection.getContent_xml(), Field.Store.YES));
+			doc.add(new TextField("sectiontext", content, Field.Store.YES));
 			// invoke the category document builder for adding categories to the document and,
 			// as required, to the taxonomy index 
 			FacetField facetField = new FacetField( 

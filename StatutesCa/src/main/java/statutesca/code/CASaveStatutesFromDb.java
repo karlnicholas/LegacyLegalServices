@@ -20,7 +20,8 @@ import statutes.StatutesRoot;
 public class CASaveStatutesFromDb extends CAProcessDb {
 	private final Path lawCodesPath;
 	private int position;
-	
+	private Set<String> classes;
+//	private Pattern pattern = Pattern.compile("class=([\"'])(?:(?=(\\\\?))\\2.)*?\\1");
 
 	/*
 	 * Reqired to run this to create xml files in the resources folder that describe
@@ -34,6 +35,7 @@ public class CASaveStatutesFromDb extends CAProcessDb {
 		super();
 		lawCodesPath = Paths.get("c:/users/karln/opcastorage/CaliforniaStatutes");
 		position = 1;
+		classes = new HashSet<>();
 	}
 
 	protected void run() throws Exception {
@@ -58,6 +60,7 @@ public class CASaveStatutesFromDb extends CAProcessDb {
 			bw.newLine();
 		}
 		bw.close();
+		classes.forEach(System.out::println);
 	}
 
 	private void processStatutesLeaf(LawForCodeSections lawForCodeSections, StatutesLeaf statutesLeaf) {
@@ -67,6 +70,20 @@ public class CASaveStatutesFromDb extends CAProcessDb {
 				sectionNumbers.add(new SectionNumber(position++, 
 					lawSection.getSection_num().substring(0, lawSection.getSection_num().length()-1)));
 			}
+/*			
+			Matcher matcher = pattern.matcher(lawSection.getContent_xml());
+			while(matcher.find()) {
+				String content = lawSection.getContent_xml();
+				int s = matcher.start();
+				while ( content.charAt(s) != '<' ) {
+					s--;
+					if ( s == 0 ) {
+						break;
+					}
+				}
+				classes.add(lawSection.getContent_xml().substring(s, matcher.end()));
+	        }
+*/	        
 		}
 		if ( sectionNumbers.size() > 0 ) {
 			statutesLeaf.setStatuteRange(new StatuteRange(
