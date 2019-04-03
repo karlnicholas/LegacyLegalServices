@@ -5,8 +5,8 @@ import org.tartarus.snowball.ext.PorterStemmer;
 
 public class Highlighter {
 	private static final PorterStemmer stemmer = new PorterStemmer();
-	public static final String preTag = "\"<mark><strong><u>\"";
-	public static final String postTag = "\"</u></strong></mark>\"";
+	public static final String preTag = "<mark><strong><u>\"";
+	public static final String postTag = "</u></strong></mark>\"";
 
 	/*
 	 * Definitely need to fix this up ... 

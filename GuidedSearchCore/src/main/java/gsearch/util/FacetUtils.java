@@ -64,7 +64,7 @@ public class FacetUtils {
 		String mapValue = fullPath.substring(0, fullPath.indexOf('-')).toLowerCase();
 		for ( StatutesTitles statuteTitle: statutesTitles ) {
 			if ( statuteTitle.getLawCode().equals( mapValue ) ) {
-				return statuteTitle.getFullTitle();
+				return statuteTitle.getTitle();
 			}
 		}
 		throw new RuntimeException("Statutes Not Found:" + fullPath);

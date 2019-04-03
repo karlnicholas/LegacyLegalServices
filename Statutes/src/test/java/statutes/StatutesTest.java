@@ -160,8 +160,8 @@ public class StatutesTest {
 		}
 		statutesNode = new StatutesNode(statutesRoot, "fullFacet", "part", "partNumber", "title", 1);
 		testNode2(statutesNode);
-		assertEquals( "title-Part partNumber. title", statutesNode.getFullTitle("-") );
-		assertEquals( "Part partNumber:title", statutesNode.toString() );		
+		assertEquals( "title-part partNumber. title", statutesNode.getFullTitle("-") );
+		assertEquals( "part partNumber:title", statutesNode.toString() );		
 		assertNotNull( statutesNode.getPart() );
 		assertNotNull( statutesNode.getPartNumber() );
 
@@ -236,9 +236,9 @@ public class StatutesTest {
 	private void testLeaf(StatutesLeaf statutesLeaf) {
 		assertEquals( "title", statutesLeaf.getTitle() );
 		assertEquals( "title", statutesLeaf.getTitle(false) );
-		assertEquals( "Part partNumber. title", statutesLeaf.getTitle(true) );
-		assertEquals( "title-part partNumber. title-Part partNumber. title", statutesLeaf.getFullTitle("-") );
-		assertEquals( "Part partNumber", statutesLeaf.getShortTitle() );
+		assertEquals( "part partNumber. title", statutesLeaf.getTitle(true) );
+		assertEquals( "title-part partNumber. title-part partNumber. title", statutesLeaf.getFullTitle("-") );
+		assertEquals( "part partNumber", statutesLeaf.getShortTitle() );
 		assertEquals( "fullFacet", statutesLeaf.getFullFacet() );
 		assertEquals( 1, statutesLeaf.getStatuteRange().getsNumber().getPosition() );
 		assertEquals( 4, statutesLeaf.getStatuteRange().geteNumber().getPosition() );

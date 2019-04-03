@@ -84,7 +84,7 @@ public class ParserInterfaceRsCa implements IStatutesApi {
 	}
 
 	@Override
-	public String getFullTitle(String lawCode) {
+	public String getTitle(String lawCode) {
 		return null;
 	}
 

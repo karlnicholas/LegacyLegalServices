@@ -14,12 +14,11 @@ public class StatutesTitlesTest {
 		assertNotNull("StatutesTitles not created", statutesTitles);
 		statutesTitles.setLawCode("bpc");
 		statutesTitles.setShortTitle("Bus. & Professions");
-		statutesTitles.setCommonTitle("business and professions code");
-		statutesTitles.setFullTitle("california business and professions code");
+		statutesTitles.setTitle("business and professions code");
 		statutesTitles.setAbvrTitles( new String[]{"bus. & prof. code"} );
 		// do test
 		testTitle(statutesTitles);
-		statutesTitles = new StatutesTitles("bpc", "Bus. & Professions", "business and professions code", "california business and professions code", new String[]{"bus. & prof. code"});
+		statutesTitles = new StatutesTitles("bpc", "Bus. & Professions", "business and professions code", new String[]{"bus. & prof. code"});
 		testTitle(statutesTitles);
 		statutesTitles = new StatutesTitles(statutesTitles);
 		testTitle(statutesTitles);
@@ -28,8 +27,7 @@ public class StatutesTitlesTest {
 	private void testTitle(StatutesTitles statutesTitles) {
 		assertEquals("bpc", statutesTitles.getLawCode() );
 		assertEquals("Bus. & Professions", statutesTitles.getShortTitle() );
-		assertEquals("business and professions code", statutesTitles.getCommonTitle() );
-		assertEquals("california business and professions code", statutesTitles.getFullTitle() );
+		assertEquals("business and professions code", statutesTitles.getTitle() );
 		assertArrayEquals(new String[]{"bus. & prof. code"}, statutesTitles.getAbvrTitles());
 		assertEquals("bus. & prof. code", statutesTitles.getAbvrTitle(0));
 		assertEquals("bus. & prof. code", statutesTitles.getAbvrTitle());

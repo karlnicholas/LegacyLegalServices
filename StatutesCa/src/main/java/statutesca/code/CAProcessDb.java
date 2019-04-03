@@ -106,7 +106,7 @@ public class CAProcessDb {
 			if ( ! foundCode ) {
 				statutesRoot = new StatutesRoot(
 						lawCode, 
-						iStatutesApi.getFullTitle(lawCode), 
+						iStatutesApi.getTitle(lawCode), 
 						iStatutesApi.getShortTitle(lawCode), 
 						lawCode + "-0");
 				secStack.push(statutesRoot);
