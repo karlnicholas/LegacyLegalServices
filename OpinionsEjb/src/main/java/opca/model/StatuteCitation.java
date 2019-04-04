@@ -30,8 +30,6 @@ import javax.persistence.Table;
 @NamedQueries({
 	@NamedQuery(name="StatuteCitation.findStatutesForKeys", 
 		query="select s from StatuteCitation s where s.statuteKey in :keys"),
-	@NamedQuery(name="StatuteCitation.selectForTitle", 
-		query="select s from StatuteCitation s where s.statuteKey.title like :title"),
 /*	
 	@NamedQuery(name="StatuteCitation.findByStatuteKeyJoinReferringOpinions", 
 	query="select distinct(s) from StatuteCitation s left join fetch s.referringOpinions ro left join fetch ro.opinionBase where s.statuteKey = :statuteKey"),
@@ -54,7 +52,7 @@ import javax.persistence.Table;
 })
 @SuppressWarnings("serial")
 @Entity
-@Table(indexes = {@Index(columnList="title,sectionNumber")})
+@Table(indexes = {@Index(columnList="lawCode,sectionNumber")})
 public class StatuteCitation implements Comparable<StatuteCitation>, Serializable { 
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
@@ -68,14 +66,14 @@ public class StatuteCitation implements Comparable<StatuteCitation>, Serializabl
         referringOpinions = new TreeSet<OpinionStatuteCitation>();
     }
     
-    public StatuteCitation(OpinionBase opinionBase, String title, String sectionNumber) {
+    public StatuteCitation(OpinionBase opinionBase, String lawCode, String sectionNumber) {
     	// this is constructed without a parent and that's added later
     	// when we build the hierarchy
 //    	logger.fine("title:" + title + ":section:" + section);
-        statuteKey = new StatuteKey(title, sectionNumber);
+        statuteKey = new StatuteKey(lawCode, sectionNumber);
         referringOpinions = new TreeSet<OpinionStatuteCitation>();
         referringOpinions.add(new OpinionStatuteCitation(this, opinionBase, 1));
-        if ( title == null ) {
+        if ( lawCode == null ) {
             designated = false;
         } else {
             designated = true;

@@ -36,7 +36,7 @@ public class TestCAParseSlipDetails extends CACaseScraper {
 				ScrapedOpinionDocument parsedDoc = parseScrapedDocument.parseScrapedDocument(slipOpinion, inputStream);
 	        	if ( parsedDoc.isScrapedSuccess() ) {
 	        		documents.add( parsedDoc );
-					parseOpinionDetails(slipOpinion);
+//					parseOpinionDetails(slipOpinion);
 				} else {
 					logger.warning("Opinion not parsed: " + slipOpinion.getFileName() + " " + slipOpinion.getFileExtension());
 				}

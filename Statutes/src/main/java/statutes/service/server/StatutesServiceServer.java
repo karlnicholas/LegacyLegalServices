@@ -72,17 +72,17 @@ public class StatutesServiceServer implements StatutesService {
 			StatuteKey key = itc.next();
 			// StatuteCitation citation = parserResults.findStatute(key);
 			// This is a section
-			String title = key.getTitle();
+			String lawCode = key.getLawCode();
 			SectionNumber sectionNumber = new SectionNumber();
 			sectionNumber.setPosition(-1);
 			sectionNumber.setSectionNumber(key.getSectionNumber());
 			// int refCount = citation.getRefCount(opinionBase.getOpinionKey());
 			// boolean designated = citation.getDesignated();
-			if (title != null) {
+			if (lawCode != null) {
 				// here we look for the Doc Section within the Code Section Hierachary
 				// and place it within the sectionReference we previously parsed out of the
 				// opinion
-				StatutesBaseClass statutesBaseClass = iStatutesApi.findReference(title, sectionNumber);
+				StatutesBaseClass statutesBaseClass = iStatutesApi.findReference(lawCode, sectionNumber);
 				if (statutesBaseClass != null) {
 					StatuteHierarchy statuteHierarchy = iStatutesApi
 							.getStatutesHierarchy(statutesBaseClass.getFullFacet());

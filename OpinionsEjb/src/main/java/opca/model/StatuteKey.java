@@ -11,13 +11,13 @@ public class StatuteKey implements Serializable, Comparable<StatuteKey> {
     @Column(columnDefinition="char(32)")
     protected String sectionNumber;
     @Column(columnDefinition="char(4)")
-    protected String title;
+    protected String lawCode;
 
     public StatuteKey() {}
     
-    public StatuteKey(String title, String sectionNumber) {
+    public StatuteKey(String lawCode, String sectionNumber) {
 		this.sectionNumber = sectionNumber;
-		this.title = title;
+		this.lawCode = lawCode;
 	}
 
 	/**
@@ -52,18 +52,18 @@ public class StatuteKey implements Serializable, Comparable<StatuteKey> {
      *     {@link String }
      *     
      */
-    public String getTitle() {
-        return title;
+    public String getLawCode() {
+        return lawCode;
     }
     public void setTitle(String value) {
-        this.title = value;
+        this.lawCode = value;
     }
     @Override
     public int compareTo(StatuteKey o) {
-        if ( title == null && o.title != null ) return -1;
-        if ( title != null && o.title == null ) return 1;
-        if ( title != null && o.title != null ) {
-            int r = title.compareTo(o.title); 
+        if ( lawCode == null && o.lawCode != null ) return -1;
+        if ( lawCode != null && o.lawCode == null ) return 1;
+        if ( lawCode != null && o.lawCode != null ) {
+            int r = lawCode.compareTo(o.lawCode); 
             if (  r != 0 ) return r; 
         }  
         if ( sectionNumber == null && o.sectionNumber != null ) return -1;
@@ -78,7 +78,7 @@ public class StatuteKey implements Serializable, Comparable<StatuteKey> {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((title == null) ? 0 : title.hashCode());
+        result = prime * result + ((lawCode == null) ? 0 : lawCode.hashCode());
         result = prime * result + ((sectionNumber == null) ? 0 : sectionNumber.hashCode());
         return result;
     }
@@ -91,10 +91,10 @@ public class StatuteKey implements Serializable, Comparable<StatuteKey> {
         if (getClass() != obj.getClass())
             return false;
         StatuteKey other = (StatuteKey) obj;
-        if (title == null) {
-            if (other.title != null)
+        if (lawCode == null) {
+            if (other.lawCode != null)
                 return false;
-        } else if (!title.equals(other.title))
+        } else if (!lawCode.equals(other.lawCode))
             return false;
         if (sectionNumber == null) {
             if (other.sectionNumber != null)
@@ -105,6 +105,6 @@ public class StatuteKey implements Serializable, Comparable<StatuteKey> {
     }
     @Override
     public String toString() {
-        return title + ":" + sectionNumber;
+        return lawCode + ":" + sectionNumber;
     }
 }

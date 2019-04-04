@@ -278,7 +278,7 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
         	if ( statuteCitations == null ) 
         		statuteCitations = new TreeSet<OpinionStatuteCitation>();
 	        for ( OpinionStatuteCitation addStatuteCitation: opinionBase.getStatuteCitations() ) {
-            	if ( addStatuteCitation.getStatuteCitation().getStatuteKey().getTitle() == null ) 
+            	if ( addStatuteCitation.getStatuteCitation().getStatuteKey().getLawCode() == null ) 
             		continue;
 	            if ( !statuteCitations.contains(addStatuteCitation) ) {
 	            	statuteCitations.add(addStatuteCitation);
@@ -313,7 +313,7 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
         	if ( statuteCitations == null ) 
         		statuteCitations = new TreeSet<OpinionStatuteCitation>();
 	        for ( OpinionStatuteCitation addStatuteCitation: opinionBase.getStatuteCitations() ) {
-            	if ( addStatuteCitation.getStatuteCitation().getStatuteKey().getTitle() == null ) 
+            	if ( addStatuteCitation.getStatuteCitation().getStatuteKey().getLawCode() == null ) 
             		continue;
 	            if ( !statuteCitations.contains(addStatuteCitation) ) {
 	            	statuteCitations.add(addStatuteCitation);

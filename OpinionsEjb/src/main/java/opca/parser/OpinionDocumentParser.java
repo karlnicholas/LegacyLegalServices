@@ -61,7 +61,7 @@ public class OpinionDocumentParser {
         Set<StatuteCitation> goodStatutes = new TreeSet<StatuteCitation>();
         for ( StatuteCitation statuteCitation: statutes) {
         	// forever get rid of statutes without a referenced code.
-        	if( statuteCitation.getStatuteKey().getTitle() != null ) {
+        	if( statuteCitation.getStatuteKey().getLawCode() != null ) {
 /*        		
 if ( !statuteCitation.toString().equals("pen:245") ) {
 	continue;
@@ -161,10 +161,10 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
     private void checkDesignatedCodeSections(TreeSet<StatuteCitation> citations, OpinionBase opinionBase) {
     	StatuteCitation[] acitations = citations.toArray(new StatuteCitation[0]);
         for ( int idx = 0; idx < acitations.length; ++idx ) {
-            if ( acitations[idx].getStatuteKey().getTitle() != null ) {
+            if ( acitations[idx].getStatuteKey().getLawCode() != null ) {
                 for ( int idx2 = idx+1; idx2 < acitations.length; ++idx2 ) {
                     // if the code is not the same
-                    if ( ! (acitations[idx].getStatuteKey().getTitle().equals( acitations[idx2].getStatuteKey().getTitle() )) ) {
+                    if ( ! (acitations[idx].getStatuteKey().getLawCode().equals( acitations[idx2].getStatuteKey().getLawCode() )) ) {
                         // but the section number is .. then
                         if ( acitations[idx].getStatuteKey().getSectionNumber().equals( acitations[idx2].getStatuteKey().getSectionNumber() ) ) {
                             // if there is a difference in designated flags ..
@@ -202,7 +202,7 @@ if ( !statuteCitation.toString().equals("pen:245") ) {
     private void collapseCodeSections(TreeSet<StatuteCitation> citations, OpinionBase opinionBase) {
     	StatuteCitation[] acitations = citations.toArray(new StatuteCitation[0]);
         for ( int idx = 0; idx < acitations.length; ++idx ) {
-            if ( acitations[idx].getStatuteKey().getTitle() == null ) {
+            if ( acitations[idx].getStatuteKey().getLawCode() == null ) {
                 for ( int idx2 = idx+1; idx2 < acitations.length; ++idx2 ) {
                     if ( acitations[idx].getStatuteKey().getSectionNumber().equals( acitations[idx2].getStatuteKey().getSectionNumber() ) ) {
                     	acitations[idx2].setRefCount(opinionBase, 

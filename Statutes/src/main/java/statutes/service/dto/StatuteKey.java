@@ -35,12 +35,12 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "statuteKey", propOrder = {
-    "title",
+    "lawCode",
     "sectionNumber"
 })
 public class StatuteKey {
 
-    protected String title;
+    protected String lawCode;
     protected String sectionNumber;
 
     /**
@@ -51,8 +51,8 @@ public class StatuteKey {
      *     {@link String }
      *     
      */
-    public String getTitle() {
-        return title;
+    public String getLawCode() {
+        return lawCode;
     }
 
     /**
@@ -63,8 +63,8 @@ public class StatuteKey {
      *     {@link String }
      *     
      */
-    public void setTitle(String value) {
-        this.title = value;
+    public void setLawCode(String value) {
+        this.lawCode = value;
     }
 
     /**

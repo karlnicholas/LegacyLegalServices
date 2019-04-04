@@ -91,14 +91,14 @@ public class CAStatutesApiImpl implements IStatutesApi {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setLawCode("FAC");
 		statutesTitles.setShortTitle("Agriculture");
-		statutesTitles.setTitle("Family Code");
+		statutesTitles.setTitle("Food and Agricultural Code");
 		statutesTitles.setAbvrTitles( new String[]{"food & agr. code"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setLawCode("FAM");
 		statutesTitles.setShortTitle("Family");
-		statutesTitles.setTitle("Financial Code");
+		statutesTitles.setTitle("Family Code");
 		statutesTitles.setAbvrTitles( new String[]{"fam. code"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 		
@@ -112,7 +112,7 @@ public class CAStatutesApiImpl implements IStatutesApi {
 		statutesTitles = new StatutesTitles();
 		statutesTitles.setLawCode("FIN");
 		statutesTitles.setShortTitle("Financial");
-		statutesTitles.setTitle("financial code");
+		statutesTitles.setTitle("Financial Code");
 		statutesTitles.setAbvrTitles( new String[]{"fin. code"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
@@ -282,7 +282,6 @@ public class CAStatutesApiImpl implements IStatutesApi {
 
 	public StatutesRoot findStatuteRoot(String lawCode) {
 		
-		String tempTitle = lawCode.toLowerCase();
 		StatutesTitles statutesTitles = null;
 		for ( StatutesTitles t: mapStatutesToTitles.values() ) {
 			if ( t.getLawCode().equals( lawCode ) ) {
@@ -293,14 +292,13 @@ public class CAStatutesApiImpl implements IStatutesApi {
 		if ( statutesTitles == null ) {
 			throw new RuntimeException("StatutesRoot not found:" + lawCode);
 		}
-		tempTitle = statutesTitles.getLawCode();
 		Iterator<StatutesRoot> ci = statutes.iterator();
 		while (ci.hasNext()) {
 			StatutesRoot code = ci.next();
-			if (code.getFullFacet().toLowerCase().contains(tempTitle)) {
+			if (code.getFullFacet().contains(lawCode)) {
 				return code;
 			}
-			if ( tempTitle.contains(code.getFullFacet().toLowerCase())) {
+			if ( lawCode.contains(code.getFullFacet())) {
 				return code;
 			}
 		}

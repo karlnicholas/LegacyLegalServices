@@ -59,7 +59,7 @@ public class OpinionViewBuilder {
     	statutes.service.dto.StatuteKeyArray statuteKeyArray = new statutes.service.dto.StatuteKeyArray();
         for( StatuteCitation statuteCitation: opinionBase.getOnlyStatuteCitations() ) {
             statutes.service.dto.StatuteKey statuteKey = new statutes.service.dto.StatuteKey();            
-            statuteKey.setTitle(statuteCitation.getStatuteKey().getTitle());
+            statuteKey.setLawCode(statuteCitation.getStatuteKey().getLawCode());
             statuteKey.setSectionNumber(statuteCitation.getStatuteKey().getSectionNumber());
             statuteKeyArray.getItem().add(statuteKey);
         }
@@ -72,7 +72,7 @@ public class OpinionViewBuilder {
         
         while ( itc.hasNext() ) {
         	OpinionStatuteCitation citation = itc.next();
-        	if ( citation.getStatuteCitation().getStatuteKey().getTitle() != null ) {
+        	if ( citation.getStatuteCitation().getStatuteKey().getLawCode() != null ) {
         		// find the statutesLeaf from the Statutes service and return with all parents filled out.
 	            StatutesLeaf statutesLeaf = findStatutesLeaf(keyHierarchyPairs, citation.getStatuteCitation().getStatuteKey());
 	            if ( statutesLeaf == null ) {
@@ -207,11 +207,11 @@ public class OpinionViewBuilder {
      */
     private StatutesLeaf findStatutesLeaf(statutes.service.dto.KeyHierarchyPairs keyHierarchyPairs, StatuteKey key) {
 		List<StatutesBaseClass> subPaths = null;
-    	final String title = key.getTitle();
+    	final String title = key.getLawCode();
     	final String sectionNumber = key.getSectionNumber();
     	for ( statutes.service.dto.KeyHierarchyPair keyHierarchyPair: keyHierarchyPairs.getItem()) {
     		statutes.service.dto.StatuteKey statuteKey = keyHierarchyPair.getStatuteKey();
-    		if ( title.equals(statuteKey.getTitle()) && sectionNumber.equals(statuteKey.getSectionNumber()) ) {
+    		if ( title.equals(statuteKey.getLawCode()) && sectionNumber.equals(statuteKey.getSectionNumber()) ) {
     			subPaths = keyHierarchyPair.getStatutesPath();
     			break;
     		}
