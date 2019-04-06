@@ -90,6 +90,7 @@
                 <configuration>
                   <fractions>
                     <fraction>container</fraction>
+                    <fraction>cdi</fraction>
                     <fraction>jaxrs</fraction>
                     <fraction>logging</fraction>
                     <fraction>undertow</fraction>

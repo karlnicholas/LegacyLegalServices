@@ -106,7 +106,6 @@
                     <fraction>security</fraction>
                     <fraction>transactions</fraction>
                     <fraction>undertow</fraction>
-                    <fraction>camel-http4</fraction>
                   </fractions>
                 </configuration>
               </execution>
