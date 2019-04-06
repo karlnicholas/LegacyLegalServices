@@ -6,7 +6,7 @@
   <parent>
     <artifactId>legalservices</artifactId>
     <groupId>legalservices</groupId>
-    <version>0.4.0-SNAPSHOT</version>
+    <version>0.5.0-SNAPSHOT</version>
   </parent>
   <properties>
     <m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
