@@ -24,11 +24,9 @@ import statutes.StatutesRoot;
  */
 public class CAStatutesApiImpl implements IStatutesApi {
 	private final static Logger logger = Logger.getLogger( CAStatutesApiImpl.class.getName() );
-//    private static final String DEBUGFILE = null; // "bpc";	// "fam";
     
 	private ArrayList<StatutesRoot> statutes;
 	private HashMap<String, StatutesTitles> mapStatutesToTitles;
-//	private StatutesParser parser;
 	public CAStatutesApiImpl() {
 		mapStatutesToTitles = new HashMap<String, StatutesTitles> ();
 
@@ -237,22 +235,7 @@ public class CAStatutesApiImpl implements IStatutesApi {
 	}
 	@Override
 	public boolean loadStatutes() {
-//		parser = new StatutesParser();
 		statutes = new ArrayList<StatutesRoot>();
-		
-//		JAXBContext ctx = JAXBContext.newInstance(StatutesRoot.class);
-//		unmarshaller = ctx.createUnmarshaller();
-/*
-		final ClassLoader classLoader1 = Thread.currentThread().getContextClassLoader();
-		final ClassLoader classLoader2 = this.getClass().getClassLoader();
-		ClassLoader classLoader = null;
-		final String resourcePath = "CaliforniaStatutes/";
-		if ( classLoader1 == null ) logger.warning("classLoader1 is null");
-		else classLoader = classLoader1;
-		if ( classLoader2 == null ) logger.warning("classLoader2 is null");
-		else classLoader = classLoader2;
-*/		
-		
 		try {
 			String resourcePath = System.getenv("californiastatutesloc");
 			if ( resourcePath == null ) {
@@ -263,7 +246,6 @@ public class CAStatutesApiImpl implements IStatutesApi {
 			for ( String file: files ) {
 				Path filePath = Paths.get(resourcePath + "/" + file );
 				logger.info("Processing " + filePath );
-//				StatutesRoot c = (StatutesRoot) unmarshaller.unmarshal(url.openStream());
 				ObjectInputStream ois = new ObjectInputStream( Files.newInputStream(filePath) );
 				StatutesRoot c = (StatutesRoot)ois.readObject();
 				c.rebuildParentReferences(null);
@@ -302,20 +284,6 @@ public class CAStatutesApiImpl implements IStatutesApi {
 				return code;
 			}
 		}
-/*		
-		
-		String tempTitle = lawCode.toLowerCase();
-		Iterator<StatutesRoot> ci = statutes.iterator();
-		while (ci.hasNext()) {
-			StatutesRoot code = ci.next();
-			if (code.getTitle(false).toLowerCase().contains(tempTitle)) {
-				return code;
-			}
-			if ( tempTitle.contains(code.getTitle(false).toLowerCase())) {
-				return code;
-			}
-		}
-*/		
 		throw new RuntimeException("StatutesRoot not found:" + lawCode);
 	}
 
@@ -335,17 +303,10 @@ public class CAStatutesApiImpl implements IStatutesApi {
 	}
 	
 	public static void main(String[] args) throws Exception {
-//		logger.setLevel(Level.FINE);
 		CAStatutesApiImpl codes = new CAStatutesApiImpl();
-//		codes.loadFromRawPath(Paths.get("c:/users/karl/code"));
 		codes.loadStatutes();
-		// CodeParser parser = new CodeParser();
-//		Path path = FileSystems.getDefault().getPath("codes/ccp_table_of_contents");
-//		Path path = ;		// <--|
-//		StatutesRoot c = parser.parse(path);		// <--|
 		StatutesBaseClass reference = codes.findReference("California Penal Code", new SectionNumber(0, "625") );
 		System.out.println(reference );
-//		System.out.println( reference.getFullFacet());
 	}
 
 	@Override
@@ -376,7 +337,6 @@ public class CAStatutesApiImpl implements IStatutesApi {
 				statutesRoot.getStatuteRange()
 			); 
 		rwr.getStatutesPath().add(returnStatutesRoot);
-//		String lawCode = FacetUtils.getFacetHeadFromRoot(statutesTitles, statutesRoot);
 		
 		List<StatutesBaseClass> subPaths = statutesRoot.getReferences();
 
@@ -403,12 +363,8 @@ public class CAStatutesApiImpl implements IStatutesApi {
 							baseClass.getDepth(), 
 							baseClass.getStatuteRange()
 						);
-//						currentBaseClass.addReference(entryReference);
 						rwr.getStatutesPath().add(entryReference);
-//						entries = entryReference.getEntries();
 						subPaths = baseClass.getReferences();
-//						viewModel.setState(STATES.TERMINATE);
-//						termSection = baseClass.getStatutesLeaf();
 						currentBaseClass = entryReference; 
 
 					} else {
@@ -422,12 +378,8 @@ public class CAStatutesApiImpl implements IStatutesApi {
 							cLeaf.getStatuteRange() 
 						);
 						entryReference.getSectionNumbers().addAll(cLeaf.getSectionNumbers());
-//						currentBaseClass.addReference(entryReference);
 						rwr.getStatutesPath().add(entryReference);
-//						entries = entryReference.getEntries();
 						subPaths = baseClass.getReferences();
-//						viewModel.setState(STATES.TERMINATE);
-//						termSection = baseClass.getStatutesLeaf();
 						currentBaseClass = entryReference; 
 					}
 					break;	// out of for loop
@@ -449,7 +401,6 @@ public class CAStatutesApiImpl implements IStatutesApi {
 							reference.getStatuteRange()
 						);
 					rwr.getFinalReferences().add(entryReference);
-//					currentBaseClass.addReference(entryReference);
 				} else {
 					StatutesLeaf entryReference = new StatutesLeaf(
 							currentBaseClass, 
@@ -461,7 +412,6 @@ public class CAStatutesApiImpl implements IStatutesApi {
 							cLeaf.getStatuteRange()
 						);
 					entryReference.getSectionNumbers().addAll(cLeaf.getSectionNumbers());
-//					currentBaseClass.addReference(entryReference);
 					rwr.getFinalReferences().add(entryReference);
 				}
 			}
@@ -484,56 +434,3 @@ public class CAStatutesApiImpl implements IStatutesApi {
 		throw new RuntimeException("StatutesRoot not found: " + lawCode);
 	}
 }
-
-/*
-public static String getShortTitle(String title) {
-    if ( title == null ) return title;
-    for (int i=0; i < patterns.length; ++i ) {
-        if ( title.toLowerCase().contains(patterns[i]) )
-            return patternsAbvr[i];
-    }
-    return title;
-}
-*/    
-
-/*
- * There is a problem here. When using this method, the section numbers in  
- * are not in consistent order. e.g.  Penal StatutesRoot 273a is before 273.1
- * but 270a is after 270.1 -- This makes is difficult, or impossible, to determine
- * what file a specific section number belongs to. I'm coding it so that
- * 270a is said to come before 270.1. This is needed because the files
- * 270-273.5 includes 273a. The file 273.8-273.88 does not include 273a.
- * I don't know if there are other situations where this is reversed ... 
- * I should write a utility to check everything. See ConvertToHybridXML in the
- * opca project.
- * ...
- * ok, there's more. The second numerical element of the section number is not ordered numberically, but lexically.
- * so .. 422.865 comes before 422.88
- */
-/*	
-public void loadFromRawPath(Path path) throws IOException {
-	// ArrayList<File> files = new ArrayList<File>();
-
-	List<Path> files = new ArrayList<Path>();
-    try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
-        for (Path entry : stream) {
-            if (Files.isDirectory(entry)) 
-            	continue;
-			if (entry.getFileName().toString().contains("constitution")) 
-				continue;
-			if ( DEBUGFILE != null ) { 
-				if (!entry.getFileName().toString().contains(DEBUGFILE)) 
-					continue;
-			}
-        	files.add(entry);
-        }
-    }
-    Charset encoding = StandardCharsets.ISO_8859_1;
-	for ( Path file: files ) {
-		logger.info("Processing " + file);
-		loadRawFile( encoding, file );
-	}
-
-	Collections.sort( statutes );
-}
-*/
