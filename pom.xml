@@ -10,23 +10,6 @@
   <packaging>pom</packaging>
   <url>http://gs-opca.b9ad.pro-us-east-1.openshiftapps.com/</url>
   <description>Legal Services Parent Project</description>
-  <modules>
-    <module>Statutes</module>
-    <module>GuidedSearchCore</module>
-    <module>StatutesCa</module>
-    <module>GuidedSearchWeb</module>
-    <module>OpinionsEjb</module>
-    <module>OpinionsWeb</module>
-    <module>LegalServicesEar</module>
-    <module>StatutesRs</module>
-  </modules>
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <distribution>repo</distribution>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-    </license>
-  </licenses>
   <properties>
     <!-- Explicitly declaring the source encoding eliminates the following 
       message: -->
@@ -50,6 +33,35 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
   </properties>
+  <modules>
+    <module>Statutes</module>
+    <module>GuidedSearchCore</module>
+    <module>StatutesCa</module>
+    <module>GuidedSearchWeb</module>
+    <module>OpinionsEjb</module>
+    <module>OpinionsWeb</module>
+    <module>LegalServicesEar</module>
+    <module>StatutesRs</module>
+  </modules>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <distribution>repo</distribution>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Karl Nicholas</name>
+      <email>karl.nicholas@outlook.com</email>
+      <organizationUrl>https://github.com/karlnicholas</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <connection>https://github.com/karlnicholas/LegalServices.git</connection>
+    <developerConnection>scm:git:git@github.com:karlnicholas/LegalServices.git</developerConnection>
+    <url>https://github.com/karlnicholas/LegalServices</url>
+  </scm>
   <repositories>
     <repository>
       <id>maven-repository</id>
