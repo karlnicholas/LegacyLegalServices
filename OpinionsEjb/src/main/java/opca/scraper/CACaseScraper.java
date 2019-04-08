@@ -180,11 +180,7 @@ public class CACaseScraper implements OpinionScraperInterface {
 		} catch (IOException ex) {
 	    	logger.log(Level.SEVERE, null, ex);
 		}
-		try ( CloseableHttpClient httpClient = HttpClientBuilder.create()
-				.setRedirectStrategy(redirectStrategy)
-				.setDefaultCookieStore(cookieStore)
-				.build() 
-		) {
+		try ( CloseableHttpClient httpClient = HttpClientBuilder.create().build() ) {
 		
 			try {
 				Thread.sleep(1000L + (long)(Math.random() * 2000.0));
@@ -217,11 +213,7 @@ public class CACaseScraper implements OpinionScraperInterface {
 		} catch (IOException ex) {
 	    	logger.log(Level.SEVERE, null, ex);
 		}
-		try ( CloseableHttpClient httpClient = HttpClientBuilder.create()
-				.setRedirectStrategy(redirectStrategy)
-				.setDefaultCookieStore(cookieStore)
-				.build() 
-		) {
+		try ( CloseableHttpClient httpClient = HttpClientBuilder.create().build() ) {
 		
 			try {
 				Thread.sleep(1000L + (long)(Math.random() * 2000.0));
@@ -253,17 +245,13 @@ public class CACaseScraper implements OpinionScraperInterface {
 		} catch (IOException ex) {
 	    	logger.log(Level.SEVERE, null, ex);
 		}
-		try ( CloseableHttpClient httpClient = HttpClientBuilder.create()
-				.setRedirectStrategy(redirectStrategy)
-				.setDefaultCookieStore(cookieStore)
-				.build() 
-		) {
+		try ( CloseableHttpClient httpClient = HttpClientBuilder.create().build() ) {
 			try {
 				Thread.sleep(1000L + (long)(Math.random() * 2000.0));
 			} catch (InterruptedException e) {
 				logger.severe(e.getLocalizedMessage());
 			}
-			HttpGet httpGet = new HttpGet(baseUrl+redirectStrategy.getLocation().replace("mainCaseScreen", trialCourt));
+			HttpGet httpGet = new HttpGet(baseUrl+redirectStrategy.getLocation().replace(mainCaseScreen, trialCourt));
 		    httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134");
 			try ( CloseableHttpResponse response = httpClient.execute(httpGet, localContext) ) {
 				InputStream is;
