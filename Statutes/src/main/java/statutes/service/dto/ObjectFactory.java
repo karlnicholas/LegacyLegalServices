@@ -38,7 +38,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link StatuteKey }
-     * 
+     * @return {@link StatuteKey} statuteKey
      */
     public StatuteKey createStatuteKey() {
         return new StatuteKey();
@@ -46,7 +46,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link StatuteKeyArray }
-     * 
+     * @return {@link StatuteKeyArray} 
      */
     public StatuteKeyArray createStatuteKeyArray() {
         return new StatuteKeyArray();
@@ -54,7 +54,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link KeyHierarchyPairs }
-     * 
+     * @return {@link KeyHierarchyPairs} 
      */
     public KeyHierarchyPairs createResponseArray() {
         return new KeyHierarchyPairs();
@@ -62,7 +62,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link KeyHierarchyPair }
-     * 
+     * @return {@link KeyHierarchyPair} 
      */
     public KeyHierarchyPair createResponsePair() {
         return new KeyHierarchyPair();
@@ -70,7 +70,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link StatutesTitlesArray }
-     * 
+     * @return {@link StatutesTitlesArray} 
      */
     public StatutesTitlesArray createStatutesTitlesArray() {
         return new StatutesTitlesArray();

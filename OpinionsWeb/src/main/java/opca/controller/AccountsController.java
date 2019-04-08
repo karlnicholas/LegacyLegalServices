@@ -245,6 +245,7 @@ public class AccountsController implements Serializable {
     /**
      * optout current user
      * 
+     * @param optout value
      * @return Naviation to /views/account.xhtml
      */
     public String setOptout(boolean optout) {

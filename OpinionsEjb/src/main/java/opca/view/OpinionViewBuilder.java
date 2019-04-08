@@ -45,14 +45,6 @@ public class OpinionViewBuilder {
         return opinionView;
     }
 
-
-    /**
-     * Should be combined and trimmed, yes?
-     * 
-     * @param opinionBase
-     * @param responseArray
-     * @return
-     */
     public List<StatuteView> createStatuteViews(OpinionBase opinionBase) {
     	List<StatuteKey> errorKeys = new ArrayList<>();
         // statutes ws .. getStatuteKeys list to search for 

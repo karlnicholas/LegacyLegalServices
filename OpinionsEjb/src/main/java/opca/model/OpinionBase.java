@@ -93,14 +93,14 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
 	
 	/**
 	 * Only meant for comparison purposes.
-	 * @param opinionKey
+	 * @param opinionKey for opinion
 	 */
     public OpinionBase(OpinionKey opinionKey) {
         this.opinionKey = opinionKey;
     }
 	/**
 	 * adds a new referringOpinion key if it doesn't already exist.
-	 * @param opinionKey
+	 * @param opinionBase OpinionBase 
 	 */
     public void addReferringOpinion(OpinionBase opinionBase) {
     	if (referringOpinions == null ) {
@@ -112,7 +112,7 @@ public class OpinionBase implements Comparable<OpinionBase>, Serializable {
     }
     /**
      * Removes a referringOpinion if it exists
-     * @param opinionBase
+     * @param opinionBase OpinionBase
      */
     public void removeReferringOpinion(OpinionBase opinionBase) {
     	if (referringOpinions != null ) {

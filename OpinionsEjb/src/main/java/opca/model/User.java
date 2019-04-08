@@ -86,10 +86,10 @@ public class User implements Serializable {
     /**
      * Create account constructor 
      * 
-     * @param email
-     * @param emailUpdates
-     * @param password
-     * @param role
+     * @param email of user
+     * @param emailUpdates when notifications sent?
+     * @param password of user
+     * @param locale of user
      */
 	public User(String email, boolean emailUpdates, String password, Locale locale) {
 		init();

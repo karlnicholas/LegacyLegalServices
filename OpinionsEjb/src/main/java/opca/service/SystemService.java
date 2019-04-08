@@ -26,7 +26,6 @@ public class SystemService {
     /**
      * Merge user with Database
      * @param user to merge.
-     * @return Merged User
      */
     @Asynchronous
     public void startVerify(User user) {
@@ -40,11 +39,12 @@ public class SystemService {
 	    	logger.severe("Verification failed: " + ex.getMessage());
     	}
     }
-    	
+
     /**
-     * Merge user with Database
-     * @param user to merge.
-     * @return Merged User
+     * Send email async
+     * @param email from about
+     * @param comment from about 
+     * @param locale from about
      */
     @Asynchronous
 	public void sendAboutEmail(String email, String comment, Locale locale) {

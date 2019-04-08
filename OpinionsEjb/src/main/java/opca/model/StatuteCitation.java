@@ -88,7 +88,7 @@ public class StatuteCitation implements Comparable<StatuteCitation>, Serializabl
      * so the only referringOpinions will be slip opinions
      * therefore, there will be nothing to sum, just add
      * the referring opinions in ..
-     * @param statute
+     * @param statute citation
      */
 	public void mergeStatuteCitationFromSlipLoad(StatuteCitation statute) {
     	Iterator<OpinionStatuteCitation> refOpIt = statute.referringOpinions.iterator();

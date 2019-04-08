@@ -99,6 +99,7 @@ public class UserService {
     /**
      * return User for email.
      * @param email to search for.
+     * @param verifyKey for user
      * @return User found, else runtime exception.
      */
     @PermitAll

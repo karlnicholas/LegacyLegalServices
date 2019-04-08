@@ -64,7 +64,7 @@ public class KeyHierarchyPairs {
      * Objects of the following type(s) are allowed in the list
      * {@link KeyHierarchyPair }
      * 
-     * 
+     * @return KeyHierarchyPair list
      */
     public List<KeyHierarchyPair> getItem() {
         if (item == null) {
