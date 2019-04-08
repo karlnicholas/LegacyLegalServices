@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <name>GuidedSearch</name>
   <modelVersion>4.0.0</modelVersion>
   <groupId>legalservices</groupId>
   <artifactId>legalservices</artifactId>
-  <version>0.5.0-SNAPSHOT</version>
+  <version>0.5.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <url>http://gs-opca.b9ad.pro-us-east-1.openshiftapps.com/</url>
   <description>Legal Services Parent Project</description>
@@ -62,6 +60,7 @@
     <connection>https://github.com/karlnicholas/LegalServices.git</connection>
     <developerConnection>scm:git:git@github.com:karlnicholas/LegalServices.git</developerConnection>
     <url>https://github.com/karlnicholas/LegalServices</url>
+    <tag>HEAD</tag>
   </scm>
   <repositories>
     <repository>
