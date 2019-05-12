@@ -5,3 +5,4 @@
 target
 .settings/*
 !.settings/.jsdtscope
+/pom.xml.releaseBackup
