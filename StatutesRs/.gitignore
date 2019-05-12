@@ -7,3 +7,4 @@ target
 .settings/*
 !.settings/.jsdtscope
 /.tern-project
+pom.xml.releaseBackup
