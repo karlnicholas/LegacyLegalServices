@@ -4,7 +4,7 @@
   <parent>
     <artifactId>legalservices</artifactId>
     <groupId>legalservices</groupId>
-    <version>0.5.1</version>
+    <version>0.5.2-SNAPSHOT</version>
   </parent>
   <artifactId>opinions-ejb</artifactId>
   <name>opinions-ejb: EJB Module</name>
