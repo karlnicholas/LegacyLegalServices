@@ -8,7 +8,7 @@
   <parent>
     <groupId>legalservices</groupId>
     <artifactId>legalservices</artifactId>
-    <version>0.5.1-SNAPSHOT</version>
+    <version>0.5.1</version>
   </parent>
   <properties>
     <!-- Explicitly declaring the source encoding eliminates the following 
