@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>legalservices</groupId>
   <artifactId>legalservices</artifactId>
-  <version>0.5.1-SNAPSHOT</version>
+  <version>0.5.1</version>
   <packaging>pom</packaging>
   <url>http://gs-opca.b9ad.pro-us-east-1.openshiftapps.com/</url>
   <description>Legal Services Parent Project</description>
@@ -60,7 +60,7 @@
     <connection>https://github.com/karlnicholas/LegalServices.git</connection>
     <developerConnection>scm:git:git@github.com:karlnicholas/LegalServices.git</developerConnection>
     <url>https://github.com/karlnicholas/LegalServices</url>
-    <tag>HEAD</tag>
+    <tag>legalservices-0.5.1</tag>
   </scm>
   <repositories>
     <repository>
