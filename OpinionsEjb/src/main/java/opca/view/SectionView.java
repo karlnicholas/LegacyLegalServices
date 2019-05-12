@@ -123,7 +123,12 @@ public class SectionView extends ViewReference {
 		this.importance = importance;
 	}
 
-	@XmlElement
+	@XmlTransient
+	public String getFullFacet() {
+		return fullFacet;
+	}
+
+    @XmlElement
 	public String getDisplayTitlePath() {
     	List<String> shortTitles = getShortTitles();
     	return shortTitles.toString().replace("[", "").replace("]", "") + ", " + title;

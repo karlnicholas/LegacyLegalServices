@@ -33,7 +33,10 @@ xmlns:composite="http://xmlns.jcp.org/jsf/composite">
           </ui:repeat>
           </span>
           <span class="openstat code titlepath"><h:outputText value="#{section.displayTitlePath}" /></span>
+<!--           
           <span class="openstat code sections"><h:outputText value="#{section.displaySections}" /></span>
+ -->          
+          <h:outputLink value="http://op-opca.b9ad.pro-us-east-1.openshiftapps.com/?path=#{section.fullFacet}" ><span class="openstat code sections"><h:outputText value="#{section.displaySections}" /></span></h:outputLink>
           </div>
         </ui:repeat>
       </div>
