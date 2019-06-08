@@ -18,8 +18,8 @@
     <version.wildfly.maven.plugin>1.2.2.Final</version.wildfly.maven.plugin>
     <!-- Define the version of the JBoss BOMs we want to import to specify 
       tested stacks. -->
-    <version.wildfly.bom>15.0.1.Final</version.wildfly.bom>
-    <version.wildfly>15.0.1.Final</version.wildfly>
+    <version.wildfly.bom>16.0.0.Final</version.wildfly.bom>
+    <version.wildfly>16.0.0.Final</version.wildfly>
     <version.wildfly.thorntail>2.4.0.Final</version.wildfly.thorntail>
     <!-- other plugin versions -->
     <version.compiler.plugin>3.8.0</version.compiler.plugin>
@@ -68,8 +68,8 @@
       <url>https://repo.maven.apache.org/maven2/</url>
     </repository>
     <repository>
-      <id>jboss-developer-repository</id>
-      <url>https://maven.repository.redhat.com/nexus/content/repositories/developer</url>
+      <id>jboss-repository</id>
+      <url>https://repository.jboss.org/nexus/content/groups/public/</url>
     </repository>
   </repositories>
   <dependencyManagement>
