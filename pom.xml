@@ -36,6 +36,7 @@
     <module>Statutes</module>
     <module>GuidedSearchCore</module>
     <module>StatutesCa</module>
+    <module>StatutesAz</module>
     <module>GuidedSearchWeb</module>
     <module>OpinionsEjb</module>
     <module>OpinionsWeb</module>
@@ -114,6 +115,13 @@
       <dependency>
         <groupId>legalservices</groupId>
         <artifactId>statutesca</artifactId>
+        <version>${project.version}</version>
+        <type>jar</type>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>legalservices</groupId>
+        <artifactId>statutesaz</artifactId>
         <version>${project.version}</version>
         <type>jar</type>
         <scope>compile</scope>
