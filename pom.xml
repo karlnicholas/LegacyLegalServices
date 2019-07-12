@@ -40,8 +40,9 @@
     <module>GuidedSearchWeb</module>
     <module>OpinionsEjb</module>
     <module>OpinionsWeb</module>
+    <module>StatutesRsCa</module>
+    <module>StatutesRsAz</module>
     <module>LegalServicesEar</module>
-    <module>StatutesRs</module>
   </modules>
   <licenses>
     <license>

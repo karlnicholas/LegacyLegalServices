@@ -1,0 +1,10 @@
+/target/
+/.settings/
+.project
+.classpath
+.factorypath
+target
+.settings/*
+!.settings/.jsdtscope
+/.tern-project
+pom.xml.releaseBackup
