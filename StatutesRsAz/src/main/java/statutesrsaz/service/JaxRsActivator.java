@@ -1,4 +1,4 @@
-package statutesrsca.service;
+package statutesrsaz.service;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -450,7 +450,7 @@ public class AZStatutesApiImpl implements IStatutesApi {
 	public StatuteHierarchy getStatutesHierarchy(String fullFacet) {
 		StatutesTitles[] statutesTitles = getStatutesTitles();
 		String lawCode = FacetUtils.findLawCodeFromFacet(statutesTitles, fullFacet);
-		
+
 		StatutesRoot statutesRoot = findReferenceByLawCode(lawCode);
 
 		StatuteHierarchy rwr = new StatuteHierarchy();

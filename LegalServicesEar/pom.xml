@@ -31,7 +31,12 @@
     </dependency>
     <dependency>
       <groupId>legalservices</groupId>
-      <artifactId>statutesrs</artifactId>
+      <artifactId>statutesrsca</artifactId>
+      <type>war</type>
+    </dependency>
+    <dependency>
+      <groupId>legalservices</groupId>
+      <artifactId>statutesrsaz</artifactId>
       <type>war</type>
     </dependency>
   </dependencies>
@@ -57,9 +62,15 @@
             </webModule>
             <webModule>
               <groupId>legalservices</groupId>
-              <artifactId>statutesrs</artifactId>
-              <contextRoot>/statutesrs</contextRoot>
-              <bundleFileName>statutesrs.war</bundleFileName>
+              <artifactId>statutesrsca</artifactId>
+              <contextRoot>/statutesrsca</contextRoot>
+              <bundleFileName>statutesrsca.war</bundleFileName>
+            </webModule>
+            <webModule>
+              <groupId>legalservices</groupId>
+              <artifactId>statutesrsaz</artifactId>
+              <contextRoot>/statutesrsaz</contextRoot>
+              <bundleFileName>statutesrsaz.war</bundleFileName>
             </webModule>
             <webModule>
               <groupId>legalservices</groupId>

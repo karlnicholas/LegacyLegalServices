@@ -101,7 +101,14 @@
       </dependency>
       <dependency>
         <groupId>legalservices</groupId>
-        <artifactId>statutesrs</artifactId>
+        <artifactId>statutesrsca</artifactId>
+        <version>${project.version}</version>
+        <type>war</type>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>legalservices</groupId>
+        <artifactId>statutesrsaz</artifactId>
         <version>${project.version}</version>
         <type>war</type>
         <scope>compile</scope>

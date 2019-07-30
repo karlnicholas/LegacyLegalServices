@@ -22,7 +22,7 @@ public class ParserInterfaceRsCa implements IStatutesApi {
 			if ( s != null )
 				serviceURL = new URL(s);
 			else 
-				serviceURL = new URL("http://localhost:8080/statutesrs/rs/");
+				serviceURL = new URL("http://localhost:8080/statutesrsaz/rs/");
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
