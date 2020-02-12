@@ -31,98 +31,98 @@ public class AZStatutesApiImpl implements IStatutesApi {
 		mapStatutesToTitles = new HashMap<String, StatutesTitles> ();
 
 		StatutesTitles statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title1");
+		statutesTitles.setLawCode("GPC");
 		statutesTitles.setShortTitle("General Provisions");
 		statutesTitles.setTitle("General Provisions");
 		statutesTitles.setAbvrTitles( new String[]{"General Provisions"} ); 		
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title3");
+		statutesTitles.setLawCode("AGC");
 		statutesTitles.setShortTitle("Agriculture");
 		statutesTitles.setTitle("Agriculture");
 		statutesTitles.setAbvrTitles( new String[]{"Agriculture"} ); 		
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title4");
+		statutesTitles.setLawCode("ABC");
 		statutesTitles.setShortTitle("Alcoholic Beverages");
 		statutesTitles.setTitle("Alcoholic Beverages");
 		statutesTitles.setAbvrTitles( new String[]{"Alcoholic Beverages"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title5");
+		statutesTitles.setLawCode("ASC");
 		statutesTitles.setShortTitle("Amusements and Sports");
 		statutesTitles.setTitle("Amusements and Sports");
 		statutesTitles.setAbvrTitles( new String[]{"Amusements and Sports"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title6");
+		statutesTitles.setLawCode("BFI");
 		statutesTitles.setShortTitle("Banks and Financial Institutions");
 		statutesTitles.setTitle("Banks and Financial Institutions");
 		statutesTitles.setAbvrTitles( new String[]{"Banks and Financial Institutions"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title7");
+		statutesTitles.setLawCode("BON");
 		statutesTitles.setShortTitle("Bonds");
 		statutesTitles.setTitle("Bonds");
 		statutesTitles.setAbvrTitles( new String[]{"Bonds"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title8");
+		statutesTitles.setLawCode("CSC");
 		statutesTitles.setShortTitle("Child Safety");
 		statutesTitles.setTitle("Child Safety");
 		statutesTitles.setAbvrTitles( new String[]{"Child Safety"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title9");
+		statutesTitles.setLawCode("CTC");
 		statutesTitles.setShortTitle("Cities and Towns");
 		statutesTitles.setTitle("Cities and Towns");
 		statutesTitles.setAbvrTitles( new String[]{"Cities and Towns"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title10");
+		statutesTitles.setLawCode("CAC");
 		statutesTitles.setShortTitle("Corporations and Associations");
 		statutesTitles.setTitle("Corporations and Associations");
 		statutesTitles.setAbvrTitles( new String[]{"Corporations and Associations"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title11");
+		statutesTitles.setLawCode("COU");
 		statutesTitles.setShortTitle("Counties");
 		statutesTitles.setTitle("Counties");
 		statutesTitles.setAbvrTitles( new String[]{"Counties"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title12");
+		statutesTitles.setLawCode("CCP");
 		statutesTitles.setShortTitle("Courts and Civil Proceedings");
 		statutesTitles.setTitle("Courts and Civil Proceedings");
 		statutesTitles.setAbvrTitles( new String[]{"Courts and Civil Proceedings"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title13");
+		statutesTitles.setLawCode("CRI");
 		statutesTitles.setShortTitle("Criminal Code");
 		statutesTitles.setTitle("Criminal Code");
 		statutesTitles.setAbvrTitles( new String[]{"Criminal Code"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title14");
+		statutesTitles.setLawCode("TEP");
 		statutesTitles.setShortTitle("Trusts, Estates and Protective Proceedings");
 		statutesTitles.setTitle("Trusts, Estates and Protective Proceedings");
 		statutesTitles.setAbvrTitles( new String[]{"Trusts, Estates and Protective Proceedings"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title15");
+		statutesTitles.setLawCode("EDU");
 		statutesTitles.setShortTitle("Education");
 		statutesTitles.setTitle("Education");
 		statutesTitles.setAbvrTitles( new String[]{"Education"} );
@@ -136,224 +136,224 @@ public class AZStatutesApiImpl implements IStatutesApi {
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title17");
+		statutesTitles.setLawCode("GFC");
 		statutesTitles.setShortTitle("Game and Fish");
 		statutesTitles.setTitle("Game and Fish");
 		statutesTitles.setAbvrTitles( new String[]{"Game and Fish"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title18");
+		statutesTitles.setLawCode("ITC");
 		statutesTitles.setShortTitle("Information Technology");
 		statutesTitles.setTitle("Information Technology");
 		statutesTitles.setAbvrTitles( new String[]{"Information Technology"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title19");
+		statutesTitles.setLawCode("IRC");
 		statutesTitles.setShortTitle("Initiative, Referendum and Recall");
 		statutesTitles.setTitle("Initiative, Referendum and Recall");
 		statutesTitles.setAbvrTitles( new String[]{"Initiative, Referendum and Recall"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title20");
+		statutesTitles.setLawCode("INS");
 		statutesTitles.setShortTitle("Insurance");
 		statutesTitles.setTitle("Insurance");
 		statutesTitles.setAbvrTitles( new String[]{"Insurance"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title21");
+		statutesTitles.setLawCode("JUR");
 		statutesTitles.setShortTitle("Juries");
 		statutesTitles.setTitle("Juries");
 		statutesTitles.setAbvrTitles( new String[]{"Juries"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title22");
+		statutesTitles.setLawCode("JMC");
 		statutesTitles.setShortTitle("Justice and Municipal Courts");
 		statutesTitles.setTitle("Justice and Municipal Courts");
 		statutesTitles.setAbvrTitles( new String[]{"Justice and Municipal Courts"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title23");
+		statutesTitles.setLawCode("LAB");
 		statutesTitles.setShortTitle("Labor");
 		statutesTitles.setTitle("Labor");
 		statutesTitles.setAbvrTitles( new String[]{"Labor"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title25");
+		statutesTitles.setLawCode("MDR");
 		statutesTitles.setShortTitle("Marital and Domestic Relations");
 		statutesTitles.setTitle("Marital and Domestic Relations");
 		statutesTitles.setAbvrTitles( new String[]{"Marital and Domestic Relations"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title26");
+		statutesTitles.setLawCode("MAE");
 		statutesTitles.setShortTitle("Military Affairs and Emergency Management");
 		statutesTitles.setTitle("Military Affairs and Emergency Management");
 		statutesTitles.setAbvrTitles( new String[]{"Military Affairs and Emergency Management"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title27");
+		statutesTitles.setLawCode("MOG");
 		statutesTitles.setShortTitle("Minerals, Oil and Gas");
 		statutesTitles.setTitle("Minerals, Oil and Gas");
 		statutesTitles.setAbvrTitles( new String[]{"Minerals, Oil and Gas"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title28");
+		statutesTitles.setLawCode("TRA");
 		statutesTitles.setShortTitle("Transportation");
 		statutesTitles.setTitle("Transportation");
 		statutesTitles.setAbvrTitles( new String[]{"Transportation"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title29");
+		statutesTitles.setLawCode("PAR");
 		statutesTitles.setShortTitle("Partnership");
 		statutesTitles.setTitle("Partnership");
 		statutesTitles.setAbvrTitles( new String[]{"Partnership"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title30");
+		statutesTitles.setLawCode("POW");
 		statutesTitles.setShortTitle("Power");
 		statutesTitles.setTitle("Power");
 		statutesTitles.setAbvrTitles( new String[]{"Power"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title31");
+		statutesTitles.setLawCode("PPC");
 		statutesTitles.setShortTitle("Prisons and Prisoners");
 		statutesTitles.setTitle("Prisons and Prisoners");
 		statutesTitles.setAbvrTitles( new String[]{"Prisons and Prisoners"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title32");
+		statutesTitles.setLawCode("POC");
 		statutesTitles.setShortTitle("Professions and Occupations");
 		statutesTitles.setTitle("Professions and Occupations");
 		statutesTitles.setAbvrTitles( new String[]{"Professions and Occupations"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title33");
+		statutesTitles.setLawCode("PRO");
 		statutesTitles.setShortTitle("Property");
 		statutesTitles.setTitle("Property");
 		statutesTitles.setAbvrTitles( new String[]{"Property"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title34");
+		statutesTitles.setLawCode("PBI");
 		statutesTitles.setShortTitle("Public Buildings and Improvements");
 		statutesTitles.setTitle("Public Buildings and Improvements");
 		statutesTitles.setAbvrTitles( new String[]{"Public Buildings and Improvements"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title35");
+		statutesTitles.setLawCode("PFC");
 		statutesTitles.setShortTitle("Public Finances");
 		statutesTitles.setTitle("Public Finances");
 		statutesTitles.setAbvrTitles( new String[]{"Public Finances"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title36");
+		statutesTitles.setLawCode("PHS");
 		statutesTitles.setShortTitle("Public Health and Safety");
 		statutesTitles.setTitle("Public Health and Safety");
 		statutesTitles.setAbvrTitles( new String[]{"Public Health and Safety"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title37");
+		statutesTitles.setLawCode("PLC");
 		statutesTitles.setShortTitle("Public Lands");
 		statutesTitles.setTitle("Public Lands");
 		statutesTitles.setAbvrTitles( new String[]{"Public Lands"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title38");
+		statutesTitles.setLawCode("POE");
 		statutesTitles.setShortTitle("Public Officers and Employees");
 		statutesTitles.setTitle("Public Officers and Employees");
 		statutesTitles.setAbvrTitles( new String[]{"Public Officers and Employees"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title39");
+		statutesTitles.setLawCode("PPN");
 		statutesTitles.setShortTitle("Public Records, Printing and Notices");
 		statutesTitles.setTitle("Public Records, Printing and Notices");
 		statutesTitles.setAbvrTitles( new String[]{"Public Records, Printing and Notices"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title40");
+		statutesTitles.setLawCode("PUC");
 		statutesTitles.setShortTitle("Public Utilities and Carriers");
 		statutesTitles.setTitle("Public Utilities and Carriers");
 		statutesTitles.setAbvrTitles( new String[]{"Public Utilities and Carriers"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title41");
+		statutesTitles.setLawCode("SGC");
 		statutesTitles.setShortTitle("State Government");
 		statutesTitles.setTitle("State Government");
 		statutesTitles.setAbvrTitles( new String[]{"State Government"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title42");
+		statutesTitles.setLawCode("TAX");
 		statutesTitles.setShortTitle("Taxation");
 		statutesTitles.setTitle("Taxation");
 		statutesTitles.setAbvrTitles( new String[]{"Taxation"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title43");
+		statutesTitles.setLawCode("TOI");
 		statutesTitles.setShortTitle("Taxation of Income");
 		statutesTitles.setTitle("Taxation of Income");
 		statutesTitles.setAbvrTitles( new String[]{"Taxation of Income"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title44");
+		statutesTitles.setLawCode("TAC");
 		statutesTitles.setShortTitle("Trade and Commerce");
 		statutesTitles.setTitle("Trade and Commerce");
 		statutesTitles.setAbvrTitles( new String[]{"Trade and Commerce"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title45");
+		statutesTitles.setLawCode("WAT");
 		statutesTitles.setShortTitle("Waters");
 		statutesTitles.setTitle("Waters");
 		statutesTitles.setAbvrTitles( new String[]{"Waters"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title46");
+		statutesTitles.setLawCode("WEL");
 		statutesTitles.setShortTitle("Welfare");
 		statutesTitles.setTitle("Welfare");
 		statutesTitles.setAbvrTitles( new String[]{"Welfare"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title47");
+		statutesTitles.setLawCode("UCC");
 		statutesTitles.setShortTitle("Uniform Commercial Code");
 		statutesTitles.setTitle("Uniform Commercial Code");
 		statutesTitles.setAbvrTitles( new String[]{"Uniform Commercial Code"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 
 		statutesTitles = new StatutesTitles();
-		statutesTitles.setLawCode("title48");
+		statutesTitles.setLawCode("STD");
 		statutesTitles.setShortTitle("Special Taxing Districts");
 		statutesTitles.setTitle("Special Taxing Districts");
 		statutesTitles.setAbvrTitles( new String[]{"Special Taxing Districts"} );
 		mapStatutesToTitles.put( statutesTitles.getLawCode(), statutesTitles );
 		statutesTitles = new StatutesTitles();
 
-		statutesTitles.setLawCode("title49");
+		statutesTitles.setLawCode("ENV");
 		statutesTitles.setShortTitle("The Environment");
 		statutesTitles.setTitle("The Environment");
 		statutesTitles.setAbvrTitles( new String[]{"The Environment"} );
@@ -380,7 +380,7 @@ public class AZStatutesApiImpl implements IStatutesApi {
 		} catch (ClassNotFoundException | IOException e) {
 			throw new RuntimeException(e);
 		}
-		Collections.sort( statutes );
+//		Collections.sort( statutes );
 		return true;
 	}		
 
